@@ -47,6 +47,9 @@ public class CharacterController3D : MonoBehaviour
     public bool isRunning; // Determines if the character is running
     public bool isJumping; // Determines if the character is jumping
 
+    public bool isPunching;
+    public bool isBlocking; 
+
     // ------------------------- METHODS -------------------------
     void Start() // Start is called before the first frame update
     {
@@ -133,30 +136,52 @@ public class CharacterController3D : MonoBehaviour
             }
         }
 
-        // Condition for jumping
-        if (Input.GetButtonDown("Jump") && canMove && characterController.isGrounded)
+        if (canMove && characterController.isGrounded) 
         {
-            moveDirection.y = jumpPower; // Makes the character jump
-            isJumping = true; // Returns true if the character is jumping
-            HandleAnimation(); // Calls the HandleAnimation function
-        }
-        else
-        {
-            moveDirection.y = movementDirectionY; // Keeps the character grounded
-            isJumping = false; // Returns false if the character is jumping
-            HandleAnimation(); // Calls the HandleAnimation function
+            // Condition for jumping
+            if (Input.GetButtonDown("Jump"))
+            {
+                moveDirection.y = jumpPower; // Makes the character jump
+                isJumping = true; // Returns true if the character is jumping
+                HandleAnimation(); // Calls the HandleAnimation function
+            }
+            else
+            {
+                moveDirection.y = movementDirectionY; // Keeps the character grounded
+                isJumping = false; // Returns false if the character is jumping
+                HandleAnimation(); // Calls the HandleAnimation function
+            }
         }
 
-        // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below
-        // when the moveDirection is multiplied by deltaTime). This is because gravity should be applied
-        // as an acceleration (ms^-2)
-        if (!characterController.isGrounded)
+        if (!characterController.isGrounded) 
         {
+            // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below
+            // when the moveDirection is multiplied by deltaTime). This is because gravity should be applied
+            // as an acceleration (ms^-2)
             moveDirection.y -= gravityWeight * Time.deltaTime; // Applies gravity to the character
         }
 
-        // Controller Movement
-        characterController.Move(moveDirection * Time.deltaTime); // Moves the character based on the moveDirection
+        if (Input.GetMouseButtonDown(0))
+        {
+            isPunching = true;
+            isBlocking = false;
+            HandleAnimation(); // Calls the HandleAnimation function
+        }
+        else if (Input.GetMouseButton(1))
+        {
+            isBlocking = true;
+            isPunching = false;
+            HandleAnimation(); // Calls the HandleAnimation function
+        }
+        else 
+        {
+            isBlocking = false;
+            isPunching = false;
+            HandleAnimation(); // Calls the HandleAnimation function
+        }
+
+            // Controller Movement
+            characterController.Move(moveDirection * Time.deltaTime); // Moves the character based on the moveDirection
 
         // Camera Movement
         if (canMove)
@@ -176,6 +201,9 @@ public class CharacterController3D : MonoBehaviour
         animator.SetBool("isIdle", isIdle); // Sets the character's idle animation
         animator.SetBool("isWalking", isWalking); // Sets the character's walking animation
         animator.SetBool("isRunning", isRunning); // Sets the character's running animation
+
+        animator.SetBool("isPunching", isPunching);
+        animator.SetBool("isBlocking", isBlocking);
         //animator.SetBool("isJumping", isJumping); // Sets the character's jumping animation
     }
 
