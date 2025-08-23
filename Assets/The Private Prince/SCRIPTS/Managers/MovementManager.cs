@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MovementManager : MonoBehaviour
+public class MovementManager : MonoBehaviour, IMoveable
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -27,12 +27,34 @@ public class MovementManager : MonoBehaviour
     [Header("STATES")]
     public bool isRunning = false; // Determines if the character is running
     public bool canMove = true; // Determines if the character can move
+    //public bool wantsToRun = false; // Determines if the character can run
     public bool isGrounded;
 
     // ------------------------- METHODS -------------------------
 
     public enum CharacterState { isIdle, isWalking, isRunning, isJumping }
     public CharacterState currentCharacState;
+
+    public virtual void HandleInput() 
+    {
+        // Freezes the Characters
+        if (!canMove)
+        {
+            moveDirection = Vector3.zero; // Instantly stop movement
+            curSpeedX = 0;
+            curSpeedY = 0;
+            verticalVelocity = 0;
+            return;
+        }
+
+        //// Set everything to zero to make sure
+        //Vector2 inputDirection = new Vector2(0, 0);
+        //bool wantsToRun = false;
+        //bool wantsToJump = false;
+
+        //CalculateMovement(inputDirection, wantsToRun);
+        //CalculateJump(wantsToJump);
+    }
 
     public virtual void CalculateMovement(Vector2 inputDirection, bool wantsToRun) 
     {
@@ -46,7 +68,7 @@ public class MovementManager : MonoBehaviour
         curSpeedY = canMove ? targetSpeed * inputDirection.x : 0; // Moves the character left and right
 
         moveDirection = (forward * curSpeedX) + (right * curSpeedY); // Identifies what direction the character is moving
-        isRunning = wantsToRun && inputDirection.magnitude > 0.1f;
+        isRunning = isRunning && inputDirection.magnitude > 0.1f;
 
         Debug.Log($"Move Direction: {moveDirection}"); // Logs the character's movement direction
     }
@@ -93,7 +115,7 @@ public class MovementManager : MonoBehaviour
         }
     }
 
-    protected virtual void SetAnimationState(CharacterState newState)
+    public virtual void SetAnimationState(CharacterState newState)
     {
         if (currentCharacState == newState) return;
 
