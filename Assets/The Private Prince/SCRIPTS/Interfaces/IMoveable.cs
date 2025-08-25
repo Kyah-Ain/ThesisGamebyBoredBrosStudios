@@ -1,4 +1,4 @@
 public interface IMoveable 
 {
-    public void Movement();
+    public void HandleInput();
 }
