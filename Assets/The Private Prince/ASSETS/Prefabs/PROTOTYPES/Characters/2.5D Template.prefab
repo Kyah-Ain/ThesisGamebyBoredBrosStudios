@@ -83,11 +83,9 @@ GameObject:
   - component: {fileID: 6077341573256094689}
   - component: {fileID: 4737888934890109217}
   - component: {fileID: 3005155248204313018}
-  - component: {fileID: 8933467204235647672}
   - component: {fileID: 3677482770458820450}
-  - component: {fileID: 6046108726436254597}
   m_Layer: 0
-  m_Name: 2D Player Tester (using Character Controller)
+  m_Name: 2.5D Template
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -183,28 +181,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8933467204235647672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4690095491012069730}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5733aeba562de05449eec414d06b0baa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  speed: 5
-  jumpingPower: 5
-  horizontal: 0
-  vertical: 0
-  isWalking: 0
-  groundCheck: {fileID: 8799419674086510036}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!143 &3677482770458820450
 CharacterController:
   m_ObjectHideFlags: 0
@@ -231,36 +207,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0.63, y: 0.5, z: 0}
---- !u!114 &6046108726436254597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4690095491012069730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b413b277a814b64a931c337e516f548, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  walkingSpeed: 3.5
-  runningSpeed: 8
-  jumpPower: 8
-  gravityWeight: 20
-  isRunning: 0
-  canMove: 1
-  isGrounded: 0
-  currentCharacState: 0
-  stamina: 100
-  maxStamina: 100
-  staminaDrainRate: 15
-  staminaRecoveryRate: 5
-  playerCamera: {fileID: 1996718913885225854}
-  lookSpeed: 2
-  lookXLimit: 45
-  isExhausted: 0
-  interactableRayDistance: 5
 --- !u!1 &6531313329648920677
 GameObject:
   m_ObjectHideFlags: 0

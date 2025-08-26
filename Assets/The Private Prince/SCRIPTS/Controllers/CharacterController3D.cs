@@ -10,7 +10,7 @@ public class CharacterController3D : MovementManager
 {
     // ------------------------- VARIABLES -------------------------
 
-    [Header("REFERENCES")]
+    [Header("COMPONENTS")]
     public CharacterController characterController; // Placeholder for the CharacterController component
 
     [Header("CAMERA NECK MOVEMENT")]

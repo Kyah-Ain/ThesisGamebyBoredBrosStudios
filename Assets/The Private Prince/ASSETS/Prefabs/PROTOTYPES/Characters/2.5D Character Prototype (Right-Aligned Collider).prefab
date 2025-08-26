@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 7378188736287826034}
   - component: {fileID: 4729298943028943443}
   m_Layer: 0
-  m_Name: isGrounded Checker
+  m_Name: isGrounded Checker (Optional)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7378188736287826034
 Transform:
   m_ObjectHideFlags: 0
@@ -169,7 +169,6 @@ GameObject:
   - component: {fileID: 6870769309758837894}
   - component: {fileID: 6734562126209422973}
   - component: {fileID: 200691408981949438}
-  - component: {fileID: 2239625737838420703}
   - component: {fileID: 5790927050512734214}
   m_Layer: 0
   m_Name: 2D Player Tester (using Character Controller)
@@ -293,34 +292,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.8, z: 0}
---- !u!114 &2239625737838420703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7293462893398277265}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b413b277a814b64a931c337e516f548, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  walkingSpeed: 3.5
-  runningSpeed: 8
-  jumpPower: 8
-  gravityWeight: 20
-  isRunning: 0
-  canMove: 1
-  isGrounded: 0
-  currentCharacState: 0
-  characterController: {fileID: 0}
-  playerCamera: {fileID: 4852972728012667122}
-  lookSpeed: 2
-  lookXLimit: 45
-  rotationX: 0
-  inputDirection: {x: 0, y: 0}
-  wantsToJump: 0
 --- !u!114 &5790927050512734214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,7 +335,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6753661930213433653}
   m_Layer: 0
-  m_Name: Character Prototype (2.5D)
+  m_Name: 2.5D Character Prototype (Right-Aligned Collider)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

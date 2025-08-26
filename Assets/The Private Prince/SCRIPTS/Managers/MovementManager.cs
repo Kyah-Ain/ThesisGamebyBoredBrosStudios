@@ -9,7 +9,7 @@ public class MovementManager : MonoBehaviour, IMoveable
 {
     // ------------------------- VARIABLES -------------------------
 
-    [Header("REFERENCES")]
+    [Header("ANIMATION")]
     public Animator animator;
 
     [Header("MOVEMENT COMPASS")]
@@ -19,10 +19,13 @@ public class MovementManager : MonoBehaviour, IMoveable
     protected float verticalVelocity;
 
     [Header("ATTRIBUTES")]
+    public float gravityWeight = 20.0f;
     public float walkingSpeed = 3.5f; // Speed at which the character walks
     public float runningSpeed = 8f; // Speed at which the character runs
     public float jumpPower = 8.0f; // Power of the character's jump
-    public float gravityWeight = 20.0f;
+
+    public float iWalkingSpeed { get => walkingSpeed; set => gravityWeight = value; }
+    public float iGravityWeight { get => gravityWeight; set => gravityWeight = value; }
 
     [Header("STATES")]
     public bool isRunning = false; // Determines if the character is running
@@ -70,7 +73,7 @@ public class MovementManager : MonoBehaviour, IMoveable
         moveDirection = (forward * curSpeedX) + (right * curSpeedY); // Identifies what direction the character is moving
         isRunning = isRunning && inputDirection.magnitude > 0.1f;
 
-        Debug.Log($"Move Direction: {moveDirection}"); // Logs the character's movement direction
+        //Debug.Log($"Move Direction: {moveDirection}"); // Logs the character's movement direction
     }
 
     public virtual void CalculateJump(bool wantsToJump)
