@@ -19,36 +19,43 @@ public class CharacterController3D : MovementManager
     public float lookXLimit = 45.0f; // Maximum angle the camera can look up or down
     public float rotationX = 0; // Placeholder for the camera's X rotation
 
-    public Vector2 inputDirection;
-    public bool wantsToJump;
+    public Vector2 inputDirection; // Placeholder for the character's input direction
+    public bool wantsToJump; // Determines if the character wants to jump
 
     // ------------------------- METHODS -------------------------
 
-    void Start() // Start is called before the first frame update
+    // Start is called before the first frame update
+    void Start() 
     {
         characterController = GetComponent<CharacterController>(); // Automatically references the CharacterController component
     }
 
+    // Handles player input for movements
     public override void HandleInput()
     {
+        // Calls from this class (CharacterController3D)
         MoveControl();
         RunControl();
         JumpControl();
 
+        // Calls from the parent class (MovementManager)
         CalculateMovement(inputDirection, isRunning);
         CalculateJump(wantsToJump);
     }
 
+    // Gets player input for movement direction
     public virtual void MoveControl() 
     {
         inputDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     }
 
+    // Gets player input for running
     public virtual void RunControl()
     {
         isRunning = Input.GetKey(KeyCode.LeftShift);
     }
 
+    // Gets player input for jumping
     public virtual void JumpControl()
     {
         wantsToJump = Input.GetKeyDown(KeyCode.Space);
