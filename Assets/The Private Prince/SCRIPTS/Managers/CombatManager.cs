@@ -34,6 +34,7 @@ public class CombatManager : MonoBehaviour, IDamageable
     public void Die() 
     {
         Debug.Log("Character Died");
+        Destroy(gameObject); // Test addition by Pagbilao to see if player destroys object
     }
 
     // Handles character taking damage
