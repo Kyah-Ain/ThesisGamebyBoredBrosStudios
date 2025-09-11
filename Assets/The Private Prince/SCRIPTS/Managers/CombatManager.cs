@@ -18,7 +18,7 @@ public class CombatManager : MonoBehaviour, IDamageable
     // ------------------------- METHODS -------------------------
 
     // Update is called once per frame
-    public void Update() 
+    public virtual void Update() 
     {
         if (health <= 0)
         {

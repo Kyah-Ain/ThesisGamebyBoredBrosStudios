@@ -16,7 +16,7 @@ public class EnemyDummy : CombatManager
     }
 
     // Update is called once per frame
-    void Update()
+    public override void Update()
     {
         // Calls from the parent class (CombatManager)
         base.Update();
