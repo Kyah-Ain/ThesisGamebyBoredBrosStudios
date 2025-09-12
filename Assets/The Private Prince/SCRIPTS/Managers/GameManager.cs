@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public ActivationManager activationManager; // Reference to the PanelManager.cs that handles UI panels and prompts
 
     [Header("Scene Reference")]
-    public string sceneToLoad; // Reference to the scene that will be loaded 
+    public string levelToLoad; // Reference to the scene that will be loaded 
 
     // ---------------------------- METHODS ---------------------------
     // Built-in Unity method that is called at the start of activiting this whole script
@@ -33,9 +33,9 @@ public class GameManager : MonoBehaviour
     // Method that loads a specified level
     public void LoadLevel() 
     {
-        if (sceneToLoad != null)
+        if (levelToLoad != null)
         {
-            SceneManager.LoadScene(sceneToLoad); // Load the specified scene by its name
+            SceneManager.LoadScene(levelToLoad); // Load the specified scene by its name
         }
         else 
         {
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     // Method that quickly loads the player to the last level played
     public void LoadLastLevel()
     {
-        if (sceneToLoad != null)
+        if (levelToLoad != null)
         {
             SceneManager.LoadScene($"Level_{levelManager.lastLevel}"); // Load the last level played by the player
         }
