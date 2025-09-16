@@ -4,57 +4,59 @@ using TMPro; //ADD WHEN USING TextMeshPro
 
 public class DialogueUI : MonoBehaviour
 {
-    [SerializeField] private GameObject dialogueBox;
-    [SerializeField] private TMP_Text textLabel;
+    [SerializeField] private GameObject dialogueBox; // The main dialogue box UI element
+    [SerializeField] private TMP_Text textLabel; // The text label where dialogue appears
 
-    public bool IsOpen { get; private set; }    
+    public bool IsOpen { get; private set; } // Public property to check if dialogue is currently open    
 
-    private ResponseHandler responseHandler;
-    private TypeWriterEffect typeWriterEffect;
+    private ResponseHandler responseHandler; // Reference to handle response buttons
+    private TypeWriterEffect typeWriterEffect; // Reference to handle typewriter effect
 
     private void Start()
     {
-        typeWriterEffect = GetComponent<TypeWriterEffect>();
-        responseHandler = GetComponent<ResponseHandler>();   
+        typeWriterEffect = GetComponent<TypeWriterEffect>(); // Get TypeWriterEffect component
+        responseHandler = GetComponent<ResponseHandler>(); // Get ResponseHandler component   
 
-        CloseDialogueBox();
+        CloseDialogueBox(); // Ensure dialogue box is closed at start
     }
 
     public void ShowDialogue(DialogueObject dialogueObject)
     {
-        IsOpen = true;
-        dialogueBox.SetActive(true);
-        StartCoroutine(StepThroughDialogue(dialogueObject));
+        IsOpen = true; // Set dialogue state to open
+        dialogueBox.SetActive(true); // Activate the dialogue box UI
+        StartCoroutine(StepThroughDialogue(dialogueObject)); // Start dialogue progression coroutine
     }
 
     private IEnumerator StepThroughDialogue(DialogueObject dialogueObject)
     {
+        // Loop through each line of dialogue in the dialogue object
         for (int i = 0; i < dialogueObject.Dialogue.Length; i++)
         {
-            string dialogue = dialogueObject.Dialogue[i];
-            yield return typeWriterEffect.Run(dialogue, textLabel);
+            string dialogue = dialogueObject.Dialogue[i]; // Get current dialogue line
+            yield return typeWriterEffect.Run(dialogue, textLabel); // Run typewriter effect for this line
 
+            // If this is the last line and there are responses, break out of the loop
             if (i == dialogueObject.Dialogue.Length - 1 && dialogueObject.HasResponses) break;
 
+            // Wait for player to press Space before continuing to next line
             yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
         }
 
-        if(dialogueObject.HasResponses)
+        // Check if this dialogue has responses
+        if (dialogueObject.HasResponses)
         {
-            responseHandler.ShowResponses(dialogueObject.Responses);
+            responseHandler.ShowResponses(dialogueObject.Responses); // Show response options
         }
         else
         {
-            CloseDialogueBox();
+            CloseDialogueBox(); // Close dialogue if no responses
         }
-
-        
     }
 
     private void CloseDialogueBox()
     {
-        IsOpen = false;
-        dialogueBox.SetActive(false);
-        textLabel.text = string.Empty;
+        IsOpen = false; // Set dialogue state to closed
+        dialogueBox.SetActive(false); // Deactivate the dialogue box UI
+        textLabel.text = string.Empty; // Clear the text label
     }
 }
