@@ -25,7 +25,14 @@ public class Player2Point5D : CharacterController3D
     public float interactRaycast = 5f; // Defines how long the raycast would be
     public LayerMask hitLayers; // Defines what only can be interacted with the raycast
 
+    [Header("DIALOGUE")]
+    [SerializeField] private DialogueUI dialogueUI;
+
     // ------------------------- METHODS -------------------------
+
+    // Getter for dialogue UI
+    public DialogueUI DialogueUI => dialogueUI;
+    public IInteractable Interactable { get; set; }
 
     // Start is called before the first frame update
     private void Start()
@@ -36,6 +43,9 @@ public class Player2Point5D : CharacterController3D
     // Update is called once per frame
     private void Update() 
     {
+        //stops player from moving when in Dialogue
+        if(dialogueUI != null && dialogueUI.IsOpen) return;
+
         // Calls from the parent class (CharacterController3D)
         HandleInput();
 
@@ -47,6 +57,13 @@ public class Player2Point5D : CharacterController3D
         HandleFlip();
         HandleStamina();
         HandleRaycast();
+
+        // Button prompt for Dialogue Interaction
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            Interactable?.Interact(this); // Used null propagation for less lines
+        }
+     
     }
 
     // Handles player input for movements
