@@ -33,10 +33,15 @@ public class DialogueUI : MonoBehaviour
         for (int i = 0; i < dialogueObject.Dialogue.Length; i++)
         {
             string dialogue = dialogueObject.Dialogue[i]; // Get current dialogue line
-            yield return typeWriterEffect.Run(dialogue, textLabel); // Run typewriter effect for this line
+
+            yield return RunTypingEffect(dialogue);
+
+            textLabel.text = dialogue;
 
             // If this is the last line and there are responses, break out of the loop
             if (i == dialogueObject.Dialogue.Length - 1 && dialogueObject.HasResponses) break;
+
+            yield return null;
 
             // Wait for player to press Space before continuing to next line
             yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
@@ -50,6 +55,21 @@ public class DialogueUI : MonoBehaviour
         else
         {
             CloseDialogueBox(); // Close dialogue if no responses
+        }
+    }
+
+    private IEnumerator RunTypingEffect(string dialogue)
+    {
+        typeWriterEffect.Run(dialogue, textLabel);
+
+        while (typeWriterEffect.isRunning)
+        {
+            yield return null;
+
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                typeWriterEffect.Stop();
+            }
         }
     }
 
