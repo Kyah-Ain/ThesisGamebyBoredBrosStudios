@@ -176,9 +176,5 @@ public class Player2Point5D : CharacterController3D
                 damageable.TakeDamage(10);
             }
         }
-        else 
-        {
-            Debug.Log("Raycast didn't hit any damageable game objects");
-        }
     } 
 }
