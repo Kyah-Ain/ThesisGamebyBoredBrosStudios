@@ -8,6 +8,8 @@ public class CombatManager : MonoBehaviour, IDamageable
 {
     // ------------------------- VARIABLES -------------------------
 
+    public event Action<CombatManager> onDeath;
+
     public float health = 100f; // Default health value
     public float defense = 10f; // Default defense value
 
@@ -31,9 +33,10 @@ public class CombatManager : MonoBehaviour, IDamageable
     }
 
     // Handles character death
-    public void Die() 
+    public virtual void Die() 
     {
         Debug.Log("Character Died");
+        onDeath?.Invoke(this);
         Destroy(gameObject); // Test addition by Pagbilao to see if player destroys object
     }
 
