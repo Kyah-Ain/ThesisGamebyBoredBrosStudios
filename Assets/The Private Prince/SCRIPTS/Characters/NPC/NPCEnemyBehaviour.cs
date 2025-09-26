@@ -6,31 +6,36 @@ using UnityEngine.AI;
 public class NPCEnemyBehaviour : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
+
     [Header("NPC Target")]
-    //public Transform movePositionTransform; // Player transform
     public Transform playerToDetect;
-    private Vector3 randomRoamPath;
+    public Transform npcOriginPlace;
 
     [Header("NPC Detection & Attributes")]
-    private NavMeshAgent navMeshAgent;
+    protected NavMeshAgent navMeshAgent;
     public LayerMask targetExceptionMask;
 
     public float viewDistance = 10f;
     public float viewAngle = 90f;
-    //private bool hasSeenPlayer = false; // Tracks if the NPC has seen the player recently
+    protected bool hasSeenPlayer = false; // Tracks if the NPC has seen the player recently
+
+    [Header("Interactables")]
+    public GameObject raycastEmitter; // The game object that will emits the raycast
+    public float interactRaycast = 5f; // Defines how long the raycast would be
+    public LayerMask hitLayers; // Defines what only can be interacted with the raycast
+    private bool isFacingRight = true; // For flipping the 2D Character (Left or Right)
 
     // -------------------------- METHODS ---------------------------
 
-    void Awake()
+
+    public virtual void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
-
-        // Initialize a random position
-        randomRoamPath = GetRandomPosition();
-        navMeshAgent.SetDestination(randomRoamPath);
+        navMeshAgent.SetDestination(npcOriginPlace.transform.position);
     }
 
-    void Start()
+
+    public virtual void Start()
     {
         // Auto-find player if not set
         if (playerToDetect == null)
@@ -46,57 +51,25 @@ public class NPCEnemyBehaviour : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public virtual void Update()
     {
-        NPCRoam();
-    }
+        HandleRaycast();
 
-    public void NPCRoam() 
-    {
         if (CanSeePlayer())
         {
-            //hasSeenPlayer = true;
-            navMeshAgent.SetDestination(playerToDetect.position);
-            navMeshAgent.speed = 3.5f; // Faster when chasing
+            navMeshAgent.SetDestination(playerToDetect.position); // 
+            navMeshAgent.speed = 3.5f; // Makes the NPC moves faster when chasing player
 
             Debug.Log($"Player detected! Chasing player at position: {playerToDetect.position}");
         }
         else
         {
-            // Normal roaming
+            navMeshAgent.SetDestination(npcOriginPlace.position);
             navMeshAgent.speed = 1.5f;
-            if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
-            {
-                randomRoamPath = GetRandomPosition();
-                navMeshAgent.SetDestination(randomRoamPath);
-            }
-
-            //if (hasSeenPlayer)
-            //{
-            //    // Go to last known position, then resume roaming
-            //    if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
-            //    {
-            //        hasSeenPlayer = false;
-            //        randomRoamPath = GetRandomPosition();
-            //        navMeshAgent.SetDestination(randomRoamPath);
-            //        navMeshAgent.speed = 1.5f; // Normal speed when roaming
-            //    }
-            //}
-            //else
-            //{
-            //    // Normal roaming
-            //    navMeshAgent.speed = 1.5f;
-            //    if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
-            //    {
-            //        randomRoamPath = GetRandomPosition();
-            //        navMeshAgent.SetDestination(randomRoamPath);
-            //    }
-            //}
         }
     }
-
-
-    bool CanSeePlayer()
+   
+    protected virtual bool CanSeePlayer()
     {
         Vector3 dirToPlayer = (playerToDetect.position - transform.position).normalized;
         float distanceToPlayer = Vector3.Distance(transform.position, playerToDetect.position);
@@ -114,34 +87,65 @@ public class NPCEnemyBehaviour : MonoBehaviour
         return true;
     }
 
-    private Vector3 GetRandomPosition()
+    // Updates animation's face direction based on Movement States
+    protected virtual void HandleFlip()
     {
-        Vector3 randomDirection = transform.position + new Vector3(
-            Random.Range(-10f, 10f), // Random X offset
-            0,
-            Random.Range(-10f, 10f)  // Random Z offset
-        );
+        // Get horizontal input equavalent to left and right arrow keys or A and D keys
+        float horizontal = Input.GetAxisRaw("Horizontal");
 
-        // Validate the point using NavMesh.SamplePosition
-        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+        // METHOD 1: FLIPS THE SCALE OF THE OBJECT WITH A CAMERA SHAKENESS DURING TRANSITION
+        //Flip to Left                       //Flip to Right
+        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
         {
-            return hit.position; // Return valid NavMesh position
+            isFacingRight = !isFacingRight;
+            Vector2 localScale = transform.localScale;
+            localScale.x *= -1f;
+            transform.localScale = localScale;
         }
-        return transform.position; // Default to current position if no valid point
+
+        //// METHOD 2: JUST ROTATE THE GAME OBJECT FOR SMOOTHER TRANSITION
+        ////Flip to Left                       //Flip to Right
+        //if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
+        //{
+        //    isFacingRight = !isFacingRight;
+
+        //    // Flip the sprite on the X-axis
+        //    spriteRenderer.flipX = !isFacingRight;
+        //}
     }
 
-    private void OnTriggerStay(Collider actor)
+    // Handles raycasting for Interaction and Combat
+    protected virtual void HandleRaycast()
     {
-        // Check if the player has entered the trigger
-        if (actor.gameObject.CompareTag("Player"))
+        // Establishes the raycast's origin and direction
+        Vector3 rayOrigin = raycastEmitter.transform.position;
+        Vector3 rayDirection = isFacingRight ? Vector3.right : Vector3.left;
+
+        // Creates the ray and visualizes it in the Scene view
+        Ray interactionRay = new Ray(rayOrigin, rayDirection);
+        Debug.DrawRay(rayOrigin, rayDirection * interactRaycast, Color.blue); // Visualizes the laser in the Unity Scene 
+        //Debug.Log("Raycast has been established");
+
+        // Checks if the ray hits an object within the specified distance and layers
+        if (Physics.Raycast(interactionRay, out RaycastHit hitInfo, interactRaycast, hitLayers))
         {
-            //Debug.Log("Player collided with capsule!");
-            //TriggerJumpScare();
-            Debug.Log("Player is being Damaged!");
+            Debug.Log($"Trying to interact with: {hitInfo.collider.name}");
+
+            // Traverse the hit object to find an IDamageable component
+            IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
+
+            // If an IDamageable component is found, apply damage when the Fire1 button is pressed
+            if (damageable != null)
+            {
+                Debug.Log("Player damaged the player");
+
+                // Add coroutine logic here to have interval per NPC Enemy attack
+                damageable.TakeDamage(10);
+            }
         }
     }
 
-    private void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, viewDistance);

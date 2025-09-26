@@ -89,7 +89,7 @@ public class Player2Point5D : CharacterController3D
     }
 
     // Updates animation's face direction based on Movement States
-    void HandleFlip()
+    protected virtual void HandleFlip()
     {
         // Get horizontal input equavalent to left and right arrow keys or A and D keys
         float horizontal = Input.GetAxisRaw("Horizontal");
@@ -116,7 +116,7 @@ public class Player2Point5D : CharacterController3D
     }
 
     // Manages stamina drain and recovery
-    void HandleStamina()
+    protected virtual void HandleStamina()
     {
         // Determine if stamina should drain or recover
         if (isRunning)
@@ -149,7 +149,7 @@ public class Player2Point5D : CharacterController3D
     }
 
     // Handles raycasting for Interaction and Combat
-    void HandleRaycast()
+    protected virtual void HandleRaycast()
     {
         // Establishes the raycast's origin and direction
         Vector3 rayOrigin = raycastEmitter.transform.position;
