@@ -24,15 +24,19 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
     }
 
     // Update is called once per frame
-    public override void Update()
+    public override void FixedUpdate()
     {
         NPCRoam();
+        base.HandleRaycast();
+        base.HandleNPCFlip();
     }
 
     public void NPCRoam()
     {
         if (base.CanSeePlayer())
         {
+            currentViewAngle = 360f; // Full awareness!
+
             hasSeenPlayer = true;
             navMeshAgent.SetDestination(playerToDetect.position);
             navMeshAgent.speed = 3.5f; // Faster when chasing
@@ -51,6 +55,9 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
 
             if (hasSeenPlayer)
             {
+                // Player was seen but now lost - return to normal view angle after a delay
+                StartCoroutine(base.ReturnToNormalViewAfterDelay(2f));
+
                 // Go to last known position, then resume roaming
                 if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
                 {
@@ -64,6 +71,7 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
             {
                 // Normal roaming
                 navMeshAgent.speed = 1.5f;
+
                 if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
                 {
                     randomRoamPath = GetRandomPosition();

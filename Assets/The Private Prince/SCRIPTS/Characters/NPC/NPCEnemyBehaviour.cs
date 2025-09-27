@@ -15,25 +15,33 @@ public class NPCEnemyBehaviour : MonoBehaviour
     protected NavMeshAgent navMeshAgent;
     public LayerMask targetExceptionMask;
 
-    public float viewDistance = 10f;
-    public float viewAngle = 90f;
     protected bool hasSeenPlayer = false; // Tracks if the NPC has seen the player recently
+    public float viewDistance = 10f;
+    protected float currentViewAngle; // Current view angle (changes when player is detected)
+    public float viewAngle = 90f;
+    
+    [Header("Facing Direction")]
+    public FacingDirection defaultFacingDirection = FacingDirection.Right; // Set in Inspector
+    public enum FacingDirection { Right, Left }
+    private bool isFacingRight = false; // For flipping the 2D Character (Left or Right)
 
     [Header("Interactables")]
     public GameObject raycastEmitter; // The game object that will emits the raycast
-    public float interactRaycast = 5f; // Defines how long the raycast would be
     public LayerMask hitLayers; // Defines what only can be interacted with the raycast
-    private bool isFacingRight = true; // For flipping the 2D Character (Left or Right)
-
+    public float interactRaycast = 5f; // Defines how long the raycast would be
+    
     // -------------------------- METHODS ---------------------------
-
 
     public virtual void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        navMeshAgent.updateRotation = false; // Freeze rotation on the NavMeshAgent
+
+        SetFacingDirection(defaultFacingDirection); // Set initial facing direction based on inspector
+        currentViewAngle = viewAngle; // Start with default view angle
+
         navMeshAgent.SetDestination(npcOriginPlace.transform.position);
     }
-
 
     public virtual void Start()
     {
@@ -41,34 +49,92 @@ public class NPCEnemyBehaviour : MonoBehaviour
         if (playerToDetect == null)
         {
             playerToDetect = GameObject.FindGameObjectWithTag("Player").transform;
-
             Debug.Log($"Player {playerToDetect.name} with a \"Player\" tag has been found. It has been automatically referenced");
         }
-        else 
+        else
         {
             Debug.Log($"Player {playerToDetect.name} with a \"Player\" tag not found. Please reference your character manually.");
         }
     }
 
     // Update is called once per frame
-    public virtual void Update()
+    public virtual void FixedUpdate()
     {
         HandleRaycast();
 
-        if (CanSeePlayer())
+        if (CanSeePlayer()) // No variable needed - just like child script!
         {
-            navMeshAgent.SetDestination(playerToDetect.position); // 
-            navMeshAgent.speed = 3.5f; // Makes the NPC moves faster when chasing player
+            currentViewAngle = 360f; // Full awareness!
+            hasSeenPlayer = true;
 
+            navMeshAgent.SetDestination(playerToDetect.position);
+            navMeshAgent.speed = 3.5f;
+            HandleNPCFlip();
             Debug.Log($"Player detected! Chasing player at position: {playerToDetect.position}");
         }
         else
         {
+            if (hasSeenPlayer)
+            {
+                StartCoroutine(ReturnToNormalViewAfterDelay(2f));
+            }
+
             navMeshAgent.SetDestination(npcOriginPlace.position);
             navMeshAgent.speed = 1.5f;
+
+            if (HasReachedDestination())
+            {
+                ReturnToDefaultFacing();
+            }
+            else
+            {
+                HandleNPCFlip();
+            }
         }
     }
-   
+
+    // Check if NPC has reached their destination
+    protected virtual bool HasReachedDestination()
+    {
+        if (!navMeshAgent.pathPending)
+        {
+            if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+            {
+                if (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Return to default facing direction when at station
+    protected virtual void ReturnToDefaultFacing()
+    {
+        bool shouldFaceRight = defaultFacingDirection == FacingDirection.Right;
+
+        if (isFacingRight != shouldFaceRight)
+        {
+            SetFacingDirection(defaultFacingDirection);
+        }
+    }
+
+    // Set facing direction explicitly
+    protected virtual void SetFacingDirection(FacingDirection direction)
+    {
+        bool newFacingRight = (direction == FacingDirection.Right);
+
+        // Only flip if direction actually changes
+        if (isFacingRight != newFacingRight)
+        {
+            isFacingRight = newFacingRight;
+            Vector2 localScale = transform.localScale;
+            localScale.x = Mathf.Abs(localScale.x) * (isFacingRight ? 1f : -1f);
+            transform.localScale = localScale;
+        }
+    }
+
     protected virtual bool CanSeePlayer()
     {
         Vector3 dirToPlayer = (playerToDetect.position - transform.position).normalized;
@@ -76,8 +142,10 @@ public class NPCEnemyBehaviour : MonoBehaviour
 
         if (distanceToPlayer > viewDistance) return false;
 
-        float angleToPlayer = Vector3.Angle(transform.forward, dirToPlayer);
-        if (angleToPlayer > viewAngle / 2f) return false;
+        Vector3 angleDirection = isFacingRight ? Vector3.right : Vector3.left; // Switches View Angle depending on the move direction
+        float angleToPlayer = Vector3.Angle(angleDirection, dirToPlayer);
+
+        if (angleToPlayer > currentViewAngle / 2f) return false;
 
         if (Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, targetExceptionMask))
         {
@@ -87,31 +155,50 @@ public class NPCEnemyBehaviour : MonoBehaviour
         return true;
     }
 
-    // Updates animation's face direction based on Movement States
-    protected virtual void HandleFlip()
+    // Coroutine to return to normal view angle after losing player
+    protected virtual IEnumerator ReturnToNormalViewAfterDelay(float delay)
     {
-        // Get horizontal input equavalent to left and right arrow keys or A and D keys
-        float horizontal = Input.GetAxisRaw("Horizontal");
+        yield return new WaitForSeconds(delay);
 
-        // METHOD 1: FLIPS THE SCALE OF THE OBJECT WITH A CAMERA SHAKENESS DURING TRANSITION
-        //Flip to Left                       //Flip to Right
-        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
+        // Only return to normal if still hasn't seen player
+        if (!CanSeePlayer())
         {
-            isFacingRight = !isFacingRight;
-            Vector2 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+            hasSeenPlayer = false;
+            currentViewAngle = viewAngle; // Return to default view angle
+            Debug.Log("Player lost. Returning to normal view angle.");
         }
+    }
 
-        //// METHOD 2: JUST ROTATE THE GAME OBJECT FOR SMOOTHER TRANSITION
-        ////Flip to Left                       //Flip to Right
-        //if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
-        //{
-        //    isFacingRight = !isFacingRight;
+    // Handles NPC flipping based on movement direction
+    protected virtual void HandleNPCFlip()
+    {
+        if (navMeshAgent.velocity.magnitude > 0.1f) // Only flip when moving
+        {
+            // Get the horizontal direction of movement (ignore Y axis)
+            Vector3 horizontalVelocity = new Vector3(navMeshAgent.velocity.x, 0, navMeshAgent.velocity.z);
 
-        //    // Flip the sprite on the X-axis
-        //    spriteRenderer.flipX = !isFacingRight;
-        //}
+            if (horizontalVelocity.magnitude > 0.1f)
+            {
+                // Determine if moving left or right relative to NPC's forward
+                Vector3 localMovement = transform.InverseTransformDirection(horizontalVelocity);
+                float horizontalDirection = localMovement.x;
+
+                // Flip to Left                       // Flip to Right
+                if (isFacingRight && horizontalDirection < -0.1f || !isFacingRight && horizontalDirection > 0.1f)
+                {
+                    Flip();
+                }
+            }
+        }
+    }
+
+    // Separate flip method for reusability
+    protected virtual void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        Vector2 localScale = transform.localScale;
+        localScale.x *= -1f;
+        transform.localScale = localScale;
     }
 
     // Handles raycasting for Interaction and Combat
@@ -123,23 +210,17 @@ public class NPCEnemyBehaviour : MonoBehaviour
 
         // Creates the ray and visualizes it in the Scene view
         Ray interactionRay = new Ray(rayOrigin, rayDirection);
-        Debug.DrawRay(rayOrigin, rayDirection * interactRaycast, Color.blue); // Visualizes the laser in the Unity Scene 
-        //Debug.Log("Raycast has been established");
+        Debug.DrawRay(rayOrigin, rayDirection * interactRaycast, Color.blue);
 
         // Checks if the ray hits an object within the specified distance and layers
         if (Physics.Raycast(interactionRay, out RaycastHit hitInfo, interactRaycast, hitLayers))
         {
             Debug.Log($"Trying to interact with: {hitInfo.collider.name}");
 
-            // Traverse the hit object to find an IDamageable component
             IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
-
-            // If an IDamageable component is found, apply damage when the Fire1 button is pressed
             if (damageable != null)
             {
-                Debug.Log("Player damaged the player");
-
-                // Add coroutine logic here to have interval per NPC Enemy attack
+                Debug.Log("NPC damaged the player");
                 damageable.TakeDamage(10);
             }
         }
@@ -147,14 +228,31 @@ public class NPCEnemyBehaviour : MonoBehaviour
 
     protected virtual void OnDrawGizmosSelected()
     {
+        // Draw view distance sphere
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, viewDistance);
 
-        Vector3 rightLimit = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward;
-        Vector3 leftLimit = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward;
+        // Draw view angle based on current state
+        if (currentViewAngle < 360f)
+        {
+            Vector3 angleDirection = isFacingRight ? Vector3.right : Vector3.left;
+            Vector3 rightLimit = Quaternion.Euler(0, currentViewAngle / 2, 0) * angleDirection;
+            Vector3 leftLimit = Quaternion.Euler(0, -currentViewAngle / 2, 0) * angleDirection;
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, transform.position + rightLimit * viewDistance);
-        Gizmos.DrawLine(transform.position, transform.position + leftLimit * viewDistance);
+            Gizmos.color = hasSeenPlayer ? Color.red : Color.blue; // Red when alert, blue when normal
+            Gizmos.DrawLine(transform.position, transform.position + rightLimit * viewDistance);
+            Gizmos.DrawLine(transform.position, transform.position + leftLimit * viewDistance);
+        }
+        else
+        {
+            // Draw full circle when in 360-degree mode
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, viewDistance);
+        }
+
+        // Draw default facing direction indicator
+        Gizmos.color = Color.green;
+        Vector3 defaultDir = (defaultFacingDirection == FacingDirection.Right) ? Vector3.right : Vector3.left;
+        Gizmos.DrawLine(transform.position, transform.position + defaultDir * 2f);
     }
 }

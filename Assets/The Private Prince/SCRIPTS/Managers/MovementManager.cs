@@ -123,7 +123,7 @@ public class MovementManager : MonoBehaviour, IMoveable
             {
                 SetAnimationState(CharacterState.isIdle);
             }
-        }
+        } 
     }
 
     // Sets the animation state and updates animator parameters
