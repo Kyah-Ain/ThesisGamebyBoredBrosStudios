@@ -41,11 +41,13 @@ public class PuzzleEnemies : MonoBehaviour
 
     private void OnEnemyDefeated(CombatManager cm)
     {
+        cm.onDeath -= OnEnemyDefeated;
         spawnedEnemies.Remove(cm);
 
         if (spawnedEnemies.Count == 0)
         {
             onAllEnemiesDefeated?.Invoke();
+            onAllEnemiesDefeated = null;
         }
     }
 }
