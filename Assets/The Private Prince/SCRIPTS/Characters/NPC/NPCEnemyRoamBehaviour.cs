@@ -33,7 +33,19 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
 
     public void NPCRoam()
     {
-        if (base.CanSeePlayer() & base.IsPlayerAlive())
+        // Update chase timer (copied from base class)
+        if (isInFullChase)
+        {
+            chaseTimer -= Time.fixedDeltaTime;
+            if (chaseTimer <= 0f)
+            {
+                isInFullChase = false;
+                currentViewAngle = viewAngle; // Return to limited view
+                Debug.Log("Full chase ended, returning to normal detection");
+            }
+        }
+
+        if (base.CanSeePlayer() & base.IsPlayerAlive() || isInFullChase)
         {
             if (!hasSeenPlayer)
             {
@@ -41,6 +53,13 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
             }
 
             currentViewAngle = 360f; // Full awareness!
+
+            // Start full chase timer if not already active
+            if (!isInFullChase)
+            {
+                isInFullChase = true;
+                chaseTimer = fullChaseDuration;
+            }
 
             hasSeenPlayer = true;
             navMeshAgent.SetDestination(playerToDetect.position);
@@ -60,8 +79,11 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
 
             if (hasSeenPlayer)
             {
-                // Player was seen but now lost - return to normal view angle after a delay
-                StartCoroutine(base.ReturnToNormalViewAfterDelay(2f));
+                // Only return if not in full chase mode
+                if (!isInFullChase)
+                {
+                    StartCoroutine(base.ReturnToNormalViewAfterDelay(2f));
+                }
 
                 // Go to last known position, then resume roaming
                 if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
@@ -121,6 +143,9 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
         {
             currentViewAngle = 360f;
             hasSeenPlayer = true;
+            isInFullChase = true;
+            chaseTimer = fullChaseDuration;
+
             navMeshAgent.SetDestination(playerToDetect.position);
             navMeshAgent.speed = 3.5f;
             Debug.Log($"{name} (Roaming) was alerted by another NPC!");

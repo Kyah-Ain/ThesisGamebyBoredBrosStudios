@@ -26,6 +26,11 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
     public float viewAngle = 90f;
     public float alertRadius = 10f;
 
+    [Header("Chase Timer")]
+    public float fullChaseDuration = 5f; // How long to chase ignoring range
+    protected float chaseTimer = 0f;
+    protected bool isInFullChase = false;
+
     [Header("Facing Direction")]
     public FacingDirection defaultFacingDirection = FacingDirection.Right; // Set in Inspector
     public enum FacingDirection { Right, Left }
@@ -68,7 +73,19 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
     {
         HandleRaycast();
 
-        if (IsPlayerAlive() && CanSeePlayer()) 
+        // Update chase timer
+        if (isInFullChase)
+        {
+            chaseTimer -= Time.fixedDeltaTime;
+            if (chaseTimer <= 0f)
+            {
+                isInFullChase = false;
+                currentViewAngle = viewAngle; // Return to limited view
+                Debug.Log("Full chase ended, returning to normal detection");
+            }
+        }
+
+        if (IsPlayerAlive() && CanSeePlayer() || isInFullChase) 
         {
             // Alerts nearby NPCs when first detecting player
             if (!hasSeenPlayer)
@@ -79,10 +96,17 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
             currentViewAngle = 360f; // Full awareness!
             hasSeenPlayer = true;
 
+            // Start full chase timer if not already active
+            if (!isInFullChase)
+            {
+                isInFullChase = true;
+                chaseTimer = fullChaseDuration;
+            }
+
             navMeshAgent.SetDestination(playerToDetect.position);
             navMeshAgent.speed = 3.5f;
             HandleNPCFlip();
-            Debug.Log($"Player detected! Chasing player at position: {playerToDetect.position}");
+            //Debug.Log($"Player detected! Chasing player at position: {playerToDetect.position}");
         }
         else
         {
@@ -160,12 +184,14 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
         Vector3 dirToPlayer = (playerToDetect.position - transform.position).normalized;
         float distanceToPlayer = Vector3.Distance(transform.position, playerToDetect.position);
 
-        if (distanceToPlayer > viewDistance) return false;
+        // Ignore distance check if in full chase mode
+        if (!isInFullChase && distanceToPlayer > viewDistance) return false;
 
         Vector3 angleDirection = isFacingRight ? Vector3.right : Vector3.left; // Switches View Angle depending on the move direction
         float angleToPlayer = Vector3.Angle(angleDirection, dirToPlayer);
 
-        if (angleToPlayer > currentViewAngle / 2f) return false;
+        // Ignore angle check if in full chase mode
+        if (!isInFullChase && angleToPlayer > currentViewAngle / 2f) return false;
 
         if (Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, targetExceptionMask))
         {
@@ -292,10 +318,14 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
     {
         if (IsPlayerAlive())
         {
-            currentViewAngle = 360f;
             hasSeenPlayer = true;
+            isInFullChase = true;
+            chaseTimer = fullChaseDuration;
+            currentViewAngle = 360f;
+
             navMeshAgent.SetDestination(playerToDetect.position);
             navMeshAgent.speed = 3.5f;
+
             Debug.Log($"{name} was alerted by another NPC!");
         }
     }
