@@ -10,12 +10,16 @@ public class CombatManager : MonoBehaviour, IDamageable
 
     public event Action<CombatManager> onDeath;
 
-    public float health = 100f; // Default health value
-    public float defense = 10f; // Default defense value
+    public float health = 5f; // Default health value
+    public float maxHealth = 5f; // Default max health value
+    //public float defense = 10f; // Default defense value
 
     // Interface implementation for IDamageable
     public float iHealth { get => health; set => health = value; }
-    public float iDefense { get => defense; set => defense = value; }
+    public float iMaxHealth { get => iMaxHealth; set => iMaxHealth = value; }
+    //public float iDefense { get => defense; set => defense = value; }
+
+    public int healRate = 1;
 
     // ------------------------- METHODS -------------------------
 
@@ -26,10 +30,10 @@ public class CombatManager : MonoBehaviour, IDamageable
         {
             Die();
         }
-        else if (health < 100 & health > 0) 
-        {
-            Heal();
-        }
+        //else if (health < 100 & health > 0)
+        //{
+        //    Heal();
+        //}
     }
 
     // Handles character death
@@ -40,18 +44,21 @@ public class CombatManager : MonoBehaviour, IDamageable
         Destroy(gameObject); // Test addition by Pagbilao to see if player destroys object
     }
 
-    // Handles character taking damage
-    public void TakeDamage(int damage)
+    // Handles character taking damages
+    public virtual void TakeDamage(int damage)
     {
         Debug.Log("Character Damaged");
 
-        health -= damage * (100f / (100f + defense));
+        // Calculate the damage taken and prevent negative health
+        health = Mathf.Max(0, health - damage); //* (100f / (100f + defense));
     }
 
     // Handles character healing
-    public void Heal()
+    public virtual void Heal()
     {
         Debug.Log($"Character Healing {health}");
-        health += 1 * Time.deltaTime;
+
+        // 
+        health = Mathf.Min(maxHealth, health + healRate * Time.deltaTime);
     }
 }

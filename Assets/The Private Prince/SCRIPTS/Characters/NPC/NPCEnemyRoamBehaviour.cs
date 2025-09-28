@@ -33,8 +33,13 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
 
     public void NPCRoam()
     {
-        if (base.CanSeePlayer())
+        if (base.CanSeePlayer() & base.IsPlayerAlive())
         {
+            if (!hasSeenPlayer)
+            {
+                AlertEveryoneNear();
+            }
+
             currentViewAngle = 360f; // Full awareness!
 
             hasSeenPlayer = true;
@@ -101,5 +106,24 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
     protected override void HandleRaycast()
     {
         base.HandleRaycast();
+    }
+
+    // 
+    public override void AlertEveryoneNear()
+    {
+        base.AlertEveryoneNear(); // Call base alert functionality
+    }
+
+    // 
+    public override void ForceDetectPlayer()
+    {
+        if (IsPlayerAlive())
+        {
+            currentViewAngle = 360f;
+            hasSeenPlayer = true;
+            navMeshAgent.SetDestination(playerToDetect.position);
+            navMeshAgent.speed = 3.5f;
+            Debug.Log($"{name} (Roaming) was alerted by another NPC!");
+        }
     }
 }

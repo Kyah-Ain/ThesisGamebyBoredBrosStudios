@@ -255,6 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   defense: 10
+  healRate: 1
 --- !u!114 &7152661048831393790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,6 +268,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1b0329e1af652a4cbb4bd6ecc37beb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  npcAttackDamage: 1
+  npcAttackCooldown: 5
+  npcCanAttack: 1
   playerToDetect: {fileID: 0}
   npcOriginPlace: {fileID: 7328197494449965995}
   targetExceptionMask:
@@ -278,7 +282,7 @@ MonoBehaviour:
   raycastEmitter: {fileID: 6708872321202969813}
   hitLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   interactRaycast: 5
 --- !u!1 &6708872321202969813
 GameObject:

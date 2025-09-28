@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NPCEnemyBehaviour : MonoBehaviour
+public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
 {
     // ------------------------- VARIABLES -------------------------
+
+    [Header("Combat")]
+    public int npcAttackDamage = 1;
+    public float npcAttackCooldown = 5f;
+    public bool npcCanAttack = true;
 
     [Header("NPC Target")]
     public Transform playerToDetect;
@@ -19,7 +24,8 @@ public class NPCEnemyBehaviour : MonoBehaviour
     public float viewDistance = 10f;
     protected float currentViewAngle; // Current view angle (changes when player is detected)
     public float viewAngle = 90f;
-    
+    public float alertRadius = 10f;
+
     [Header("Facing Direction")]
     public FacingDirection defaultFacingDirection = FacingDirection.Right; // Set in Inspector
     public enum FacingDirection { Right, Left }
@@ -62,8 +68,14 @@ public class NPCEnemyBehaviour : MonoBehaviour
     {
         HandleRaycast();
 
-        if (CanSeePlayer()) // No variable needed - just like child script!
+        if (IsPlayerAlive() && CanSeePlayer()) 
         {
+            // Alerts nearby NPCs when first detecting player
+            if (!hasSeenPlayer)
+            {
+                AlertEveryoneNear();
+            }
+
             currentViewAngle = 360f; // Full awareness!
             hasSeenPlayer = true;
 
@@ -74,13 +86,13 @@ public class NPCEnemyBehaviour : MonoBehaviour
         }
         else
         {
+            navMeshAgent.SetDestination(npcOriginPlace.position);
+            navMeshAgent.speed = 1.5f;
+
             if (hasSeenPlayer)
             {
                 StartCoroutine(ReturnToNormalViewAfterDelay(2f));
             }
-
-            navMeshAgent.SetDestination(npcOriginPlace.position);
-            navMeshAgent.speed = 1.5f;
 
             if (HasReachedDestination())
             {
@@ -91,6 +103,12 @@ public class NPCEnemyBehaviour : MonoBehaviour
                 HandleNPCFlip();
             }
         }
+    }
+
+    // OPTIONAL: 
+    protected virtual bool IsPlayerAlive()
+    {
+        return playerToDetect != null && playerToDetect.gameObject.activeInHierarchy;
     }
 
     // Check if NPC has reached their destination
@@ -137,6 +155,8 @@ public class NPCEnemyBehaviour : MonoBehaviour
 
     protected virtual bool CanSeePlayer()
     {
+        if (!IsPlayerAlive()) return false;
+
         Vector3 dirToPlayer = (playerToDetect.position - transform.position).normalized;
         float distanceToPlayer = Vector3.Distance(transform.position, playerToDetect.position);
 
@@ -161,7 +181,7 @@ public class NPCEnemyBehaviour : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         // Only return to normal if still hasn't seen player
-        if (!CanSeePlayer())
+        if (!CanSeePlayer() || !IsPlayerAlive())
         {
             hasSeenPlayer = false;
             currentViewAngle = viewAngle; // Return to default view angle
@@ -204,6 +224,8 @@ public class NPCEnemyBehaviour : MonoBehaviour
     // Handles raycasting for Interaction and Combat
     protected virtual void HandleRaycast()
     {
+        if (!npcCanAttack) return;
+
         // Establishes the raycast's origin and direction
         Vector3 rayOrigin = raycastEmitter.transform.position;
         Vector3 rayDirection = isFacingRight ? Vector3.right : Vector3.left;
@@ -220,9 +242,61 @@ public class NPCEnemyBehaviour : MonoBehaviour
             IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
             if (damageable != null)
             {
+                npcCanAttack = false; //
+                // Pass on the 'character to damage' & the 'cooldown before the next damage' unto the Coroutine
+                StartCoroutine(NPCAttackCooldown(damageable, npcAttackCooldown));
+
                 Debug.Log("NPC damaged the player");
-                damageable.TakeDamage(10);
             }
+        }
+    }
+
+    // 
+    protected virtual IEnumerator NPCAttackCooldown(IDamageable victim, float cooldown) 
+    {
+        // Apply damage to the subject or character 
+        victim.TakeDamage(npcAttackDamage);
+
+        // Applies cooldown before being called again
+        yield return new WaitForSeconds(cooldown);
+
+        npcCanAttack = true;
+    }
+
+    //
+    public virtual void AlertEveryoneNear()
+    {
+        // Find all NPCs within alert radius
+        Collider[] nearbyColliders = Physics.OverlapSphere(transform.position, alertRadius);
+
+        foreach (Collider collider in nearbyColliders)
+        {
+            // Check if nearby object has IAlertable interface and it's not this NPC
+            IAlertable alertable = collider.GetComponent<IAlertable>();
+            if (alertable != null && alertable != (IAlertable)this)
+            {
+                // Force the nearby NPC to detect player
+                NPCEnemyBehaviour nearbyNPC = collider.GetComponent<NPCEnemyBehaviour>();
+                if (nearbyNPC != null && !nearbyNPC.hasSeenPlayer)
+                {
+                    nearbyNPC.ForceDetectPlayer();
+                }
+            }
+        }
+
+        Debug.Log($"{name} alerted nearby NPCs!");
+    }
+
+    //
+    public virtual void ForceDetectPlayer()
+    {
+        if (IsPlayerAlive())
+        {
+            currentViewAngle = 360f;
+            hasSeenPlayer = true;
+            navMeshAgent.SetDestination(playerToDetect.position);
+            navMeshAgent.speed = 3.5f;
+            Debug.Log($"{name} was alerted by another NPC!");
         }
     }
 
@@ -254,5 +328,9 @@ public class NPCEnemyBehaviour : MonoBehaviour
         Gizmos.color = Color.green;
         Vector3 defaultDir = (defaultFacingDirection == FacingDirection.Right) ? Vector3.right : Vector3.left;
         Gizmos.DrawLine(transform.position, transform.position + defaultDir * 2f);
+
+        // Draw alert radius 
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, alertRadius);
     }
 }

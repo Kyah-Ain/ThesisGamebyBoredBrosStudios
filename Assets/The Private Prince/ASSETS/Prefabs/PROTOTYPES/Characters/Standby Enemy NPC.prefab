@@ -82,7 +82,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3663612585904481790}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -478,7 +478,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  defense: 10
+  maxHealth: 5
+  healRate: 1
 --- !u!114 &4911644577748153562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,6 +492,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32ca010a8ad725542a9ca6b1e64f5010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  npcAttackDamage: 1
+  npcAttackCooldown: 5
+  npcCanAttack: 1
   playerToDetect: {fileID: 0}
   npcOriginPlace: {fileID: 2144126350946170843}
   targetExceptionMask:
@@ -498,9 +502,10 @@ MonoBehaviour:
     m_Bits: 0
   viewDistance: 10
   viewAngle: 150
+  alertRadius: 15
   defaultFacingDirection: 1
   raycastEmitter: {fileID: 5048117250034338113}
   hitLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   interactRaycast: 5
