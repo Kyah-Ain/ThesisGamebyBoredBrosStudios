@@ -11,7 +11,7 @@ public class TypingPuzzle : PuzzleBase
     public int glitchCount = 0;
     public int typoLimit = 0; // 0 means no limit
 
-    [Header("Typing UI Reference")]
+    [Header("Typing UI References")]
     public TextMeshProUGUI puzzleText;
     public TextMeshProUGUI typoText;
 
@@ -138,7 +138,7 @@ public class TypingPuzzle : PuzzleBase
         typoText.gameObject.SetActive(visible);
 
         if (visible)
-            typoText.text = $"Typos: {typoCounter} / {typoLimit}";
+            typoText.text = $"Typos: {typoCounter}/{typoLimit}";
     }
 
     private void UpdateGlitches()

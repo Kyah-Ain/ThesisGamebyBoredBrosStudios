@@ -1,69 +1,289 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using System.Linq;
 
 public class UnscramblerPuzzle : PuzzleBase
 {
-    [Header("Typing Puzzle Settings")]
-    [TextArea] public string targetString;
+    [Header("Unscrambler Puzzle Settings")]
+    [TextArea] public string sentence; // target sentence to unscramble
+    public int guessLimit = 0; // 0 means no limit
     public int glitchCount = 0;
-    public int typoLimit = 0;
 
-    private string currentInput = "";
-    private int typoCounter = 0;
+    [Header("Unscrambler UI References")]
+    public Transform blanksParent;
+    public Transform wordBankParent;
+    public GameObject wordButtonPrefab;
+    public GameObject blankPrefab;
+    public Button submitButton;
+    public TextMeshProUGUI guessText;
 
-    private void OnEnable()
+    private string[] targetWords;
+    private List<string> availableWords = new List<string>();
+    private List<string> currentBlanks = new List<string>();
+    private List<GameObject> blankObjects = new List<GameObject>();
+    private List<GameObject> wordButtonObjects = new List<GameObject>();
+    private List<GameObject> blankToButton = new List<GameObject>();
+    private int guessCounter = 0;
+
+    public override void StartPuzzle()
     {
-        currentInput = "";
-        typoCounter = 0;
-    }
+        base.StartPuzzle();
 
-    private void OnGUI()
-    {
-        if (!active) return;
+        targetWords = sentence.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
 
-        Event e = Event.current;
-        if (e.type == EventType.KeyDown && e.character != '\0')
+        ClearChildren(wordBankParent);
+        ClearChildren(blanksParent);
+
+        SetupWords();
+        SetupBlanks();
+        UpdateSubmitButton();
+        UpdateGuessUI();
+
+        if (submitButton != null)
         {
-            HandleCharacterInput(e.character);
+            submitButton.onClick.RemoveAllListeners();
+            submitButton.onClick.AddListener(SubmitGuess);
         }
     }
 
-    private void HandleCharacterInput(char input)
+    private void SetupWords()
     {
-        if (!active) return;
+        availableWords.Clear();
+        wordButtonObjects.Clear();
+        availableWords.AddRange(targetWords);
 
-        int currentIndex = currentInput.Length;
-        if (currentIndex >= targetString.Length) return;
+        if (glitchCount > 0)
+            AddGlitchWords();
 
-        char expectedChar = targetString[currentIndex];
-        if (input == expectedChar)
+        availableWords = ShuffleList(availableWords);
+
+        foreach (var w in availableWords)
         {
-            currentInput += input;
+            GameObject buttonObj = Instantiate(wordButtonPrefab, wordBankParent);
+            TextMeshProUGUI label = buttonObj.GetComponentInChildren<TextMeshProUGUI>();
+            if (label != null) label.text = w;
+
+            Button btnComp = buttonObj.GetComponent<Button>();
+            string word = w; // Capture for listener
+            btnComp.onClick.AddListener(() => SelectWord(word, buttonObj));
+
+            wordButtonObjects.Add(buttonObj);
         }
-        else if (input == '\b')
+    }
+
+    private void SetupBlanks()
+    {
+        blankObjects.Clear();
+        blankToButton.Clear();
+        currentBlanks.Clear();
+
+        for (int i = 0; i < targetWords.Length; i++)
         {
-            if (currentInput.Length > 0)
-                currentInput = currentInput.Substring(0, currentInput.Length - 1);
+            GameObject blankObj = Instantiate(blankPrefab, blanksParent);
+            blankObjects.Add(blankObj);
+
+            blankToButton.Add(null);
+
+            int index = i; // Capture for listener
+            Button blankBtn = blankObj.GetComponent<Button>();
+            if (blankBtn != null)
+                blankBtn.onClick.AddListener(() => DeselectWord(index));
+            currentBlanks.Add(null);
+        }
+
+        UpdateBlanksUI();
+    }
+
+    public void SelectWord(string word, GameObject button)
+    {
+        int index = currentBlanks.FindIndex(b => b == null);
+        if (index == -1) return; // No empty blanks
+
+        currentBlanks[index] = word;
+        
+        if (button != null)
+            button.SetActive(false);
+
+        blankToButton[index] = button;
+
+        UpdateBlanksUI();
+        UpdateSubmitButton();
+    }
+
+    public void DeselectWord(int index)
+    {
+        if (index < 0 || index >= currentBlanks.Count) return;
+        if (currentBlanks[index] == null) return;
+
+        GameObject sourceButton = blankToButton[index];
+        if (sourceButton != null)
+        {
+            sourceButton.SetActive(true);
+            blankToButton[index] = null;
         }
         else
         {
-            typoCounter++;
-            if (typoCounter >= typoLimit)
+            string word = currentBlanks[index];
+            foreach (Transform child in wordBankParent)
             {
-                PuzzleManager.Instance.EndPuzzle(PuzzleResult.Failed);
-                return;
+                var lab = child.GetComponentInChildren<TextMeshProUGUI>();
+                if (lab != null && lab.text == word && !child.gameObject.activeSelf)
+                {
+                    child.gameObject.SetActive(true);
+                    break;
+                }
             }
         }
 
-        if (currentInput == targetString)
+        currentBlanks[index] = null;
+        UpdateBlanksUI();
+        UpdateSubmitButton();
+    }
+
+    public void SubmitGuess()
+    {
+        if (currentBlanks.Contains(null)) return;
+
+        bool correct = CheckSentenceCorrect();
+
+        if (correct)
         {
             PuzzleManager.Instance.EndPuzzle(PuzzleResult.Solved);
         }
+        else
+        {
+            guessCounter++;
+            if (guessLimit > 0 && guessCounter >= guessLimit)
+                PuzzleManager.Instance.EndPuzzle(PuzzleResult.Failed);
+            else
+                RetryPuzzle();
+        }
+    }
+
+    private bool CheckSentenceCorrect()
+    {
+        if (currentBlanks.Count != targetWords.Length) return false;
+
+        for (int i = 0; i < targetWords.Length; i++)
+        {
+            if (!string.Equals(currentBlanks[i], targetWords[i], System.StringComparison.Ordinal))
+                return false;
+        }
+        return true;
+    }
+
+    private void RetryPuzzle()
+    {
+        for (int i = 0; i < currentBlanks.Count; i++)
+        {
+            currentBlanks[i] = null;
+            if (i < blankToButton.Count)
+                blankToButton[i] = null;
+        }
+
+        foreach (var btn in wordButtonObjects)
+        {
+            if (btn != null)
+                btn.SetActive(true);
+        }
+
+        UpdateBlanksUI();
+        UpdateSubmitButton();
+        UpdateGuessUI();
+    }
+
+    private void UpdateBlanksUI()
+    {
+        for (int i = 0; i < blankObjects.Count; i++)
+        {
+            var blankObj = blankObjects[i];
+            if (blankObj == null) continue;
+
+            var label = blankObj.GetComponentInChildren<TextMeshProUGUI>();
+            if (label != null)
+            {
+                label.text = currentBlanks[i] ?? "";
+            }
+        }
+    }
+
+    private void UpdateSubmitButton()
+    {
+        if (submitButton == null) return;
+        submitButton.gameObject.SetActive(!currentBlanks.Contains(null));
+    }
+
+    private void UpdateGuessUI()
+    {
+        if (guessText == null) return;
+        if (guessLimit > 0)
+        {
+            guessText.gameObject.SetActive(true);
+            guessText.text = $"Guesses: {guessCounter}/{guessLimit}";
+        }
+        else
+        {
+            guessText.gameObject.SetActive(false);
+        }
+    }
+
+    private List<string> ShuffleList(List<string> list)
+    {
+        List<string> shuffled = new List<string>(list);
+        for (int i = 0; i < shuffled.Count; i++)
+        {
+            int rand = Random.Range(i, shuffled.Count);
+            (shuffled[i], shuffled[rand]) = (shuffled[rand], shuffled[i]);
+        }
+        return shuffled;
+    }
+
+    private void AddGlitchWords()
+    {
+        int minLen = int.MaxValue, maxLen = 0;
+        foreach (var word in targetWords)
+        {
+            minLen = Mathf.Min(minLen, word.Length);
+            maxLen = Mathf.Max(maxLen, word.Length);
+        }
+
+        HashSet<string> unique = new HashSet<string>(availableWords);
+        int added = 0;
+        while (added < glitchCount)
+        {
+            int len = Random.Range(minLen, maxLen + 1);
+            string glitch = GenerateRandomString(len);
+
+            if (!unique.Contains(glitch))
+            {
+                unique.Add(glitch);
+                availableWords.Add(glitch);
+                added++;
+            }
+        }
+    }
+
+    private string GenerateRandomString(int length)
+    {
+        const string chars = "abcdefghijklmnopqrstuvwxyz";
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        for (int i = 0; i < length; i++)
+            sb.Append(chars[Random.Range(0, chars.Length)]);
+        return sb.ToString();
+    }
+
+    private void ClearChildren(Transform parent)
+    {
+        if (parent == null) return;
+        for (int i = parent.childCount - 1; i >= 0; i--)
+            Destroy(parent.GetChild(i).gameObject);
     }
 
     public override void HandleInput()
     {
-        // Input is handled in OnGUI for real-time typing
+        // Handled in Update() via Input.inputString
     }
 }
