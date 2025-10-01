@@ -36,9 +36,13 @@ public class DialogueActivator : MonoBehaviour, IInteractable
     // Implementation of the IInteractable interface method
     public void Interact(Player2Point5D player)
     {
-        if(TryGetComponent(out DialogueResponseEvent responseEvents) && responseEvents.DialogueObject == dialogueObject)
+        foreach (DialogueResponseEvent responseEvent in GetComponents<DialogueResponseEvent>())
         {
-            player.DialogueUI.AddResponseEvents(responseEvents.Events); 
+            if (responseEvent.DialogueObject == dialogueObject)
+            {
+                player.DialogueUI.AddResponseEvents(responseEvent.Events);
+                break;
+            }
         }
 
         // Tell the player's dialogue UI to show this object's dialogue
