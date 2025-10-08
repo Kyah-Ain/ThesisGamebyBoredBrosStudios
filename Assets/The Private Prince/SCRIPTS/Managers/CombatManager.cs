@@ -10,16 +10,14 @@ public class CombatManager : MonoBehaviour, IDamageable
 
     public event Action<CombatManager> onDeath;
 
-    public float health = 5f; // Default health value
-    public float maxHealth = 5f; // Default max health value
-    //public float defense = 10f; // Default defense value
+    public float health = 5f;
+    public float maxHealth = 5f;
+    public int healRate = 1;
 
     // Interface implementation for IDamageable
     public float iHealth { get => health; set => health = value; }
-    public float iMaxHealth { get => iMaxHealth; set => iMaxHealth = value; }
-    //public float iDefense { get => defense; set => defense = value; }
+    public float iMaxHealth { get => maxHealth; set => maxHealth = value; }
 
-    public int healRate = 1;
 
     // ------------------------- METHODS -------------------------
 
@@ -30,10 +28,6 @@ public class CombatManager : MonoBehaviour, IDamageable
         {
             Die();
         }
-        //else if (health < 100 & health > 0)
-        //{
-        //    Heal();
-        //}
     }
 
     // Handles character death
@@ -41,24 +35,32 @@ public class CombatManager : MonoBehaviour, IDamageable
     {
         Debug.Log("Character Died");
         onDeath?.Invoke(this);
-        Destroy(gameObject); // Test addition by Pagbilao to see if player destroys object
+
+        EnemyPoolMember poolMember = GetComponent<EnemyPoolMember>();
+        if (poolMember != null)
+        {
+            poolMember.ReturnToPool();
+        }
+        else
+        {
+            Debug.LogWarning("No EnemyPoolMember found, destroying GameObject instead.");
+            Destroy(gameObject);
+        }
     }
 
     // Handles character taking damages
     public virtual void TakeDamage(int damage)
     {
         Debug.Log("Character Damaged");
+        health = Mathf.Max(0, health - damage);
 
-        // Calculate the damage taken and prevent negative health
-        health = Mathf.Max(0, health - damage); //* (100f / (100f + defense));
+        Debug.Log($"Health after damage: {health}");
     }
 
     // Handles character healing
     public virtual void Heal()
     {
         Debug.Log($"Character Healing {health}");
-
-        // 
-        health = Mathf.Min(maxHealth, health + healRate * Time.deltaTime);
+        health = Mathf.Min(maxHealth, health + healRate * Time.deltaTime); //...
     }
 }

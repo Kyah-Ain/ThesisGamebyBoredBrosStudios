@@ -119,6 +119,7 @@ GameObject:
   - component: {fileID: 521337730373580949}
   - component: {fileID: 2374312042209622303}
   - component: {fileID: 7152661048831393790}
+  - component: {fileID: 47941200075623107}
   m_Layer: 8
   m_Name: Enemy NPC
   m_TagString: Untagged
@@ -276,16 +277,31 @@ MonoBehaviour:
   targetExceptionMask:
     serializedVersion: 2
     m_Bits: 0
+  hasSeenPlayer: 0
   viewDistance: 10
+  currentViewAngle: 0
   viewAngle: 150
   alertRadius: 15
   fullChaseDuration: 5
+  isInFullChase: 0
   defaultFacingDirection: 1
   raycastEmitter: {fileID: 6708872321202969813}
   hitLayers:
     serializedVersion: 2
     m_Bits: 128
   interactRaycast: 5
+--- !u!114 &47941200075623107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5746453048216548237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70129ff103c58444e98b74e6ecb296d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6708872321202969813
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,13 +396,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 499745134856207254}
+  - component: {fileID: 1915496698188459605}
   m_Layer: 8
   m_Name: Roaming Enemy NPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &499745134856207254
 Transform:
   m_ObjectHideFlags: 0
@@ -404,6 +421,18 @@ Transform:
   - {fileID: 7328197494449965995}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1915496698188459605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7230602454809052128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70129ff103c58444e98b74e6ecb296d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7824546424623504840
 GameObject:
   m_ObjectHideFlags: 0

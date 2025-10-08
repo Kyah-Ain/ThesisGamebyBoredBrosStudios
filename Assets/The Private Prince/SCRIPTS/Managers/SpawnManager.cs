@@ -50,20 +50,6 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    // Trigger-based spawning when player enters the collider area
-    void OnTriggerEnter(Collider other)
-    {
-        // Check if the entering object is the player
-        if (other.CompareTag("Player"))
-        {
-            // Spawns random mixed wave when player enters trigger
-            //SpawnMixedWave();
-
-            // Spawns roamers only when player enters trigger
-            SpawnAtAllPoints(EnemyFactory.EnemyType.Roamer);
-        }
-    }
-
     // Method to spawn one enemy at EACH spawn point with the same type
     public void SpawnAtAllPoints(EnemyFactory.EnemyType enemyType)
     {
@@ -102,7 +88,7 @@ public class SpawnManager : MonoBehaviour
     }
 
     // Method to spawn single enemy at specific point with NavMesh validation
-    private void SpawnEnemyAtPoint(EnemyFactory.EnemyType enemyType, Transform spawnPoint)
+    public void SpawnEnemyAtPoint(EnemyFactory.EnemyType enemyType, Transform spawnPoint)
     {
         // Check if spawn point is on NavMesh before spawning
         if (!NavMesh.SamplePosition(spawnPoint.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))

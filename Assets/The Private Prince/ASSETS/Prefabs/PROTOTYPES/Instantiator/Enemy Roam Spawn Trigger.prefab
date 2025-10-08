@@ -327,9 +327,8 @@ GameObject:
   - component: {fileID: 755113937702863074}
   - component: {fileID: 5150277757484616261}
   - component: {fileID: 1941945891865116691}
-  - component: {fileID: 9034585529634198311}
-  - component: {fileID: 117197881827733541}
   - component: {fileID: 3823045886350864471}
+  - component: {fileID: 1822724459205378655}
   m_Layer: 0
   m_Name: Enemy Roam Spawn Trigger
   m_TagString: Untagged
@@ -345,7 +344,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4447505295821777284}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.5, y: -14.25, z: 17.5}
   m_LocalScale: {x: 1, y: 5, z: 13.5}
   m_ConstrainProportionsScale: 0
@@ -428,41 +427,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9034585529634198311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4447505295821777284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0910d3bb91d6fa74c8656558c67b31dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  guardPrefab: {fileID: 3326638889272970336, guid: e58e23a19910cca4482b68aed4c73b03,
-    type: 3}
-  roamerPrefab: {fileID: 7230602454809052128, guid: bfe2575f8118e83478a1625afebdca42,
-    type: 3}
---- !u!114 &117197881827733541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4447505295821777284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b16d0e2d6fa07f246b5a9d933fae6409, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnPoints:
-  - {fileID: 4879996132737142280}
-  - {fileID: 1004212770159850266}
-  - {fileID: 70439463800564015}
-  - {fileID: 2295099511801509152}
-  - {fileID: 4707908684832459612}
-  _factory: {fileID: 0}
 --- !u!114 &3823045886350864471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,6 +441,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   disableMode: 2
   disableDelay: 0.15
+--- !u!114 &1822724459205378655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4447505295821777284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e962192a62b27df479818ec97e3b4385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnMode: 0
+  enemyType: 1
+  spawnManager: {fileID: 0}
 --- !u!1 &6186081509500132548
 GameObject:
   m_ObjectHideFlags: 0

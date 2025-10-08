@@ -1,6 +1,7 @@
 using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
 using UnityEngine; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
+using UnityEngine.AI; // Grants access to Unity's AI and Navigation features
 
 public class Player2Point5D : CharacterController3D
 {
@@ -165,8 +166,15 @@ public class Player2Point5D : CharacterController3D
         {
             Debug.Log($"Trying to interact with: {hitInfo.collider.name}");
 
+            // Check if the hit object has a NavMeshObstacle
+            NavMeshObstacle obstacle = hitInfo.collider.GetComponent<NavMeshObstacle>();
+            if (obstacle != null)
+            {
+                Debug.Log("Hit object has NavMeshObstacle - this might be blocking raycasts when carved");
+            }
+
             // Traverse the hit object to find an IDamageable component
-            IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
+            IDamageable damageable = hitInfo.collider.GetComponentInParent<IDamageable>();
 
             // If an IDamageable component is found, apply damage when the Fire1 button is pressed
             if (damageable != null & Input.GetButtonDown("Fire1"))

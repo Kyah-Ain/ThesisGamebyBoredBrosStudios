@@ -20,16 +20,16 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
     protected NavMeshAgent navMeshAgent;
     public LayerMask targetExceptionMask;
 
-    protected bool hasSeenPlayer = false; // Tracks if the NPC has seen the player recently
+    public bool hasSeenPlayer = false; // Tracks if the NPC has seen the player recently
     public float viewDistance = 10f;
-    protected float currentViewAngle; // Current view angle (changes when player is detected)
+    public float currentViewAngle; // Current view angle (changes when player is detected)
     public float viewAngle = 90f;
     public float alertRadius = 10f;
 
     [Header("Chase Timer")]
     public float fullChaseDuration = 5f; // How long to chase ignoring range
     protected float chaseTimer = 0f;
-    protected bool isInFullChase = false;
+    public bool isInFullChase = false;
 
     [Header("Facing Direction")]
     public FacingDirection defaultFacingDirection = FacingDirection.Right; // Set in Inspector
