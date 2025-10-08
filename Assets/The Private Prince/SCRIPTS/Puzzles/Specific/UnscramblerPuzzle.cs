@@ -86,12 +86,17 @@ public class UnscramblerPuzzle : PuzzleBase
             blankObjects.Add(blankObj);
 
             blankToButton.Add(null);
-
-            int index = i; // Capture for listener
-            Button blankBtn = blankObj.GetComponent<Button>();
-            if (blankBtn != null)
-                blankBtn.onClick.AddListener(() => DeselectWord(index));
             currentBlanks.Add(null);
+
+            Transform removeBtnT = blankObj.transform.Find("RemoveButton");
+            if (removeBtnT != null)
+            {
+                Button removeBtn = removeBtnT.GetComponent<Button>();
+                int index = i; // Capture for listener
+                removeBtn.onClick.RemoveAllListeners();
+                removeBtn.onClick.AddListener(() => DeselectWord(index));
+                removeBtn.gameObject.SetActive(false);
+            }
         }
 
         UpdateBlanksUI();
@@ -118,6 +123,7 @@ public class UnscramblerPuzzle : PuzzleBase
         if (index < 0 || index >= currentBlanks.Count) return;
         if (currentBlanks[index] == null) return;
 
+        // Reactivate original word button
         GameObject sourceButton = blankToButton[index];
         if (sourceButton != null)
         {
@@ -126,6 +132,7 @@ public class UnscramblerPuzzle : PuzzleBase
         }
         else
         {
+            // Safety check in case the button reference was lost
             string word = currentBlanks[index];
             foreach (Transform child in wordBankParent)
             {
@@ -206,6 +213,12 @@ public class UnscramblerPuzzle : PuzzleBase
             if (label != null)
             {
                 label.text = currentBlanks[i] ?? "";
+            }
+
+            Transform removeBtnT = blankObj.transform.Find("RemoveButton");
+            if (removeBtnT != null)
+            {
+                removeBtnT.gameObject.SetActive(currentBlanks[i] != null);
             }
         }
     }
