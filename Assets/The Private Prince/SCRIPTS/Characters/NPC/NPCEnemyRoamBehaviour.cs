@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.AI;
+using System.Collections; // Grants access to collections and data structures like ArrayList, Hashtable, etc.
+using System.Collections.Generic; // Grants access to generic collections like List, Dictionary, etc.
+using UnityEngine; // Grants access to Unity's core classes and functions
+using UnityEngine.AI; // Grants access to Unity's AI and Navigation system
 
 public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
 {
