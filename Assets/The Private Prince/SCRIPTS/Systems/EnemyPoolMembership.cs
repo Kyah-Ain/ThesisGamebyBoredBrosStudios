@@ -4,11 +4,11 @@ public class EnemyPoolMember : MonoBehaviour
 {
     private EnemyPool pool;
     private EnemyFactory.EnemyType enemyType;
-    private GameObject rootPoolObject; // Track the root object
 
     public void SetPool(EnemyPool enemyPool)
     {
         pool = enemyPool;
+        Debug.Log($"Pool reference SET for {gameObject.name}: {pool != null}");
     }
 
     public void SetEnemyType(EnemyFactory.EnemyType type)
@@ -16,69 +16,51 @@ public class EnemyPoolMember : MonoBehaviour
         enemyType = type;
     }
 
-    // NEW: Set the root object this component belongs to
-    public void SetRootObject(GameObject root)
-    {
-        rootPoolObject = root;
-    }
-
-    // Call this when enemy is defeated
     public void ReturnToPool()
     {
+        Debug.Log($"Attempting to return {gameObject.name} to pool. Pool reference: {pool != null}");
+
         if (pool != null)
         {
-            // Return the ROOT object, not this child object
-            GameObject objectToReturn = rootPoolObject != null ? rootPoolObject : this.gameObject;
-            pool.ReturnEnemy(objectToReturn, enemyType);
+            pool.ReturnEnemy(this.gameObject, enemyType);
         }
         else
         {
+            Debug.LogError($"No pool reference! Destroying enemy: {gameObject.name}");
+            Debug.LogError($"GameObject path: {GetGameObjectPath(this.gameObject)}");
+            Debug.LogError($"Active in hierarchy: {gameObject.activeInHierarchy}");
             Destroy(gameObject);
         }
     }
 
-    // Method to find pool member in hierarchy AND get the root
-    public static (EnemyPoolMember member, GameObject root) FindInHierarchy(GameObject searchRoot)
+    private string GetGameObjectPath(GameObject obj)
+    {
+        string path = obj.name;
+        while (obj.transform.parent != null)
+        {
+            obj = obj.transform.parent.gameObject;
+            path = obj.name + "/" + path;
+        }
+        return path;
+    }
+
+    public static EnemyPoolMember FindInHierarchy(GameObject searchRoot)
     {
         EnemyPoolMember member = searchRoot.GetComponent<EnemyPoolMember>();
-        if (member != null) return (member, searchRoot);
+        if (member != null)
+        {
+            Debug.Log($"Found pool member on root: {searchRoot.name}");
+            return member;
+        }
 
         member = searchRoot.GetComponentInChildren<EnemyPoolMember>();
         if (member != null)
         {
-            // Find the actual enemy root (not the pool parent)
-            GameObject enemyRoot = FindEnemyRoot(member.transform);
-            return (member, enemyRoot);
+            Debug.Log($"Found pool member in children: {member.gameObject.name} of {searchRoot.name}");
+            return member;
         }
 
-        member = searchRoot.GetComponentInParent<EnemyPoolMember>();
-        if (member != null)
-        {
-            GameObject enemyRoot = FindEnemyRoot(member.transform);
-            return (member, enemyRoot);
-        }
-
-        return (null, null);
-    }
-
-    // Helper method to find the enemy root (ignoring pool parent)
-    private static GameObject FindEnemyRoot(Transform start)
-    {
-        Transform current = start;
-
-        // Go up the hierarchy until we find the pool parent or reach top
-        while (current.parent != null)
-        {
-            // Check if parent is the pool (has EnemyPool component)
-            if (current.parent.GetComponent<EnemyPool>() != null)
-            {
-                // This current transform is the enemy root
-                return current.gameObject;
-            }
-            current = current.parent;
-        }
-
-        // If no pool parent found, return the topmost object
-        return current.gameObject;
+        Debug.Log($"No pool member found in hierarchy of: {searchRoot.name}");
+        return null;
     }
 }

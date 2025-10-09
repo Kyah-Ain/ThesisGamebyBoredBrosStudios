@@ -31,20 +31,30 @@ public class SpawnManager : MonoBehaviour
     // FOR TESTING: Keyboard shortcuts to spawn enemies manually
     void Update()
     {
+        // In SpawnManager Update method
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            EnemyPool enemyPool = GetComponent<EnemyPool>();
+            if (enemyPool != null)
+            {
+                enemyPool.DebugAllPoolReferences();
+            }
+        }
+
         // Keyboard shortcut 1: Spawn guards at all spawn points
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha1))
         {
             SpawnAtAllPoints(EnemyFactory.EnemyType.Guard);
         }
 
         // Keyboard shortcut 2: Spawn roamers at all spawn points
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha2))
         {
             SpawnAtAllPoints(EnemyFactory.EnemyType.Roamer);
         }
 
         // Keyboard shortcut 3: Spawn mixed wave alternating between guard and roamer
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha3))
         {
             SpawnMixedWave();
         }
@@ -192,8 +202,10 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < points.Length; i++)
         {
             EnemyFactory.EnemyType enemyType = (i % 2 == 0) ?
-                EnemyFactory.EnemyType.Guard : EnemyFactory.EnemyType.Roamer;
+            EnemyFactory.EnemyType.Guard : EnemyFactory.EnemyType.Roamer;
             SpawnEnemyAtPoint(enemyType, points[i]);
         }
     }
+
+
 }

@@ -1,8 +1,7 @@
-using System; // Grants access to base system functions and datatypes
-using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
-using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
-using UnityEngine; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
-
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class CombatManager : MonoBehaviour, IDamageable
 {
@@ -18,11 +17,10 @@ public class CombatManager : MonoBehaviour, IDamageable
     public float iHealth { get => health; set => health = value; }
     public float iMaxHealth { get => maxHealth; set => maxHealth = value; }
 
-
     // ------------------------- METHODS -------------------------
 
     // Update is called once per frame
-    public virtual void Update() 
+    public virtual void Update()
     {
         if (health <= 0)
         {
@@ -33,21 +31,20 @@ public class CombatManager : MonoBehaviour, IDamageable
     // Handles character death
     public virtual void Die()
     {
-        Debug.Log("Character Died");
+        Debug.Log($"Character Died - {gameObject.name}");
         onDeath?.Invoke(this);
 
-        var (poolMember, rootObject) = EnemyPoolMember.FindInHierarchy(this.gameObject);
+        // SIMPLIFIED: Use the new simplified FindInHierarchy
+        EnemyPoolMember poolMember = EnemyPoolMember.FindInHierarchy(this.gameObject);
 
-        Debug.Log($"Pool Member Found: {poolMember != null}, Root Object: {rootObject != null}");
-
-        if (poolMember != null && rootObject != null)
+        if (poolMember != null)
         {
-            Debug.Log($"Returning root object to pool: {rootObject.name}");
+            Debug.Log($"Found pool member on {poolMember.gameObject.name}, returning to pool");
             poolMember.ReturnToPool();
         }
         else
         {
-            Debug.LogError($"No EnemyPoolMember found! PoolMember: {poolMember}, Root: {rootObject}");
+            Debug.LogError($"No EnemyPoolMember found on {gameObject.name} or its children!");
             Destroy(gameObject);
         }
     }
@@ -55,16 +52,34 @@ public class CombatManager : MonoBehaviour, IDamageable
     // Handles character taking damages
     public virtual void TakeDamage(int damage)
     {
-        Debug.Log("Character Damaged");
+        Debug.Log($"Character Damaged: {gameObject.name}");
         health = Mathf.Max(0, health - damage);
 
         Debug.Log($"Health after damage: {health}");
+
+        // Optional: Add visual/audio feedback here
+        if (health <= 0)
+        {
+            Debug.Log($"{gameObject.name} has been defeated!");
+        }
     }
 
     // Handles character healing
     public virtual void Heal()
     {
-        Debug.Log($"Character Healing {health}");
-        health = Mathf.Min(maxHealth, health + healRate * Time.deltaTime); //...
+        float previousHealth = health;
+        health = Mathf.Min(maxHealth, health + healRate * Time.deltaTime);
+
+        if (health > previousHealth)
+        {
+            Debug.Log($"Character Healing: {gameObject.name} ({previousHealth} -> {health})");
+        }
+    }
+
+    // Optional: Reset method for when enemy is respawned from pool
+    public virtual void ResetCombat()
+    {
+        health = maxHealth;
+        Debug.Log($"Combat reset for {gameObject.name} - Health: {health}");
     }
 }

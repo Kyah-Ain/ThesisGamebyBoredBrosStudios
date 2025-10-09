@@ -34,26 +34,39 @@ public class EnemyFactory : MonoBehaviour
             GameObject enemy = enemyPool.GetEnemy(type);
             if (enemy != null)
             {
-                // Set enemy type for pool return
+                // CRITICAL: Set enemy type immediately when getting from pool
                 EnemyPoolMember poolMember = enemy.GetComponent<EnemyPoolMember>();
                 if (poolMember != null)
                 {
                     poolMember.SetEnemyType(type);
                 }
+                else
+                {
+                    Debug.LogError($"No EnemyPoolMember found on pooled enemy: {enemy.name}");
+                }
+
+                // Reset combat state when spawning from pool
+                CombatManager combat = enemy.GetComponentInChildren<CombatManager>();
+                if (combat != null)
+                {
+                    combat.ResetCombat();
+                }
+
                 return enemy;
             }
         }
 
-        // Fallback to instantiation if pool fails
+        // Fallback to instantiation if pool fails - USE YOUR ORIGINAL CODE
         Debug.LogWarning("Using instantiation fallback - consider setting up object pool");
 
         // Instantiate the appropriate prefab based on the requested type
+        GameObject newEnemy = null;
         switch (type)
         {
             // If the requested type is Guard, then instantiate a stationary enemy
             case EnemyType.Guard:
                 if (guardPrefab != null)
-                    return Instantiate(guardPrefab);
+                    newEnemy = Instantiate(guardPrefab);
                 else
                     Debug.LogError("Guard prefab not assigned!");
                 break;
@@ -61,12 +74,24 @@ public class EnemyFactory : MonoBehaviour
             // If the requested type is Roamer, then instantiate a roaming enemy
             case EnemyType.Roamer:
                 if (roamerPrefab != null)
-                    return Instantiate(roamerPrefab);
+                    newEnemy = Instantiate(roamerPrefab);
                 else
                     Debug.LogError("Roamer prefab not assigned!");
                 break;
         }
-        // Return null if type is unrecognized or prefab is missing
-        return null;
+
+        // Set up pool member for newly instantiated enemy
+        if (newEnemy != null)
+        {
+            EnemyPoolMember poolMember = newEnemy.GetComponent<EnemyPoolMember>();
+            if (poolMember == null)
+            {
+                poolMember = newEnemy.AddComponent<EnemyPoolMember>();
+            }
+            poolMember.SetEnemyType(type);
+            poolMember.SetPool(enemyPool);
+        }
+
+        return newEnemy;
     }
 }
