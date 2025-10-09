@@ -31,19 +31,23 @@ public class CombatManager : MonoBehaviour, IDamageable
     }
 
     // Handles character death
-    public virtual void Die() 
+    public virtual void Die()
     {
         Debug.Log("Character Died");
         onDeath?.Invoke(this);
 
-        EnemyPoolMember poolMember = GetComponent<EnemyPoolMember>();
-        if (poolMember != null)
+        var (poolMember, rootObject) = EnemyPoolMember.FindInHierarchy(this.gameObject);
+
+        Debug.Log($"Pool Member Found: {poolMember != null}, Root Object: {rootObject != null}");
+
+        if (poolMember != null && rootObject != null)
         {
+            Debug.Log($"Returning root object to pool: {rootObject.name}");
             poolMember.ReturnToPool();
         }
         else
         {
-            Debug.LogWarning("No EnemyPoolMember found, destroying GameObject instead.");
+            Debug.LogError($"No EnemyPoolMember found! PoolMember: {poolMember}, Root: {rootObject}");
             Destroy(gameObject);
         }
     }

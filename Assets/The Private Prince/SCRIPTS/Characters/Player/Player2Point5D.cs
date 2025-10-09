@@ -23,6 +23,7 @@ public class Player2Point5D : CharacterController3D
     float exhaustionTimer = 0f; // Timer to manage exhaustion duration
 
     [Header("INTERACTABLES")]
+    public int attackDamage = 10; // Damage dealt when attacking an enemy
     public float interactRaycast = 5f; // Defines how long the raycast would be
     public LayerMask hitLayers; // Defines what only can be interacted with the raycast
 
@@ -181,7 +182,7 @@ public class Player2Point5D : CharacterController3D
             {
                 Debug.Log("Player damaged the player");
 
-                damageable.TakeDamage(10);
+                damageable.TakeDamage(attackDamage);
             }
         }
     } 

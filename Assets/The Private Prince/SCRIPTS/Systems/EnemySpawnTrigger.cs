@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemySpawnTrigger : MonoBehaviour
 {
@@ -49,34 +49,17 @@ public class EnemySpawnTrigger : MonoBehaviour
 
     public void TriggerSpawning()
     {
-        // Check if spawn manager is available
-        if (spawnManager == null)
-        {
-            Debug.LogError("Cannot spawn enemies: SpawnManager is null!");
-            return;
-        }
+        if (spawnManager == null) return;
+        if (spawnPoints == null || spawnPoints.Length == 0) return;
 
-        // Check if this trigger has spawn points assigned
-        if (spawnPoints == null || spawnPoints.Length == 0)
-        {
-            Debug.LogError("No spawn points assigned to this trigger!");
-            return;
-        }
-
-        // Set the spawn points AND call the spawn method
-        spawnManager.spawnPoints = spawnPoints;
-
-        // Call the appropriate spawn method based on dropdown selection
+        // Use temporary spawn points without modifying the manager's permanent ones
         switch (spawnMode)
         {
             case SpawnMode.AllPointsSameType:
-                spawnManager.SpawnAtAllPoints(enemyType); // ADD THIS LINE
-                Debug.Log($"Spawned {enemyType} at {spawnPoints.Length} specific points");
+                spawnManager.SpawnAtPoints(spawnPoints, enemyType);
                 break;
-
             case SpawnMode.MixedWave:
-                spawnManager.SpawnMixedWave(); // ADD THIS LINE
-                Debug.Log($"Spawned mixed wave at {spawnPoints.Length} specific points");
+                spawnManager.SpawnMixedWaveAtPoints(spawnPoints);
                 break;
         }
     }

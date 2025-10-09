@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -50,12 +50,17 @@ public class EnemyPool : MonoBehaviour
         GameObject enemy = Instantiate(prefab, poolParent);
         enemy.SetActive(false);
 
-        // Add pool reference to enemy for returning later
+        Debug.Log($"Creating new enemy: {enemy.name}");
+
+        // Add EnemyPoolMember to the root object
         EnemyPoolMember poolMember = enemy.GetComponent<EnemyPoolMember>();
         if (poolMember == null)
+        {
             poolMember = enemy.AddComponent<EnemyPoolMember>();
+        }
 
         poolMember.SetPool(this);
+        // EnemyType will be set when the enemy is actually spawned
 
         return enemy;
     }
@@ -72,13 +77,14 @@ public class EnemyPool : MonoBehaviour
 
         if (pool.availableObjects.Count > 0)
         {
+            // Reuse existing enemy
             GameObject enemy = pool.availableObjects.Dequeue();
             enemy.SetActive(true);
             return enemy;
         }
         else
         {
-            // Expand pool if empty
+            // Expand pool if empty ← THIS IS THE KEY!
             Debug.Log($"Pool empty for {enemyType}, creating new enemy");
             GameObject enemy = CreateNewEnemy(pool.prefab);
             pool.allObjects.Add(enemy);

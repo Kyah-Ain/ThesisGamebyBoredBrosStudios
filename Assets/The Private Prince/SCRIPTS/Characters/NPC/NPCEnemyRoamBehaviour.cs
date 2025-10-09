@@ -69,14 +69,6 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
         }
         else
         {
-            // Normal roaming
-            //navMeshAgent.speed = 1.5f;
-            //if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance < 0.5f)
-            //{
-            //    randomRoamPath = GetRandomPosition();
-            //    navMeshAgent.SetDestination(randomRoamPath);
-            //}
-
             if (hasSeenPlayer)
             {
                 // Only return if not in full chase mode

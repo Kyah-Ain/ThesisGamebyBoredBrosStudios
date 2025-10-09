@@ -56,7 +56,7 @@ public class SpawnManager : MonoBehaviour
         // Validate if spawning is possible before proceeding
         if (!IsReadyToSpawn()) return;
 
-        // Iterate through all spawn points and spawn enemies
+        // Just spawn at all points and let the pool handle creating new ones if needed
         foreach (Transform spawnPoint in spawnPoints)
         {
             SpawnEnemyAtPoint(enemyType, spawnPoint);
@@ -176,6 +176,24 @@ public class SpawnManager : MonoBehaviour
                     Gizmos.DrawSphere(spawn.position, 0.3f);
                 }
             }
+        }
+    }
+
+    public void SpawnAtPoints(Transform[] points, EnemyFactory.EnemyType enemyType)
+    {
+        foreach (Transform spawnPoint in points)
+        {
+            SpawnEnemyAtPoint(enemyType, spawnPoint);
+        }
+    }
+
+    public void SpawnMixedWaveAtPoints(Transform[] points)
+    {
+        for (int i = 0; i < points.Length; i++)
+        {
+            EnemyFactory.EnemyType enemyType = (i % 2 == 0) ?
+                EnemyFactory.EnemyType.Guard : EnemyFactory.EnemyType.Roamer;
+            SpawnEnemyAtPoint(enemyType, points[i]);
         }
     }
 }
