@@ -52,16 +52,20 @@ public class EnemyPool : MonoBehaviour
 
         Debug.Log($"Creating new enemy: {enemy.name}");
 
-        // Add EnemyPoolMember to the root object
-        EnemyPoolMember poolMember = enemy.GetComponent<EnemyPoolMember>();
+        // FIND THE ROOT OBJECT that has EnemyPoolMember
+        EnemyPoolMember poolMember = enemy.GetComponentInChildren<EnemyPoolMember>();
         if (poolMember == null)
         {
+            // If no pool member exists, add it to the root
             poolMember = enemy.AddComponent<EnemyPoolMember>();
+            Debug.Log($"Added EnemyPoolMember to root: {enemy.name}");
+        }
+        else
+        {
+            Debug.Log($"Found EnemyPoolMember on: {poolMember.gameObject.name}");
         }
 
         poolMember.SetPool(this);
-        // EnemyType will be set when the enemy is actually spawned
-
         return enemy;
     }
 

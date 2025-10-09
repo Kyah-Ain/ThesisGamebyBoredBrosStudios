@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,18 +34,19 @@ public class EnemyFactory : MonoBehaviour
             GameObject enemy = enemyPool.GetEnemy(type);
             if (enemy != null)
             {
-                // CRITICAL: Set enemy type immediately when getting from pool
-                EnemyPoolMember poolMember = enemy.GetComponent<EnemyPoolMember>();
+                // FIND THE POOL MEMBER ANYWHERE IN HIERARCHY
+                EnemyPoolMember poolMember = enemy.GetComponentInChildren<EnemyPoolMember>();
                 if (poolMember != null)
                 {
                     poolMember.SetEnemyType(type);
+                    poolMember.SetPool(enemyPool); // ← Ensure pool reference is set!
                 }
                 else
                 {
-                    Debug.LogError($"No EnemyPoolMember found on pooled enemy: {enemy.name}");
+                    Debug.LogError($"No EnemyPoolMember found anywhere in {enemy.name} hierarchy!");
                 }
 
-                // Reset combat state when spawning from pool
+                // Reset combat state
                 CombatManager combat = enemy.GetComponentInChildren<CombatManager>();
                 if (combat != null)
                 {

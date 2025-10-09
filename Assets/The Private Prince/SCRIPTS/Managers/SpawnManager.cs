@@ -54,7 +54,7 @@ public class SpawnManager : MonoBehaviour
         }
 
         // Keyboard shortcut 3: Spawn mixed wave alternating between guard and roamer
-        if (Input.GetKeyDown(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha3))
         {
             SpawnMixedWave();
         }

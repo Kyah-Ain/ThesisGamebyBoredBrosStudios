@@ -22941,6 +22941,7 @@ Transform:
   m_Children:
   - {fileID: 8454036116503377628}
   - {fileID: 5260407637135568779}
+  - {fileID: 1121858841}
   - {fileID: 8337127141246527157}
   - {fileID: 2102668299}
   - {fileID: 446037413}
@@ -27478,6 +27479,85 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 2509cc5763ca17f4598bf61fd585a93e,
     type: 3}
   m_PrefabInstance: {fileID: 1119307963}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1121858840
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 899736140}
+    m_Modifications:
+    - target: {fileID: 279320697402284325, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_Name
+      value: Roaming Enemy NPC 2.0 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 279320697402284325, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -15.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 23.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f398162fa96fbb446bb619da83ffcff0, type: 3}
+--- !u!4 &1121858841 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1121858840}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1124702053
 PrefabInstance:
@@ -33908,15 +33988,55 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 188463148}
     m_Modifications:
+    - target: {fileID: 70439463800564015, guid: c5ff64a7f49a95040a8f0b77acec26e5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1004212770159850266, guid: c5ff64a7f49a95040a8f0b77acec26e5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -13.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 1004212770159850266, guid: c5ff64a7f49a95040a8f0b77acec26e5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1822724459205378655, guid: c5ff64a7f49a95040a8f0b77acec26e5,
+        type: 3}
+      propertyPath: enemyType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1822724459205378655, guid: c5ff64a7f49a95040a8f0b77acec26e5,
         type: 3}
       propertyPath: spawnManager
       value: 
       objectReference: {fileID: 1437821030}
+    - target: {fileID: 2295099511801509152, guid: c5ff64a7f49a95040a8f0b77acec26e5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2295099511801509152, guid: c5ff64a7f49a95040a8f0b77acec26e5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.074074075
+      objectReference: {fileID: 0}
     - target: {fileID: 4447505295821777284, guid: c5ff64a7f49a95040a8f0b77acec26e5,
         type: 3}
       propertyPath: m_Name
       value: Enemy Roam Spawn Trigger (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879996132737142280, guid: c5ff64a7f49a95040a8f0b77acec26e5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -9.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4879996132737142280, guid: c5ff64a7f49a95040a8f0b77acec26e5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.018518519
       objectReference: {fileID: 0}
     - target: {fileID: 5955465771966402647, guid: c5ff64a7f49a95040a8f0b77acec26e5,
         type: 3}
@@ -54771,12 +54891,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pools:
   - enemyType: 1
-    prefab: {fileID: 5520805149797009807, guid: 1f9f3a2f106054349a2382f78be8b2c6,
-      type: 3}
+    prefab: {fileID: 279320697402284325, guid: f398162fa96fbb446bb619da83ffcff0, type: 3}
     initialSize: 0
     allObjects: []
   - enemyType: 0
-    prefab: {fileID: 3326638889272970336, guid: e58e23a19910cca4482b68aed4c73b03,
+    prefab: {fileID: 2633522332129455802, guid: 86b9bf090fccc9549b7229a30964e236,
       type: 3}
     initialSize: 0
     allObjects: []
@@ -55031,6 +55150,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1822724459205378655, guid: c5ff64a7f49a95040a8f0b77acec26e5,
         type: 3}
+      propertyPath: enemyType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1822724459205378655, guid: c5ff64a7f49a95040a8f0b77acec26e5,
+        type: 3}
       propertyPath: spawnManager
       value: 
       objectReference: {fileID: 1437821030}
@@ -55107,6 +55231,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Roaming Enemy NPC 2.0
       objectReference: {fileID: 0}
+    - target: {fileID: 279320697402284325, guid: f398162fa96fbb446bb619da83ffcff0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -55120,7 +55249,7 @@ PrefabInstance:
     - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 22
+      value: 13.25
       objectReference: {fileID: 0}
     - target: {fileID: 5377898867470008550, guid: f398162fa96fbb446bb619da83ffcff0,
         type: 3}
@@ -55677,6 +55806,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Standby Enemy NPC 2.0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2633522332129455802, guid: 86b9bf090fccc9549b7229a30964e236,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7384595377284973533, guid: 86b9bf090fccc9549b7229a30964e236,
         type: 3}
