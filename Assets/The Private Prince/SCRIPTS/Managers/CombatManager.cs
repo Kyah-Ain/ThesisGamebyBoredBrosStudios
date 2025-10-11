@@ -18,6 +18,9 @@ public class CombatManager : MonoBehaviour, IDamageable
     public float iHealth { get => health; set => health = value; }
     public float iMaxHealth { get => maxHealth; set => maxHealth = value; }
 
+    [Header("DEAD SUBJECT")]
+    public GameObject objectToKill;
+
     // ------------------------- METHODS -------------------------
 
     // Update is called once per frame
@@ -39,7 +42,8 @@ public class CombatManager : MonoBehaviour, IDamageable
         onDeath?.Invoke(this);
 
         // Find pool member in hierarchy for object pooling
-        EnemyPoolMember poolMember = EnemyPoolMember.FindInHierarchy(this.gameObject);
+        EnemyPoolMember poolMember = EnemyPoolMember.FindInHierarchy(objectToKill);
+        //EnemyPoolMember poolMember = null;
 
         if (poolMember != null)
         {

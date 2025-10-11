@@ -941,7 +941,7 @@ GameObject:
   - component: {fileID: 1932868355}
   - component: {fileID: 1932868354}
   m_Layer: 3
-  m_Name: Ground
+  m_Name: Training Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1781,12 +1781,12 @@ GameObject:
   - component: {fileID: 7104586870755820770}
   - component: {fileID: 1885937613330407168}
   m_Layer: 0
-  m_Name: Character Prototype
+  m_Name: 3D Character Prototype (Naligaw Lang)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1885937613330407168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1800,24 +1800,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 7104586870755820770}
+  gravityWeight: 20
   walkingSpeed: 3.5
   runningSpeed: 8
   jumpPower: 8
-  Running: 0
+  isRunning: 0
   canMove: 1
+  isGrounded: 0
   currentCharacState: 0
-  stamina: 100
-  maxStamina: 100
-  staminaDrainRate: 13
-  staminaRecoveryRate: 5
-  gravityWeight: 20
-  interactableRayDistance: 5
+  characterController: {fileID: 0}
   playerCamera: {fileID: 8978869082077938412}
   lookSpeed: 2
   lookXLimit: 45
-  isExhausted: 0
-  isPunching: 0
-  isBlocking: 0
+  rotationX: 0
+  inputDirection: {x: 0, y: 0}
+  wantsToJump: 0
 --- !u!1 &1910504368049022881
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,8 +13,8 @@ public class EnemyFactory : MonoBehaviour
     }
 
     [Header("PREFAB VARIANTS")]
-    public GameObject guardPrefab; // Prefab for guard-type enemy
     public GameObject roamerPrefab; // Prefab for roamer-type enemy
+    public GameObject guardPrefab; // Prefab for guard-type enemy
 
     [Header("POOLING SETTINGS")]
     private EnemyPool enemyPool;  // Reference to the object pool manager

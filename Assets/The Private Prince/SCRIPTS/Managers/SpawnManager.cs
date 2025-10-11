@@ -206,6 +206,4 @@ public class SpawnManager : MonoBehaviour
             SpawnEnemyAtPoint(enemyType, points[i]);
         }
     }
-
-
 }
