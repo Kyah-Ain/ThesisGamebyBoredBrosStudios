@@ -27,6 +27,8 @@ public class Player2Point5D : CharacterController3D
     public float interactRaycast = 5f; // Defines how long the raycast would be
     public LayerMask hitLayers; // Defines what only can be interacted with the raycast
 
+    public bool playerAttacked = false; // ...
+
     [Header("DIALOGUE")]
     [SerializeField] private DialogueUI dialogueUI;
 
@@ -183,6 +185,7 @@ public class Player2Point5D : CharacterController3D
                 Debug.Log("Player damaged the player");
 
                 damageable.TakeDamage(attackDamage);
+                playerAttacked = true;
             }
         }
     } 

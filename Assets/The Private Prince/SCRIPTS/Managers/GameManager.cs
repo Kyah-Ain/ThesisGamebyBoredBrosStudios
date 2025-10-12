@@ -8,6 +8,10 @@ using UnityEngine.Events; // Grants access to Unity's event system classes and f
 public class GameManager : MonoBehaviour
 {
     // ---------------------------- VARIABLES -------------------------
+
+    // Singleton instance for global access (On Reading Onleh)
+    public static GameManager Instance { get; private set; }
+
     [Header("Script References")]
     public LevelManager levelManager; // Reference to the SaveManager.cs that handles saving and loading levels
     public ActivationManager activationManager; // Reference to the PanelManager.cs that handles UI panels and prompts
@@ -16,7 +20,22 @@ public class GameManager : MonoBehaviour
     public string levelToLoad; // Reference to the scene that will be loaded 
 
     // ---------------------------- METHODS ---------------------------
-    // Built-in Unity method that is called at the start of activiting this whole script
+
+    // ...
+    public void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else 
+        {
+            // If an instance already exists, destroy this duplicate to enforce singleton pattern
+            Destroy(gameObject);
+        }
+    }
+
+    // Method ...
     public void StartNewGame() 
     {
         if (levelManager.highestLevel > 1)

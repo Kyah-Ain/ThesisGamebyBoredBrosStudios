@@ -14,7 +14,11 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
 
     public override void Awake()
     {
-        base.Awake(); // Initialize base class components and settings
+        navMeshAgent = GetComponent<NavMeshAgent>(); // Get the NavMeshAgent component
+        navMeshAgent.updateRotation = false; // Freeze rotation on the NavMeshAgent
+
+        SetFacingDirection(defaultFacingDirection); // Set initial facing direction based on inspector
+        currentViewAngle = viewAngle; // Start with default view angle
     }
 
     // Update is called once per frame - overrides base FixedUpdate for roaming behavior

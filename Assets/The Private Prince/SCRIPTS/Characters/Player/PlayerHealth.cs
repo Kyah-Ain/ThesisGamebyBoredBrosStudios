@@ -110,4 +110,16 @@ public class PlayerHealth : CombatManager
         UpdateHeartsUI();
         //ModifyHeartsUI();
     }
+
+    // Override Die method to handle player death differently
+    public override void Die()
+    {
+        base.Die();
+
+        // ...
+        if (GameManager.Instance != null) 
+        {
+            GameManager.Instance.LoadLevel();
+        }
+    }
 }

@@ -2,7 +2,7 @@ using System.Collections; // Grants access to collecitons structures like ArrayL
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
 using UnityEngine; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
 
-public class EnemyDummy : CombatManager
+public class Enemy : CombatManager
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -13,7 +13,7 @@ public class EnemyDummy : CombatManager
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
