@@ -9,6 +9,16 @@ public class SpawnManager : MonoBehaviour
     public Transform[] spawnPoints; // Array of spawn locations in the scene
     [SerializeField] private EnemyFactory _factory; // Reference to factory that creates enemies
 
+    [Header("NAVMESH SETTINGS")]
+    [Tooltip("How far to search for valid NavMesh position when spawning")]
+    public float spawnSearchRadius = 3.0f; // Configurable spawn position search radius
+
+    [Tooltip("How far to search for NavMesh in debug visualizations")]
+    public float debugSearchRadius = 5.0f; // Configurable debug search radius
+
+    [Tooltip("Distance threshold to show adjustment warnings")]
+    public float adjustmentWarningThreshold = 0.1f; // Minimum distance to trigger adjustment warnings
+
     [Header("DEBUG SETTINGS")]
     public bool enableDebugLogs = true; // Toggle for detailed spawn debugging
 
@@ -28,7 +38,7 @@ public class SpawnManager : MonoBehaviour
         }
 
         // Log readiness status with number of available spawn points
-        Debug.Log($"Spawner ready with {spawnPoints.Length} spawn points");
+        Debug.Log($"Spawner ready with {spawnPoints.Length} spawn points (Search Radius: {spawnSearchRadius})");
 
         // Debug all spawn points on start
         if (enableDebugLogs)
@@ -54,6 +64,20 @@ public class SpawnManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
         {
             DebugSpecificSpawnPoint(0); // Debug first spawn point
+        }
+
+        // Increase search radius with [ key
+        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        {
+            spawnSearchRadius += 1.0f;
+            Debug.Log($"Spawn search radius increased to: {spawnSearchRadius}");
+        }
+
+        // Decrease search radius with ] key
+        if (Input.GetKeyDown(KeyCode.RightBracket))
+        {
+            spawnSearchRadius = Mathf.Max(0.5f, spawnSearchRadius - 1.0f);
+            Debug.Log($"Spawn search radius decreased to: {spawnSearchRadius}");
         }
 
         // Keyboard shortcut 1: Spawn guards at all spawn points
@@ -125,7 +149,10 @@ public class SpawnManager : MonoBehaviour
         if (enemy != null)
         {
             SetupNavMeshEnemy(enemy, validatedPosition, spawnPoint.rotation);
-            Debug.Log($"Spawned {enemyType} at {spawnPoint.name} -> Position: {validatedPosition}");
+            if (enableDebugLogs)
+            {
+                Debug.Log($"Spawned {enemyType} at {spawnPoint.name} -> Position: {validatedPosition}");
+            }
         }
     }
 
@@ -138,20 +165,20 @@ public class SpawnManager : MonoBehaviour
             DebugSpawnPoint(spawnPoint, spawnPoint.name);
         }
 
-        // Check if spawn point is on NavMesh with larger search radius
-        if (NavMesh.SamplePosition(spawnPoint.position, out NavMeshHit hit, 3.0f, NavMesh.AllAreas))
+        // Check if spawn point is on NavMesh with CONFIGURABLE search radius
+        if (NavMesh.SamplePosition(spawnPoint.position, out NavMeshHit hit, spawnSearchRadius, NavMesh.AllAreas))
         {
             float distance = Vector3.Distance(spawnPoint.position, hit.position);
-            if (distance > 0.1f)
+            if (distance > adjustmentWarningThreshold)
             {
-                Debug.LogWarning($"Spawn point {spawnPoint.name} adjusted by {distance:F2} units to fit NavMesh");
+                Debug.LogWarning($"Spawn point {spawnPoint.name} adjusted by {distance:F2} units to fit NavMesh (Radius: {spawnSearchRadius})");
                 Debug.Log($"Original: {spawnPoint.position} -> Corrected: {hit.position}");
             }
             return hit.position; // Return the NavMesh-corrected position
         }
         else
         {
-            Debug.LogError($"Spawn point {spawnPoint.name} is NOT on NavMesh! Using original position.");
+            Debug.LogError($"Spawn point {spawnPoint.name} is NOT on NavMesh! (Search Radius: {spawnSearchRadius}). Using original position.");
             return spawnPoint.position; // Fallback to original position
         }
     }
@@ -213,11 +240,13 @@ public class SpawnManager : MonoBehaviour
         Debug.Log($"=== SPAWN POINT DEBUG: {pointName} ===");
         Debug.Log($"World Position: {spawnPoint.position}");
         Debug.Log($"Local Position: {spawnPoint.localPosition}");
+        Debug.Log($"Spawn Search Radius: {spawnSearchRadius}");
 
-        // Check NavMesh availability with larger search radius
-        if (NavMesh.SamplePosition(spawnPoint.position, out NavMeshHit hit, 5.0f, NavMesh.AllAreas))
+        // Check NavMesh availability with CONFIGURABLE debug search radius
+        if (NavMesh.SamplePosition(spawnPoint.position, out NavMeshHit hit, debugSearchRadius, NavMesh.AllAreas))
         {
-            Debug.Log($"✓ Found NavMesh at distance: {Vector3.Distance(spawnPoint.position, hit.position):F2}");
+            float distance = Vector3.Distance(spawnPoint.position, hit.position);
+            Debug.Log($"✓ Found NavMesh at distance: {distance:F2} (Max: {debugSearchRadius})");
             Debug.Log($"✓ NavMesh Position: {hit.position}");
             Debug.Log($"✓ NavMesh Area: {hit.mask}");
 
@@ -227,7 +256,7 @@ public class SpawnManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"✗ NO NavMesh found within 5 units of spawn point!");
+            Debug.LogError($"✗ NO NavMesh found within {debugSearchRadius} units of spawn point!");
             Debug.DrawRay(spawnPoint.position, Vector3.up * 5, Color.red, 10f);
         }
 
@@ -245,12 +274,15 @@ public class SpawnManager : MonoBehaviour
     private void DebugAllSpawnPoints()
     {
         Debug.Log($"=== SPAWN POINT ANALYSIS ({spawnPoints.Length} points) ===");
+        Debug.Log($"Search Radius: {spawnSearchRadius}, Debug Radius: {debugSearchRadius}");
+
         for (int i = 0; i < spawnPoints.Length; i++)
         {
             if (spawnPoints[i] != null)
             {
-                bool isValid = NavMesh.SamplePosition(spawnPoints[i].position, out NavMeshHit hit, 2.0f, NavMesh.AllAreas);
-                Debug.Log($"Point {i}: {spawnPoints[i].name} - Valid: {isValid} - Position: {spawnPoints[i].position}");
+                bool isValid = NavMesh.SamplePosition(spawnPoints[i].position, out NavMeshHit hit, spawnSearchRadius, NavMesh.AllAreas);
+                float distance = isValid ? Vector3.Distance(spawnPoints[i].position, hit.position) : 0f;
+                Debug.Log($"Point {i}: {spawnPoints[i].name} - Valid: {isValid} - Adjust Distance: {distance:F2} - Position: {spawnPoints[i].position}");
             }
             else
             {
@@ -285,11 +317,11 @@ public class SpawnManager : MonoBehaviour
                 // Only process valid spawn points
                 if (spawn != null)
                 {
-                    // Check NavMesh status and set color accordingly with larger search radius
-                    if (NavMesh.SamplePosition(spawn.position, out NavMeshHit hit, 3.0f, NavMesh.AllAreas))
+                    // Check NavMesh status and set color accordingly with CONFIGURABLE search radius
+                    if (NavMesh.SamplePosition(spawn.position, out NavMeshHit hit, spawnSearchRadius, NavMesh.AllAreas))
                     {
                         float distance = Vector3.Distance(spawn.position, hit.position);
-                        if (distance < 0.1f)
+                        if (distance < adjustmentWarningThreshold)
                         {
                             Gizmos.color = Color.green; // Green = perfectly on NavMesh
                         }
@@ -309,6 +341,10 @@ public class SpawnManager : MonoBehaviour
                     // Draw visual indicators for spawn points
                     Gizmos.DrawWireSphere(spawn.position, 0.5f);
                     Gizmos.DrawSphere(spawn.position, 0.3f);
+
+                    // Draw search radius visualization
+                    Gizmos.color = Color.cyan;
+                    Gizmos.DrawWireSphere(spawn.position, spawnSearchRadius);
                 }
             }
         }
@@ -331,5 +367,19 @@ public class SpawnManager : MonoBehaviour
             EnemyFactory.EnemyType.Guard : EnemyFactory.EnemyType.Roamer;
             SpawnEnemyAtPoint(enemyType, points[i]);
         }
+    }
+
+    // Public method to adjust search radius at runtime
+    public void SetSpawnSearchRadius(float newRadius)
+    {
+        spawnSearchRadius = Mathf.Max(0.1f, newRadius);
+        Debug.Log($"Spawn search radius set to: {spawnSearchRadius}");
+    }
+
+    // Public method to adjust debug search radius at runtime
+    public void SetDebugSearchRadius(float newRadius)
+    {
+        debugSearchRadius = Mathf.Max(0.1f, newRadius);
+        Debug.Log($"Debug search radius set to: {debugSearchRadius}");
     }
 }
