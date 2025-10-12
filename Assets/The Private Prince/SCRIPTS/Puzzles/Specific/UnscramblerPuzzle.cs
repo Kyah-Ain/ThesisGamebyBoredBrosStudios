@@ -297,6 +297,6 @@ public class UnscramblerPuzzle : PuzzleBase
 
     public override void HandleInput()
     {
-        // Handled in Update() via Input.inputString
+        
     }
 }
