@@ -7,12 +7,15 @@ public class SpawnManager : MonoBehaviour
 {
     [Header("SPAWNER SETTINGS")]
     public Transform[] spawnPoints; // Array of spawn locations in the scene
-    [SerializeField]private EnemyFactory _factory; // Reference to factory that creates enemies
+    [SerializeField] private EnemyFactory _factory; // Reference to factory that creates enemies
+
+    [Header("DEBUG SETTINGS")]
+    public bool enableDebugLogs = true; // Toggle for detailed spawn debugging
 
     void Start()
     {
         // Get the EnemyFactory component on the same GameObject
-        if (_factory == null) 
+        if (_factory == null)
         {
             _factory = GetComponent<EnemyFactory>();
         }
@@ -26,12 +29,18 @@ public class SpawnManager : MonoBehaviour
 
         // Log readiness status with number of available spawn points
         Debug.Log($"Spawner ready with {spawnPoints.Length} spawn points");
+
+        // Debug all spawn points on start
+        if (enableDebugLogs)
+        {
+            DebugAllSpawnPoints();
+        }
     }
 
     // FOR TESTING: Keyboard shortcuts to spawn enemies manually
     void Update()
     {
-        // In SpawnManager Update method
+        // Debug pool references with P key
         if (Input.GetKeyDown(KeyCode.P))
         {
             EnemyPool enemyPool = GetComponent<EnemyPool>();
@@ -39,6 +48,12 @@ public class SpawnManager : MonoBehaviour
             {
                 enemyPool.DebugAllPoolReferences();
             }
+        }
+
+        // Debug specific spawn point with O key
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            DebugSpecificSpawnPoint(0); // Debug first spawn point
         }
 
         // Keyboard shortcut 1: Spawn guards at all spawn points
@@ -97,15 +112,11 @@ public class SpawnManager : MonoBehaviour
         Debug.Log($"Spawned mixed wave across {spawnPoints.Length} spawn points");
     }
 
-    // Method to spawn single enemy at specific point with NavMesh validation
+    // Method to spawn single enemy at specific point with enhanced NavMesh validation
     public void SpawnEnemyAtPoint(EnemyFactory.EnemyType enemyType, Transform spawnPoint)
     {
-        // Check if spawn point is on NavMesh before spawning
-        if (!NavMesh.SamplePosition(spawnPoint.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-        {
-            Debug.LogError($"Spawn point {spawnPoint.name} is NOT on NavMesh!");
-            return;
-        }
+        // Enhanced spawn point validation with detailed debugging
+        Vector3 validatedPosition = ValidateAndGetSpawnPosition(spawnPoint);
 
         // Use factory to create the requested enemy type
         GameObject enemy = _factory.CreateEnemy(enemyType);
@@ -113,29 +124,63 @@ public class SpawnManager : MonoBehaviour
         // If enemy was successfully created, set up its position and navigation
         if (enemy != null)
         {
-            SetupNavMeshEnemy(enemy, spawnPoint);
-            Debug.Log($"Spawned {enemyType} at {spawnPoint.name}");
+            SetupNavMeshEnemy(enemy, validatedPosition, spawnPoint.rotation);
+            Debug.Log($"Spawned {enemyType} at {spawnPoint.name} -> Position: {validatedPosition}");
         }
     }
 
-    // Method to handle NavMeshAgent setup and positioning
-    private void SetupNavMeshEnemy(GameObject enemy, Transform spawnPoint)
+    // Enhanced method to validate spawn position and get NavMesh-corrected position
+    private Vector3 ValidateAndGetSpawnPosition(Transform spawnPoint)
+    {
+        // Detailed spawn point debugging
+        if (enableDebugLogs)
+        {
+            DebugSpawnPoint(spawnPoint, spawnPoint.name);
+        }
+
+        // Check if spawn point is on NavMesh with larger search radius
+        if (NavMesh.SamplePosition(spawnPoint.position, out NavMeshHit hit, 3.0f, NavMesh.AllAreas))
+        {
+            float distance = Vector3.Distance(spawnPoint.position, hit.position);
+            if (distance > 0.1f)
+            {
+                Debug.LogWarning($"Spawn point {spawnPoint.name} adjusted by {distance:F2} units to fit NavMesh");
+                Debug.Log($"Original: {spawnPoint.position} -> Corrected: {hit.position}");
+            }
+            return hit.position; // Return the NavMesh-corrected position
+        }
+        else
+        {
+            Debug.LogError($"Spawn point {spawnPoint.name} is NOT on NavMesh! Using original position.");
+            return spawnPoint.position; // Fallback to original position
+        }
+    }
+
+    // Enhanced method to handle NavMeshAgent setup and positioning
+    private void SetupNavMeshEnemy(GameObject enemy, Vector3 position, Quaternion rotation)
     {
         // Get the NavMeshAgent component if it exists
-        NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
+        NavMeshAgent agent = enemy.GetComponentInChildren<NavMeshAgent>();
         if (agent != null)
         {
-            // Use Warp for NavMesh agents to ensure proper positioning
-            agent.Warp(spawnPoint.position);
-            agent.transform.rotation = spawnPoint.rotation;
+            // Ensure agent is enabled and use Warp for proper NavMesh positioning
+            agent.enabled = true;
+            agent.Warp(position);
+            agent.transform.rotation = rotation;
             agent.isStopped = false;
             agent.ResetPath();
+
+            if (enableDebugLogs)
+            {
+                Debug.Log($"NavMeshAgent positioned at: {agent.transform.position}, OnNavMesh: {agent.isOnNavMesh}");
+            }
         }
         else
         {
             // Fallback positioning for enemies without NavMeshAgent
-            enemy.transform.position = spawnPoint.position;
-            enemy.transform.rotation = spawnPoint.rotation;
+            enemy.transform.position = position;
+            enemy.transform.rotation = rotation;
+            Debug.LogWarning($"Enemy {enemy.name} has no NavMeshAgent, using direct positioning");
         }
     }
 
@@ -160,7 +205,75 @@ public class SpawnManager : MonoBehaviour
         return true;
     }
 
-    // Visualize spawn points in editor with NavMesh status coloring
+    // ------------------------- DEBUGGING METHODS -------------------------
+
+    // Comprehensive spawn point debugging method
+    public void DebugSpawnPoint(Transform spawnPoint, string pointName)
+    {
+        Debug.Log($"=== SPAWN POINT DEBUG: {pointName} ===");
+        Debug.Log($"World Position: {spawnPoint.position}");
+        Debug.Log($"Local Position: {spawnPoint.localPosition}");
+
+        // Check NavMesh availability with larger search radius
+        if (NavMesh.SamplePosition(spawnPoint.position, out NavMeshHit hit, 5.0f, NavMesh.AllAreas))
+        {
+            Debug.Log($"✓ Found NavMesh at distance: {Vector3.Distance(spawnPoint.position, hit.position):F2}");
+            Debug.Log($"✓ NavMesh Position: {hit.position}");
+            Debug.Log($"✓ NavMesh Area: {hit.mask}");
+
+            // Visualize the difference in Scene view
+            Debug.DrawLine(spawnPoint.position, hit.position, Color.yellow, 10f);
+            Debug.DrawRay(hit.position, Vector3.up * 3, Color.green, 10f);
+        }
+        else
+        {
+            Debug.LogError($"✗ NO NavMesh found within 5 units of spawn point!");
+            Debug.DrawRay(spawnPoint.position, Vector3.up * 5, Color.red, 10f);
+        }
+
+        // Check for colliders that might be blocking
+        Collider[] colliders = Physics.OverlapSphere(spawnPoint.position, 2f);
+        Debug.Log($"Colliders nearby: {colliders.Length}");
+        foreach (Collider col in colliders)
+        {
+            Debug.Log($" - {col.name} (Layer: {LayerMask.LayerToName(col.gameObject.layer)})");
+        }
+        Debug.Log("=== END DEBUG ===");
+    }
+
+    // Debug all spawn points in the array
+    private void DebugAllSpawnPoints()
+    {
+        Debug.Log($"=== SPAWN POINT ANALYSIS ({spawnPoints.Length} points) ===");
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            if (spawnPoints[i] != null)
+            {
+                bool isValid = NavMesh.SamplePosition(spawnPoints[i].position, out NavMeshHit hit, 2.0f, NavMesh.AllAreas);
+                Debug.Log($"Point {i}: {spawnPoints[i].name} - Valid: {isValid} - Position: {spawnPoints[i].position}");
+            }
+            else
+            {
+                Debug.LogError($"Point {i}: NULL REFERENCE!");
+            }
+        }
+        Debug.Log("=== END ANALYSIS ===");
+    }
+
+    // Debug specific spawn point by index
+    public void DebugSpecificSpawnPoint(int index)
+    {
+        if (index >= 0 && index < spawnPoints.Length && spawnPoints[index] != null)
+        {
+            DebugSpawnPoint(spawnPoints[index], $"Index_{index}_{spawnPoints[index].name}");
+        }
+        else
+        {
+            Debug.LogError($"Invalid spawn point index: {index}");
+        }
+    }
+
+    // Visualize spawn points in editor with enhanced NavMesh status coloring
     void OnDrawGizmosSelected()
     {
         // Only draw gizmos if spawn points array exists
@@ -172,10 +285,22 @@ public class SpawnManager : MonoBehaviour
                 // Only process valid spawn points
                 if (spawn != null)
                 {
-                    // Check NavMesh status and set color accordingly
-                    if (NavMesh.SamplePosition(spawn.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+                    // Check NavMesh status and set color accordingly with larger search radius
+                    if (NavMesh.SamplePosition(spawn.position, out NavMeshHit hit, 3.0f, NavMesh.AllAreas))
                     {
-                        Gizmos.color = Color.green; // Green = valid spawn point on NavMesh
+                        float distance = Vector3.Distance(spawn.position, hit.position);
+                        if (distance < 0.1f)
+                        {
+                            Gizmos.color = Color.green; // Green = perfectly on NavMesh
+                        }
+                        else
+                        {
+                            Gizmos.color = Color.yellow; // Yellow = adjusted to NavMesh
+                            // Draw line showing adjustment
+                            Gizmos.color = Color.white;
+                            Gizmos.DrawLine(spawn.position, hit.position);
+                            Gizmos.color = Color.yellow;
+                        }
                     }
                     else
                     {
@@ -189,6 +314,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    // Public methods for external triggers
     public void SpawnAtPoints(Transform[] points, EnemyFactory.EnemyType enemyType)
     {
         foreach (Transform spawnPoint in points)

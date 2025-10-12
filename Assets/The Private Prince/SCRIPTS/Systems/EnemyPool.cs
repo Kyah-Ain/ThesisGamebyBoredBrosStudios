@@ -169,22 +169,23 @@ public class EnemyPool : MonoBehaviour
         poolMember.SetPool(this);
     }
 
-    // Resets enemy to default state before returning to pool
+    // Resets enemy to default state before returning to pool - FIXED ORDER
     private void ResetEnemyState(GameObject enemy)
     {
-        // Deactivate and reparent
-        enemy.SetActive(false);
-        enemy.transform.SetParent(poolParent);
+        // Reset navigation FIRST while object is still active
+        ResetNavigationComponents(enemy);
 
         // Reset combat system
         ResetCombatComponents(enemy);
 
-        // Reset navigation
-        ResetNavigationComponents(enemy);
-
-        // Clear transform
-        enemy.transform.position = Vector3.zero;
+        // Reset rotation only - DO NOT reset position to avoid moving to (0,0,0)
         enemy.transform.rotation = Quaternion.identity;
+
+        // Reparent and deactivate LAST
+        enemy.transform.SetParent(poolParent);
+        enemy.SetActive(false);
+
+        Debug.Log($"Enemy {enemy.name} fully reset and returned to pool");
     }
 
     // Resets health and combat status for pool reuse
@@ -200,17 +201,19 @@ public class EnemyPool : MonoBehaviour
         }
     }
 
-    // Resets navigation components to default state
+    // Resets navigation components to default state - ENHANCED
     private void ResetNavigationComponents(GameObject enemy)
     {
-        // Reset NavMeshAgent path and stop movement
+        // Reset NavMeshAgent path and stop movement while object is active
         NavMeshAgent agent = enemy.GetComponentInChildren<NavMeshAgent>();
         if (agent != null)
         {
-            // Clear path and stop agent
+            // Clear path, stop movement, and reset velocity
             agent.ResetPath();
+            agent.velocity = Vector3.zero;  // Clear any remaining velocity
             agent.isStopped = true;
-            Debug.Log($"Reset NavMeshAgent for: {enemy.name}");
+
+            Debug.Log($"Reset NavMeshAgent for: {enemy.name} at position: {agent.transform.position}");
         }
     }
 
