@@ -161,8 +161,7 @@ public class Player2Point5D : CharacterController3D
 
         // Creates the ray and visualizes it in the Scene view
         Ray interactionRay = new Ray(rayOrigin, rayDirection);
-        Debug.DrawRay(rayOrigin, rayDirection * interactRaycast, Color.blue); // Visualizes the laser in the Unity Scene 
-        //Debug.Log("Raycast has been established");
+        Debug.DrawRay(rayOrigin, rayDirection * interactRaycast, Color.blue);
 
         // Checks if the ray hits an object within the specified distance and layers
         if (Physics.Raycast(interactionRay, out RaycastHit hitInfo, interactRaycast, hitLayers))
@@ -182,10 +181,11 @@ public class Player2Point5D : CharacterController3D
             // If an IDamageable component is found, apply damage when the Fire1 button is pressed
             if (damageable != null & Input.GetButtonDown("Fire1"))
             {
-                Debug.Log("Player damaged the player");
+                Debug.Log("Player attacked an enemy");
 
                 damageable.TakeDamage(attackDamage);
-                StartCoroutine(ResetPlayerAttacked()); // Player attack that reset immediately to prevent multiple counts
+                playerAttacked = true; // ADD THIS LINE - set to true when attack happens
+                StartCoroutine(ResetPlayerAttacked());
             }
         }
     }

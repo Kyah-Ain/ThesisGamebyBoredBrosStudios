@@ -56427,12 +56427,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3.5, z: 1}
   m_Center: {x: 0, y: -0.3649441, z: 0}
---- !u!1 &246083576912804947 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7096561936256594762, guid: 7e5cd00e05eec6f4980ee21ad93ee9a7,
-    type: 3}
-  m_PrefabInstance: {fileID: 2759896523958657133}
-  m_PrefabAsset: {fileID: 0}
 --- !u!33 &437854634263253289
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -56885,12 +56879,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &4336306515443212866 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3759024926885119728, guid: a37544fd81251424d855934000a9e607,
-    type: 3}
-  m_PrefabInstance: {fileID: 7535774338337026852}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4447505297168412468 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7725214322729161084, guid: c5ff64a7f49a95040a8f0b77acec26e5,
@@ -57334,12 +57322,14 @@ PrefabInstance:
         type: 3}
       propertyPath: guardPrefab
       value: 
-      objectReference: {fileID: 4336306515443212866}
+      objectReference: {fileID: 3759024926885119728, guid: a37544fd81251424d855934000a9e607,
+        type: 3}
     - target: {fileID: 362574676975361387, guid: 8bf3d66e4ebe89d42bc52ed2e99a104d,
         type: 3}
       propertyPath: roamerPrefab
       value: 
-      objectReference: {fileID: 246083576912804947}
+      objectReference: {fileID: 7096561936256594762, guid: 7e5cd00e05eec6f4980ee21ad93ee9a7,
+        type: 3}
     - target: {fileID: 2246213321749564856, guid: 8bf3d66e4ebe89d42bc52ed2e99a104d,
         type: 3}
       propertyPath: m_Name
@@ -57399,12 +57389,14 @@ PrefabInstance:
         type: 3}
       propertyPath: pools.Array.data[0].prefab
       value: 
-      objectReference: {fileID: 246083576912804947}
+      objectReference: {fileID: 7096561936256594762, guid: 7e5cd00e05eec6f4980ee21ad93ee9a7,
+        type: 3}
     - target: {fileID: 7727709958143849446, guid: 8bf3d66e4ebe89d42bc52ed2e99a104d,
         type: 3}
       propertyPath: pools.Array.data[1].prefab
       value: 
-      objectReference: {fileID: 4336306515443212866}
+      objectReference: {fileID: 3759024926885119728, guid: a37544fd81251424d855934000a9e607,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -57786,7 +57778,8 @@ MonoBehaviour:
   debugLineMaterial: {fileID: 0}
   debugLineWidth: 0.1
   viewConeRenderer: {fileID: 0}
-  viewConeMaterial: {fileID: 0}
+  normalViewConeMaterial: {fileID: 0}
+  alertedViewConeMaterial: {fileID: 0}
   viewConeWidth: 0.05
 --- !u!143 &8246700824519485989
 CharacterController:
