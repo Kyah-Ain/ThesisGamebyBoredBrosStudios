@@ -54,7 +54,8 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
 
     [Header("Visual View Cone")]
     public LineRenderer viewConeRenderer; // Reference to the View Cone LineRenderer component (assign manually in inspector)
-    public Material viewConeMaterial; // Material for the view cone
+    public Material normalViewConeMaterial; // Material for normal state (green cone)
+    public Material alertedViewConeMaterial; // Material for alerted state (red 360 view)
     public float viewConeWidth = 0.05f; // Width of the view cone lines
 
     // -------------------------- METHODS ---------------------------
@@ -134,14 +135,14 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
         viewConeRenderer.endWidth = viewConeWidth;
         viewConeRenderer.loop = true; // Connect back to start point
 
-        // Set material if provided, otherwise use default
-        if (viewConeMaterial != null)
+        // Set initial material - default to normal state
+        if (normalViewConeMaterial != null)
         {
-            viewConeRenderer.material = viewConeMaterial;
+            viewConeRenderer.material = normalViewConeMaterial;
         }
         else
         {
-            // Create a simple default material
+            // Fallback: create a simple default material
             viewConeRenderer.material = new Material(Shader.Find("Sprites/Default"));
             viewConeRenderer.material.color = new Color(0, 1, 0, 0.3f); // Semi-transparent green
         }
@@ -208,14 +209,19 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
 
             viewConeRenderer.SetPositions(positions);
 
-            // Change color based on alert state
-            viewConeRenderer.material.color = hasSeenPlayer ?
-                new Color(1, 0, 0, 0.3f) : // Semi-transparent red when alert
-                new Color(0, 1, 0, 0.3f);  // Semi-transparent green when normal
+            // Switch to appropriate material based on state
+            if (hasSeenPlayer && alertedViewConeMaterial != null)
+            {
+                viewConeRenderer.material = alertedViewConeMaterial;
+            }
+            else if (normalViewConeMaterial != null)
+            {
+                viewConeRenderer.material = normalViewConeMaterial;
+            }
         }
         else
         {
-            // Draw full circle when in 360-degree mode (existing code)
+            // Draw full circle when in 360-degree mode
             int segments = 36;
             viewConeRenderer.positionCount = segments + 1;
             Vector3[] positions = new Vector3[segments + 1];
@@ -228,7 +234,12 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
             }
 
             viewConeRenderer.SetPositions(positions);
-            viewConeRenderer.material.color = new Color(1, 0, 0, 0.3f); // Semi-transparent red for full awareness
+
+            // Use alerted material for 360 view
+            if (alertedViewConeMaterial != null)
+            {
+                viewConeRenderer.material = alertedViewConeMaterial;
+            }
         }
     }
 
