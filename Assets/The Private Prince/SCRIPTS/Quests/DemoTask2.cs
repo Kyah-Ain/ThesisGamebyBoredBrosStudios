@@ -32,16 +32,16 @@ public class DemoTask2 : MonoBehaviour
             if (playerKill.playerAttacked == true)
             {
                 enemiesDefeated += 1;
-                playerKill.playerAttacked = false;
+                playerKill.playerAttacked = false; // Reset immediately
 
-                // Update the display through TaskManager instead of directly modifying text
                 UpdateTaskDisplay();
 
-                // Check for task completion immediately after incrementing
                 if (enemiesDefeated >= enemiesToDefeat)
                 {
                     TaskManager.Instance.CompleteTask();
                 }
+
+                Debug.Log($"Enemy defeated! Total: {enemiesDefeated}/{enemiesToDefeat}");
             }
         }
     }

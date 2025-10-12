@@ -185,8 +185,14 @@ public class Player2Point5D : CharacterController3D
                 Debug.Log("Player damaged the player");
 
                 damageable.TakeDamage(attackDamage);
-                playerAttacked = true;
+                StartCoroutine(ResetPlayerAttacked()); // Player attack that reset immediately to prevent multiple counts
             }
         }
-    } 
+    }
+
+    private IEnumerator ResetPlayerAttacked()
+    {
+        yield return new WaitForEndOfFrame(); // Wait until end of frame
+        playerAttacked = false;
+    }
 }
