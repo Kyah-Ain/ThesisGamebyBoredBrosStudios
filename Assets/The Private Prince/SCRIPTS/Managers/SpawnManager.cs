@@ -148,7 +148,7 @@ public class SpawnManager : MonoBehaviour
         // If enemy was successfully created, set up its position and navigation
         if (enemy != null)
         {
-            SetupNavMeshEnemy(enemy, validatedPosition, spawnPoint.rotation);
+            SetupNavMeshEnemy(enemy, validatedPosition, spawnPoint.rotation, spawnPoint);
             if (enableDebugLogs)
             {
                 Debug.Log($"Spawned {enemyType} at {spawnPoint.name} -> Position: {validatedPosition}");
@@ -183,8 +183,8 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    // Enhanced method to handle NavMeshAgent setup and positioning
-    private void SetupNavMeshEnemy(GameObject enemy, Vector3 position, Quaternion rotation)
+    // Enhanced method to handle NavMeshAgent setup and positioning - UPDATED
+    private void SetupNavMeshEnemy(GameObject enemy, Vector3 position, Quaternion rotation, Transform spawnPoint)
     {
         // Get the NavMeshAgent component if it exists
         NavMeshAgent agent = enemy.GetComponentInChildren<NavMeshAgent>();
@@ -197,6 +197,14 @@ public class SpawnManager : MonoBehaviour
             agent.isStopped = false;
             agent.ResetPath();
 
+            // CRITICAL FIX: Set the NPC's origin place to the spawn point
+            NPCEnemyBehaviour npcBehaviour = enemy.GetComponentInChildren<NPCEnemyBehaviour>();
+            if (npcBehaviour != null)
+            {
+                npcBehaviour.npcOriginPlace = spawnPoint;
+                Debug.Log($"Set {enemy.name} origin to {spawnPoint.name} at position {spawnPoint.position}");
+            }
+
             if (enableDebugLogs)
             {
                 Debug.Log($"NavMeshAgent positioned at: {agent.transform.position}, OnNavMesh: {agent.isOnNavMesh}");
@@ -207,6 +215,15 @@ public class SpawnManager : MonoBehaviour
             // Fallback positioning for enemies without NavMeshAgent
             enemy.transform.position = position;
             enemy.transform.rotation = rotation;
+
+            // CRITICAL FIX: Set the NPC's origin place to the spawn point
+            NPCEnemyBehaviour npcBehaviour = enemy.GetComponentInChildren<NPCEnemyBehaviour>();
+            if (npcBehaviour != null)
+            {
+                npcBehaviour.npcOriginPlace = spawnPoint;
+                Debug.Log($"Set {enemy.name} origin to {spawnPoint.name} at position {spawnPoint.position}");
+            }
+
             Debug.LogWarning($"Enemy {enemy.name} has no NavMeshAgent, using direct positioning");
         }
     }
