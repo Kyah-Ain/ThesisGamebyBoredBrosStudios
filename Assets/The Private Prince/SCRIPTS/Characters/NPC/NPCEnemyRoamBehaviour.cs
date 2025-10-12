@@ -19,6 +19,8 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
 
         SetFacingDirection(defaultFacingDirection); // Set initial facing direction based on inspector
         currentViewAngle = viewAngle; // Start with default view angle
+
+        InitializeVisuals(); // Initialize the visual components
     }
 
     // Update is called once per frame - overrides base FixedUpdate for roaming behavior
@@ -27,6 +29,10 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
         NPCRoam(); // Handle roaming and detection logic
         base.HandleRaycast(); // Use base class raycast for attacks
         base.HandleNPCFlip(); // Use base class flipping logic
+
+        // Update visual elements every frame
+        UpdateDebugLine();
+        UpdateViewCone();
     }
 
     // Main roaming behavior method that handles both chasing and wandering

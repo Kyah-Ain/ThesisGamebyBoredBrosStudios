@@ -45,6 +45,18 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
     // Debug flag to prevent multiple alerts for the same detection
     protected bool hasAlertedThisDetection = false;
 
+    // ------------------------- VISUAL DEBUG LINE -------------------------
+
+    [Header("Visual Debug Line")]
+    public LineRenderer debugLineRenderer; // Reference to the LineRenderer component (assign manually in inspector)
+    public Material debugLineMaterial; // Material for the debug line
+    public float debugLineWidth = 0.1f; // Width of the debug line
+
+    [Header("Visual View Cone")]
+    public LineRenderer viewConeRenderer; // Reference to the View Cone LineRenderer component (assign manually in inspector)
+    public Material viewConeMaterial; // Material for the view cone
+    public float viewConeWidth = 0.05f; // Width of the view cone lines
+
     // -------------------------- METHODS ---------------------------
 
     // Awake is called when the script instance is being loaded
@@ -57,6 +69,167 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
         currentViewAngle = viewAngle; // Start with default view angle
 
         navMeshAgent.SetDestination(npcOriginPlace.transform.position); // Sets the NPC to its origin place
+
+        InitializeVisuals(); // Initialize the visual components
+    }
+
+    // Initializes the visual debug line and view cone components
+    protected virtual void InitializeVisuals()
+    {
+        // Only setup debug line if reference is assigned
+        if (debugLineRenderer != null)
+        {
+            ConfigureDebugLine();
+        }
+        else
+        {
+            Debug.LogWarning($"{name}: Debug LineRenderer not assigned. Visual debug line will not be displayed.");
+        }
+
+        // Only setup view cone if reference is assigned
+        if (viewConeRenderer != null)
+        {
+            ConfigureViewCone();
+        }
+        else
+        {
+            Debug.LogWarning($"{name}: View Cone LineRenderer not assigned. Visual view cone will not be displayed.");
+        }
+    }
+
+    // Configures the debug line renderer with proper settings
+    protected virtual void ConfigureDebugLine()
+    {
+        if (debugLineRenderer == null) return;
+
+        // Configure the LineRenderer
+        debugLineRenderer.positionCount = 2;
+        debugLineRenderer.startWidth = debugLineWidth;
+        debugLineRenderer.endWidth = debugLineWidth;
+
+        // Set material if provided, otherwise use default
+        if (debugLineMaterial != null)
+        {
+            debugLineRenderer.material = debugLineMaterial;
+        }
+        else
+        {
+            // Create a simple default material
+            debugLineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            debugLineRenderer.material.color = Color.red;
+        }
+
+        debugLineRenderer.enabled = true; // Ensure it's visible
+        Debug.Log($"{name}: Debug line visual initialized successfully");
+    }
+
+    // Configures the view cone renderer with proper settings
+    protected virtual void ConfigureViewCone()
+    {
+        if (viewConeRenderer == null) return;
+
+        // Configure the LineRenderer for view cone
+        viewConeRenderer.positionCount = 3; // Start point, right edge, left edge
+        viewConeRenderer.startWidth = viewConeWidth;
+        viewConeRenderer.endWidth = viewConeWidth;
+        viewConeRenderer.loop = true; // Connect back to start point
+
+        // Set material if provided, otherwise use default
+        if (viewConeMaterial != null)
+        {
+            viewConeRenderer.material = viewConeMaterial;
+        }
+        else
+        {
+            // Create a simple default material
+            viewConeRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            viewConeRenderer.material.color = new Color(0, 1, 0, 0.3f); // Semi-transparent green
+        }
+
+        viewConeRenderer.enabled = true; // Ensure it's visible
+        Debug.Log($"{name}: View cone visual initialized successfully");
+    }
+
+    // Update the debug line to show current detection state
+    protected virtual void UpdateDebugLine()
+    {
+        if (debugLineRenderer == null) return;
+
+        // Set line positions: from NPC to current target or forward direction
+        Vector3 startPos = transform.position;
+        Vector3 endPos;
+
+        if (detectedPlayer != null && hasSeenPlayer)
+        {
+            // Line to player when detected
+            endPos = detectedPlayer.position;
+            debugLineRenderer.material.color = Color.red; // Red when chasing
+        }
+        else
+        {
+            // Line in facing direction when roaming/idle
+            Vector3 direction = isFacingRight ? Vector3.right : Vector3.left;
+            endPos = startPos + direction * viewDistance;
+            debugLineRenderer.material.color = Color.blue; // Blue when normal
+        }
+
+        debugLineRenderer.SetPosition(0, startPos);
+        debugLineRenderer.SetPosition(1, endPos);
+    }
+
+    // Update the view cone visualization based on current state
+    // Update the view cone visualization based on current state
+    protected virtual void UpdateViewCone()
+    {
+        if (viewConeRenderer == null) return;
+
+        if (currentViewAngle < 360f)
+        {
+            // Create a proper cone with more segments for smoother appearance
+            int segments = Mathf.Max(10, Mathf.RoundToInt(currentViewAngle / 10f)); // More segments for smoother cone
+            viewConeRenderer.positionCount = segments + 2; // +2 for center point and closing the loop
+
+            Vector3[] positions = new Vector3[segments + 2];
+            Vector3 angleDirection = isFacingRight ? Vector3.right : Vector3.left;
+
+            // Start from center
+            positions[0] = transform.position;
+
+            // Create arc points
+            float startAngle = -currentViewAngle / 2f;
+            float angleStep = currentViewAngle / segments;
+
+            for (int i = 0; i <= segments; i++)
+            {
+                float angle = startAngle + (angleStep * i);
+                Vector3 dir = Quaternion.Euler(0, angle, 0) * angleDirection;
+                positions[i + 1] = transform.position + dir * viewDistance;
+            }
+
+            viewConeRenderer.SetPositions(positions);
+
+            // Change color based on alert state
+            viewConeRenderer.material.color = hasSeenPlayer ?
+                new Color(1, 0, 0, 0.3f) : // Semi-transparent red when alert
+                new Color(0, 1, 0, 0.3f);  // Semi-transparent green when normal
+        }
+        else
+        {
+            // Draw full circle when in 360-degree mode (existing code)
+            int segments = 36;
+            viewConeRenderer.positionCount = segments + 1;
+            Vector3[] positions = new Vector3[segments + 1];
+
+            for (int i = 0; i <= segments; i++)
+            {
+                float angle = i * (360f / segments);
+                Vector3 dir = Quaternion.Euler(0, angle, 0) * Vector3.forward;
+                positions[i] = transform.position + dir * viewDistance;
+            }
+
+            viewConeRenderer.SetPositions(positions);
+            viewConeRenderer.material.color = new Color(1, 0, 0, 0.3f); // Semi-transparent red for full awareness
+        }
     }
 
     // Update is called once per frame
@@ -122,6 +295,10 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
                 HandleNPCFlip();
             }
         }
+
+        // Update visual elements every frame
+        UpdateDebugLine();
+        UpdateViewCone();
     }
 
     // OPTIONAL: Check if the detected player is still active and alive
@@ -414,7 +591,7 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
         Debug.DrawRay(transform.position, Vector3.up * 2f, Color.yellow);
     }
 
-    // Visual debugging in Scene view
+    // Visual debugging in Scene view (kept for editor visualization)
     protected virtual void OnDrawGizmosSelected()
     {
         // Draw view distance sphere
