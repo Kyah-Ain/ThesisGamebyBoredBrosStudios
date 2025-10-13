@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2809397325495840737}
   - component: {fileID: 4885871778875214438}
   - component: {fileID: 6058616935019534020}
+  - component: {fileID: 5524495328117287690}
   - component: {fileID: 1238416338430177504}
   m_Layer: 6
   m_Name: Training Dummy
@@ -85,6 +86,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3.579888, z: 1}
   m_Center: {x: 0, y: -0.3649441, z: 0}
+--- !u!114 &5524495328117287690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380464716641093270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70129ff103c58444e98b74e6ecb296d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1238416338430177504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,7 +111,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  defense: 10
+  maxHealth: 5
+  healRate: 1
+  objectToKill: {fileID: 1380464716641093270}
 --- !u!1 &4388687442387477632
 GameObject:
   m_ObjectHideFlags: 0
