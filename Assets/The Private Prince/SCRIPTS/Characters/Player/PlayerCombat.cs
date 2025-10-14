@@ -4,7 +4,7 @@ using UnityEngine; // Grants access to Unity's core classes and functions, such 
 using UnityEngine.UI; // Grants access to Unity's UI classes, such as Image, Button, Text, etc.
 using TMPro; // Grants access to TextMesh Pro classes for advanced text rendering and formatting
 
-public class PlayerHealth : CombatManager
+public class PlayerCombat : CombatManager
 {
     // ------------------------- VARIABLES -------------------------
 

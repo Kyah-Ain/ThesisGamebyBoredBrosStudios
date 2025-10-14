@@ -588,20 +588,6 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
         }
     }
 
-    // Manual test method for debugging alerts
-    private void Update()
-    {
-        // Press T to test alerts manually without detection
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            Debug.Log($"{name}: MANUAL ALERT TEST");
-            AlertEveryoneNear();
-        }
-
-        // Visualize alert radius with debug ray
-        Debug.DrawRay(transform.position, Vector3.up * 2f, Color.yellow);
-    }
-
     // Visual debugging in Scene view (kept for editor visualization)
     protected virtual void OnDrawGizmosSelected()
     {
@@ -636,4 +622,18 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, alertRadius);
     }
+
+    //// Manual test method for debugging alerts
+    //private void Update()
+    //{
+    //    // Press T to test alerts manually without detection
+    //    if (Input.GetKeyDown(KeyCode.T))
+    //    {
+    //        Debug.Log($"{name}: MANUAL ALERT TEST");
+    //        AlertEveryoneNear();
+    //    }
+
+    //    // Visualize alert radius with debug ray
+    //    Debug.DrawRay(transform.position, Vector3.up * 2f, Color.yellow);
+    //}
 }

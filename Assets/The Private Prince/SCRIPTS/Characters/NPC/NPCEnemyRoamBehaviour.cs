@@ -182,14 +182,14 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
         }
     }
 
-    // Manual test method for debugging roaming alerts
-    private void Update()
-    {
-        // Press T to test alerts manually without detection
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            Debug.Log($"{name} (Roaming): MANUAL ALERT TEST");
-            AlertEveryoneNear();
-        }
-    }
+    //// Manual test method for debugging roaming alerts
+    //private void Update()
+    //{
+    //    // Press T to test alerts manually without detection
+    //    if (Input.GetKeyDown(KeyCode.Alpha0))
+    //    {
+    //        Debug.Log($"{name} (Roaming): MANUAL ALERT TEST");
+    //        AlertEveryoneNear();
+    //    }
+    //}
 }
