@@ -8,6 +8,9 @@ public class PlayerCombat : CombatManager
 {
     // ------------------------- VARIABLES -------------------------
 
+    [Header("Script Reference")]
+    public Player2Point5D player2Point5D; // ...
+
     [Header("UI Settings")]
     public Image[] heartsLeft;
     public HeartDisplayMode heartMode = HeartDisplayMode.Simple;
@@ -97,6 +100,16 @@ public class PlayerCombat : CombatManager
     // Method to Take damage and Update the Player's hearts
     public override void TakeDamage(int damage)
     {
+        // ...
+        if (player2Point5D.isBlocking)
+        {
+            // Turn this on if you changed the blocking logic to "Instance" instead of "Continous"
+            //player2Point5D.isBlocking = false;
+
+            return; // Exits the method immediately ignoring the rest
+        }
+
+        // The rest ...
         base.TakeDamage(damage);
         UpdateHeartsUI();
         //ModifyHeartsUI();

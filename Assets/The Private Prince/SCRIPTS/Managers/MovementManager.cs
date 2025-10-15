@@ -30,12 +30,14 @@ public class MovementManager : MonoBehaviour, IMoveable
 
     [Header("STATES")]
     public bool isRunning = false; // Determines if the character is running
+    public bool isAttacking = false; // ...
+    public bool isBlocking = false; // ...
     public bool canMove = true; // Determines if the character can move
     public bool isGrounded; // Determines if the character is grounded (on the ground)
 
     // ------------------------- METHODS -------------------------
 
-    public enum CharacterState { isIdle, isWalking, isRunning, isJumping }
+    public enum CharacterState { isIdle, isWalking, isRunning, isJumping, isAttacking, isBlocking }
     public CharacterState currentCharacState;
 
     // Sets up default state for the character
@@ -109,13 +111,21 @@ public class MovementManager : MonoBehaviour, IMoveable
         {
             SetAnimationState(CharacterState.isJumping);
         }
+        else if (isBlocking) 
+        {
+            SetAnimationState(CharacterState.isBlocking);
+        }
         else
         {
             // Calculate horizontal movement magnitude (ignore Y axis for movement detection)
             Vector3 horizontalMove = new Vector3(moveDirection.x, 0, moveDirection.z);
 
-            // Determine if the character is walking or running based on movement magnitude
-            if (horizontalMove.magnitude > 0.1f)
+            // Determine if the character is attacking, walking, or running based on movement magnitude
+            if (isAttacking) 
+            {
+                SetAnimationState(CharacterState.isAttacking);
+            }
+            else if (horizontalMove.magnitude > 0.1f)
             {
                 SetAnimationState(isRunning ? CharacterState.isRunning : CharacterState.isWalking);
             }

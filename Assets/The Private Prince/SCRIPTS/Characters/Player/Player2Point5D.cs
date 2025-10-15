@@ -24,10 +24,11 @@ public class Player2Point5D : CharacterController3D
 
     [Header("INTERACTABLES")]
     public int attackDamage = 10; // Damage dealt when attacking an enemy
+    public float attackDuration = 1f; // ...
+    public bool playerHits; // ...
+
     public float interactRaycast = 5f; // Defines how long the raycast would be
     public LayerMask hitLayers; // Defines what only can be interacted with the raycast
-
-    public bool playerAttacked = false; // ...
 
     [Header("DIALOGUE")]
     [SerializeField] private DialogueUI dialogueUI;
@@ -50,7 +51,7 @@ public class Player2Point5D : CharacterController3D
         //stops player from moving when in Dialogue
         if(dialogueUI != null && dialogueUI.IsOpen) return;
 
-        // Calls from the parent class (CharacterController3D)
+        // Calls from this class (Player2Point5D)
         HandleInput();
 
         // Calls from the parent class (MovementManager)
@@ -85,9 +86,25 @@ public class Player2Point5D : CharacterController3D
         }
 
         // Calls from the parent class (CharacterController3D)
-        MoveControl();
-        JumpControl();
+        base.JumpControl();
+        base.CombatControl();
 
+        // ...
+        if (isAttacking)
+        {
+            StartCoroutine(PauseMovement(attackDuration));
+        }
+        else if (isBlocking)
+        {
+            inputDirection = new Vector2(0f, 0f);
+        }
+        else 
+        {
+            base.MoveControl();
+        }
+        Debug.Log($"{isAttacking} & {isBlocking}");
+
+        // Calls from the parent class (MovementManager)
         CalculateMovement(inputDirection, isRunning);
         CalculateJump(wantsToJump);
     }
@@ -184,15 +201,32 @@ public class Player2Point5D : CharacterController3D
                 Debug.Log("Player attacked an enemy");
 
                 damageable.TakeDamage(attackDamage);
-                playerAttacked = true; // ADD THIS LINE - set to true when attack happens
+                playerHits = true; // Set to true when player hits an opponent
+
+                // ...
+                StartCoroutine(PauseMovement(attackDuration));
+                // ...
                 StartCoroutine(ResetPlayerAttacked());
             }
         }
     }
 
+    // ...
+    public IEnumerator PauseMovement(float duration)
+    {
+        // ...
+        inputDirection = new Vector2(0f, 0f);
+
+        yield return new WaitForSeconds(duration);
+        isAttacking = false;
+
+        Debug.Log("Coroutine finished.");
+    }
+
+    // ...
     private IEnumerator ResetPlayerAttacked()
     {
         yield return new WaitForEndOfFrame(); // Wait until end of frame
-        playerAttacked = false;
+        playerHits = false;
     }
 }

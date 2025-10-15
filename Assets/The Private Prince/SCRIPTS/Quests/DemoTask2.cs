@@ -29,10 +29,10 @@ public class DemoTask2 : MonoBehaviour
     {
         if (TaskManager.Instance.completedTasks == 3)
         {
-            if (playerKill.playerAttacked == true)
+            if (playerKill.playerHits == true)
             {
                 enemiesDefeated += 1;
-                playerKill.playerAttacked = false; // Reset immediately
+                playerKill.playerHits = false; // Reset immediately
 
                 UpdateTaskDisplay();
 

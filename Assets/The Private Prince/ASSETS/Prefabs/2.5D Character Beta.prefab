@@ -372,6 +372,7 @@ MonoBehaviour:
   maxHealth: 5
   healRate: 1
   objectToKill: {fileID: 3944118832068428985}
+  player2Point5D: {fileID: 6079771419730663201}
   heartsLeft:
   - {fileID: 0}
   - {fileID: 0}
@@ -397,14 +398,12 @@ MonoBehaviour:
   runningSpeed: 8
   jumpPower: 8
   isRunning: 0
+  isAttacking: 0
+  isBlocking: 0
   canMove: 1
   isGrounded: 0
   currentCharacState: 0
   characterController: {fileID: 2324735991155503957}
-  playerCamera: {fileID: 0}
-  lookSpeed: 2
-  lookXLimit: 45
-  rotationX: 0
   inputDirection: {x: 0, y: 0}
   wantsToJump: 0
   raycastEmitter: {fileID: 4538444295854402176}
@@ -414,11 +413,12 @@ MonoBehaviour:
   staminaRecoveryRate: 5
   isExhausted: 0
   attackDamage: 100
+  attackDuration: 0.5
+  playerHits: 0
   interactRaycast: 3
   hitLayers:
     serializedVersion: 2
     m_Bits: 320
-  playerAttacked: 0
   dialogueUI: {fileID: 0}
 --- !u!1 &7757799454336587648
 GameObject:

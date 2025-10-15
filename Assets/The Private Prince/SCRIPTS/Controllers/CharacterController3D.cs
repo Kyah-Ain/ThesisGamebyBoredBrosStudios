@@ -14,10 +14,10 @@ public class CharacterController3D : MovementManager
     public CharacterController characterController; // Placeholder for the CharacterController component
 
     [Header("CAMERA NECK MOVEMENT")]
-    public GameObject playerCamera; // Placeholder for the camera GameObject
-    public float lookSpeed = 2.0f; // Mouse look sensitivity
-    public float lookXLimit = 45.0f; // Maximum angle the camera can look up or down
-    public float rotationX = 0; // Placeholder for the camera's X rotation
+    //public GameObject playerCamera; // Placeholder for the camera GameObject
+    //public float lookSpeed = 2.0f; // Mouse look sensitivity
+    //public float lookXLimit = 45.0f; // Maximum angle the camera can look up or down
+    //public float rotationX = 0; // Placeholder for the camera's X rotation
 
     public Vector2 inputDirection; // Placeholder for the character's input direction
     public bool wantsToJump; // Determines if the character wants to jump
@@ -33,10 +33,13 @@ public class CharacterController3D : MovementManager
     // Handles player input for movements
     public override void HandleInput()
     {
+        base.HandleInput(); // Checks if the character is allowed to move
+
         // Calls from this class (CharacterController3D)
         MoveControl();
         RunControl();
         JumpControl();
+        CombatControl();
 
         // Calls from the parent class (MovementManager)
         CalculateMovement(inputDirection, isRunning);
@@ -59,5 +62,18 @@ public class CharacterController3D : MovementManager
     public virtual void JumpControl()
     {
         wantsToJump = Input.GetKeyDown(KeyCode.Space);
+    }
+
+    // Gets player input for attack and defense
+    public virtual void CombatControl()
+    {
+        if (!isAttacking) 
+        {
+            // Left mouse button
+            isAttacking = Input.GetKeyDown(KeyCode.Mouse0);
+        }
+
+        // Right mouse button
+        isBlocking = Input.GetKey(KeyCode.Mouse1);
     }
 }
