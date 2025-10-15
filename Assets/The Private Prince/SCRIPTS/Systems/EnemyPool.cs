@@ -1,5 +1,6 @@
 ﻿using System.Collections; // Grants access to collections and data structures like ArrayList, Hashtable, etc.
 using System.Collections.Generic; // Grants access to generic collections like List, Dictionary, etc.
+using Unity.VisualScripting;
 using UnityEngine; // Grants access to Unity's core classes and functions
 using UnityEngine.AI; // Grants access to Unity's AI and Navigation system
 
@@ -169,7 +170,7 @@ public class EnemyPool : MonoBehaviour
         poolMember.SetPool(this);
     }
 
-    // Resets enemy to default state before returning to pool - FIXED ORDER
+    // Resets enemy to default state before returning to pool
     private void ResetEnemyState(GameObject enemy)
     {
         // Reset navigation FIRST while object is still active
@@ -178,7 +179,16 @@ public class EnemyPool : MonoBehaviour
         // Reset combat system
         ResetCombatComponents(enemy);
 
-        // Reset rotation only - DO NOT reset position to avoid moving to (0,0,0)
+        // ...
+        IAlertable alertables = enemy.GetComponentInChildren<IAlertable>();
+
+        if (alertables != null) 
+        {
+            // ...
+            alertables.HardResetAlert();
+        }
+
+        // Reset rotation only (DO NOT reset position to avoid moving to (0,0,0))
         enemy.transform.rotation = Quaternion.identity;
 
         // Reparent and deactivate LAST

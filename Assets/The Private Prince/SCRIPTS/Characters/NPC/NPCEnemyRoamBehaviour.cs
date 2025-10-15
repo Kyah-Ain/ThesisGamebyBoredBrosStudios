@@ -150,36 +150,13 @@ public class NPCEnemyRoamBehaviour : NPCEnemyBehaviour
     // Force detection when alerted by other NPCs - enhanced for roaming behavior
     public override void ForceDetectPlayer()
     {
-        // Find a player first if we don't have one
-        if (detectedPlayer == null)
-        {
-            detectedPlayer = FindPlayerInConeView();
-        }
+        base.ForceDetectPlayer();
+    }
 
-        // If still no player, find any player in scene as fallback
-        if (detectedPlayer == null)
-        {
-            GameObject playerObj = GameObject.FindGameObjectWithTag(playerTag);
-            if (playerObj != null) detectedPlayer = playerObj.transform;
-        }
-
-        if (detectedPlayer != null)
-        {
-            currentViewAngle = 360f; // Full awareness when alerted
-            hasSeenPlayer = true;
-            isInFullChase = true;
-            chaseTimer = fullChaseDuration;
-            hasAlertedThisDetection = true; // Prevent this NPC from re-alerting
-
-            navMeshAgent.SetDestination(detectedPlayer.position);
-            navMeshAgent.speed = 3.5f; // Faster chase speed
-
-            Debug.Log($"{name} (Roaming) was alerted by another NPC! Chasing {detectedPlayer.name}");
-        }
-        else
-        {
-            Debug.LogWarning($"{name} (Roaming): ForceDetectPlayer failed - no player found!");
-        }
+    // ...
+    public override void HardResetAlert()
+    {
+        base.HardResetAlert();
     }
 
     //// Manual test method for debugging roaming alerts
