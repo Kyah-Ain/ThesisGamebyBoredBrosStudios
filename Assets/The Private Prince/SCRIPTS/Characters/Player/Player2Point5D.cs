@@ -210,8 +210,6 @@ public class Player2Point5D : CharacterController3D
 
                 // ...
                 StartCoroutine(PauseMovement(attackDuration));
-                // ...
-                StartCoroutine(ResetPlayerAttacked());
             }
         }
     }
@@ -231,12 +229,5 @@ public class Player2Point5D : CharacterController3D
 
         //Debug.Log($"AFTER: isAttacking = {isAttacking}");
         //Debug.Log("Coroutine finished.");
-    }
-
-    // ...
-    private IEnumerator ResetPlayerAttacked()
-    {
-        yield return new WaitForEndOfFrame(); // Wait until end of frame
-        playerHits = false;
     }
 }

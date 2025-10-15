@@ -31,8 +31,8 @@ public class DemoTask2 : MonoBehaviour
         {
             if (playerKill.playerHits == true)
             {
+                // ...
                 enemiesDefeated += 1;
-                playerKill.playerHits = false; // Reset immediately
 
                 UpdateTaskDisplay();
 
@@ -44,6 +44,8 @@ public class DemoTask2 : MonoBehaviour
                 Debug.Log($"Enemy defeated! Total: {enemiesDefeated}/{enemiesToDefeat}");
             }
         }
+        // ...
+        playerKill.playerHits = false;
     }
 
     // Add this method to update the display properly
