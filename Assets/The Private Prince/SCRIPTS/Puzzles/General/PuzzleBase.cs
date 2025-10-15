@@ -48,6 +48,16 @@ public abstract class PuzzleBase : MonoBehaviour
         }
     }
 
+    public virtual void ResetPuzzle()
+    {
+        timer = timeLimit;
+        active = false;
+        ShowUI(false);
+
+        OnPuzzleReset();
+    }
+
+
     protected virtual void Update()
     {
         if (!active) return;
@@ -93,4 +103,6 @@ public abstract class PuzzleBase : MonoBehaviour
     protected virtual void OnUIVisibilityChanged(bool visible) { } // To be overwritten for specific puzzle UI handling
 
     public abstract void HandleInput(); // To be overwritten for specific puzzle input handling
+
+    protected virtual void OnPuzzleReset() { } // To be overwritten for specific puzzle reset handling
 }

@@ -188,4 +188,25 @@ public class JigsawPuzzle : PuzzleBase
     {
         // Nothing specific here — handled by Drag events in JigsawPiece
     }
+
+    protected override void OnPuzzleReset()
+    {
+        // Reset all progress-related counters
+        placedPieces = 0;
+        errorCount = 0;
+
+        // Clear existing pieces and cells
+        foreach (Transform child in referenceArea)
+            Destroy(child.gameObject);
+        foreach (Transform child in pieceContainer)
+            Destroy(child.gameObject);
+
+        pieces.Clear();
+        cells.Clear();
+
+        // Update UI
+        UpdateErrorText();
+
+        initialized = false;
+    }
 }

@@ -299,4 +299,34 @@ public class UnscramblerPuzzle : PuzzleBase
     {
         
     }
+
+    protected override void OnPuzzleReset()
+    {
+        // Clear everything in case the player failed and puzzle is replayable
+        ClearChildren(wordBankParent);
+        ClearChildren(blanksParent);
+
+        // Reset internal lists and counters
+        guessCounter = 0;
+        availableWords.Clear();
+        currentBlanks.Clear();
+        blankObjects.Clear();
+        wordButtonObjects.Clear();
+        blankToButton.Clear();
+
+        // Recreate puzzle setup
+        targetWords = sentence.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+        SetupWords();
+        SetupBlanks();
+
+        UpdateSubmitButton();
+        UpdateGuessUI();
+
+        // Ensure submit button listener is reattached cleanly
+        if (submitButton != null)
+        {
+            submitButton.onClick.RemoveAllListeners();
+            submitButton.onClick.AddListener(SubmitGuess);
+        }
+    }
 }

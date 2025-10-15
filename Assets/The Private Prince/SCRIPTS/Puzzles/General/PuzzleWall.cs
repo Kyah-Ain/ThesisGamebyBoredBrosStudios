@@ -7,8 +7,17 @@ public class PuzzleWall : MonoBehaviour
     [Header("Wall Settings")]
     public PuzzleBase puzzle;
     public PuzzleEnemies puzzleEnemies;
+    public bool replayableAfterFailure = false;
 
     private bool puzzleResolved = false;
+
+    public bool HasActiveEnemies
+    {
+        get
+        {
+            return puzzleEnemies != null && puzzleEnemies.HasAliveEnemies;
+        }
+    }
 
     private void OnEnable()
     {
@@ -69,11 +78,23 @@ public class PuzzleWall : MonoBehaviour
 
     private void OnEnemiesCleared()
     {
-        DestroyWall();
+        if (replayableAfterFailure)
+        {
+            puzzleResolved = false;
+            if (puzzle != null)
+            {
+                puzzle.ResetPuzzle();
+            }
+        }
+        else
+        {
+            DestroyWall();
+        }
+
     }
 
     private void DestroyWall()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

@@ -8,6 +8,7 @@ public enum PuzzleState { Idle, InProgress, Paused, Completed }
 public class PuzzleManager : MonoBehaviour
 {
     public static PuzzleManager Instance;
+    public event System.Action<PuzzleBase> OnPuzzleStarted;
     public event System.Action<PuzzleBase, PuzzleResult> OnPuzzleEnded;
 
     private PuzzleBase activePuzzle;
@@ -30,6 +31,8 @@ public class PuzzleManager : MonoBehaviour
         state = PuzzleState.InProgress;
 
         activePuzzle.StartPuzzle();
+
+        OnPuzzleStarted?.Invoke(puzzle);
     }
 
     public void EndPuzzle(PuzzleResult result)

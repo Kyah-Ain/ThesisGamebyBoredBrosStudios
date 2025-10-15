@@ -43,13 +43,38 @@ public class Player2Point5D : CharacterController3D
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>(); // Automatically references the SpriteRenderer component
+        if (PuzzleManager.Instance != null) // Check if PuzzleManager instance exists
+        {
+            PuzzleManager.Instance.OnPuzzleStarted += HandlePuzzleStarted; // Subscribe to the OnPuzzleStarted event
+            PuzzleManager.Instance.OnPuzzleEnded += HandlePuzzleEnded; // Subscribe to the OnPuzzleEnded event
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (PuzzleManager.Instance != null) // Check if PuzzleManager instance exists
+        {
+            PuzzleManager.Instance.OnPuzzleStarted -= HandlePuzzleStarted; // Unsubscribe from the OnPuzzleStarted event
+            PuzzleManager.Instance.OnPuzzleEnded -= HandlePuzzleEnded; // Unsubscribe from the OnPuzzleEnded event
+        }
     }
 
     // Update is called once per frame
     private void Update() 
     {
+        if (PuzzleManager.Instance != null && PuzzleManager.Instance.State == PuzzleState.InProgress)
+        {
+            // If a puzzle is active, skip player updates
+            canMove = false;
+            return;
+        }
+        else
+        {
+            canMove = true;
+        }
+
         //stops player from moving when in Dialogue
-        if(dialogueUI != null && dialogueUI.IsOpen) return;
+        if (dialogueUI != null && dialogueUI.IsOpen) return;
 
         // Calls from this class (Player2Point5D)
         HandleInput();
@@ -228,5 +253,31 @@ public class Player2Point5D : CharacterController3D
     {
         yield return new WaitForEndOfFrame(); // Wait until end of frame
         playerHits = false;
+    }
+
+    private void HandlePuzzleStarted(PuzzleBase puzzle)
+    {
+        // Logic to handle when a puzzle starts
+        canMove = false; // Disable player movement
+
+        moveDirection = Vector3.zero; // Stop any existing movement
+        curSpeedX = 0f; // Reset horizontal speed
+        curSpeedY = 0f; // Reset vertical speed
+        verticalVelocity = 0f; // Reset vertical velocity
+
+        if (animator != null)
+        {
+            // Reset animation states to idle (Will need to be adjusted based on actual animator parameters)
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isJumping", false);
+            animator.SetBool("isIdle", true);
+        }
+    }
+
+    private void HandlePuzzleEnded(PuzzleBase puzzle, PuzzleResult result)
+    {
+        // Logic to handle when a puzzle ends
+        canMove = true; // Re-enable player movement
     }
 }

@@ -234,6 +234,25 @@ public class ConnectPuzzle : PuzzleBase
             return;
         }
 
+        // Block movinf over a non-matching wire base
+        WireBase baseAtNewPos = GetWireBaseAtGridPosition(newPos);
+        if (baseAtNewPos != null && baseAtNewPos != currentlyDragging)
+        {
+            WirePair currentPair = GetWirePairForBase(currentlyDragging);
+            GlitchDot currentGlitch = GetGlitchForBase(currentlyDragging);
+            WirePair targetPair = GetWirePairForBase(baseAtNewPos);
+            GlitchDot targetGlitch = GetGlitchForBase(baseAtNewPos);
+            
+            bool sameWireColor = 
+                (currentPair != null && targetPair != null && currentPair == targetPair) ||
+                (currentGlitch != null && targetGlitch != null && currentGlitch == targetGlitch);
+
+            if (!sameWireColor)
+            {
+                return; // Block movement over non-matching base
+            }
+        }
+
         // Check if path is occupied by another wire
         WirePath path = wirePaths[newPos.x, newPos.y];
         Color currentColor = GetCurrentWireColor();
@@ -647,6 +666,9 @@ public class ConnectPuzzle : PuzzleBase
             return;
         }
 
+        wirePairs.Clear();
+        glitchDots.Clear();
+
         InitializeGrid();
         CreateWirePairsFromData();
         CreateGlitchDotsFromData();
@@ -758,5 +780,49 @@ public class ConnectPuzzle : PuzzleBase
                 return pair;
         }
         return null;
+    }
+
+    private WireBase GetWireBaseAtGridPosition(Vector2Int gridPos)
+    {
+        foreach (var pair in wirePairs)
+        {
+            Vector2Int startPos = GetBasePosition(pair.startBase);
+            Vector2Int endPos = GetBasePosition(pair.endBase);
+            if (startPos == gridPos)
+                return pair.startBase;
+            if (endPos == gridPos)
+                return pair.endBase;
+        }
+        foreach (var glitch in glitchDots)
+        {
+            if (glitch.gridPosition == gridPos)
+                return glitch.glitchBase;
+        }
+        return null;
+    }
+
+    protected override void OnPuzzleReset()
+    {
+        // Clear all current puzzle elements
+        if (gridContainer != null)
+        {
+            foreach (Transform child in gridContainer)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        wirePairs.Clear();
+        glitchDots.Clear();
+        currentPath.Clear();
+        currentWireSegments.Clear();
+        currentlyDragging = null;
+        hoveredWireBase = null;
+        isDragging = false;
+
+        // Reinitialize everything just like StartPuzzle
+        InitializeGrid();
+        CreateWirePairsFromData();
+        CreateGlitchDotsFromData();
     }
 }

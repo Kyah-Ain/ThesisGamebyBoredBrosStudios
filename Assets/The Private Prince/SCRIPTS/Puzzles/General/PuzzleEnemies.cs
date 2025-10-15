@@ -50,4 +50,11 @@ public class PuzzleEnemies : MonoBehaviour
             onAllEnemiesDefeated = null;
         }
     }
+
+    private void Update()
+    {
+        spawnedEnemies.RemoveAll(e => e == null);
+    }
+
+    public bool HasAliveEnemies => spawnedEnemies.Count > 0;
 }

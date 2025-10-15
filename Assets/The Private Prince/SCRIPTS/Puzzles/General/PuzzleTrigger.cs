@@ -41,6 +41,7 @@ public class PuzzleTrigger : MonoBehaviour
     private void HandlePuzzleTab()
     {
         if (puzzleWall == null || puzzleWall.puzzle == null) return;
+        if (puzzleWall.HasActiveEnemies) return;
 
         var pm = PuzzleManager.Instance;
         if (pm == null) return;

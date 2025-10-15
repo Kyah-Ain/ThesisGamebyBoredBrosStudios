@@ -198,4 +198,20 @@ public class TypingPuzzle : PuzzleBase
     {
         // Handled in Update() via Input.inputString
     }
+
+    protected override void OnPuzzleReset()
+    {
+        currentInput = "";
+        typoCounter = 0;
+
+        if (string.IsNullOrEmpty(targetString))
+        {
+            targetString = GenerateRandomString(targetLength);
+        }
+
+        AssignGlitches();
+        UpdateGlitches();
+        UpdatePuzzleDisplay();
+        UpdateTypoUI(true);
+    }
 }

@@ -1524,6 +1524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzle: {fileID: 565695107}
   puzzleEnemies: {fileID: 322804377}
+  replayableAfterFailure: 1
 --- !u!65 &249522077
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3342,6 +3343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzle: {fileID: 1299461708}
   puzzleEnemies: {fileID: 1925057045}
+  replayableAfterFailure: 1
 --- !u!65 &795697187
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4009,7 +4011,7 @@ Transform:
   m_GameObject: {fileID: 884393793}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 162.02779, y: -14.842796, z: 10.801128}
+  m_LocalPosition: {x: 180.32779, y: -14.842796, z: 10.801128}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6442,10 +6444,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 49240194}
     m_Modifications:
+    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+        type: 3}
+      propertyPath: timeLimit
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 1711428002109590642, guid: b7aa810a5b6581b4690873e4b801442b,
         type: 3}
       propertyPath: m_Name
       value: Connect Puzzle
+      objectReference: {fileID: 0}
+    - target: {fileID: 1829301180792699786, guid: b7aa810a5b6581b4690873e4b801442b,
+        type: 3}
+      propertyPath: replayableAfterFailure
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
         type: 3}
@@ -7793,6 +7805,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzle: {fileID: 230152449}
   puzzleEnemies: {fileID: 1864326952}
+  replayableAfterFailure: 1
 --- !u!65 &1683536407
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7945,6 +7958,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzle: {fileID: 636645537}
   puzzleEnemies: {fileID: 382184622}
+  replayableAfterFailure: 0
 --- !u!65 &1727097530
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9717,7 +9731,7 @@ PrefabInstance:
     - target: {fileID: 1794654830090496719, guid: 48f99980a3350a14295086b7f8b159c8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 162.2
+      value: 180.5
       objectReference: {fileID: 0}
     - target: {fileID: 1794654830090496719, guid: 48f99980a3350a14295086b7f8b159c8,
         type: 3}
