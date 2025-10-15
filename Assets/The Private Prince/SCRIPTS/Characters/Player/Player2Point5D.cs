@@ -30,6 +30,8 @@ public class Player2Point5D : CharacterController3D
     public float interactRaycast = 5f; // Defines how long the raycast would be
     public LayerMask hitLayers; // Defines what only can be interacted with the raycast
 
+    public bool isCoroutineDone = false; // ...
+
     [Header("DIALOGUE")]
     [SerializeField] private DialogueUI dialogueUI;
 
@@ -43,36 +45,11 @@ public class Player2Point5D : CharacterController3D
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>(); // Automatically references the SpriteRenderer component
-        if (PuzzleManager.Instance != null) // Check if PuzzleManager instance exists
-        {
-            PuzzleManager.Instance.OnPuzzleStarted += HandlePuzzleStarted; // Subscribe to the OnPuzzleStarted event
-            PuzzleManager.Instance.OnPuzzleEnded += HandlePuzzleEnded; // Subscribe to the OnPuzzleEnded event
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (PuzzleManager.Instance != null) // Check if PuzzleManager instance exists
-        {
-            PuzzleManager.Instance.OnPuzzleStarted -= HandlePuzzleStarted; // Unsubscribe from the OnPuzzleStarted event
-            PuzzleManager.Instance.OnPuzzleEnded -= HandlePuzzleEnded; // Unsubscribe from the OnPuzzleEnded event
-        }
     }
 
     // Update is called once per frame
-    private void Update() 
+    private void Update()
     {
-        if (PuzzleManager.Instance != null && PuzzleManager.Instance.State == PuzzleState.InProgress)
-        {
-            // If a puzzle is active, skip player updates
-            canMove = false;
-            return;
-        }
-        else
-        {
-            canMove = true;
-        }
-
         //stops player from moving when in Dialogue
         if (dialogueUI != null && dialogueUI.IsOpen) return;
 
@@ -89,11 +66,11 @@ public class Player2Point5D : CharacterController3D
         HandleRaycast();
 
         // Button prompt for Dialogue Interaction
-        if(Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             Interactable?.Interact(this); // Used null propagation for less lines
         }
-     
+
     }
 
     // Handles player input for movements
@@ -105,7 +82,7 @@ public class Player2Point5D : CharacterController3D
             // Calls from the parent class (CharacterController3D)
             base.RunControl();
         }
-        else 
+        else
         {
             isRunning = false;
         }
@@ -117,17 +94,20 @@ public class Player2Point5D : CharacterController3D
         // ...
         if (isAttacking)
         {
-            StartCoroutine(PauseMovement(attackDuration));
+            if (!isCoroutineDone)
+            {
+                StartCoroutine(PauseMovement(attackDuration));
+            }
         }
         else if (isBlocking)
         {
             inputDirection = new Vector2(0f, 0f);
         }
-        else 
+        else
         {
             base.MoveControl();
         }
-        Debug.Log($"{isAttacking} & {isBlocking}");
+        //Debug.Log($"isAttacking: {isAttacking} & isBlocking: {isBlocking}");
 
         // Calls from the parent class (MovementManager)
         CalculateMovement(inputDirection, isRunning);
@@ -239,13 +219,18 @@ public class Player2Point5D : CharacterController3D
     // ...
     public IEnumerator PauseMovement(float duration)
     {
-        // ...
-        inputDirection = new Vector2(0f, 0f);
+        //Debug.Log($"BEFORE: isAttacking = {isAttacking}");
+
+        isCoroutineDone = true; // Prevents new attacks while current one isn't done yet
+        inputDirection = new Vector2(0f, 0f); // Makes the player not move while attacking
 
         yield return new WaitForSeconds(duration);
-        isAttacking = false;
 
-        Debug.Log("Coroutine finished.");
+        isAttacking = false; // ...
+        isCoroutineDone = false; // ...
+
+        //Debug.Log($"AFTER: isAttacking = {isAttacking}");
+        //Debug.Log("Coroutine finished.");
     }
 
     // ...
@@ -253,31 +238,5 @@ public class Player2Point5D : CharacterController3D
     {
         yield return new WaitForEndOfFrame(); // Wait until end of frame
         playerHits = false;
-    }
-
-    private void HandlePuzzleStarted(PuzzleBase puzzle)
-    {
-        // Logic to handle when a puzzle starts
-        canMove = false; // Disable player movement
-
-        moveDirection = Vector3.zero; // Stop any existing movement
-        curSpeedX = 0f; // Reset horizontal speed
-        curSpeedY = 0f; // Reset vertical speed
-        verticalVelocity = 0f; // Reset vertical velocity
-
-        if (animator != null)
-        {
-            // Reset animation states to idle (Will need to be adjusted based on actual animator parameters)
-            animator.SetBool("isWalking", false);
-            animator.SetBool("isRunning", false);
-            animator.SetBool("isJumping", false);
-            animator.SetBool("isIdle", true);
-        }
-    }
-
-    private void HandlePuzzleEnded(PuzzleBase puzzle, PuzzleResult result)
-    {
-        // Logic to handle when a puzzle ends
-        canMove = true; // Re-enable player movement
     }
 }
