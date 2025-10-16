@@ -220,8 +220,9 @@ GameObject:
   - component: {fileID: 2324735991155503957}
   - component: {fileID: 5926677495183905077}
   - component: {fileID: 8409092425902307792}
-  - component: {fileID: 3356730650485628665}
   - component: {fileID: 6079771419730663201}
+  - component: {fileID: 3356730650485628665}
+  - component: {fileID: 552260058701300776}
   m_Layer: 7
   m_Name: 2D Player (with Character Controller)
   m_TagString: Player
@@ -369,30 +370,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a58c0b625cda841bdea6322f1c4b3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3356730650485628665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6434379796336950780}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6ee4c006a00b3f4bb1e0ffca6e307dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 5
-  maxHealth: 5
-  healRate: 1
-  objectToKill: {fileID: 3944118832068428985}
-  player2Point5D: {fileID: 6079771419730663201}
-  heartsLeft:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  heartMode: 0
 --- !u!114 &6079771419730663201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,6 +401,7 @@ MonoBehaviour:
   maxStamina: 100
   staminaDrainRate: 15
   staminaRecoveryRate: 5
+  isFacingRight: 1
   isExhausted: 0
   attackDamage: 100
   attackDuration: 0.5
@@ -434,6 +412,77 @@ MonoBehaviour:
     m_Bits: 320
   isCoroutineDone: 0
   dialogueUI: {fileID: 0}
+--- !u!114 &3356730650485628665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6434379796336950780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6ee4c006a00b3f4bb1e0ffca6e307dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 5
+  maxHealth: 5
+  healRate: 1
+  objectToKill: {fileID: 3944118832068428985}
+  enableKnockback: 1
+  player2Point5D: {fileID: 6079771419730663201}
+  heartsLeft:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  heartMode: 0
+--- !u!114 &552260058701300776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6434379796336950780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53572c71c7166cd42b8a73e58b1ffa69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisCharacter: {fileID: 3365932091219003684}
+  knockBackForce: 5
+  knockBackDuration: 0.3
+  knockbackCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  attackLodgeDistance: 0.5
+  lodgeDuration: 0.2
+  enableDiagonalKnockback: 1
+  useEightDirectionKnockback: 1
+  diagonalForceMultiplier: 0.7
+  isKnockBackActive: 0
+  isLodgingActive: 0
 --- !u!1 &7757799454336587648
 GameObject:
   m_ObjectHideFlags: 0
