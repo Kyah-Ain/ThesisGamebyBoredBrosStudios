@@ -588,6 +588,20 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
         }
     }
 
+    // ...
+    public virtual void HardResetAlert()
+    {
+        npcCanAttack = true;
+        hasSeenPlayer = false;
+        isInFullChase = false;
+        chaseTimer = 0f;
+        currentViewAngle = viewAngle; // Reverts to ...
+        hasAlertedThisDetection = false; // Prevent this NPC from re-alerting
+
+        navMeshAgent.SetDestination(npcOriginPlace.position);
+        navMeshAgent.speed = 1.5f; // Faster chase speed
+    }
+
     // Visual debugging in Scene view (kept for editor visualization)
     protected virtual void OnDrawGizmosSelected()
     {
