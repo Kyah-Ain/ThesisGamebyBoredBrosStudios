@@ -56863,6 +56863,11 @@ PrefabInstance:
       propertyPath: m_BoundingVolume
       value: 
       objectReference: {fileID: 934408217}
+    - target: {fileID: 552260058701300776, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
+        type: 3}
+      propertyPath: knockBackForce
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 3356730650485628665, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
         type: 3}
       propertyPath: heartsLeft.Array.data[0]
@@ -57613,7 +57618,7 @@ PrefabInstance:
     - target: {fileID: 7728224702312192107, guid: c5ff64a7f49a95040a8f0b77acec26e5,
         type: 3}
       propertyPath: enemyType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7728224702312192107, guid: c5ff64a7f49a95040a8f0b77acec26e5,
         type: 3}
@@ -57728,6 +57733,7 @@ MonoBehaviour:
   maxHealth: 5
   healRate: 1
   objectToKill: {fileID: 0}
+  enableKnockback: 1
 --- !u!1 &5163012037615371094
 GameObject:
   m_ObjectHideFlags: 0
@@ -58221,6 +58227,7 @@ MonoBehaviour:
   fullChaseDuration: 5
   isInFullChase: 0
   defaultFacingDirection: 0
+  isFacingRight: 0
   raycastEmitter: {fileID: 0}
   hitLayers:
     serializedVersion: 2

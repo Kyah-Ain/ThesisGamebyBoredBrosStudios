@@ -21,7 +21,17 @@ public class CombatManager : MonoBehaviour, IDamageable
     [Header("DEAD SUBJECT")]
     public GameObject objectToKill;
 
+    [Header("KNOCKBACK")]
+    public bool enableKnockback = true;
+    private CombatLodging combatLodging;
+
     // ------------------------- METHODS -------------------------
+
+    // Awake is called when the script instance is being loaded
+    private void Awake()
+    {
+        combatLodging = GetComponent<CombatLodging>();
+    }
 
     // Update is called once per frame
     public virtual void Update()
@@ -74,6 +84,24 @@ public class CombatManager : MonoBehaviour, IDamageable
         {
             Debug.Log($"{gameObject.name} has been defeated!");
         }
+    }
+
+    // Handles knockback effect when taking damage
+    public virtual void ApplyKnockback(Vector3 damageSource)
+    {
+        // Apply knockback if enabled
+        if (enableKnockback && combatLodging != null)
+        {
+            // ...
+            combatLodging.OnDamageTaken(damageSource);
+        }
+    }
+
+    // Handles taking damage with knockback effect
+    public virtual void TakeDamageWithKnockback(int damage, Vector3 damageSource)
+    {
+        TakeDamage(damage); // Apply damage
+        ApplyKnockback(damageSource); // Apply knockback
     }
 
     // Handles character healing over time

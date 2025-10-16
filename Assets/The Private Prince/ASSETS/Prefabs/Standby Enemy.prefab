@@ -10,11 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 6049677083975663208}
   - component: {fileID: 3934134315994686439}
+  - component: {fileID: 7797986843248318835}
   - component: {fileID: 8512559874339013448}
   - component: {fileID: 6846191255389116464}
   - component: {fileID: 8222245197435811769}
+  - component: {fileID: 4880783693032977707}
   - component: {fileID: 5975781723822109860}
-  - component: {fileID: 7797986843248318835}
   m_Layer: 8
   m_Name: Enemy NPC Component
   m_TagString: Untagged
@@ -92,110 +93,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!136 &8512559874339013448
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2282970497907538862}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!195 &6846191255389116464
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2282970497907538862}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 1.25
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0.1
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!114 &8222245197435811769
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2282970497907538862}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6e961bdf83e7634db6b021355adb809, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100
-  maxHealth: 5
-  healRate: 1
-  objectToKill: {fileID: 3759024926885119728}
---- !u!114 &5975781723822109860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2282970497907538862}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32ca010a8ad725542a9ca6b1e64f5010, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  npcAttackDamage: 1
-  npcAttackCooldown: 5
-  npcCanAttack: 1
-  npcOriginPlace: {fileID: 8618299129369446561}
-  detectedPlayer: {fileID: 0}
-  playerTag: Player
-  targetExceptionMask:
-    serializedVersion: 2
-    m_Bits: 0
-  hasSeenPlayer: 0
-  viewDistance: 10
-  currentViewAngle: 0
-  viewAngle: 150
-  alertRadius: 15
-  fullChaseDuration: 5
-  isInFullChase: 0
-  defaultFacingDirection: 1
-  raycastEmitter: {fileID: 5825616077669887248}
-  hitLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  interactRaycast: 5
-  debugLineRenderer: {fileID: 7797986843248318835}
-  debugLineMaterial: {fileID: 2100000, guid: 3f4f3d8b16da4f44ea42a40b9eaa2527, type: 2}
-  debugLineWidth: 0.1
-  viewConeRenderer: {fileID: 7797986843248318835}
-  normalViewConeMaterial: {fileID: 2100000, guid: 510f1a4c405d15b44836b4cd601a8d6c,
-    type: 2}
-  alertedViewConeMaterial: {fileID: 2100000, guid: 25cba0c6a3b08d5468d1a6db26100cee,
-    type: 2}
-  viewConeWidth: 0.05
 --- !u!120 &7797986843248318835
 LineRenderer:
   serializedVersion: 2
@@ -300,6 +197,158 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!136 &8512559874339013448
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2282970497907538862}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!195 &6846191255389116464
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2282970497907538862}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 1.25
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0.1
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &8222245197435811769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2282970497907538862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6e961bdf83e7634db6b021355adb809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  maxHealth: 5
+  healRate: 1
+  objectToKill: {fileID: 3759024926885119728}
+  enableKnockback: 1
+--- !u!114 &4880783693032977707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2282970497907538862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53572c71c7166cd42b8a73e58b1ffa69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisCharacter: {fileID: 6049677083975663208}
+  knockBackForce: 0.1
+  knockBackDuration: 0.3
+  knockbackCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  attackLodgeDistance: 0.5
+  lodgeDuration: 0.2
+  enableDiagonalKnockback: 1
+  useEightDirectionKnockback: 1
+  diagonalForceMultiplier: 0.7
+  isKnockBackActive: 0
+  isLodgingActive: 0
+--- !u!114 &5975781723822109860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2282970497907538862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32ca010a8ad725542a9ca6b1e64f5010, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcAttackDamage: 1
+  npcAttackCooldown: 5
+  npcCanAttack: 1
+  npcOriginPlace: {fileID: 8618299129369446561}
+  detectedPlayer: {fileID: 0}
+  playerTag: Player
+  targetExceptionMask:
+    serializedVersion: 2
+    m_Bits: 0
+  hasSeenPlayer: 0
+  viewDistance: 10
+  currentViewAngle: 0
+  viewAngle: 150
+  alertRadius: 15
+  fullChaseDuration: 5
+  isInFullChase: 0
+  defaultFacingDirection: 1
+  isFacingRight: 0
+  raycastEmitter: {fileID: 5825616077669887248}
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  interactRaycast: 5
+  debugLineRenderer: {fileID: 7797986843248318835}
+  debugLineMaterial: {fileID: 2100000, guid: 3f4f3d8b16da4f44ea42a40b9eaa2527, type: 2}
+  debugLineWidth: 0.1
+  viewConeRenderer: {fileID: 7797986843248318835}
+  normalViewConeMaterial: {fileID: 2100000, guid: 510f1a4c405d15b44836b4cd601a8d6c,
+    type: 2}
+  alertedViewConeMaterial: {fileID: 2100000, guid: 25cba0c6a3b08d5468d1a6db26100cee,
+    type: 2}
+  viewConeWidth: 0.05
 --- !u!1 &3759024926885119728
 GameObject:
   m_ObjectHideFlags: 0

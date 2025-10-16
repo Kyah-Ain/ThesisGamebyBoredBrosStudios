@@ -18,7 +18,7 @@ public class Player2Point5D : CharacterController3D
     public float staminaRecoveryRate = 3f; // How fast stamina recovers per second when not running
 
     [Header("REGULATORS")]
-    private bool isFacingRight = true; // For flipping the 2D Character (Left or Right)
+    public bool isFacingRight = true; // For flipping the 2D Character (Left or Right)
     public bool isExhausted = false; // Determines if the character is exhausted (stamina is 0 or less)
     float exhaustionTimer = 0f; // Timer to manage exhaustion duration
 
@@ -192,6 +192,10 @@ public class Player2Point5D : CharacterController3D
 
             // Check if the hit object has a NavMeshObstacle
             NavMeshObstacle obstacle = hitInfo.collider.GetComponent<NavMeshObstacle>();
+
+            // Check if the hit object has a CombatLodging component
+            CombatLodging playerCombatLodging = GetComponent<CombatLodging>();
+
             if (obstacle != null)
             {
                 Debug.Log("Hit object has NavMeshObstacle - this might be blocking raycasts when carved");
@@ -205,8 +209,25 @@ public class Player2Point5D : CharacterController3D
             {
                 Debug.Log("Player attacked an enemy");
 
+                // Apply damage using interface method
                 damageable.TakeDamage(attackDamage);
+
+                // Apply knockback to the enemy
+                CombatManager targetCombat = hitInfo.collider.GetComponentInParent<CombatManager>();
+
+                if (targetCombat != null)
+                {
+                    // ...
+                    targetCombat.ApplyKnockback(transform.position);
+                }
+                
                 playerHits = true; // Set to true when player hits an opponent
+
+                // Trigger attack lodge for PLAYER
+                if (playerCombatLodging != null)
+                {
+                    playerCombatLodging.OnAttackPerformed();
+                }
 
                 // ...
                 StartCoroutine(PauseMovement(attackDuration));
@@ -214,13 +235,14 @@ public class Player2Point5D : CharacterController3D
         }
     }
 
-    // ...
+    // Method to pause player movement during attacks
     public IEnumerator PauseMovement(float duration)
     {
         //Debug.Log($"BEFORE: isAttacking = {isAttacking}");
 
         isCoroutineDone = true; // Prevents new attacks while current one isn't done yet
         inputDirection = new Vector2(0f, 0f); // Makes the player not move while attacking
+        //inputDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         yield return new WaitForSeconds(duration);
 

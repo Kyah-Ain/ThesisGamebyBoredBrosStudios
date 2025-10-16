@@ -35,7 +35,7 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
     [Header("Facing Direction")]
     public FacingDirection defaultFacingDirection = FacingDirection.Right; // Default facing direction
     public enum FacingDirection { Right, Left } // For setting default facing direction of the NPC
-    private bool isFacingRight = false; // For flipping the 2D Character (Left or Right)
+    public bool isFacingRight = false; // For flipping the 2D Character (Left or Right)
 
     [Header("Interactables")]
     public GameObject raycastEmitter; // The game object that will emits the raycast
@@ -493,10 +493,34 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
         {
             Debug.Log($"Trying to interact with: {hitInfo.collider.name}");
 
+            // Check if the hit object implements IDamageable interface
             IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
+
+            // Check if the hit object has a CombatLodging component
+            CombatLodging npcCombatLodging = GetComponent<CombatLodging>();
+
             if (damageable != null)
             {
                 npcCanAttack = false; // Prevent attacking during cooldown
+
+                // Apply damage using interface method
+                damageable.TakeDamage(npcAttackDamage);
+
+                // Apply knockback to the player
+                CombatManager targetCombat = hitInfo.collider.GetComponentInParent<CombatManager>();
+                if (targetCombat != null)
+                {
+                    // ...
+                    targetCombat.ApplyKnockback(transform.position);
+                }
+
+                // Apply attack lodge for NPC
+                if (npcCombatLodging != null)
+                {
+                    // ...
+                    npcCombatLodging.OnAttackPerformed();
+                }
+
                 // Pass on the 'character to damage' & the 'cooldown before the next damage' unto the Coroutine
                 StartCoroutine(NPCAttackCooldown(damageable, npcAttackCooldown));
 
@@ -508,8 +532,8 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
     // Coroutine to handle attack cooldown period
     protected virtual IEnumerator NPCAttackCooldown(IDamageable victim, float cooldown)
     {
-        // Apply damage to the subject or character 
-        victim.TakeDamage(npcAttackDamage);
+        //// Apply damage to the subject or character 
+        //victim.TakeDamage(npcAttackDamage);
 
         // Applies cooldown before being called again
         yield return new WaitForSeconds(cooldown);
