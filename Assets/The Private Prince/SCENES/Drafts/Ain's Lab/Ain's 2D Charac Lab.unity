@@ -5395,59 +5395,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 178752508}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &180461793 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7757799454336587648, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
-    type: 3}
-  m_PrefabInstance: {fileID: 264937550318881417}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &180461796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180461793}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e501d18bb52cf8c40b1853ca4904654f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_CollideAgainst:
-    serializedVersion: 2
-    m_Bits: 511
-  m_IgnoreTag: Border
-  m_TransparentLayers:
-    serializedVersion: 2
-    m_Bits: 1024
-  m_MinimumDistanceFromTarget: 0.1
-  m_AvoidObstacles: 1
-  m_DistanceLimit: 0
-  m_MinimumOcclusionTime: 0
-  m_CameraRadius: 0.1
-  m_Strategy: 0
-  m_MaximumEffort: 4
-  m_SmoothingTime: 0
-  m_Damping: 1.25
-  m_DampingWhenOccluded: 0
-  m_OptimalTargetDistance: 0
---- !u!114 &180461797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180461793}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2fba25a5cd15594e8f050a11e386c80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ConfineMode: 1
-  m_BoundingVolume: {fileID: 934408217}
-  m_BoundingShape2D: {fileID: 0}
-  m_ConfineScreenEdges: 1
-  m_Damping: 0
 --- !u!1001 &182973492
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24304,7 +24251,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -56911,6 +56858,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 899736140}
     m_Modifications:
+    - target: {fileID: 330636905177991014, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
+        type: 3}
+      propertyPath: m_BoundingVolume
+      value: 
+      objectReference: {fileID: 934408217}
     - target: {fileID: 3356730650485628665, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
         type: 3}
       propertyPath: heartsLeft.Array.data[0]
@@ -56936,11 +56888,6 @@ PrefabInstance:
       propertyPath: heartsLeft.Array.data[4]
       value: 
       objectReference: {fileID: 194995436}
-    - target: {fileID: 3829493235491555709, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
-        type: 3}
-      propertyPath: m_Lens.NearClipPlane
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3944118832068428985, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
         type: 3}
       propertyPath: m_Name
@@ -56999,15 +56946,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7757799454336587648, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 180461796}
-    - targetCorrespondingSourceObject: {fileID: 7757799454336587648, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 180461797}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2913ad5a01fab44bbc0324b6b4deb2d, type: 3}
 --- !u!33 &437854634263253289
 MeshFilter:
