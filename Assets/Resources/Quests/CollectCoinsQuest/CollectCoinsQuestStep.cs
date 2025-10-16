@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//test custom Quest
 public class CollectCoinsQuestStep : QuestStep
 {
     private int coinsCollected = 0;
@@ -21,12 +22,25 @@ public class CollectCoinsQuestStep : QuestStep
     {
         //if (coinsCollected < coinsToComplete)
         //{
-        //coinsCollected++;
+            //coinsCollected++;
+            //UpdateState();
         //}
 
         //if (coinsCollected >= coinsToComplete)
         //{
             //FinishQuestStep();
         //}
+    }
+
+    private void UpdateState()
+    {
+        string state = coinsCollected.ToString();
+        ChangeState(state);
+    }
+
+    protected override void SetQuestStepState(string state)
+    {
+        this.coinsCollected = System.Int32.Parse(state);
+        UpdateState();
     }
 }
