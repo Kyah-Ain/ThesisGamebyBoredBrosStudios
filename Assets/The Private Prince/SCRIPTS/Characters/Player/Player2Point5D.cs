@@ -24,13 +24,13 @@ public class Player2Point5D : CharacterController3D
 
     [Header("INTERACTABLES")]
     public int attackDamage = 10; // Damage dealt when attacking an enemy
-    public float attackDuration = 1f; // ...
-    public bool playerHits; // ...
+    public float attackDuration = 1f; // Duration of attack animation and cooldown
+    public bool playerHits; // Tracks if player successfully hit an opponent
 
     public float interactRaycast = 5f; // Defines how long the raycast would be
     public LayerMask hitLayers; // Defines what only can be interacted with the raycast
 
-    public bool isCoroutineDone = false; // ...
+    public bool isCoroutineDone = false; // Prevents overlapping attack coroutines
 
     [Header("DIALOGUE")]
     [SerializeField] private DialogueUI dialogueUI;
@@ -70,7 +70,6 @@ public class Player2Point5D : CharacterController3D
         {
             Interactable?.Interact(this); // Used null propagation for less lines
         }
-
     }
 
     // Handles player input for movements
@@ -91,23 +90,16 @@ public class Player2Point5D : CharacterController3D
         base.JumpControl();
         base.CombatControl();
 
-        // ...
-        if (isAttacking)
+        // Handle movement restrictions during combat actions
+        // NOTE: CombatMomentum now handles movement pausing during attacks internally
+        if (isAttacking || isBlocking)
         {
-            if (!isCoroutineDone)
-            {
-                StartCoroutine(PauseMovement(attackDuration));
-            }
-        }
-        else if (isBlocking)
-        {
-            inputDirection = new Vector2(0f, 0f);
+            inputDirection = new Vector2(0f, 0f); // Stop movement while blocking
         }
         else
         {
-            base.MoveControl();
+            base.MoveControl(); // Normal movement when not blocking
         }
-        //Debug.Log($"isAttacking: {isAttacking} & isBlocking: {isBlocking}");
 
         // Calls from the parent class (MovementManager)
         CalculateMovement(inputDirection, isRunning);
@@ -129,16 +121,6 @@ public class Player2Point5D : CharacterController3D
             localScale.x *= -1f;
             transform.localScale = localScale;
         }
-
-        //// METHOD 2: JUST ROTATE THE GAME OBJECT FOR SMOOTHER TRANSITION
-        ////Flip to Left                       //Flip to Right
-        //if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
-        //{
-        //    isFacingRight = !isFacingRight;
-
-        //    // Flip the sprite on the X-axis
-        //    spriteRenderer.flipX = !isFacingRight;
-        //}
     }
 
     // Manages stamina drain and recovery
@@ -185,71 +167,92 @@ public class Player2Point5D : CharacterController3D
         Ray interactionRay = new Ray(rayOrigin, rayDirection);
         Debug.DrawRay(rayOrigin, rayDirection * interactRaycast, Color.blue);
 
-        // Checks if the ray hits an object within the specified distance and layers
-        if (Physics.Raycast(interactionRay, out RaycastHit hitInfo, interactRaycast, hitLayers))
+        //// Get CombatMomentum reference at the start
+        //CombatMomentum playerCombatMomentum = GetComponent<CombatMomentum>();
+
+        // Attacks when Mouse Left Click button is pressed (with or without hitting something)
+        if (Input.GetButtonDown("Fire1"))
         {
-            Debug.Log($"Trying to interact with: {hitInfo.collider.name}");
+            Debug.Log("Player performed attack");
 
-            // Check if the hit object has a NavMeshObstacle
-            NavMeshObstacle obstacle = hitInfo.collider.GetComponent<NavMeshObstacle>();
+            //// Trigger attack momentum for PLAYER (happens on every attack attempt)
+            //// CombatMomentum handles movement pausing internally during the forward push
+            //if (playerCombatMomentum != null)
+            //{
+            //    playerCombatMomentum.OnAttackPerformed();
+            //}
 
-            // Check if the hit object has a CombatLodging component
-            CombatLodging playerCombatLodging = GetComponent<CombatLodging>();
-
-            if (obstacle != null)
+            // Set attacking state for animation and cooldown
+            if (!isCoroutineDone)
             {
-                Debug.Log("Hit object has NavMeshObstacle - this might be blocking raycasts when carved");
+                StartCoroutine(AttackCooldown(attackDuration));
             }
 
-            // Traverse the hit object to find an IDamageable component
-            IDamageable damageable = hitInfo.collider.GetComponentInParent<IDamageable>();
-
-            // If an IDamageable component is found, apply damage when the Fire1 button is pressed
-            if (damageable != null & Input.GetButtonDown("Fire1"))
+            // Checks if the ray hits an object within the specified distance and layers
+            if (Physics.Raycast(interactionRay, out RaycastHit hitInfo, interactRaycast, hitLayers))
             {
-                Debug.Log("Player attacked an enemy");
+                Debug.Log($"Trying to interact with: {hitInfo.collider.name}");
 
-                // Apply damage using interface method
-                damageable.TakeDamage(attackDamage);
+                //// Check if the hit object has a NavMeshObstacle
+                //NavMeshObstacle obstacle = hitInfo.collider.GetComponent<NavMeshObstacle>();
 
-                // Apply knockback to the enemy
-                CombatManager targetCombat = hitInfo.collider.GetComponentInParent<CombatManager>();
+                //if (obstacle != null)
+                //{
+                //    Debug.Log("Hit object has NavMeshObstacle - this might be blocking raycasts when carved");
+                //}
 
-                if (targetCombat != null)
+                // Traverse the hit object to find an IDamageable component
+                IDamageable damageable = hitInfo.collider.GetComponentInParent<IDamageable>();
+
+                // Traverse the hit object to find an IKnockable component
+                IKnockable knockable = hitInfo.collider.GetComponentInParent<IKnockable>();
+
+                // If an IDamageable component is found, apply damage when the Fire1 button is pressed
+                if (damageable != null)
                 {
-                    // ...
-                    targetCombat.ApplyKnockback(transform.position);
-                }
-                
-                playerHits = true; // Set to true when player hits an opponent
+                    Debug.Log("Player attacked an enemy");
 
-                // Trigger attack lodge for PLAYER
-                if (playerCombatLodging != null)
-                {
-                    playerCombatLodging.OnAttackPerformed();
-                }
+                    // Apply damage using interface method
+                    damageable.TakeDamage(attackDamage);
 
-                // ...
-                StartCoroutine(PauseMovement(attackDuration));
+                    // If an IKnockable component is found, apply knockback
+                    if (knockable != null)
+                    {
+                        // Apply knockback using interface method
+                        knockable.KnockBack(transform, hitInfo.transform);
+                    }
+
+                    //// Apply knockback to the enemy
+                    //CombatManager targetCombat = hitInfo.collider.GetComponentInParent<CombatManager>();
+
+                    //if (targetCombat != null)
+                    //{
+                    //    targetCombat.ApplyKnockback(transform.position);
+                    //}
+
+                    playerHits = true; // Set to true when player hits an opponent
+                }
             }
         }
     }
 
-    // Method to pause player movement during attacks
-    public IEnumerator PauseMovement(float duration)
+    // Handles attack cooldown without affecting movement (movement handled by CombatMomentum)
+    public IEnumerator AttackCooldown(float duration)
     {
-        //Debug.Log($"BEFORE: isAttacking = {isAttacking}");
-
         isCoroutineDone = true; // Prevents new attacks while current one isn't done yet
-        inputDirection = new Vector2(0f, 0f); // Makes the player not move while attacking
-        //inputDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        isAttacking = true; // Set attacking state
+
+        // NOTE: No movement pausing here - CombatMomentum handles it internally
+        // The character can still be moved by the attack momentum during this time
+
+        // For testing, might relocate this latur : 3
+        //inputDirection = new Vector2(0f, 0f);
 
         yield return new WaitForSeconds(duration);
 
-        isAttacking = false; // ...
-        isCoroutineDone = false; // ...
+        isAttacking = false; // Reset attacking state
+        isCoroutineDone = false; // Allow new attacks
 
-        //Debug.Log($"AFTER: isAttacking = {isAttacking}");
-        //Debug.Log("Coroutine finished.");
+        Debug.Log("Attack cooldown finished.");
     }
 }

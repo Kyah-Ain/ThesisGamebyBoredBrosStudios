@@ -496,8 +496,8 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
             // Check if the hit object implements IDamageable interface
             IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
 
-            // Check if the hit object has a CombatLodging component
-            CombatLodging npcCombatLodging = GetComponent<CombatLodging>();
+            //// Check if the hit object has a CombatMomentum component
+            //CombatMomentum npcCombatMomentum = GetComponent<CombatMomentum>();
 
             if (damageable != null)
             {
@@ -506,20 +506,20 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
                 // Apply damage using interface method
                 damageable.TakeDamage(npcAttackDamage);
 
-                // Apply knockback to the player
-                CombatManager targetCombat = hitInfo.collider.GetComponentInParent<CombatManager>();
-                if (targetCombat != null)
-                {
-                    // ...
-                    targetCombat.ApplyKnockback(transform.position);
-                }
+                //// Apply knockback to the player
+                //CombatManager targetCombat = hitInfo.collider.GetComponentInParent<CombatManager>();
+                //if (targetCombat != null)
+                //{
+                //    // ...
+                //    //targetCombat.ApplyKnockback(transform.position);
+                //}
 
-                // Apply attack lodge for NPC
-                if (npcCombatLodging != null)
-                {
-                    // ...
-                    npcCombatLodging.OnAttackPerformed();
-                }
+                //// Apply attack lodge for NPC
+                //if (npcCombatMomentum != null)
+                //{
+                //    // ...
+                //    npcCombatMomentum.OnAttackPerformed();
+                //}
 
                 // Pass on the 'character to damage' & the 'cooldown before the next damage' unto the Coroutine
                 StartCoroutine(NPCAttackCooldown(damageable, npcAttackCooldown));

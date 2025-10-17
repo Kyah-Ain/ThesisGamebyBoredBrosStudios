@@ -298,13 +298,17 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  attackLodgeDistance: 0.5
-  lodgeDuration: 0.2
+  attackPushDistance: 0.5
+  pushDuration: 0.2
+  enableCombatPush: 1
+  useSmoothMovement: 1
+  smoothingFactor: 0.1
   enableDiagonalKnockback: 1
   useEightDirectionKnockback: 1
   diagonalForceMultiplier: 0.7
+  constantKnockbackDirection: {x: 0, y: 0, z: -1}
   isKnockBackActive: 0
-  isLodgingActive: 0
+  isMomentumActive: 0
 --- !u!114 &5975781723822109860
 MonoBehaviour:
   m_ObjectHideFlags: 0

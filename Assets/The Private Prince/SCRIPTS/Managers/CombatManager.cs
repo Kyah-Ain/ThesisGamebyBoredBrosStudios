@@ -3,7 +3,7 @@ using System.Collections.Generic; // Grants access to collections structures lik
 using UnityEngine; // Grants access to Unity's core features like Data types, DateTime, Math, and Debug
 using System; // Grants access to base system functions and data types
 
-public class CombatManager : MonoBehaviour, IDamageable
+public class CombatManager : MonoBehaviour, IDamageable, IKnockable
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -14,6 +14,11 @@ public class CombatManager : MonoBehaviour, IDamageable
     public float maxHealth = 5f; // Maximum health capacity
     public int healRate = 1; // Health regeneration rate per second
 
+    [Header("KNOCKBACK MECHANICS")]
+    public float knockbackForce = 0.1f; // Default force applied during knockback
+    public enum KnockbackMode { Enabled, Disabled }
+    public KnockbackMode knockbackMode = KnockbackMode.Enabled;
+
     // Interface implementation for IDamageable
     public float iHealth { get => health; set => health = value; }
     public float iMaxHealth { get => maxHealth; set => maxHealth = value; }
@@ -21,17 +26,17 @@ public class CombatManager : MonoBehaviour, IDamageable
     [Header("DEAD SUBJECT")]
     public GameObject objectToKill;
 
-    [Header("KNOCKBACK")]
-    public bool enableKnockback = true;
-    private CombatLodging combatLodging;
+    //[Header("KNOCKBACK")]
+    //public bool enableKnockback = true;
+    //private CombatMomentum combatMomentum;
 
     // ------------------------- METHODS -------------------------
 
-    // Awake is called when the script instance is being loaded
-    private void Awake()
-    {
-        combatLodging = GetComponent<CombatLodging>();
-    }
+    //// Awake is called when the script instance is being loaded
+    //private void Awake()
+    //{
+    //    //combatMomentum = GetComponent<CombatMomentum>();
+    //}
 
     // Update is called once per frame
     public virtual void Update()
@@ -87,22 +92,42 @@ public class CombatManager : MonoBehaviour, IDamageable
     }
 
     // Handles knockback effect when taking damage
-    public virtual void ApplyKnockback(Vector3 damageSource)
+    public virtual void KnockBack(Transform objectKnocker, Transform knockableObject)
     {
-        // Apply knockback if enabled
-        if (enableKnockback && combatLodging != null)
+        //// Apply knockback if enabled
+        //if (enableKnockback && combatMomentum != null)
+        //{
+        //    // ...
+        //    combatMomentum.OnDamageTaken(damageSource);
+        //}
+
+        // Check if knockback is enabled using the enum field
+        if (knockbackMode == KnockbackMode.Disabled)
         {
-            // ...
-            combatLodging.OnDamageTaken(damageSource);
+            return; // Exit early if knockback is disabled
+        }
+
+        // Knockback character to the RIGHT if the attacker position is on the LEFT & vice versa
+        if (objectKnocker.position.x < knockableObject.position.x) 
+        {
+            // Knockback to the right
+            Vector3 knockBack = new Vector3(knockbackForce, 0, 0);
+            knockableObject.transform.position += knockBack;
+        }
+        else
+        {
+            // Knockback to the left
+            Vector3 knockBack = new Vector3(knockbackForce, 0, 0);
+            knockableObject.transform.position -= knockBack;
         }
     }
 
-    // Handles taking damage with knockback effect
-    public virtual void TakeDamageWithKnockback(int damage, Vector3 damageSource)
-    {
-        TakeDamage(damage); // Apply damage
-        ApplyKnockback(damageSource); // Apply knockback
-    }
+    //// Handles taking damage with knockback effect
+    //public virtual void TakeDamageWithKnockback(int damage, Vector3 damageSource)
+    //{
+    //    TakeDamage(damage); // Apply damage
+    //    KnockBack(damageSource); // Apply knockback
+    //}
 
     // Handles character healing over time
     public virtual void Heal()
