@@ -56988,21 +56988,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7568096045863959947, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7568096045863959947, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 5.7261825
-      objectReference: {fileID: 0}
-    - target: {fileID: 7568096045863959947, guid: a2913ad5a01fab44bbc0324b6b4deb2d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -9.063078
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -57426,6 +57411,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300812196183874382, guid: 7e5cd00e05eec6f4980ee21ad93ee9a7,
+        type: 3}
+      propertyPath: maxHealth
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7096561936256594762, guid: 7e5cd00e05eec6f4980ee21ad93ee9a7,
         type: 3}
@@ -58125,8 +58115,10 @@ MonoBehaviour:
   health: 100
   maxHealth: 5
   healRate: 1
-  knockbackForce: 0.1
+  knockBackEffect: 0.1
+  smoothDuration: 0.2
   knockbackMode: 0
+  knockBackType: 1
   objectToKill: {fileID: 0}
 --- !u!1 &5163012037615371094
 GameObject:
@@ -58439,8 +58431,10 @@ MonoBehaviour:
   health: 1000000
   maxHealth: 1000000
   healRate: 1000000
-  knockbackForce: 0.1
+  knockBackEffect: 0.1
+  smoothDuration: 0.2
   knockbackMode: 0
+  knockBackType: 1
   objectToKill: {fileID: 2077483413}
 --- !u!1001 &6932609948502634837
 PrefabInstance:
@@ -58548,47 +58542,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53572c71c7166cd42b8a73e58b1ffa69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisCharacter: {fileID: 7598210664977818628}
-  characterController: {fileID: 0}
-  navMeshAgent: {fileID: 0}
-  movementManager: {fileID: 0}
-  npcBehaviour: {fileID: 0}
-  knockBackForce: 0.1
-  knockBackDuration: 0.3
-  knockbackCurve:
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  attackPushDistance: 0.5
-  pushDuration: 0.2
-  enableCombatPush: 1
-  useSmoothMovement: 1
-  smoothingFactor: 0.1
-  enableDiagonalKnockback: 1
-  useEightDirectionKnockback: 1
-  diagonalForceMultiplier: 0.7
-  isKnockBackActive: 0
-  isMomentumActive: 0
-  knockbackVelocity: {x: 0, y: 0, z: 0}
-  momentumVelocity: {x: 0, y: 0, z: 0}
-  targetMomentumPosition: {x: 0, y: 0, z: 0}
 --- !u!136 &7487445219299741266
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -58647,6 +58600,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8222245197435811769, guid: a37544fd81251424d855934000a9e607,
+        type: 3}
+      propertyPath: maxHealth
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8618299129369446561, guid: a37544fd81251424d855934000a9e607,
         type: 3}

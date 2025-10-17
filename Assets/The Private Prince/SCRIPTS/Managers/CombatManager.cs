@@ -15,9 +15,13 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
     public int healRate = 1; // Health regeneration rate per second
 
     [Header("KNOCKBACK MECHANICS")]
-    public float knockbackForce = 0.1f; // Default force applied during knockback
+    public float knockBackEffect = 0.1f; // Default force applied to the victim during knockback
+    public float smoothDuration = 0.2f; // Duration for smooth knockback effect
     public enum KnockbackMode { Enabled, Disabled }
     public KnockbackMode knockbackMode = KnockbackMode.Enabled;
+
+    public enum KnockBackType { JAGGED, SMOOTH }
+    public KnockBackType knockBackType = KnockBackType.SMOOTH;
 
     // Interface implementation for IDamageable
     public float iHealth { get => health; set => health = value; }
@@ -107,27 +111,50 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
             return; // Exit early if knockback is disabled
         }
 
-        // Knockback character to the RIGHT if the attacker position is on the LEFT & vice versa
-        if (objectKnocker.position.x < knockableObject.position.x) 
+        // Calculate direction from attacker to target (normalized)
+        Vector3 knockbackDirection = (knockableObject.position - objectKnocker.position).normalized;
+
+        // Remove Y component knockback (currently need X & Z axis only)
+        knockbackDirection.y = 0;
+
+        if (knockBackType == KnockBackType.JAGGED)
         {
-            // Knockback to the right
-            Vector3 knockBack = new Vector3(knockbackForce, 0, 0);
-            knockableObject.transform.position += knockBack;
+            // METHOD 1 JAGGED KNOCKBACK ----------------------------------------------------------------
+
+            // Apply knockback force
+            Vector3 knockbackForceVector = knockbackDirection * knockBackEffect;
+
+            // Apply the knockback
+            knockableObject.transform.position += knockbackForceVector;
         }
-        else
+        else 
         {
-            // Knockback to the left
-            Vector3 knockBack = new Vector3(knockbackForce, 0, 0);
-            knockableObject.transform.position -= knockBack;
+            // METHOD 2: SMOOTH KNOCKBACK ----------------------------------------------------------------
+
+            // Start smooth knockback coroutine
+            StartCoroutine(SmoothKnockback(knockableObject, knockbackDirection, knockBackEffect, smoothDuration));
         }
     }
 
-    //// Handles taking damage with knockback effect
-    //public virtual void TakeDamageWithKnockback(int damage, Vector3 damageSource)
-    //{
-    //    TakeDamage(damage); // Apply damage
-    //    KnockBack(damageSource); // Apply knockback
-    //}
+    // Coroutine for smooth knockback effect
+    private IEnumerator SmoothKnockback(Transform target, Vector3 direction, float force, float duration)
+    {
+        float elapsed = 0f;
+        Vector3 startPosition = target.position;
+        Vector3 targetPosition = startPosition + (direction * force);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            float smoothness = Mathf.SmoothStep(0f, 1f, t);
+
+            target.position = Vector3.Lerp(startPosition, targetPosition, smoothness);
+            yield return null;
+        }
+
+        target.position = targetPosition;
+    }
 
     // Handles character healing over time
     public virtual void Heal()

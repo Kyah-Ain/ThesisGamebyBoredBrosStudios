@@ -1,10 +1,10 @@
-﻿//using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
-//using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
-//using UnityEngine; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
-//using UnityEngine.AI; // Grants access to Unity's AI and Navigation features
+﻿using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
+using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
+using UnityEngine; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
+using UnityEngine.AI; // Grants access to Unity's AI and Navigation features
 
-//public class CombatMomentum : MonoBehaviour
-//{
+public class CombatMomentum : MonoBehaviour
+{
 //    // ------------------------- VARIABLES -------------------------
 
 //    [Header("CHARACTER COMPONENTS")]
@@ -396,4 +396,4 @@
 //        Gizmos.color = Color.green;
 //        Gizmos.DrawRay(transform.position, transform.forward * attackPushDistance);
 //    }
-//}
+}

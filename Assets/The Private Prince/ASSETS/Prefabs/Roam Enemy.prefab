@@ -565,10 +565,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  maxHealth: 5
+  maxHealth: 100
   healRate: 1
+  knockBackEffect: 0.1
+  smoothDuration: 0.2
+  knockbackMode: 0
+  knockBackType: 1
   objectToKill: {fileID: 7096561936256594762}
-  enableKnockback: 1
 --- !u!114 &1385562521952677422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,43 +584,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53572c71c7166cd42b8a73e58b1ffa69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementTarget: {fileID: 1718246493901118923}
-  knockBackForce: 0.1
-  knockBackDuration: 0.3
-  knockbackCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  attackPushDistance: 0.5
-  pushDuration: 0.2
-  enableCombatPush: 1
-  useSmoothMovement: 1
-  smoothingFactor: 0.1
-  enableDiagonalKnockback: 1
-  useEightDirectionKnockback: 1
-  diagonalForceMultiplier: 0.7
-  isKnockBackActive: 0
-  isMomentumActive: 0
 --- !u!114 &1315678201657199335
 MonoBehaviour:
   m_ObjectHideFlags: 0

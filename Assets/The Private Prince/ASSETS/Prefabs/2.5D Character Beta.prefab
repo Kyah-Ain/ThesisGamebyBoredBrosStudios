@@ -403,7 +403,7 @@ MonoBehaviour:
   staminaRecoveryRate: 5
   isFacingRight: 1
   isExhausted: 0
-  attackDamage: 100
+  attackDamage: 10
   attackDuration: 0.5
   playerHits: 0
   interactRaycast: 3
@@ -427,8 +427,11 @@ MonoBehaviour:
   health: 5
   maxHealth: 5
   healRate: 1
+  knockBackEffect: 0.1
+  smoothDuration: 0.2
+  knockbackMode: 0
+  knockBackType: 1
   objectToKill: {fileID: 3944118832068428985}
-  enableKnockback: 1
   player2Point5D: {fileID: 6079771419730663201}
   heartsLeft:
   - {fileID: 0}
@@ -449,42 +452,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53572c71c7166cd42b8a73e58b1ffa69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisCharacter: {fileID: 3365932091219003684}
-  knockBackForce: 0.1
-  knockBackDuration: 0.3
-  knockbackCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  knockbackDirection: {x: 0, y: 0, z: -1}
-  useRelativeDirection: 1
-  attackPushDistance: 0.5
-  pushDuration: 0.2
-  enableCombatPush: 1
-  useSmoothMovement: 1
-  smoothingFactor: 0.25
-  isKnockBackActive: 0
-  isMomentumActive: 0
 --- !u!1 &7757799454336587648
 GameObject:
   m_ObjectHideFlags: 0
