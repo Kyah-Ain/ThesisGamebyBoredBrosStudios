@@ -4,24 +4,35 @@ using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
+    public static QuestManager Instance { get; private set; }
+
     private Dictionary<string, Quest> questMap;
 
     private int currentPlayerLevel;
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
         questMap = CreateQuestMap();
     }
 
     private void OnEnable()
     {
+        if (GameEventsManager.Instance == null) return;
+
+        Debug.Log("QuestManager: Subscribing to quest events");
         GameEventsManager.Instance.questEvents.onStartQuest += StartQuest;
         GameEventsManager.Instance.questEvents.onAdvanceQuest += AdvanceQuest;
         GameEventsManager.Instance.questEvents.onFinishQuest += FinishQuest;
-
         GameEventsManager.Instance.questEvents.onQuestStepStateChange += QuestStepStateChange;
 
-        //GameEventsManager.Instance.playerEvents.onPlayerLevelChange += PlayerLevelChange no level up currently will add on a later date
+        Debug.Log("QuestManager: Successfully subscribed to all events");
     }
 
     private void OnDisable()
@@ -37,6 +48,24 @@ public class QuestManager : MonoBehaviour
 
     private void Start()
     {
+        // TEMPORARY: Clear corrupted quest data
+        PlayerPrefs.DeleteKey("Tandang_Quest");
+        PlayerPrefs.DeleteKey("FightClub_Rumor");
+        PlayerPrefs.Save();
+        Debug.Log("Cleared saved quest data");
+
+        // Recreate quest map with fresh data
+        questMap = CreateQuestMap();
+
+        // Backup subscription in case it's missed due to execution order
+        if (GameEventsManager.Instance != null)
+        {
+            GameEventsManager.Instance.questEvents.onStartQuest += StartQuest;
+            GameEventsManager.Instance.questEvents.onAdvanceQuest += AdvanceQuest;
+            GameEventsManager.Instance.questEvents.onFinishQuest += FinishQuest;
+            GameEventsManager.Instance.questEvents.onQuestStepStateChange += QuestStepStateChange;
+        }
+
         // Broadcast the initial state of all quests on startup
         foreach (Quest quest in questMap.Values)
         {
@@ -99,43 +128,44 @@ public class QuestManager : MonoBehaviour
     {
         // Start the quest
         Quest quest = GetQuestById(id);
+
+        // DEBUG: Check quest state - we can't access private field directly
+        Debug.Log($"Starting quest: {id}, State: {quest.state}");
+
         quest.InstantiateCurrentQuestStep(this.transform);
         ChangeQuestState(quest.info.id, QuestState.IN_PROGRESS);
     }
 
     private void AdvanceQuest(string id)
+{
+    Debug.Log($"QuestManager: Advancing quest {id}");
+    
+    Quest quest = GetQuestById(id);
+
+    quest.MoveToNextStep();
+
+    if (quest.CurrentStepExists())
     {
-        // Advance the quest
-        Quest quest = GetQuestById(id);
-
-        // move to the nest step
-        quest.MoveToNextStep();
-
-        // if there are more steps, instantiate the next one
-        if (quest.CurrentStepExists())
-        {
-            quest.InstantiateCurrentQuestStep(this.transform);
-        }
-        // if there are no more steps, finish all of them for the current quest
-        else
-        {
-            ChangeQuestState(quest.info.id, QuestState.CAN_FINISH);
-        }
+        quest.InstantiateCurrentQuestStep(this.transform);
     }
+    else
+    {
+        ChangeQuestState(quest.info.id, QuestState.CAN_FINISH);
+        Debug.Log($"QuestManager: Quest ready to finish - state: {quest.state}");
+    }
+}
 
     private void FinishQuest(string id)
     {
-        // Finish the quest
         Quest quest = GetQuestById(id);
-        //ClaimRewards(quest); this will be added in future iterations of the game
-        //ChangeQuestState(quest.info.id, QuestState.FINISHED);
+        ChangeQuestState(quest.info.id, QuestState.FINISHED);
     }
 
-    private void ClaimRewards(Quest quest)
-    {
+    //private void ClaimRewards(Quest quest)
+    //{
         //GameEventsManager.Instance.goldEvents.GoldGained(quest.info.goldReward);
         //GameEventsManager.instance.playerEvents.ExperienceGained(quest.info.experienceReward);
-    }
+    //}
 
     private void QuestStepStateChange(string id, int stepIndex, QuestStepState questStepState)
     {
@@ -162,7 +192,7 @@ public class QuestManager : MonoBehaviour
         return idToQuestMap;
     }
 
-    private Quest GetQuestById(string id)
+    public Quest GetQuestById(string id)
     {
         Quest quest = questMap[id];
         if (quest == null)

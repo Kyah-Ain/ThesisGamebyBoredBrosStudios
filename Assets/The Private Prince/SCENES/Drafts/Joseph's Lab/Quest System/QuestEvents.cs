@@ -17,10 +17,20 @@ public class QuestEvents
 
     public void AdvanceQuest(string id)
     {
+        Debug.Log($"=== QUEST EVENTS DEBUG ===");
+        Debug.Log($"QuestEvents: Advancing quest {id}");
+
         if (onAdvanceQuest != null)
         {
+            Debug.Log($"Invoking onAdvanceQuest event for {id}");
             onAdvanceQuest(id);
+            Debug.Log($"Event invoked successfully");
         }
+        else
+        {
+            Debug.LogWarning($"No subscribers to onAdvanceQuest event for {id}");
+        }
+        Debug.Log($"=== END QUEST EVENTS DEBUG ===");
     }
 
     public event Action<string> onFinishQuest;

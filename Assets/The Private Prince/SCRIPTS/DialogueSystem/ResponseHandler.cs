@@ -49,30 +49,35 @@ public class ResponseHandler : MonoBehaviour
 
     private void OnPickedResponse(Response response, int responseIndex)
     {
-        responseBox.gameObject.SetActive(false); // Hide the response box
+        Debug.Log($"ResponseHandler: Picked response '{response.ResponseText}' at index {responseIndex}");
+
+        responseBox.gameObject.SetActive(false);
 
         foreach (GameObject button in tempResponseButton)
         {
-            Destroy(button); // Destroy all temporary response buttons
+            Destroy(button);
         }
-        tempResponseButton.Clear(); // Clear the list of temporary buttons
+        tempResponseButton.Clear();
 
-        if(responseEvents != null && responseIndex <= responseEvents.Length)
+        if (responseEvents != null && responseIndex <= responseEvents.Length)
         {
+            Debug.Log($"ResponseHandler: Invoking response event at index {responseIndex}");
             responseEvents[responseIndex].OnPickedResponse?.Invoke();
+        }
+        else
+        {
+            Debug.LogWarning($"ResponseHandler: No response event at index {responseIndex}");
         }
 
         responseEvents = null;
 
-        if(response.DialogueObject)
+        if (response.DialogueObject)
         {
-            dialogueUI.ShowDialogue(response.DialogueObject); 
+            dialogueUI.ShowDialogue(response.DialogueObject);
         }
         else
         {
             dialogueUI.CloseDialogueBox();
         }
-
-        dialogueUI.ShowDialogue(response.DialogueObject); // Show the next dialogue based on the chosen response
     }
 }

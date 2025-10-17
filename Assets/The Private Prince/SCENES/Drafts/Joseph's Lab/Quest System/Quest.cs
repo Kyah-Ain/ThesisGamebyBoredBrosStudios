@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Quest
@@ -51,7 +52,7 @@ public class Quest
 
     public bool CurrentStepExists()
     {
-        return currentQuestStepIndex >= info.questStepPrefabs.Length;
+        return currentQuestStepIndex < info.questStepPrefabs.Length;
     }
 
     public void InstantiateCurrentQuestStep(Transform parentTransform)
@@ -69,6 +70,12 @@ public class Quest
 
     private GameObject GetCurrentQuestStepPrefab()
     {
+        // TEMPORARY DEBUG
+        bool stepExists = CurrentStepExists();
+        Debug.Log($"GetCurrentQuestStepPrefab: stepIndex={currentQuestStepIndex}, " +
+                  $"arrayLength={info.questStepPrefabs.Length}, " +
+                  $"CurrentStepExists()={stepExists}");
+
         GameObject questStepPrefab = null;
         if (CurrentStepExists())
         {
@@ -76,8 +83,8 @@ public class Quest
         }
         else
         {
-            Debug.LogWarning("Tried to get quest step prefab, but stepIndex was out of range indicating that"
-                + "there's no current step: QuestId=" + info.id + ", stepIndex=" + currentQuestStepIndex);
+            Debug.LogWarning("Tried to get quest step prefab, but stepIndex was out of range: "
+                + "QuestId=" + info.id + ", stepIndex=" + currentQuestStepIndex);
         }
         return questStepPrefab;
     }
