@@ -496,8 +496,8 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
             // Check if the hit object implements IDamageable interface
             IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
 
-            //// Check if the hit object has a CombatMomentum component
-            //CombatMomentum npcCombatMomentum = GetComponent<CombatMomentum>();
+            // Traverse the hit object to find an IKnockable component
+            IKnockable knockable = hitInfo.collider.GetComponentInParent<IKnockable>();
 
             if (damageable != null)
             {
@@ -505,6 +505,13 @@ public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
 
                 // Apply damage using interface method
                 damageable.TakeDamage(npcAttackDamage);
+
+                // If an IKnockable component is found, apply knockback
+                if (knockable != null)
+                {
+                    // Apply knockback using interface method
+                    knockable.KnockBack(transform, hitInfo.transform);
+                }
 
                 //// Apply knockback to the player
                 //CombatManager targetCombat = hitInfo.collider.GetComponentInParent<CombatManager>();

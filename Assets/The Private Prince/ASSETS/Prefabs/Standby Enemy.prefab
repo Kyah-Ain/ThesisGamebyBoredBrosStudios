@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6049677083975663208}
   - component: {fileID: 3934134315994686439}
   - component: {fileID: 7797986843248318835}
+  - component: {fileID: 2613081477535907345}
   - component: {fileID: 8512559874339013448}
   - component: {fileID: 6846191255389116464}
   - component: {fileID: 8222245197435811769}
@@ -197,6 +198,27 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!65 &2613081477535907345
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2282970497907538862}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 3, z: 1.75}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &8512559874339013448
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -257,11 +279,18 @@ MonoBehaviour:
   health: 100
   maxHealth: 100
   healRate: 1
-  knockBackEffect: 0.1
+  knockBackEffect: 0.75
   smoothDuration: 0.2
   knockbackMode: 0
   knockBackType: 1
   objectToKill: {fileID: 3759024926885119728}
+  navMeshAgent: {fileID: 0}
+  enemyBehaviour: {fileID: 0}
+  isBeingAttacked: 0
+  wasAgentEnabled: 0
+  movementRecoveryTime: 0.5
+  recoveryTimer: 0
+  isInRecovery: 0
 --- !u!114 &4880783693032977707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,7 +375,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3759024926885119728}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 59.5, y: -15.75, z: 20.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
