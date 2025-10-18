@@ -92,4 +92,9 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit(); // Quit the application
     }
+
+    public void LoadPuzzleLevel()
+    {
+        SceneManager.LoadScene("Mechanics Demo Test");
+    }
 }
