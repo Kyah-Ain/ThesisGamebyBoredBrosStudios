@@ -35,6 +35,11 @@ public abstract class PuzzleBase : MonoBehaviour
         timer = timeLimit;
         active = true;
         ShowUI(true);
+
+        if (MusicManager.Instance != null)
+        {
+            MusicManager.Instance.PlayPuzzleMusic();
+        }
     }
 
     public virtual void EndPuzzle(PuzzleResult result)
@@ -42,6 +47,11 @@ public abstract class PuzzleBase : MonoBehaviour
         active = false;
         Debug.Log($"Puzzle ended with result: {result}");
         ShowUI(false);
+
+        if (MusicManager.Instance != null)
+        {
+            MusicManager.Instance.ResumePreviousMusic();
+        }
     }
 
     public virtual void PausePuzzle()

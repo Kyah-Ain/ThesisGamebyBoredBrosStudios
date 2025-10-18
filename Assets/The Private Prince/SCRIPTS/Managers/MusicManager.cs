@@ -9,10 +9,15 @@ public class MusicManager : MonoBehaviour
 
     [Header("Music Settings")]
     public AudioClip mainMenuMusic;
+    public AudioClip puzzleMusic;
+    public AudioClip gameMusic; // Optional: regular game music
     public AudioSource audioSource;
 
     [Header("Scene Names")]
     public string mainMenuScene = "MainMenu";
+
+    private AudioClip previousMusic; // Store what was playing before puzzle
+    private bool wasPlayingBeforePuzzle = false;
 
     private void Awake()
     {
@@ -22,7 +27,6 @@ public class MusicManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
 
-            // Set up audio source if not assigned
             if (audioSource == null)
                 audioSource = GetComponent<AudioSource>();
         }
@@ -42,7 +46,15 @@ public class MusicManager : MonoBehaviour
         }
         else
         {
-            StopMusic();
+            // Play regular game music if available, otherwise stop music
+            if (gameMusic != null)
+            {
+                PlayGameMusic();
+            }
+            else
+            {
+                StopMusic();
+            }
         }
     }
 
@@ -55,6 +67,59 @@ public class MusicManager : MonoBehaviour
             audioSource.Play();
             Debug.Log("Main menu music started");
         }
+    }
+
+    private void PlayGameMusic()
+    {
+        if (gameMusic != null && audioSource != null)
+        {
+            audioSource.clip = gameMusic;
+            audioSource.loop = true;
+            audioSource.Play();
+            Debug.Log("Game music started");
+        }
+    }
+
+    public void PlayPuzzleMusic()
+    {
+        if (puzzleMusic != null && audioSource != null)
+        {
+            // Store current state before switching to puzzle music
+            previousMusic = audioSource.clip;
+            wasPlayingBeforePuzzle = audioSource.isPlaying;
+
+            audioSource.clip = puzzleMusic;
+            audioSource.loop = true;
+            audioSource.Play();
+            Debug.Log("Puzzle music started");
+        }
+    }
+
+    public void ResumePreviousMusic()
+    {
+        if (previousMusic != null && audioSource != null && wasPlayingBeforePuzzle)
+        {
+            audioSource.clip = previousMusic;
+            audioSource.loop = true;
+            audioSource.Play();
+            Debug.Log("Resumed previous music");
+        }
+        else
+        {
+            // If no previous music, play game music or stop
+            if (gameMusic != null)
+            {
+                PlayGameMusic();
+            }
+            else
+            {
+                StopMusic();
+            }
+        }
+
+        // Reset puzzle state
+        previousMusic = null;
+        wasPlayingBeforePuzzle = false;
     }
 
     private void StopMusic()
@@ -71,3 +136,4 @@ public class MusicManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
+
