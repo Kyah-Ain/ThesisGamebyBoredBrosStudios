@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneTransitionTrigger : MonoBehaviour
 {
-    [SerializeField] private string sceneToLoad = "CombatArena";
+    [SerializeField] private string sceneToLoad = "Ain's 2D Charac Lab"; // Your exact combat scene name;
 
     public void TransitionToCombatScene()
     {
