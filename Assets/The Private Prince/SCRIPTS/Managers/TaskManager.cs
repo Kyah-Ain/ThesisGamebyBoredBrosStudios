@@ -2,6 +2,7 @@ using System.Collections; // Grants access to collections and data structures li
 using System.Collections.Generic; // Grants access to collections and data structures like ArrayList, Hashtable, List, Dictionary, etc.
 using UnityEngine; // Grants access to Unity's core classes and functions, such as MonoBehaviour, GameObject, Transform, etc.
 using TMPro; // Grants access to TextMeshPro features such as TextMeshProUGUI, TMP_InputField, etc.
+using UnityEngine.SceneManagement;
 
 public class TaskManager : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class TaskManager : MonoBehaviour
 
     [Header("DISPLAY")]
     public TextMeshProUGUI taskOutput; // Reference to the UI text component on the game for displaying tasks
+
+    [Header("SCENE MANAGEMENT")]
+    [SerializeField] private string overworldSceneName = "Prototype Gameworld"; // Your overworld scene name
 
     // -------------------------- METHODS ---------------------------
 
@@ -44,6 +48,12 @@ public class TaskManager : MonoBehaviour
     {
         completedTasks++;
         UpdateDisplay();
+
+        // Check if all tasks are completed
+        if (completedTasks >= totalTasks)
+        {
+            ReturnToMainScene();
+        }
     }
 
     // Method to display current task status
@@ -67,11 +77,25 @@ public class TaskManager : MonoBehaviour
                 break;
             case 4:
                 taskOutput.text = "Congratulations, you passed the test!!";
+                // Auto-return after a delay when all tasks are complete
+                Invoke("ReturnToMainScene", 3f);
                 break;
             default:
                 taskOutput.text = $"Progress: {completedTasks}/{totalTasks}";
                 break;
         }
+    }
+
+    public void ReturnToMainScene()
+    {
+        Debug.Log($"Combat completed! Returning to {overworldSceneName}");
+        SceneManager.LoadScene(overworldSceneName);
+    }
+
+    public void ReturnToMainSceneManual()
+    {
+        Debug.Log($"Player manually returning to {overworldSceneName}");
+        SceneManager.LoadScene(overworldSceneName);
     }
 
     // Method to reset tasks to initial state

@@ -26,7 +26,7 @@ public class QuestPoint : MonoBehaviour
         // Setup collider automatically for 3D detection
         SphereCollider col = GetComponent<SphereCollider>();
         col.isTrigger = true;   // Must be a trigger collider for OnTriggerEnter/Exit to fire
-        col.radius = 2f;        // Default interaction range (editable in inspector)
+        col.radius = 2f;        // Default interaction range
     }
 
     private void OnEnable()
@@ -51,6 +51,15 @@ public class QuestPoint : MonoBehaviour
         {
             currentQuestState = quest.state;
             questIcon.SetState(currentQuestState, startPoint, finishPoint);
+
+            if (questIcon != null)
+            {
+                questIcon.SetState(currentQuestState, startPoint, finishPoint);
+            }
+            else
+            {
+                Debug.LogWarning($"QuestIcon not found on QuestPoint for quest: {questId}");
+            }
         }
     }
 

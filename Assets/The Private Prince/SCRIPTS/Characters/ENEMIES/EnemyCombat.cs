@@ -178,7 +178,7 @@ public class EnemyCombat : CombatManager
         recoveryTimer = 0f;
 
         // Immediately restore movement capabilities
-        if (navMeshAgent != null)
+        if (navMeshAgent != null && navMeshAgent.isActiveAndEnabled && navMeshAgent.isOnNavMesh)
         {
             navMeshAgent.isStopped = false;
         }

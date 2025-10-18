@@ -120,6 +120,11 @@ public class QuestManager : MonoBehaviour
             if (quest.state == QuestState.REQUIREMENTS_NOT_MET && CheckRequirementsMet(quest))
             {
                 ChangeQuestState(quest.info.id, QuestState.CAN_START);
+
+                if (quest != null && quest.info != null)
+                {
+                    ChangeQuestState(quest.info.id, QuestState.CAN_START);
+                }
             }
         }
     }
