@@ -157,8 +157,19 @@ public class QuestManager : MonoBehaviour
 
     private void FinishQuest(string id)
     {
+        Debug.Log($"QuestManager: Finishing quest {id}");
+
         Quest quest = GetQuestById(id);
-        ChangeQuestState(quest.info.id, QuestState.FINISHED);
+        if (quest != null)
+        {
+            Debug.Log($"Before finish - State: {quest.state}");
+            ChangeQuestState(quest.info.id, QuestState.FINISHED);
+            Debug.Log($"After finish - State: {quest.state}");
+        }
+        else
+        {
+            Debug.LogError($"Could not find quest to finish: {id}");
+        }
     }
 
     //private void ClaimRewards(Quest quest)
