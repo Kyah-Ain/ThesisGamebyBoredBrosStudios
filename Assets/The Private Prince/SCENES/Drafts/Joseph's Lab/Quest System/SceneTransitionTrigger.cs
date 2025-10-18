@@ -5,11 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class SceneTransitionTrigger : MonoBehaviour
 {
-    [SerializeField] private string sceneToLoad = "Ain's 2D Charac Lab"; // Your exact combat scene name;
+    [SerializeField] private string sceneToLoad = "Ain's 2D Charac Lab"; // Your combat scene name
 
     public void TransitionToCombatScene()
     {
-        Debug.Log($"Loading combat scene: {sceneToLoad}");
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null && GameDataManager.Instance != null)
+        {
+            GameDataManager.Instance.SaveBeforeCombat(
+                player.transform.position,
+                SceneManager.GetActiveScene().name
+            );
+        }
+
         SceneManager.LoadScene(sceneToLoad);
     }
 }

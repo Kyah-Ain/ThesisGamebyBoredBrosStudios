@@ -27,10 +27,15 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+            Debug.Log("Cleared all saved data for new game session");
+
+            DontDestroyOnLoad(gameObject);
         }
-        else 
+        else
         {
-            // If an instance already exists, destroy this duplicate to enforce singleton pattern
             Destroy(gameObject);
         }
     }

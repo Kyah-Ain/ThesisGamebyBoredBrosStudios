@@ -16,6 +16,20 @@ public abstract class PuzzleBase : MonoBehaviour
     protected float timer = 0f;
     protected bool active = false;
 
+    public bool IsActive() => active;
+    public void SetActive(bool value) => active = value;
+    public void SetUIRootActive(bool value) => uiRoot?.SetActive(value);
+
+    public bool IsPuzzleActive()
+    {
+        return active;
+    }
+
+    public void SetPuzzleActive(bool value)
+    {
+        active = value;
+    }
+
     public virtual void StartPuzzle()
     {
         timer = timeLimit;

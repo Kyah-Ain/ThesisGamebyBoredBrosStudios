@@ -48,6 +48,8 @@ public class ConnectPuzzle : PuzzleBase
     private List<WireSegment> currentWireSegments = new List<WireSegment>();
     private bool isDragging = false;
 
+    private bool isCompleted = false;
+
     [System.Serializable]
     public class WirePairData
     {
@@ -470,14 +472,12 @@ public class ConnectPuzzle : PuzzleBase
 
     private void CheckPuzzleCompletion()
     {
-        // Check if all wire pairs are connected
         foreach (var pair in wirePairs)
         {
             if (!pair.isConnected)
                 return;
         }
 
-        // Check if all paths are occupied
         for (int x = 0; x < gridSize; x++)
         {
             for (int y = 0; y < gridSize; y++)
@@ -489,6 +489,11 @@ public class ConnectPuzzle : PuzzleBase
                     return;
             }
         }
+
+        // Mark as completed
+        isCompleted = true;
+        uiRoot?.SetActive(false); // Hide UI when completed
+        active = false;
 
         PuzzleManager.Instance.EndPuzzle(PuzzleResult.Solved);
     }
@@ -824,5 +829,10 @@ public class ConnectPuzzle : PuzzleBase
         InitializeGrid();
         CreateWirePairsFromData();
         CreateGlitchDotsFromData();
+    }
+
+    public bool IsPuzzleCompleted()
+    {
+        return isCompleted;
     }
 }

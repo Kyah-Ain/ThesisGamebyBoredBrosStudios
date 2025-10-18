@@ -19,6 +19,8 @@ public class QuestManager : MonoBehaviour
         }
 
         Instance = this;
+        transform.SetParent(null);
+        DontDestroyOnLoad(gameObject);
         questMap = CreateQuestMap();
     }
 
@@ -48,12 +50,6 @@ public class QuestManager : MonoBehaviour
 
     private void Start()
     {
-        // TEMPORARY: Clear corrupted quest data
-        PlayerPrefs.DeleteKey("Tandang_Quest");
-        PlayerPrefs.DeleteKey("FightClub_Rumor");
-        PlayerPrefs.Save();
-        Debug.Log("Cleared saved quest data");
-
         // Recreate quest map with fresh data
         questMap = CreateQuestMap();
 
@@ -177,10 +173,20 @@ public class QuestManager : MonoBehaviour
         }
     }
 
+    public List<Quest> GetAllQuests()
+    {
+        List<Quest> allQuests = new List<Quest>();
+        foreach (var quest in questMap.Values)
+        {
+            allQuests.Add(quest);
+        }
+        return allQuests;
+    }
+
     //private void ClaimRewards(Quest quest)
     //{
-        //GameEventsManager.Instance.goldEvents.GoldGained(quest.info.goldReward);
-        //GameEventsManager.instance.playerEvents.ExperienceGained(quest.info.experienceReward);
+    //GameEventsManager.Instance.goldEvents.GoldGained(quest.info.goldReward);
+    //GameEventsManager.instance.playerEvents.ExperienceGained(quest.info.experienceReward);
     //}
 
     private void QuestStepStateChange(string id, int stepIndex, QuestStepState questStepState)

@@ -62,7 +62,4 @@ public class QuestEvents
             onQuestStepStateChange(id, stepIndex, questStateStep);
         }
     }
-
-
-
 }

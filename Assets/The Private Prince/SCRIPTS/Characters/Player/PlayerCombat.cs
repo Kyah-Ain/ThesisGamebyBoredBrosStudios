@@ -31,6 +31,15 @@ public class PlayerCombat : CombatManager
         health = maxHealth;
         UpdateHeartsUI();
         //ModifyHeartsUI();
+
+        Debug.Log($"Player health at start: {health}/{maxHealth}");
+
+        // Force reset health if it's 0
+        if (health <= 0)
+        {
+            health = maxHealth;
+            Debug.Log("Reset player health from 0");
+        }
     }
 
     // Update is called once per frame
@@ -127,7 +136,7 @@ public class PlayerCombat : CombatManager
     // Override Die method to handle player death differently
     public override void Die()
     {
-        base.Die();
+        //base.Die(); cinomment out ko mune may error lumalabas regarding dito - josep
 
         // ...
         if (GameManager.Instance != null) 
