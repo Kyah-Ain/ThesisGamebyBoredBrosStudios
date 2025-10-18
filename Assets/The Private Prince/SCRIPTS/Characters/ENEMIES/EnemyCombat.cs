@@ -197,18 +197,19 @@ public class EnemyCombat : CombatManager
         //// Update the Demo Task 2 enemy defeat count
         //DemoTask2.Instance.UpdateSlainedEnemies();
 
-        // Update the Demo Task 2 enemy defeat count
-        DemoTask2.Instance.UpdateSlainedEnemies();
+        //// Update the Demo Task 2 enemy defeat count
+        //DemoTask2.Instance.UpdateSlainedEnemies();
 
-        //if (DemoTask2.Instance != null)
-        //{
-        //    // Update the Demo Task 2 enemy defeat count
-        //    DemoTask2.Instance.UpdateSlainedEnemies();
-        //}
+        if (DemoTask2.Instance != null)
+        {
+            // Update the Demo Task 2 enemy defeat count
+            DemoTask2.Instance.UpdateSlainedEnemies();
+            Debug.Log($"EnemyCombat Die method called - notifying DemoTask2 of enemy defeat");
+        }
 
         // Calls the base Die method from Parent
         base.Die();
 
-        Debug.Log($"EnemyCombat Die method called - notifying DemoTask2 of enemy defeat");
+        
     }
 }
