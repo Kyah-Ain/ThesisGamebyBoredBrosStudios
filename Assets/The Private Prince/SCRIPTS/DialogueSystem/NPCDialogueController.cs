@@ -2,66 +2,137 @@ using UnityEngine;
 
 public class NPCDialogueController : MonoBehaviour
 {
+    [System.Serializable]
+    public class DialogueState
+    {
+        public QuestState questState;
+        public int minStepIndex = -1;
+        public int maxStepIndex = -1;
+        public DialogueObject dialogue;
+    }
+
     [SerializeField] private string questId;
+    [SerializeField] private DialogueState[] dialogueStates;
     [SerializeField] private DialogueObject defaultDialogue;
-    [SerializeField] private DialogueObject inProgressDialogue;
-    [SerializeField] private DialogueObject readyToCompleteDialogue;
-    [SerializeField] private DialogueObject afterCompletionDialogue; // NEW
+
+    public DialogueObject DefaultDialogue => defaultDialogue;
 
     private DialogueActivator dialogueActivator;
-    private bool questStepCompleted = false; // NEW: Track if this NPC's part is done
 
     private void Start()
     {
         dialogueActivator = GetComponent<DialogueActivator>();
-        GameEventsManager.Instance.questEvents.onQuestStateChange += OnQuestStateChange;
-        GameEventsManager.Instance.questEvents.onQuestStepStateChange += OnQuestStepStateChange; // NEW
+
+        if (GameEventsManager.Instance != null)
+        {
+            GameEventsManager.Instance.questEvents.onQuestStateChange += OnQuestStateChange;
+        }
+
+        UpdateDialogue();
     }
 
     private void OnQuestStateChange(Quest quest)
     {
         if (quest.info.id == questId)
         {
-            switch (quest.state)
-            {
-                case QuestState.REQUIREMENTS_NOT_MET:
-                case QuestState.CAN_START:
-                    dialogueActivator.UpdateDialogueObject(defaultDialogue);
-                    break;
-                case QuestState.IN_PROGRESS:
-                    if (questStepCompleted && afterCompletionDialogue != null)
-                    {
-                        dialogueActivator.UpdateDialogueObject(afterCompletionDialogue);
-                    }
-                    else
-                    {
-                        dialogueActivator.UpdateDialogueObject(inProgressDialogue);
-                    }
-                    break;
-                case QuestState.CAN_FINISH:
-                    dialogueActivator.UpdateDialogueObject(readyToCompleteDialogue);
-                    break;
-                case QuestState.FINISHED:
-                    if (afterCompletionDialogue != null)
-                        dialogueActivator.UpdateDialogueObject(afterCompletionDialogue);
-                    break;
-            }
+            UpdateDialogue();
         }
     }
 
-    // NEW: Track when this NPC's quest step is completed
-    private void OnQuestStepStateChange(string questId, int stepIndex, QuestStepState questStepState)
+    private void UpdateDialogue()
     {
-        if (questId == "Tandang_Quest")
+        if (QuestManager.Instance == null || string.IsNullOrEmpty(questId))
         {
-            // Store Owner completes step 1 (getting package)
-            if (this.questId == "Tandang_Quest" && stepIndex == 1)
+            SetDialogue(defaultDialogue);
+            return;
+        }
+
+        Quest quest = QuestManager.Instance.GetQuestById(questId);
+        if (quest == null)
+        {
+            SetDialogue(defaultDialogue);
+            return;
+        }
+
+        DialogueObject bestMatch = FindBestDialogueForState(quest);
+        SetDialogue(bestMatch != null ? bestMatch : defaultDialogue);
+    }
+
+    private DialogueObject FindBestDialogueForState(Quest quest)
+    {
+        DialogueObject bestMatch = null;
+        int bestPriority = -1;
+
+        foreach (DialogueState state in dialogueStates)
+        {
+            if (state.questState == quest.state)
             {
-                questStepCompleted = true;
-                // Update dialogue immediately
-                Quest quest = QuestManager.Instance.GetQuestById(questId);
-                OnQuestStateChange(quest);
+                int priority = CalculatePriority(state, quest);
+                if (priority > bestPriority)
+                {
+                    bestPriority = priority;
+                    bestMatch = state.dialogue;
+                }
             }
+        }
+
+        return bestMatch;
+    }
+
+    private int CalculatePriority(DialogueState state, Quest quest)
+    {
+        // Check step index constraints
+        bool stepValid = true;
+        if (state.minStepIndex >= 0 && quest.currentQuestStepIndex < state.minStepIndex)
+            stepValid = false;
+        if (state.maxStepIndex >= 0 && quest.currentQuestStepIndex > state.maxStepIndex)
+            stepValid = false;
+
+        if (!stepValid)
+            return -1;
+
+        // Higher priority for more specific step ranges
+        int priority = 0;
+        if (state.minStepIndex >= 0 || state.maxStepIndex >= 0)
+            priority += 10;
+
+        return priority;
+    }
+
+    private void SetDialogue(DialogueObject dialogue)
+    {
+        if (dialogueActivator != null && dialogue != null)
+        {
+            dialogueActivator.UpdateDialogueObject(dialogue);
+        }
+    }
+
+    public void ResetToDefault()
+    {
+        Debug.Log($"NPCDialogueController: Resetting to default dialogue for {questId}");
+
+        if (QuestManager.Instance == null || string.IsNullOrEmpty(questId))
+        {
+            SetDialogue(defaultDialogue);
+            return;
+        }
+
+        Quest quest = QuestManager.Instance.GetQuestById(questId);
+        if (quest == null)
+        {
+            SetDialogue(defaultDialogue);
+            return;
+        }
+
+        // Only reset to default if quest hasn't started
+        if (quest.state == QuestState.REQUIREMENTS_NOT_MET || quest.state == QuestState.CAN_START)
+        {
+            SetDialogue(defaultDialogue);
+        }
+        else
+        {
+            // Quest has started, use normal state handling
+            UpdateDialogue();
         }
     }
 
@@ -70,7 +141,6 @@ public class NPCDialogueController : MonoBehaviour
         if (GameEventsManager.Instance != null)
         {
             GameEventsManager.Instance.questEvents.onQuestStateChange -= OnQuestStateChange;
-            GameEventsManager.Instance.questEvents.onQuestStepStateChange -= OnQuestStepStateChange;
         }
     }
 }

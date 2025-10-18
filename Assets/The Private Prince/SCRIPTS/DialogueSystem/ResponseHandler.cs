@@ -5,18 +5,17 @@ using System.Collections.Generic;
 
 public class ResponseHandler : MonoBehaviour
 {
-    [SerializeField] private RectTransform responseBox; // The container for all response buttons
-    [SerializeField] private RectTransform responseButtonTemplate; // The template button for responses
-    [SerializeField] private RectTransform responseContainer; // The parent object for response buttons
+    [SerializeField] private RectTransform responseBox;
+    [SerializeField] private RectTransform responseButtonTemplate;
+    [SerializeField] private RectTransform responseContainer;
 
-    private DialogueUI dialogueUI; // Reference to the DialogueUI component
+    private DialogueUI dialogueUI;
     private ResponseEvent[] responseEvents;
-
-    private List<GameObject> tempResponseButton = new List<GameObject>(); // Temporary list to track created response buttons
+    private List<GameObject> tempResponseButton = new List<GameObject>();
 
     private void Start()
     {
-        dialogueUI = GetComponent<DialogueUI>(); // Get the DialogueUI component on the same GameObject
+        dialogueUI = GetComponent<DialogueUI>();
     }
 
     public void AddResponseEvents(ResponseEvent[] responseEvents)
@@ -26,31 +25,29 @@ public class ResponseHandler : MonoBehaviour
 
     public void ShowResponses(Response[] responses)
     {
-        float responseBoxHeight = 0; // Variable to calculate total height needed for response box
+        float responseBoxHeight = 0;
 
-        for(int i = 0; i < responses.Length; i++)
+        for (int i = 0; i < responses.Length; i++)
         {
             Response response = responses[i];
             int responseIndex = i;
 
-            GameObject responseButton = Instantiate(responseButtonTemplate.gameObject, responseContainer); // Create button from template
-            responseButton.gameObject.SetActive(true); // Enable the button (template is usually hidden)
-            responseButton.GetComponent<TMP_Text>().text = response.ResponseText; // Set button text to response text
-            responseButton.GetComponent<Button>().onClick.AddListener(() => OnPickedResponse(response, responseIndex)); // Add click event listener
+            GameObject responseButton = Instantiate(responseButtonTemplate.gameObject, responseContainer);
+            responseButton.gameObject.SetActive(true);
+            responseButton.GetComponent<TMP_Text>().text = response.ResponseText;
+            responseButton.GetComponent<Button>().onClick.AddListener(() => OnPickedResponse(response, responseIndex));
 
-            tempResponseButton.Add(responseButton); // Add button to temporary list for cleanup
+            tempResponseButton.Add(responseButton);
 
-            responseBoxHeight += responseButtonTemplate.sizeDelta.y; // Add button height to total height calculation
+            responseBoxHeight += responseButtonTemplate.sizeDelta.y;
         }
 
-        responseBox.sizeDelta = new Vector2(responseBox.sizeDelta.x, responseBoxHeight); // Resize response box to fit all buttons
-        responseBox.gameObject.SetActive(true); // Show the response box
+        responseBox.sizeDelta = new Vector2(responseBox.sizeDelta.x, responseBoxHeight);
+        responseBox.gameObject.SetActive(true);
     }
 
     private void OnPickedResponse(Response response, int responseIndex)
     {
-        Debug.Log($"ResponseHandler: Picked response '{response.ResponseText}' at index {responseIndex}");
-
         responseBox.gameObject.SetActive(false);
 
         foreach (GameObject button in tempResponseButton)
@@ -59,14 +56,21 @@ public class ResponseHandler : MonoBehaviour
         }
         tempResponseButton.Clear();
 
+        // Store whether this response should reset dialogue
+        bool shouldResetDialogue = false;
+
         if (responseEvents != null && responseIndex <= responseEvents.Length)
         {
-            Debug.Log($"ResponseHandler: Invoking response event at index {responseIndex}");
             responseEvents[responseIndex].OnPickedResponse?.Invoke();
-        }
-        else
-        {
-            Debug.LogWarning($"ResponseHandler: No response event at index {responseIndex}");
+
+            // Check if this is a "decline" response that should reset
+            if (response.ResponseText.ToLower().Contains("not now") ||
+                response.ResponseText.ToLower().Contains("not right now") ||
+                response.ResponseText.ToLower().Contains("maybe later"))
+            {
+                shouldResetDialogue = true;
+                Debug.Log($"Detected decline response: {response.ResponseText}");
+            }
         }
 
         responseEvents = null;
@@ -77,7 +81,25 @@ public class ResponseHandler : MonoBehaviour
         }
         else
         {
+            // Reset dialogue for decline responses
+            if (shouldResetDialogue)
+            {
+                ResetDialogueToDefault();
+            }
             dialogueUI.CloseDialogueBox();
+        }
+    }
+
+    private void ResetDialogueToDefault()
+    {
+        DialogueActivator activator = FindObjectOfType<DialogueActivator>();
+        if (activator != null)
+        {
+            NPCDialogueController dialogueController = activator.GetComponent<NPCDialogueController>();
+            if (dialogueController != null)
+            {
+                dialogueController.ResetToDefault();
+            }
         }
     }
 }
