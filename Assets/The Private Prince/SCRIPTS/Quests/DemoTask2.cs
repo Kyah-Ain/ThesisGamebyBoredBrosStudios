@@ -4,7 +4,7 @@ public class DemoTask2 : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
 
-    public Player2Point5D playerKill; // ...
+    public static DemoTask2 Instance { get; private set; }
 
     [Header("Enemies Left")]
     public int enemiesDefeated = 0;
@@ -18,34 +18,46 @@ public class DemoTask2 : MonoBehaviour
         enemiesToDefeat = 3; // Ensure this is set
     }
 
-    // ...
-    public void Update()
-    {
-        UpdateSlainedEnemies();
-    }
+    //// ...
+    //public void Update()
+    //{
+    //    UpdateSlainedEnemies();
+    //}
 
     // ...
     public void UpdateSlainedEnemies()
     {
         if (TaskManager.Instance.completedTasks == 3)
         {
-            if (playerKill.playerHits == true)
+            // ...
+            enemiesDefeated += 1;
+
+            UpdateTaskDisplay();
+
+            if (enemiesDefeated >= enemiesToDefeat)
             {
-                // ...
-                enemiesDefeated += 1;
-
-                UpdateTaskDisplay();
-
-                if (enemiesDefeated >= enemiesToDefeat)
-                {
-                    TaskManager.Instance.CompleteTask();
-                }
-
-                Debug.Log($"Enemy defeated! Total: {enemiesDefeated}/{enemiesToDefeat}");
+                TaskManager.Instance.CompleteTask();
             }
+
+            Debug.Log($"Enemy defeated! Total: {enemiesDefeated}/{enemiesToDefeat}");
+
+            //if (playerKill.playerHits == true)
+            //{
+            //    // ...
+            //    enemiesDefeated += 1;
+
+            //    UpdateTaskDisplay();
+
+            //    if (enemiesDefeated >= enemiesToDefeat)
+            //    {
+            //        TaskManager.Instance.CompleteTask();
+            //    }
+
+            //    Debug.Log($"Enemy defeated! Total: {enemiesDefeated}/{enemiesToDefeat}");
+            //}
         }
-        // ...
-        playerKill.playerHits = false;
+        //// ...
+        //playerKill.playerHits = false;
     }
 
     // Add this method to update the display properly

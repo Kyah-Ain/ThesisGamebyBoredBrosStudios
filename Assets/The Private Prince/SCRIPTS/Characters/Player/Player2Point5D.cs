@@ -230,7 +230,7 @@ public class Player2Point5D : CharacterController3D
                     //    targetCombat.ApplyKnockback(transform.position);
                     //}
 
-                    playerHits = true; // Set to true when player hits an opponent
+                    //playerHits = true; // Set to true when player hits an opponent
                 }
             }
         }

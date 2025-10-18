@@ -190,4 +190,25 @@ public class EnemyCombat : CombatManager
 
         Debug.Log("Enemy attack state forcefully stopped");
     }
+
+    // ...
+    public override void Die() 
+    {
+        //// Update the Demo Task 2 enemy defeat count
+        //DemoTask2.Instance.UpdateSlainedEnemies();
+
+        // Update the Demo Task 2 enemy defeat count
+        DemoTask2.Instance.UpdateSlainedEnemies();
+
+        //if (DemoTask2.Instance != null)
+        //{
+        //    // Update the Demo Task 2 enemy defeat count
+        //    DemoTask2.Instance.UpdateSlainedEnemies();
+        //}
+
+        // Calls the base Die method from Parent
+        base.Die();
+
+        Debug.Log($"EnemyCombat Die method called - notifying DemoTask2 of enemy defeat");
+    }
 }
