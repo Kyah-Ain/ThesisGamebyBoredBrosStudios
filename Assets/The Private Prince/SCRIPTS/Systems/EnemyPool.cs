@@ -214,6 +214,13 @@ public class EnemyPool : MonoBehaviour
     // Resets navigation components to default state - ENHANCED
     private void ResetNavigationComponents(GameObject enemy)
     {
+        // Null checker
+        if (enemy == null)
+        {
+            Debug.LogWarning("Attempted to reset navigation on null enemy");
+            return;
+        }
+
         // Reset NavMeshAgent path and stop movement while object is active
         NavMeshAgent agent = enemy.GetComponentInChildren<NavMeshAgent>();
         if (agent != null)
