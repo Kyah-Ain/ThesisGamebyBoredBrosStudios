@@ -9,7 +9,7 @@ public class PlayerCombat : CombatManager
     // ------------------------- VARIABLES -------------------------
 
     [Header("Script Reference")]
-    public Player2Point5D player2Point5D; // ...
+    public PlayerController3D PlayerController3D; // ...
 
     [Header("UI Settings")]
     public Image[] heartsLeft;
@@ -110,10 +110,10 @@ public class PlayerCombat : CombatManager
     public override void TakeDamage(int damage)
     {
         // ...
-        if (player2Point5D.isBlocking)
+        if (PlayerController3D.isBlocking)
         {
             // Turn this on if you changed the blocking logic to "Instance" instead of "Continous"
-            //player2Point5D.isBlocking = false;
+            //PlayerController3D.isBlocking = false;
 
             return; // Exits the method immediately ignoring the rest
         }

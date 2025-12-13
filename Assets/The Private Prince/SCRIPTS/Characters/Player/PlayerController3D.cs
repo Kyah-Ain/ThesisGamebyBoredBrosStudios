@@ -3,7 +3,7 @@ using System.Collections.Generic; // Grants access to collections structures lik
 using UnityEngine; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
 using UnityEngine.AI; // Grants access to Unity's AI and Navigation features
 
-public class Player2Point5D : CharacterController3D
+public class PlayerController3D : BaseCharacterController
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -44,7 +44,7 @@ public class Player2Point5D : CharacterController3D
     // Start is called before the first frame update
     private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>(); // Automatically references the SpriteRenderer component
+        //spriteRenderer = GetComponent<SpriteRenderer>(); // Automatically references the SpriteRenderer component
     }
 
     // Update is called once per frame
@@ -53,15 +53,21 @@ public class Player2Point5D : CharacterController3D
         //stops player from moving when in Dialogue
         if (dialogueUI != null && dialogueUI.IsOpen) return;
 
-        // Calls from this class (Player2Point5D)
+        // ALWAYS call HandleInput - it handles all input processing
         HandleInput();
+
+        // Apply rotation based on input direction
+        if (inputDirection.magnitude >= 0.1f && canMove)
+        {
+            float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.y) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+        }
 
         // Calls from the parent class (MovementManager)
         UpdateAnimations();
         ApplyMovement(characterController);
 
         // Calls from this class (Player2Point5D)
-        HandleFlip();
         HandleStamina();
         HandleRaycast();
 
@@ -78,7 +84,7 @@ public class Player2Point5D : CharacterController3D
         // Only allow running if not exhausted and has stamina left
         if (!isExhausted && stamina > 0)
         {
-            // Calls from the parent class (CharacterController3D)
+            // Calls from the parent class (BaseCharacterController)
             base.RunControl();
         }
         else
@@ -86,7 +92,7 @@ public class Player2Point5D : CharacterController3D
             isRunning = false;
         }
 
-        // Calls from the parent class (CharacterController3D)
+        // Calls from the parent class (BaseCharacterController)
         base.JumpControl();
         base.CombatControl();
 
@@ -98,7 +104,7 @@ public class Player2Point5D : CharacterController3D
         }
         else
         {
-            base.MoveControl(); // Normal movement when not blocking
+            MoveControl(); // Normal movement when not blocking
         }
 
         // Calls from the parent class (MovementManager)
@@ -106,22 +112,32 @@ public class Player2Point5D : CharacterController3D
         CalculateJump(wantsToJump);
     }
 
-    // Updates animation's face direction based on Movement States
-    protected virtual void HandleFlip()
+    // Gets player input for movement direction
+    public override void MoveControl()
     {
-        // Get horizontal input equavalent to left and right arrow keys or A and D keys
+        // Use GetAxisRaw for more responsive input
         float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
 
-        // METHOD 1: FLIPS THE SCALE OF THE OBJECT WITH A CAMERA SHAKENESS DURING TRANSITION
-        //Flip to Left                       //Flip to Right
-        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
-        {
-            isFacingRight = !isFacingRight;
-            Vector2 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
-        }
+        inputDirection = new Vector2(horizontal, vertical);
     }
+
+    //// Updates animation's face direction based on Movement States
+    //protected virtual void HandleFlip()
+    //{
+    //    // Get horizontal input equavalent to left and right arrow keys or A and D keys
+    //    float horizontal = Input.GetAxisRaw("Horizontal");
+
+    //    // METHOD 1: FLIPS THE SCALE OF THE OBJECT WITH A CAMERA SHAKENESS DURING TRANSITION
+    //    //Flip to Left                       //Flip to Right
+    //    if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
+    //    {
+    //        isFacingRight = !isFacingRight;
+    //        Vector2 localScale = transform.localScale;
+    //        localScale.x *= -1f;
+    //        transform.localScale = localScale;
+    //    }
+    //}
 
     // Manages stamina drain and recovery
     protected virtual void HandleStamina()
