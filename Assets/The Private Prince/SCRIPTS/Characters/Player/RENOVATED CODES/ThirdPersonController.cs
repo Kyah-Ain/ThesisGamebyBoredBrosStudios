@@ -8,12 +8,15 @@ public class ThirdPersonController : MonoBehaviour
 
     [Header("REFERENCES")]
     [SerializeField] private CharacterController characController;
+    [SerializeField] private Animator animatorController;
 
     [Header("MOVEMENT")]
     [SerializeField] private float movementSpeed = 6f;
-    [SerializeField] private float turningSpeed = 0.1f;
 
-    //[SerializeField] private float turningVelocity;
+    /*
+    [SerializeField] private float turningSpeed = 0.1f;
+    [SerializeField] private float turningVelocity;
+    */
 
     // ------------------------- UNITY METHODS -------------------------
 
@@ -25,6 +28,9 @@ public class ThirdPersonController : MonoBehaviour
         {
             // Assigns the gameObject's "Character Controller" autmatically to this script
             characController = GetComponent<CharacterController>();
+
+            // Assigns the gameObject's "Animator Controller" automatically to this script
+            animatorController = GetComponent<Animator>();
 
             Debug.Log($"Character Controller was set: {characController}");
         }
@@ -58,6 +64,10 @@ public class ThirdPersonController : MonoBehaviour
         // ".magnitude" to compute for the distance 
         if (direction.magnitude >= 0.1f)
         {
+            // Animates the character when moving
+            // - ("Name of the Animation Parameter", player.input, transition smoothness, counter)
+            animatorController.SetFloat("Input Magnitude", direction.magnitude, 0.05f, Time.deltaTime);
+
             // Computes the angle needed to rotate the character to the direction it's moving
             // - "Mathf.Atan2" calculates the angle needed to rotate from 0 up to the target x & z coordinate
             // - "Mathf.Rad2Deg" converts the Rad computed value of "Atan2" into degrees
@@ -65,7 +75,7 @@ public class ThirdPersonController : MonoBehaviour
 
             /*
             // Smooths the character rotation
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turningVelocity,turningSpeed);
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turningVelocity, turningSpeed);
             */
 
             // Applies the computed rotation to the gameObject's rotation (Rotates the gameObject)
@@ -75,5 +85,19 @@ public class ThirdPersonController : MonoBehaviour
             // Controls the "Character Controller" of a Unity game object
             characController.Move(direction * movementSpeed * Time.deltaTime);
         }
-    } 
+        else 
+        {
+            // Animates the character when NOT moving
+            // - ("Name of the Animation Parameter", player.input, transition smoothness, counter)
+            animatorController.SetFloat("Input Magnitude", 0f, 0.05f, Time.deltaTime);
+        }
+    }
+
+    /*
+    // Method for Character Animation
+    public void Animate() 
+    {
+
+    }
+    */
 }
