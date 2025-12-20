@@ -2,6 +2,7 @@ using System.Collections; // Grants access to collecitons structures like ArrayL
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
 using UnityEngine; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
 
+[RequireComponent(typeof(CharacterController))]
 public class ThirdPersonController : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
