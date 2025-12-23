@@ -12,20 +12,23 @@ public class Enemy : MonoBehaviour
 
     [Header("REFERENCES")]
     [SerializeField] protected NavMeshAgent enemyController;
-    [SerializeField] private Animator animatorController;
+    [SerializeField] protected Animator animatorController;
 
-    [Header("MOVEMENT")]
-    //[SerializeField] private float movementSpeed = 6f;
-    [SerializeField] private float updateSpeed = 0.1f;
+    [Header("AI DETECTION")]
+    [SerializeField] protected GameObject startingPosition;
+    [SerializeField] protected GameObject detectionTarget;
+    [SerializeField] LayerMask raycastObstacles;
+    [SerializeField] GameObject[] players;
 
-    [Header("ENEMY DETECTION")]
-    [SerializeField] private Transform[] enemyStartingPositions;
-    [SerializeField] private GameObject detectionTarget;
+    [Header("AI ATTRIBUTES")]
+    [SerializeField] protected float viewDistance = 10f; // How far the NPC can see
+    [SerializeField] protected float viewAngle = 90f; // How wide the NPC can see (1f = 1 Degree)
 
-    /*
-    [SerializeField] private float turningSpeed = 0.1f;
-    [SerializeField] private float turningVelocity;
-    */
+    [Header("AI STATES")]
+    [SerializeField] Coroutine currentCoroutineBehaviour;
+
+    [SerializeField] protected enum EnemyState { Neutral, Chase }
+    [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral;
 
     // ------------------------- UNITY METHODS -----------------------
 
@@ -41,51 +44,152 @@ public class Enemy : MonoBehaviour
             // Assigns the gameObject's "Animation Controller" automatically to this script
             animatorController = GetComponent<Animator>();
 
-            // ...
-            detectionTarget = GameObject.FindGameObjectWithTag("Player");
+            //// Assigns the player as the targettable game object in the scene
+            //detectionTarget = GameObject.FindGameObjectWithTag("Player");
 
             Debug.Log($"Navmesh Agent Controlller was set: {enemyController}");
-
-            // ...
-            //detectionTarget = player.transform;
         }
         else 
         {
             Debug.LogError("ASSIGN A NAVMESH AGENT CONTROLLER FIRST BEFORE USING THIS SCRIPT");
         }
+
+        // Fills the array with gameObject refereces that has the tag 'Player'
+        players = GameObject.FindGameObjectsWithTag("Player");
     }
 
     // Start is called at the first frame
     private void Start()
     {
-        StartCoroutine(FollowTarget());
-
-        //DebugChecks();
-
-        //Detection();
-        //else 
-        //{
-        //    enemyController.SetDestination(enemyStartingPositions[0].position * movementSpeed * Time.deltaTime);
-        //}
+        
     }
 
-
-    //// Update is called once per frame
-    //private void Update()
-    //{
-    //    Detection();
-    //    //else 
-    //    //{
-    //    //    enemyController.SetDestination(enemyStartingPositions[0].position * movementSpeed * Time.deltaTime);
-    //    //}
-    //}
-
-    // ------------------------- DEV METHODS -------------------------
-
-    // ...
-    private IEnumerator FollowTarget() 
+    // Update is called once per frame
+    private void Update()
     {
-        WaitForSeconds Wait = new WaitForSeconds(updateSpeed);
+        AIDetection();
+    }
+
+    // -------------------------- STATES ---------------------------
+
+    // Method for making the AI able to locate a Player
+    private void AIDetection() 
+    {
+        if (isPlayerSpotted())
+        {
+            // Evaluates if the AI is already on the Chase State, proceeds if not
+            if (currentEnemyState != EnemyState.Chase)
+            {
+                // Switches the 'Enemy' state to Chase a 'Player'
+                SwitchState(EnemyState.Chase);
+            }
+        }
+        else 
+        {
+            // Evaluates if the AI is already on the Neutral State, proceeds if not
+            if (currentEnemyState != EnemyState.Neutral) 
+            {
+                // Switches the 'Enemy' state to be 'Neutral'
+                SwitchState(EnemyState.Neutral);
+            }
+        }
+    }
+
+    // Method for switching between AI Enemy Behaviours
+    private void SwitchState(EnemyState newState) 
+    {
+        // Stops exisitng 'Coroutine' run
+        if (currentCoroutineBehaviour != null) 
+        {
+            StopCoroutine(currentCoroutineBehaviour);
+        }
+
+        // Stores the new Enemy state and overwrites the current
+        currentEnemyState = newState;
+
+        // Switches the Enemy state based on the current case condition
+        switch (newState) 
+        {
+            case EnemyState.Neutral:
+                currentCoroutineBehaviour = StartCoroutine(Neutral());
+                break;
+            case EnemyState.Chase:
+                currentCoroutineBehaviour = StartCoroutine(Chase());
+                break;
+        }
+    }
+
+    // -------------------------- DETECTION ---------------------------
+
+    // Boolean Method for evaluating if the Player has been detected through AI's Cone-Shaped View Detection
+    protected virtual bool isPlayerSpotted() 
+    {
+        // Iterates through all 'Player' gameObjects fed inside the array called 'players'
+        foreach (GameObject player in players)
+        {
+            // Looks for atleast an active one from those 'Player' tagged gameObjects
+            if (player != null && player.activeInHierarchy)
+            {
+                // Calculates the distance between the player and this enemy, stores the difference to a varible after
+                float distanceToPlayer = Vector3.Distance(this.transform.position, player.transform.position);
+
+                // Evaluates if the calculated distance to the player is considered seen (which have this as max range: 'viewDistance')
+                if (distanceToPlayer <= viewDistance)
+                {
+                    // Locates the position and direction to reach the player
+                    Vector3 directionToPlayer = (player.transform.position - this.transform.position).normalized;
+
+                    // Determines which way the enemy is facing (which serves a more accurate replica of eyesight detection)
+                    Vector3 angleDirection = this.transform.forward;
+
+                    // Calculates how much face rotation the enemy need to do by the angle difference between two directions
+                    float angleToPlayer = Vector3.Angle(angleDirection, directionToPlayer);
+
+                    // Evaluates if the player is within the AI's viewing angle
+                    // - '/ 2f' is used because Unity calculates angle starting at the facing direction of the gameObject
+                    // - this means, middle is 0 angle while left and right are just mirrored angles (both have 45, 90, 180 degree positive)
+                    // - a sample of desired 90 degree 'viewAngle' would mean 90 both sides instead of 45, which would make the AI's total detection 180 instead of 90, hence the need to divide by 2
+                    if (angleToPlayer <= viewAngle / 2f)
+                    {
+                        // Shoots a raycast detection directly to the player to evaluates if there is some obstacle blocking the AI's vision
+                        // - it replicates real-life depth seeing, instead of just concluding a player can be seen by being at specific range
+                        if (!Physics.Raycast(this.transform.position, directionToPlayer, distanceToPlayer, raycastObstacles))
+                        {
+                            // Sets the player as the target destination for the AI
+                            detectionTarget = player;
+
+                            // Returns true that indicates that the player was seen
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        // Returns false if the 'return true' have not reached
+        return false;
+    }
+
+    // ------------------------- COROUTINES -------------------------
+
+    // Coroutine Method for making the AI to standby
+    private IEnumerator Neutral()
+    {
+        // Creates a reusable 'WaitForSeconds' variable
+        WaitForSeconds Wait = new WaitForSeconds(0.1f);
+
+        while (enabled)
+        {
+            enemyController.SetDestination(startingPosition.transform.position);
+
+            yield return Wait;
+        }
+    }
+
+    // Coroutine Method for making the AI follows a player
+    private IEnumerator Chase() 
+    {
+        // Creates a reusable 'WaitForSeconds' variable
+        WaitForSeconds Wait = new WaitForSeconds(0.1f);
 
         while (enabled) 
         {
@@ -93,55 +197,6 @@ public class Enemy : MonoBehaviour
 
             yield return Wait;
         }
-    }
-
-    // Method for AI Detection Logic
-    public void Detection() 
-    {
-        //enemyController.SetDestination(player.transform.position * movementSpeed * Time.deltaTime);
-    }
-
-    // Method for Character Movement Logic
-    public void Move() 
-    {
-        /*
-        // Evaluates if the enemy found a "Player" 
-        if ()
-        {
-            enemyStartingPositions[0] = GetComponent<Transform>();
-
-            // Computes the angle needed to rotate the character to the direction it's moving
-            // - "Mathf.Atan2" calculates the angle needed to rotate from 0 up to the target x & z coordinate
-            // - "Mathf.Rad2Deg" converts the Rad computed value of "Atan2" into degrees
-            float targetAngle = Mathf.Atan2(enemyStartingPositions[0].x, enemyStartingPositions[0].z) * Mathf.Rad2Deg;
-
-            // Smooths the character rotation
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turningVelocity, turningSpeed);
-       
-            // Applies the computed rotation to the gameObject's rotation (Rotates the gameObject)
-            // "Quaternion.Euler" to avoid gimbal locking or wrong rotation starting position
-            transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
-
-
-            // Sets the enemy's position to be at its referenced position 
-            enemyController.SetDestination(targetPosition * movementSpeed * Time.deltaTime);
-        }
-        else
-        {
-
-        }
-        
-        // Evaluates if the enemy found a "Player" 
-        if (detectedPlayerPosition == null)
-        {
-            // Sets the enemy's position to be at its referenced position 
-            enemyController.SetDestination(enemyStartingPosition.transform.position); 
-        }
-        else 
-        {
-
-        }
-        */
     }
 
     // ------------------------- DEBUGGERS -------------------------
