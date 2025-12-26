@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.AI; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
 
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Animator))]
+
 public class Enemy : MonoBehaviour
 {
     // -------------------------- VARIABLES -------------------------
@@ -15,10 +17,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected Animator animatorController;
 
     [Header("AI DETECTION")]
-    [SerializeField] protected GameObject startingPosition;
+    [SerializeField] protected GameObject[] players;
     [SerializeField] protected GameObject detectionTarget;
     [SerializeField] LayerMask raycastObstacles;
-    [SerializeField] GameObject[] players;
 
     [Header("AI ATTRIBUTES")]
     [SerializeField] protected float viewDistance = 10f; // How far the NPC can see
@@ -33,7 +34,7 @@ public class Enemy : MonoBehaviour
     // ------------------------- UNITY METHODS -----------------------
 
     // Awake is called before all frame updates
-    private void Awake()
+    protected virtual void Awake()
     {
         // Evaluates if there's no existing "NavMesh Controller" component on the object
         if (enemyController == null)
@@ -59,13 +60,13 @@ public class Enemy : MonoBehaviour
     }
 
     // Start is called at the first frame
-    private void Start()
+    protected virtual void Start()
     {
         
     }
 
     // Update is called once per frame
-    private void Update()
+    protected virtual void Update()
     {
         AIDetection();
     }
@@ -73,8 +74,9 @@ public class Enemy : MonoBehaviour
     // -------------------------- STATES ---------------------------
 
     // Method for making the AI able to locate a Player
-    private void AIDetection() 
+    protected void AIDetection() 
     {
+        // Evaluate's if the Enemy should Chase the player or not
         if (isPlayerSpotted())
         {
             // Evaluates if the AI is already on the Chase State, proceeds if not
@@ -86,17 +88,18 @@ public class Enemy : MonoBehaviour
         }
         else 
         {
-            // Evaluates if the AI is already on the Neutral State, proceeds if not
-            if (currentEnemyState != EnemyState.Neutral) 
-            {
-                // Switches the 'Enemy' state to be 'Neutral'
-                SwitchState(EnemyState.Neutral);
-            }
+            // Switches the 'Enemy' state to be 'Neutral'
+            SwitchState(EnemyState.Neutral);
+
+            //// Evaluates if the AI is already on the Neutral State, proceeds if not
+            //if (currentEnemyState != EnemyState.Neutral) 
+            //{
+            //}
         }
     }
 
     // Method for switching between AI Enemy Behaviours
-    private void SwitchState(EnemyState newState) 
+    protected void SwitchState(EnemyState newState) 
     {
         // Stops exisitng 'Coroutine' run
         if (currentCoroutineBehaviour != null) 
@@ -172,21 +175,21 @@ public class Enemy : MonoBehaviour
     // ------------------------- COROUTINES -------------------------
 
     // Coroutine Method for making the AI to standby
-    private IEnumerator Neutral()
+    protected virtual IEnumerator Neutral()
     {
         // Creates a reusable 'WaitForSeconds' variable
         WaitForSeconds Wait = new WaitForSeconds(0.1f);
 
         while (enabled)
         {
-            enemyController.SetDestination(startingPosition.transform.position);
+            enemyController.SetDestination(this.transform.position);
 
             yield return Wait;
         }
     }
 
     // Coroutine Method for making the AI follows a player
-    private IEnumerator Chase() 
+    protected virtual IEnumerator Chase() 
     {
         // Creates a reusable 'WaitForSeconds' variable
         WaitForSeconds Wait = new WaitForSeconds(0.1f);
@@ -202,7 +205,7 @@ public class Enemy : MonoBehaviour
     // ------------------------- DEBUGGERS -------------------------
 
     // Ai Debugger
-    void DebugChecks()
+    protected void DebugChecks()
     {
         // 1. Is the agent on a NavMesh?
         Debug.Log("Is on NavMesh: " + enemyController.isOnNavMesh);
