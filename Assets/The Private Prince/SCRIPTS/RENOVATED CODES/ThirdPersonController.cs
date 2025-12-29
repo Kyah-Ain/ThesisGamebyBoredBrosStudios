@@ -66,8 +66,7 @@ public class ThirdPersonController : MonoBehaviour
         if (direction.magnitude >= 0.1f)
         {
             // Animates the character when moving
-            // - ("Name of the Animation Parameter", player.input, transition smoothness, counter)
-            animatorController.SetFloat("Input Magnitude", direction.magnitude, 0.05f, Time.deltaTime);
+            Animate("Input Magnitude", direction.magnitude, 0.05f, Time.deltaTime);
 
             // Computes the angle needed to rotate the character to the direction it's moving
             // - "Mathf.Atan2" calculates the angle needed to rotate from 0 up to the target x & z coordinate
@@ -89,16 +88,16 @@ public class ThirdPersonController : MonoBehaviour
         else 
         {
             // Animates the character when NOT moving
-            // - ("Name of the Animation Parameter", player.input, transition smoothness, counter)
-            animatorController.SetFloat("Input Magnitude", 0f, 0.05f, Time.deltaTime);
+            Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
         }
     }
 
-    /*
-    // Method for Character Animation
-    public void Animate() 
-    {
+    // -------------------------- ANIMATIONS ---------------------------
 
+    // Method for Character Animation
+    public void Animate(string animParamater, float inputValue, float transitionSmooth, float transitionCounter) 
+    {
+        // - ("Name of the Animation Parameter", player.input value, transition smoothness, counter)
+        animatorController.SetFloat(animParamater, inputValue, transitionSmooth, transitionCounter);
     }
-    */
 }

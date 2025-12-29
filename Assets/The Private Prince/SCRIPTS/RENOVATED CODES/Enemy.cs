@@ -26,10 +26,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected float viewAngle = 90f; // How wide the NPC can see (1f = 1 Degree)
 
     [Header("AI STATES")]
-    [SerializeField] Coroutine currentCoroutineBehaviour;
-
-    [SerializeField] protected enum EnemyState { Neutral, Chase }
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral;
+    [SerializeField] protected enum EnemyState { Neutral, Chase }
 
     // ------------------------- UNITY METHODS -----------------------
 
@@ -68,6 +66,12 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
+        
+    }
+
+    // ...
+    protected virtual void FixedUpdate()
+    {
         AIDetection();
     }
 
@@ -79,21 +83,24 @@ public class Enemy : MonoBehaviour
         // Evaluate's if the Enemy should Chase the player or not
         if (isPlayerSpotted())
         {
-            // Evaluates if the AI is already on the Chase State, proceeds if not
-            if (currentEnemyState != EnemyState.Chase)
-            {
-                // Switches the 'Enemy' state to Chase a 'Player'
-                SwitchState(EnemyState.Chase);
-            }
+            // Switches the 'Enemy' state to Chase a 'Player'
+            SwitchState(EnemyState.Chase);
+
+            //// Evaluates if the AI is already on the Chase State, proceeds if not
+            //if (currentEnemyState != EnemyState.Chase)
+            //{
+                
+            //}
         }
         else 
         {
             // Switches the 'Enemy' state to be 'Neutral'
             SwitchState(EnemyState.Neutral);
 
-            //// Evaluates if the AI is already on the Neutral State, proceeds if not
-            //if (currentEnemyState != EnemyState.Neutral) 
+            //// Evaluates if the AI is already on the Chase State, proceeds if not
+            //if (currentEnemyState != EnemyState.Neutral)
             //{
+                
             //}
         }
     }
@@ -101,12 +108,6 @@ public class Enemy : MonoBehaviour
     // Method for switching between AI Enemy Behaviours
     protected void SwitchState(EnemyState newState) 
     {
-        // Stops exisitng 'Coroutine' run
-        if (currentCoroutineBehaviour != null) 
-        {
-            StopCoroutine(currentCoroutineBehaviour);
-        }
-
         // Stores the new Enemy state and overwrites the current
         currentEnemyState = newState;
 
@@ -114,12 +115,33 @@ public class Enemy : MonoBehaviour
         switch (newState) 
         {
             case EnemyState.Neutral:
-                currentCoroutineBehaviour = StartCoroutine(Neutral());
+                Neutral();
                 break;
+
             case EnemyState.Chase:
-                currentCoroutineBehaviour = StartCoroutine(Chase());
+                Chase();
                 break;
         }
+    }
+
+    // Overrideable Method for making the AI to standby
+    protected virtual void Neutral()
+    {
+        // ...
+        enemyController.SetDestination(this.transform.position);
+
+        // ...
+        Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
+    }
+
+    // Overrideable Method for making the AI follows a player
+    protected virtual void Chase()
+    {
+        // ...
+        enemyController.SetDestination(detectionTarget.transform.position);
+
+        // ... 
+        Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
     }
 
     // -------------------------- DETECTION ---------------------------
@@ -172,34 +194,13 @@ public class Enemy : MonoBehaviour
         return false;
     }
 
-    // ------------------------- COROUTINES -------------------------
+    // -------------------------- ANIMATIONS ---------------------------
 
-    // Coroutine Method for making the AI to standby
-    protected virtual IEnumerator Neutral()
+    // Method for Character Animation
+    public void Animate(string animParamater, float inputValue, float transitionSmooth, float transitionCounter)
     {
-        // Creates a reusable 'WaitForSeconds' variable
-        WaitForSeconds Wait = new WaitForSeconds(0.1f);
-
-        while (enabled)
-        {
-            enemyController.SetDestination(this.transform.position);
-
-            yield return Wait;
-        }
-    }
-
-    // Coroutine Method for making the AI follows a player
-    protected virtual IEnumerator Chase() 
-    {
-        // Creates a reusable 'WaitForSeconds' variable
-        WaitForSeconds Wait = new WaitForSeconds(0.1f);
-
-        while (enabled) 
-        {
-            enemyController.SetDestination(detectionTarget.transform.position);
-
-            yield return Wait;
-        }
+        // - ("Name of the Animation Parameter", player.input value, transition smoothness, counter)
+        animatorController.SetFloat(animParamater, inputValue, transitionSmooth, transitionCounter);
     }
 
     // ------------------------- DEBUGGERS -------------------------

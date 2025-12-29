@@ -7,43 +7,37 @@ public class RoamingEnemy : Enemy
     // -------------------------- VARIABLES -------------------------
 
     [Header("PATROL SETTINGS")]
-    [SerializeField] protected GameObject[] patrolStations;
+    [SerializeField] protected List<Transform> patrolStations;
     [SerializeField] protected int currentPatrolIndex = 0;
     [SerializeField] protected float arrivalThreshold = 1f;
 
     // ------------------------- PARENT METHODS -----------------------
 
-    protected override IEnumerator Neutral()
+    protected override void Neutral()
     {
-        // Creates a reusable 'WaitForSeconds' variable
-        WaitForSeconds Wait = new WaitForSeconds(0.1f);
+        // Default Destination
+        enemyController.SetDestination(patrolStations[currentPatrolIndex].position);
 
-        while (enabled)
+        // ...
+        Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
+
+        // ...
+        float stationDistance = Vector3.Distance(this.transform.position, patrolStations[currentPatrolIndex].position);
+
+        Debug.Log($"RoamingEnemy 1st: {patrolStations[currentPatrolIndex].position}");
+        Debug.Log($"RoamingEnemy 2nd: {stationDistance}");
+
+        if (stationDistance < arrivalThreshold)
         {
-            //
-            enemyController.SetDestination(patrolStations[currentPatrolIndex].transform.position);
 
-            //
-            float stationDistance = Vector3.Distance(this.transform.position, patrolStations[currentPatrolIndex].transform.position);
-
-            Debug.Log(stationDistance);
-
-            if (stationDistance < arrivalThreshold) 
+            if (currentPatrolIndex < patrolStations.Count)
             {
-                if (currentPatrolIndex < patrolStations.Length - 1)
-                {
-                    currentPatrolIndex++;
-                }
-                else
-                {
-                    currentPatrolIndex = 0;
-                }
-
-                Debug.Log(currentPatrolIndex);
+                currentPatrolIndex = (currentPatrolIndex + 1) % patrolStations.Count;
             }
-            Debug.Log(stationDistance < arrivalThreshold);
 
-            yield return Wait;
+            Debug.Log($"RoamingEnemy 3rd: {currentPatrolIndex}");
         }
+
+        Debug.Log($"RoamingEnemy 4th: {stationDistance < arrivalThreshold}");
     }
 }
