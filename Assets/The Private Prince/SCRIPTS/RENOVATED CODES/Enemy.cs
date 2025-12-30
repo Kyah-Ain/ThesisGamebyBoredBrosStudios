@@ -2,6 +2,7 @@ using System.Collections; // Grants access to collecitons structures like ArrayL
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
 using System.Threading;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
 
@@ -28,6 +29,11 @@ public class Enemy : MonoBehaviour
     [Header("AI STATES")]
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral;
     [SerializeField] protected enum EnemyState { Neutral, Chase }
+
+    [Header("VISUAL DEBUGS")]
+    [SerializeField] private LineRenderer viewConeWireframe;
+    [SerializeField] private Material viewConeColor;
+
 
     // ------------------------- UNITY METHODS -----------------------
 
@@ -73,6 +79,7 @@ public class Enemy : MonoBehaviour
     protected virtual void FixedUpdate()
     {
         AIDetection();
+        AIDetectionRange();
     }
 
     // -------------------------- STATES ---------------------------
@@ -205,8 +212,35 @@ public class Enemy : MonoBehaviour
 
     // ------------------------- DEBUGGERS -------------------------
 
-    // Ai Debugger
-    protected void DebugChecks()
+    // Method for AI Wireframe Visualization
+    protected void AIDetectionRange() 
+    {
+        // Defines how many vertices the wireframe would have (in Cone Shaped Eyesight its 3: Origin, Left, Right)
+        viewConeWireframe.positionCount = 3;
+
+        // Calculates the actual edge position on the 'Left View Angle'
+        Quaternion leftRotation = Quaternion.Euler(0, -viewAngle * 0.5f, 0);
+        Vector3 leftEdge = transform.position + leftRotation * transform.forward * viewDistance;
+
+        // Calculates the actual edge position on the 'Right View Angle'
+        Quaternion rightRotation = Quaternion.Euler(0, viewAngle * 0.5f, 0);
+        Vector3 rightEdge = transform.position + rightRotation * transform.forward * viewDistance;
+
+        // Combine calculated positions to form a Cone-Shaped triangle
+        viewConeWireframe.SetPosition(0, this.transform.position); // Vertice 1: Center (from this character)
+        viewConeWireframe.SetPosition(1, leftEdge); // Vertice 2: Left (of this character)
+        viewConeWireframe.SetPosition(2, rightEdge); // Vertice 3: Right (of this character)
+
+        // Adds a filled triangle effect
+        viewConeWireframe.startWidth = 0.01f; // Very narrow at center
+        viewConeWireframe.endWidth = 0.01f; // Very narrow at edges
+
+        // Connects the last vertex back to the 'Origin' point
+        viewConeWireframe.loop = true;
+    }
+
+    // Method for Ai Navmesh Debugging Purposes
+    protected void AIComponentChecker()
     {
         // 1. Is the agent on a NavMesh?
         Debug.Log("Is on NavMesh: " + enemyController.isOnNavMesh);
