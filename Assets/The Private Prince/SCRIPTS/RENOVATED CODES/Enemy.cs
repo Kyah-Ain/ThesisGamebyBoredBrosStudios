@@ -31,9 +31,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected enum EnemyState { Neutral, Chase }
 
     [Header("VISUAL DEBUGS")]
+    [SerializeField] private float viewConeStrokeWidth = 0.05f; // How thick the lines are drawn
     [SerializeField] private LineRenderer viewConeWireframe;
-    [SerializeField] private Material viewConeColor;
-
+    [SerializeField] private Material viewConeRangeNeutral;
+    [SerializeField] private Material viewConeRangeAlerted;
+    [SerializeField] protected enum ShowCone { EnableVisualDetection, DisableVisualDetection }
+    [SerializeField] protected ShowCone detectionVisualStatus = ShowCone.EnableVisualDetection;
 
     // ------------------------- UNITY METHODS -----------------------
 
@@ -66,20 +69,22 @@ public class Enemy : MonoBehaviour
     // Start is called at the first frame
     protected virtual void Start()
     {
-        
+        InitializeVisualCone();
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
-        
+        if (detectionVisualStatus == ShowCone.EnableVisualDetection) 
+        {
+            UpdateVisualCone();
+        }
     }
 
     // ...
     protected virtual void FixedUpdate()
     {
         AIDetection();
-        AIDetectionRange();
     }
 
     // -------------------------- STATES ---------------------------
@@ -154,7 +159,7 @@ public class Enemy : MonoBehaviour
     // -------------------------- DETECTION ---------------------------
 
     // Boolean Method for evaluating if the Player has been detected through AI's Cone-Shaped View Detection
-    protected virtual bool isPlayerSpotted() 
+    protected bool isPlayerSpotted() 
     {
         // Iterates through all 'Player' gameObjects fed inside the array called 'players'
         foreach (GameObject player in players)
@@ -212,31 +217,97 @@ public class Enemy : MonoBehaviour
 
     // ------------------------- DEBUGGERS -------------------------
 
-    // Method for AI Wireframe Visualization
-    protected void AIDetectionRange() 
+    // ...
+    protected void InitializeVisualCone() 
     {
-        // Defines how many vertices the wireframe would have (in Cone Shaped Eyesight its 3: Origin, Left, Right)
-        viewConeWireframe.positionCount = 3;
+        // Evaluate's if there's no existing 'LineRenderer' for AI Enemy's range detection
+        if (viewConeWireframe == null)
+        {
+            // Automatically sets a 'LineRenderer' component to this gameObject 
+            viewConeWireframe = gameObject.AddComponent<LineRenderer>();
+        }
 
-        // Calculates the actual edge position on the 'Left View Angle'
-        Quaternion leftRotation = Quaternion.Euler(0, -viewAngle * 0.5f, 0);
-        Vector3 leftEdge = transform.position + leftRotation * transform.forward * viewDistance;
+        // Evavluates if there's an existing 'Color Material' for the AI Enemy's state detection
+        if (viewConeRangeNeutral == null)
+        {
+            // ...
+            Debug.LogWarning("Add Color Materials first for the AI's Range Indicator");
 
-        // Calculates the actual edge position on the 'Right View Angle'
-        Quaternion rightRotation = Quaternion.Euler(0, viewAngle * 0.5f, 0);
-        Vector3 rightEdge = transform.position + rightRotation * transform.forward * viewDistance;
+            return;
+        }
 
-        // Combine calculated positions to form a Cone-Shaped triangle
-        viewConeWireframe.SetPosition(0, this.transform.position); // Vertice 1: Center (from this character)
-        viewConeWireframe.SetPosition(1, leftEdge); // Vertice 2: Left (of this character)
-        viewConeWireframe.SetPosition(2, rightEdge); // Vertice 3: Right (of this character)
+        // Sets the detection range color to what color material is chosen to be referenced on the inspector
+        viewConeWireframe.material = viewConeRangeNeutral;
 
-        // Adds a filled triangle effect
-        viewConeWireframe.startWidth = 0.01f; // Very narrow at center
-        viewConeWireframe.endWidth = 0.01f; // Very narrow at edges
+        // Configure 'LineRenderer' properties
+        viewConeWireframe.positionCount = 0; // Starts empty vertices as default
+        viewConeWireframe.startWidth = viewConeStrokeWidth; // Sets the width of the starting line stroke
+        viewConeWireframe.endWidth = viewConeStrokeWidth; // Sets the width of the ending line stroke
 
-        // Connects the last vertex back to the 'Origin' point
-        viewConeWireframe.loop = true;
+        // Configure 'LineRenderer' behaviours
+        viewConeWireframe.loop = true; // Connects the last vertex back to the 'Origin' point
+        viewConeWireframe.useWorldSpace = true; // ...
+
+    }
+
+    // Method for AI Wireframe Visualization
+    protected void UpdateVisualCone() 
+    {
+        // Evaluates if the Cone attributes where ready and the devs wants to see it in game, else do not proceed
+        if (viewConeWireframe == null || detectionVisualStatus == ShowCone.DisableVisualDetection) return;
+
+        // ...
+        int segments = Mathf.Max(10, Mathf.RoundToInt(viewAngle / 10f));
+
+        // Total vertices = segments + 2 (center + arc points + closing point)
+        viewConeWireframe.positionCount = segments + 2;
+
+        // Position 0: Center point (this gameObject)
+        viewConeWireframe.SetPosition(0, transform.position);
+
+        // ...
+        float angleStep = viewAngle / segments;
+        float startAngle = -viewAngle * 0.5f;
+
+        // ...
+        for (int i = 0; i <= segments; i++)
+        {
+            float angle = startAngle + (angleStep * i);
+            Quaternion rotation = Quaternion.Euler(0, angle, 0);
+            Vector3 direction = rotation * transform.forward;
+            Vector3 point = transform.position + direction * viewDistance;
+
+            // Starts iterating at position i+1 (since 0 is center which is this gameobject)
+            viewConeWireframe.SetPosition(i + 1, point);
+        }
+
+        // -------------------------------- SIMPLE Method --------------------------------
+        //// Defines how many vertices the wireframe would have (in Cone Shaped Eyesight its 3: Origin, Left, Right)
+        //viewConeWireframe.positionCount = 4;
+
+        //// Calculates the actual edge position on the 'Left View Angle'
+        //Quaternion leftRotation = Quaternion.Euler(0, -viewAngle * 0.5f, 0);
+        //Vector3 leftEdge = transform.position + leftRotation * transform.forward * viewDistance;
+
+        //// Calculates the actual edge position on the 'Left View Angle'
+        //Vector3 middle = transform.position + transform.forward * viewDistance;
+
+        //// Calculates the actual edge position on the 'Right View Angle'
+        //Quaternion rightRotation = Quaternion.Euler(0, viewAngle * 0.5f, 0);
+        //Vector3 rightEdge = transform.position + rightRotation * transform.forward * viewDistance;
+
+        //// Combine calculated positions to form a Cone-Shaped triangle
+        //viewConeWireframe.SetPosition(0, this.transform.position); // Vertice 1: Center (from this character)
+        //viewConeWireframe.SetPosition(1, leftEdge); // Vertice 2: Left (of this character)
+        //viewConeWireframe.SetPosition(2, middle); // Vertice 3: Middle (of this character)
+        //viewConeWireframe.SetPosition(3, rightEdge); // Vertice 4: Right (of this character)
+
+        //// Adds a filled triangle effect
+        //viewConeWireframe.startWidth = 0.01f; // Very narrow at center
+        //viewConeWireframe.endWidth = 0.01f; // Very narrow at edges
+
+        //// Connects the last vertex back to the 'Origin' point
+        //viewConeWireframe.loop = true;
     }
 
     // Method for Ai Navmesh Debugging Purposes
