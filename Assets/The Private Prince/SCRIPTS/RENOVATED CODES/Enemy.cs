@@ -1,42 +1,39 @@
 using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
-using System.Threading;
-using TMPro;
-using UnityEditor.ShaderGraph.Internal;
-using UnityEngine;
-using UnityEngine.AI; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
+using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject, Transform, Vector3, etc.
+using UnityEngine.AI; // Grants access to Unity's AI and Navigation system like NavMeshAgent, NavMesh, etc.
 
-[RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(NavMeshAgent))] // Requires this game object to have a NavMeshAgent component in order to function properly
+[RequireComponent(typeof(Animator))] // Requires this game object to have an Animator component in order to function properly
 
 public class Enemy : MonoBehaviour
 {
     // -------------------------- VARIABLES -------------------------
 
     [Header("REFERENCES")]
-    [SerializeField] protected NavMeshAgent enemyController;
-    [SerializeField] protected Animator animatorController;
+    [SerializeField] protected NavMeshAgent enemyController; // Reference to the NavMeshAgent component for AI navigation
+    [SerializeField] protected Animator animatorController; // Reference to the Animator component for character animations
 
     [Header("AI DETECTION")]
-    [SerializeField] protected GameObject[] players;
-    [SerializeField] protected GameObject detectionTarget;
-    [SerializeField] LayerMask raycastObstacles;
+    [SerializeField] protected GameObject[] players; // Array to hold references to all player game objects in the scene
+    [SerializeField] protected GameObject detectionTarget; // The current target that the AI is focused on (e.g., the player)
+    [SerializeField] LayerMask raycastObstacles; // LayerMask to define which layers can block the AI's line of sight
 
     [Header("AI ATTRIBUTES")]
     [SerializeField] protected float viewDistance = 10f; // How far the NPC can see
     [SerializeField] protected float viewAngle = 90f; // How wide the NPC can see (1f = 1 Degree)
 
     [Header("AI STATES")]
-    [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral;
-    [SerializeField] protected enum EnemyState { Neutral, Chase }
+    [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral; // Default starting state of the AI
+    [SerializeField] protected enum EnemyState { Neutral, Chase } // Different states this AI can be in
 
     [Header("VISUAL DEBUGS")]
     [SerializeField] private float viewConeStrokeWidth = 0.05f; // How thick the lines are drawn
-    [SerializeField] private LineRenderer viewConeWireframe;
-    [SerializeField] private Material viewConeRangeNeutral;
-    [SerializeField] private Material viewConeRangeAlerted;
-    [SerializeField] protected enum ShowCone { EnableVisualDetection, DisableVisualDetection }
-    [SerializeField] protected ShowCone detectionVisualStatus = ShowCone.EnableVisualDetection;
+    [SerializeField] private LineRenderer viewConeWireframe; // LineRenderer component to visualize the AI's field of view
+    [SerializeField] private Material viewConeRangeNeutral; // Color Material for the AI's vision cone when in neutral state
+    [SerializeField] private Material viewConeRangeAlerted; // Color Material for the AI's vision cone when in alerted state    
+    [SerializeField] protected enum ShowCone { EnableVisualDetection, DisableVisualDetection } // Enum to toggle visual detection cone
+    [SerializeField] protected ShowCone detectionVisualStatus = ShowCone.EnableVisualDetection; // Default setting for visual detection cone
 
     // ------------------------- UNITY METHODS -----------------------
 
@@ -69,21 +66,25 @@ public class Enemy : MonoBehaviour
     // Start is called at the first frame
     protected virtual void Start()
     {
+        // Calls the method that initializes the visual cone for AI detection
         InitializeVisualCone();
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
+        // Evaluates if the dev wants to see the visual cone in-game
         if (detectionVisualStatus == ShowCone.EnableVisualDetection) 
         {
+            // Calls the method that updates the visual cone for AI detection   
             UpdateVisualCone();
         }
     }
 
-    // ...
+    // FixedUpdate is called at a fixed time interval
     protected virtual void FixedUpdate()
     {
+        // Calls the method that handles AI detection logic
         AIDetection();
     }
 
@@ -97,23 +98,11 @@ public class Enemy : MonoBehaviour
         {
             // Switches the 'Enemy' state to Chase a 'Player'
             SwitchState(EnemyState.Chase);
-
-            //// Evaluates if the AI is already on the Chase State, proceeds if not
-            //if (currentEnemyState != EnemyState.Chase)
-            //{
-                
-            //}
         }
         else 
         {
             // Switches the 'Enemy' state to be 'Neutral'
             SwitchState(EnemyState.Neutral);
-
-            //// Evaluates if the AI is already on the Chase State, proceeds if not
-            //if (currentEnemyState != EnemyState.Neutral)
-            //{
-                
-            //}
         }
     }
 
@@ -126,10 +115,12 @@ public class Enemy : MonoBehaviour
         // Switches the Enemy state based on the current case condition
         switch (newState) 
         {
+            // Case for making the AI standby
             case EnemyState.Neutral:
                 Neutral();
                 break;
 
+            // Case for making the AI follows a player
             case EnemyState.Chase:
                 Chase();
                 break;
@@ -139,20 +130,20 @@ public class Enemy : MonoBehaviour
     // Overrideable Method for making the AI to standby
     protected virtual void Neutral()
     {
-        // ...
+        // Sets the AI's destination to its current position (standby)
         enemyController.SetDestination(this.transform.position);
 
-        // ...
+        // Sets the animation to idle state
         Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
     }
 
     // Overrideable Method for making the AI follows a player
     protected virtual void Chase()
     {
-        // ...
+        // Sets the AI's destination to the detected player's position
         enemyController.SetDestination(detectionTarget.transform.position);
 
-        // ... 
+        // Sets the animation to walking/running state
         Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
     }
 
@@ -217,7 +208,7 @@ public class Enemy : MonoBehaviour
 
     // ------------------------- DEBUGGERS -------------------------
 
-    // ...
+    // Method for AI Wireframe Visualization
     protected void InitializeVisualCone() 
     {
         // Evaluate's if there's no existing 'LineRenderer' for AI Enemy's range detection
@@ -230,7 +221,7 @@ public class Enemy : MonoBehaviour
         // Evavluates if there's an existing 'Color Material' for the AI Enemy's state detection
         if (viewConeRangeNeutral == null)
         {
-            // ...
+            // Warns the dev that there's no existing 'Color Material' assigned for the AI Enemy's range indicator
             Debug.LogWarning("Add Color Materials first for the AI's Range Indicator");
 
             return;
@@ -246,7 +237,7 @@ public class Enemy : MonoBehaviour
 
         // Configure 'LineRenderer' behaviours
         viewConeWireframe.loop = true; // Connects the last vertex back to the 'Origin' point
-        viewConeWireframe.useWorldSpace = true; // ...
+        viewConeWireframe.useWorldSpace = true; // Uses world space coordinates for positioning
 
     }
 
@@ -256,29 +247,31 @@ public class Enemy : MonoBehaviour
         // Evaluates if the Cone attributes where ready and the devs wants to see it in game, else do not proceed
         if (viewConeWireframe == null || detectionVisualStatus == ShowCone.DisableVisualDetection) return;
 
-        // ...
+        // Stores how many segments the wireframe will have based on the view angle (minimum of 10 segments for smoother appearance)
         int segments = Mathf.Max(10, Mathf.RoundToInt(viewAngle / 10f));
 
-        // Total vertices = segments + 2 (center + arc points + closing point)
+        // Defines how many vertices the wireframe would have
+        // * Total Vertices = Segments + 2 (Center Point + Each Edge Point)
         viewConeWireframe.positionCount = segments + 2;
 
-        // Position 0: Center point (this gameObject)
+        // Positions the first vertex at the center of this gameobject
         viewConeWireframe.SetPosition(0, transform.position);
 
-        // ...
-        float angleStep = viewAngle / segments;
-        float startAngle = -viewAngle * 0.5f;
+        // Calculates the angle step between each segment
+        float angleStep = viewAngle / segments; // How much angle difference each segment would have
+        float startAngle = -viewAngle * 0.5f; // Starting angle at the leftmost edge
 
-        // ...
+        // Iterates through each segment to calculate and set the positions of the wireframe vertices
         for (int i = 0; i <= segments; i++)
         {
-            float angle = startAngle + (angleStep * i);
-            Quaternion rotation = Quaternion.Euler(0, angle, 0);
-            Vector3 direction = rotation * transform.forward;
-            Vector3 point = transform.position + direction * viewDistance;
+            // Calculates the angle for the current segment
+            float angle = startAngle + (angleStep * i); // Current angle for this segment
+            Quaternion rotation = Quaternion.Euler(0, angle, 0); // Creates a rotation based on the calculated angle
+            Vector3 direction = rotation * transform.forward; // Calculates the direction vector for this segment
+            Vector3 point = transform.position + direction * viewDistance; // Calculates the position of the vertex at the edge of the view distance
 
             // Starts iterating at position i+1 (since 0 is center which is this gameobject)
-            viewConeWireframe.SetPosition(i + 1, point);
+            viewConeWireframe.SetPosition(i + 1, point); // Sets the position of the vertex in the LineRenderer
         }
 
         // -------------------------------- SIMPLE Method --------------------------------

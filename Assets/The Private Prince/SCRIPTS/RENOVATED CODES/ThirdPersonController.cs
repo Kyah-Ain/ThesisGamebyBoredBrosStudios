@@ -1,18 +1,19 @@
 using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
-using UnityEngine; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
+using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject, Transform, Vector3, etc.
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController))] // Requires this GameObject to have a CharacterController component in order to function properly
+
 public class ThirdPersonController : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
 
     [Header("REFERENCES")]
-    [SerializeField] private CharacterController characController;
-    [SerializeField] private Animator animatorController;
+    [SerializeField] private CharacterController characController; // Reference to the CharacterController component for controlling character movement
+    [SerializeField] private Animator animatorController; // Reference to the Animator component for controlling character animations
 
     [Header("MOVEMENT")]
-    [SerializeField] private float movementSpeed = 6f;
+    [SerializeField] private float movementSpeed = 6f; // Speed at which the character moves
 
     /*
     [SerializeField] private float turningSpeed = 0.1f;
@@ -44,7 +45,7 @@ public class ThirdPersonController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        // Method Calls
+        // Calls the method that handles character movement
         Move();
     }
 
@@ -55,11 +56,11 @@ public class ThirdPersonController : MonoBehaviour
     {
         // Get's the Horizontal & Vertical Value from Unity's Input System
         float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        float vertical = Input.GetAxisRaw("Vertical"); 
 
         // Computes for the direction by merging horizontal & vertical positions
         // - ".normalized" so that moving diagonally would make us not move faster
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized; 
 
         // Evaluates if there is a movement
         // ".magnitude" to compute for the distance 
@@ -83,7 +84,7 @@ public class ThirdPersonController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
 
             // Controls the "Character Controller" of a Unity game object
-            characController.Move(direction * movementSpeed * Time.deltaTime);
+            characController.Move(direction * movementSpeed * Time.deltaTime); 
         }
         else 
         {
