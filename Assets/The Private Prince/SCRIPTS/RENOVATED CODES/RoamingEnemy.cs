@@ -14,13 +14,16 @@ public class RoamingEnemy : Enemy
     // ------------------------- PARENT METHODS -----------------------
 
     // Override the Neutral method from the Enemy base class
-    protected override void Neutral()
+    public override void Neutral()
     {
         // Sets the default destination to the current patrol station
         enemyController.SetDestination(patrolStations[currentPatrolIndex].position);
 
         // Sets the animation to walking/running state
         Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
+
+        // Sets the detection angle to a visual cone size
+        viewAngle = 90f;
 
         // Check if the enemy has arrived at the patrol station
         float stationDistance = Vector3.Distance(this.transform.position, patrolStations[currentPatrolIndex].position);

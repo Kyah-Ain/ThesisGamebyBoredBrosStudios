@@ -1,7 +1,7 @@
 public interface IAlertable
 {
     // ------------------------- CONTRACTS -------------------------
-    public void AlertEveryoneNear();
+    public void Chase();
 
-    public void HardResetAlert();
+    //public void HardResetAlert();
 }

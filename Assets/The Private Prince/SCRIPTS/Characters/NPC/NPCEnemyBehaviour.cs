@@ -3,7 +3,7 @@ using System.Collections.Generic; // Grants access to generic collections like L
 using UnityEngine; // Grants access to Unity's core classes and functions
 using UnityEngine.AI; // Grants access to Unity's AI and Navigation system
 
-public class NPCEnemyBehaviour : MonoBehaviour, IAlertable
+public class NPCEnemyBehaviour : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
 

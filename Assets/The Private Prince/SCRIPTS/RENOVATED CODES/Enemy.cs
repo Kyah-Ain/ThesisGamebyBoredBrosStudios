@@ -6,7 +6,7 @@ using UnityEngine.AI; // Grants access to Unity's AI and Navigation system like 
 [RequireComponent(typeof(NavMeshAgent))] // Requires this game object to have a NavMeshAgent component in order to function properly
 [RequireComponent(typeof(Animator))] // Requires this game object to have an Animator component in order to function properly
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IAlertable
 {
     // -------------------------- VARIABLES -------------------------
 
@@ -20,8 +20,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] LayerMask raycastObstacles; // LayerMask to define which layers can block the AI's line of sight
 
     [Header("AI ATTRIBUTES")]
-    [SerializeField] protected float viewDistance = 10f; // How far the NPC can see
-    [SerializeField] protected float viewAngle = 90f; // How wide the NPC can see (1f = 1 Degree)
+    [SerializeField] protected float viewDistance = 10f; // How far the Enemy can see
+    [SerializeField] protected float viewAngle = 90f; // How wide the Enemy can see (1f = 1 Degree)
+    [SerializeField] protected float backupRadius = 20f; // How far the Enemy can call for backup
 
     [Header("AI STATES")]
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral; // Default starting state of the AI
@@ -98,6 +99,9 @@ public class Enemy : MonoBehaviour
         {
             // Switches the 'Enemy' state to Chase a 'Player'
             SwitchState(EnemyState.Chase);
+
+            // Calls the method for Nearby Enemy Backup
+            AlertEveryoneNear();
         }
         else 
         {
@@ -128,23 +132,31 @@ public class Enemy : MonoBehaviour
     }
 
     // Overrideable Method for making the AI to standby
-    protected virtual void Neutral()
+    // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
+    public virtual void Neutral()
     {
         // Sets the AI's destination to its current position (standby)
         enemyController.SetDestination(this.transform.position);
 
         // Sets the animation to idle state
         Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
+
+        // Sets the detection angle to a visual cone size
+        viewAngle = 90f;
     }
 
     // Overrideable Method for making the AI follows a player
-    protected virtual void Chase()
+    // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
+    public virtual void Chase()
     {
         // Sets the AI's destination to the detected player's position
         enemyController.SetDestination(detectionTarget.transform.position);
 
         // Sets the animation to walking/running state
         Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
+
+        // Sets the detection angle to an all direction size
+        viewAngle = 360f;
     }
 
     // -------------------------- DETECTION ---------------------------
@@ -195,6 +207,29 @@ public class Enemy : MonoBehaviour
         }
         // Returns false if the 'return true' have not reached
         return false;
+    }
+
+    // Method to Alert Every Nearby Enemy for Backup
+    public virtual void AlertEveryoneNear() 
+    {
+        // Scans for nearby Enemies to Alert within its alert radius 
+        Collider[] nearbyEnemies = Physics.OverlapSphere(this.transform.position, backupRadius);
+
+        foreach (Collider enemyCollider in nearbyEnemies) 
+        {
+            // Skip self to avoid re-alerting this gameObject
+            if (enemyCollider.gameObject == this.gameObject) continue;
+
+            // ...
+            IAlertable alertable = enemyCollider.GetComponent<IAlertable>();
+
+            // ...
+            if (alertable != null) 
+            {
+                // ...
+                alertable.Chase();
+            }
+        }
     }
 
     // -------------------------- ANIMATIONS ---------------------------
