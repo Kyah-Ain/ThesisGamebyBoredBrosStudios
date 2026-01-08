@@ -16,13 +16,13 @@ public class Enemy : MonoBehaviour, IAlertable
 
     [Header("AI DETECTION")]
     [SerializeField] protected GameObject[] players; // Array to hold references to all player game objects in the scene
-    [SerializeField] protected GameObject detectionTarget; // The current target that the AI is focused on (e.g., the player)
+    [SerializeField] protected Transform detectionTarget; // The current target that the AI is focused on (e.g., the player)
     [SerializeField] LayerMask raycastObstacles; // LayerMask to define which layers can block the AI's line of sight
 
     [Header("AI ATTRIBUTES")]
     [SerializeField] protected float viewDistance = 10f; // How far the Enemy can see
     [SerializeField] protected float viewAngle = 90f; // How wide the Enemy can see (1f = 1 Degree)
-    [SerializeField] protected float backupRadius = 20f; // How far the Enemy can call for backup
+    [SerializeField] protected float backupRadius = 10f; // How far the Enemy can call for backup
 
     [Header("AI STATES")]
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral; // Default starting state of the AI
@@ -126,7 +126,7 @@ public class Enemy : MonoBehaviour, IAlertable
 
             // Case for making the AI follows a player
             case EnemyState.Chase:
-                Chase();
+                Chase(detectionTarget);
                 break;
         }
     }
@@ -147,10 +147,10 @@ public class Enemy : MonoBehaviour, IAlertable
 
     // Overrideable Method for making the AI follows a player
     // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
-    public virtual void Chase()
+    public virtual void Chase(Transform targetChase)
     {
         // Sets the AI's destination to the detected player's position
-        enemyController.SetDestination(detectionTarget.transform.position);
+        enemyController.SetDestination(targetChase.transform.position);
 
         // Sets the animation to walking/running state
         Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
@@ -196,7 +196,7 @@ public class Enemy : MonoBehaviour, IAlertable
                         if (!Physics.Raycast(this.transform.position, directionToPlayer, distanceToPlayer, raycastObstacles))
                         {
                             // Sets the player as the target destination for the AI
-                            detectionTarget = player;
+                            detectionTarget = player.transform;
 
                             // Returns true that indicates that the player was seen
                             return true;
@@ -227,7 +227,10 @@ public class Enemy : MonoBehaviour, IAlertable
             if (alertable != null) 
             {
                 // ...
-                alertable.Chase();
+                alertable.Chase(detectionTarget);
+
+                // ...
+                //alertable.SwitchState(EnemyState.Chase);
             }
         }
     }
@@ -242,6 +245,14 @@ public class Enemy : MonoBehaviour, IAlertable
     }
 
     // ------------------------- DEBUGGERS -------------------------
+
+    // Built-In Method for Gizmos Visualization in Editor
+    protected virtual void OnDrawGizmosSelected() 
+    {
+        // Draws a wire sphere to represent the AI's backup radius
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(this.transform.position, backupRadius);
+    }
 
     // Method for AI Wireframe Visualization
     protected void InitializeVisualCone() 

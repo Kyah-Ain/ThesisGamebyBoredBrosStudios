@@ -2453,6 +2453,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5736021613034859895}
+  - component: {fileID: 7644018658630763259}
   - component: {fileID: 1018756484944396614}
   - component: {fileID: 749421407056628448}
   - component: {fileID: 2645064505438490203}
@@ -2483,6 +2484,29 @@ Transform:
   - {fileID: 4042930144192226678}
   m_Father: {fileID: 5158089182010463051}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &7644018658630763259
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9154451979262963920}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Height: 1.85
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.92, z: 0}
 --- !u!95 &1018756484944396614
 Animator:
   serializedVersion: 5
@@ -2547,6 +2571,7 @@ MonoBehaviour:
     m_Bits: 0
   viewDistance: 10
   viewAngle: 90
+  backupRadius: 10
   currentEnemyState: 0
   viewConeStrokeWidth: 0.05
   viewConeWireframe: {fileID: 4925553622495843552}
