@@ -3,6 +3,8 @@ using System.Collections.Generic; // Grants access to collections structures lik
 using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject, Transform, Vector3, etc.
 using UnityEngine.AI; // Grants access to Unity's AI and Navigation system like NavMeshAgent, NavMesh, etc.
 
+//using EnemyState = IAlertable.EnemyState; // Alias for easier reference to the EnemyState enum from IAlertable interface
+
 [RequireComponent(typeof(NavMeshAgent))] // Requires this game object to have a NavMeshAgent component in order to function properly
 [RequireComponent(typeof(Animator))] // Requires this game object to have an Animator component in order to function properly
 
@@ -24,17 +26,26 @@ public class Enemy : MonoBehaviour, IAlertable
     [SerializeField] protected float viewAngle = 90f; // How wide the Enemy can see (1f = 1 Degree)
     [SerializeField] protected float backupRadius = 10f; // How far the Enemy can call for backup
 
+    [SerializeField] protected float chaseDuration = 5f; // How long the Enemy will chase the player after losing sight
+
     [Header("AI STATES")]
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral; // Default starting state of the AI
-    [SerializeField] protected enum EnemyState { Neutral, Chase } // Different states this AI can be in
+    public enum EnemyState { Neutral, Chase } // Different states this AI can be in
+
+    [Header("BOOLEANS")]
+    [SerializeField] protected bool hasBeenAlerted = false; // Indicates if the AI has been alerted by another enemy
 
     [Header("VISUAL DEBUGS")]
     [SerializeField] private float viewConeStrokeWidth = 0.05f; // How thick the lines are drawn
     [SerializeField] private LineRenderer viewConeWireframe; // LineRenderer component to visualize the AI's field of view
     [SerializeField] private Material viewConeRangeNeutral; // Color Material for the AI's vision cone when in neutral state
-    [SerializeField] private Material viewConeRangeAlerted; // Color Material for the AI's vision cone when in alerted state    
+    [SerializeField] private Material viewConeRangeAlerted; // Color Material for the AI's vision cone when in alerted state
+
     [SerializeField] protected enum ShowCone { EnableVisualDetection, DisableVisualDetection } // Enum to toggle visual detection cone
     [SerializeField] protected ShowCone detectionVisualStatus = ShowCone.EnableVisualDetection; // Default setting for visual detection cone
+
+    // Interface implementation for IAlertable
+    public bool IBeenAlerted { get => hasBeenAlerted; set => hasBeenAlerted = value; }
 
     // ------------------------- UNITY METHODS -----------------------
 
@@ -49,9 +60,6 @@ public class Enemy : MonoBehaviour, IAlertable
 
             // Assigns the gameObject's "Animation Controller" automatically to this script
             animatorController = GetComponent<Animator>();
-
-            //// Assigns the player as the targettable game object in the scene
-            //detectionTarget = GameObject.FindGameObjectWithTag("Player");
 
             Debug.Log($"Navmesh Agent Controlller was set: {enemyController}");
         }
@@ -92,10 +100,10 @@ public class Enemy : MonoBehaviour, IAlertable
     // -------------------------- STATES ---------------------------
 
     // Method for making the AI able to locate a Player
-    protected void AIDetection() 
+    protected void AIDetection()
     {
         // Evaluate's if the Enemy should Chase the player or not
-        if (isPlayerSpotted())
+        if (isPlayerSpotted() || hasBeenAlerted == true)
         {
             // Switches the 'Enemy' state to Chase a 'Player'
             SwitchState(EnemyState.Chase);
@@ -108,10 +116,26 @@ public class Enemy : MonoBehaviour, IAlertable
             // Switches the 'Enemy' state to be 'Neutral'
             SwitchState(EnemyState.Neutral);
         }
+
+        if (chaseDuration > 0f)
+        {
+            chaseDuration -= Time.deltaTime;
+        }
+        //else
+        //{
+        //    // Resets the chase duration timer
+        //    chaseDuration = 5f;
+
+        //    // Resets the alerted status
+        //    hasBeenAlerted = false;
+
+        //    // Switches the 'Enemy' state to be 'Neutral'
+        //    //SwitchState(EnemyState.Neutral);
+        //}
     }
 
     // Method for switching between AI Enemy Behaviours
-    protected void SwitchState(EnemyState newState) 
+    public void SwitchState(EnemyState newState) 
     {
         // Stores the new Enemy state and overwrites the current
         currentEnemyState = newState;
@@ -135,11 +159,24 @@ public class Enemy : MonoBehaviour, IAlertable
     // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
     public virtual void Neutral()
     {
+        // ...
+        hasBeenAlerted = false;
+
         // Sets the AI's destination to its current position (standby)
         enemyController.SetDestination(this.transform.position);
 
-        // Sets the animation to idle state
+        // ...
+        NeutralStat();
+    }
+
+    // Overrideable Method for Setting Neutral Stats
+    public virtual void NeutralStat()
+    {
+        // Sets the animation to walking/running state
         Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
+
+        // Neutral Speed
+
 
         // Sets the detection angle to a visual cone size
         viewAngle = 90f;
@@ -149,13 +186,28 @@ public class Enemy : MonoBehaviour, IAlertable
     // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
     public virtual void Chase(Transform targetChase)
     {
+        if (!isPlayerSpotted() && chaseDuration <= 0) 
+        {
+            hasBeenAlerted = false;
+        }
+
         // Sets the AI's destination to the detected player's position
         enemyController.SetDestination(targetChase.transform.position);
 
+        // ...
+        ChaseStat();
+    }
+
+    // Overrideable Method for Setting Chase Stats
+    public virtual void ChaseStat()
+    {
         // Sets the animation to walking/running state
         Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
 
-        // Sets the detection angle to an all direction size
+        // Chase Speed
+
+
+        // Sets the detection angle to a visual cone size
         viewAngle = 360f;
     }
 
@@ -226,11 +278,21 @@ public class Enemy : MonoBehaviour, IAlertable
             // ...
             if (alertable != null) 
             {
+
                 // ...
-                alertable.Chase(detectionTarget);
+                //alertable.IDetect = detectionTarget;
 
                 // ...
                 //alertable.SwitchState(EnemyState.Chase);
+
+                // ...
+                //alertable.ForcedAlert(detectionTarget);
+
+                // ...
+                alertable.IBeenAlerted = true;
+
+                // ...
+                alertable.Chase(detectionTarget);
             }
         }
     }
