@@ -44,8 +44,9 @@ public class Enemy : MonoBehaviour, IAlertable
     [SerializeField] protected enum ShowCone { EnableVisualDetection, DisableVisualDetection } // Enum to toggle visual detection cone
     [SerializeField] protected ShowCone detectionVisualStatus = ShowCone.EnableVisualDetection; // Default setting for visual detection cone
 
-    // Interface implementation for IAlertable
-    public bool IBeenAlerted { get => hasBeenAlerted; set => hasBeenAlerted = value; }
+    // Interface implementation for Variables
+    public Transform IDetect { get => detectionTarget; set => detectionTarget = value; }
+    public bool IAlerted { get => hasBeenAlerted; set => hasBeenAlerted = value; }
 
     // ------------------------- UNITY METHODS -----------------------
 
@@ -117,10 +118,10 @@ public class Enemy : MonoBehaviour, IAlertable
             SwitchState(EnemyState.Neutral);
         }
 
-        if (chaseDuration > 0f)
-        {
-            chaseDuration -= Time.deltaTime;
-        }
+        //if (chaseDuration > 0f)
+        //{
+        //    chaseDuration -= Time.deltaTime;
+        //}
         //else
         //{
         //    // Resets the chase duration timer
@@ -186,16 +187,27 @@ public class Enemy : MonoBehaviour, IAlertable
     // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
     public virtual void Chase(Transform targetChase)
     {
-        if (!isPlayerSpotted() && chaseDuration <= 0) 
+        if (isPlayerSpotted() || chaseDuration > 0)
+        {
+            //// ...
+            //hasBeenAlerted = false;
+
+            //// ...
+            //chaseDuration = 5f;
+
+            // ...
+            chaseDuration -= Time.deltaTime;
+
+            // Sets the AI's destination to the detected player's position
+            enemyController.SetDestination(targetChase.transform.position);
+
+            // ...
+            ChaseStat();
+        }
+        else
         {
             hasBeenAlerted = false;
         }
-
-        // Sets the AI's destination to the detected player's position
-        enemyController.SetDestination(targetChase.transform.position);
-
-        // ...
-        ChaseStat();
     }
 
     // Overrideable Method for Setting Chase Stats
@@ -289,10 +301,13 @@ public class Enemy : MonoBehaviour, IAlertable
                 //alertable.ForcedAlert(detectionTarget);
 
                 // ...
-                alertable.IBeenAlerted = true;
+                alertable.IDetect = detectionTarget;
+                
+                // ...
+                alertable.IAlerted = true;
 
                 // ...
-                alertable.Chase(detectionTarget);
+                //alertable.Chase(detectionTarget);
             }
         }
     }

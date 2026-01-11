@@ -16,6 +16,9 @@ public class RoamingEnemy : Enemy
     // Override the Neutral method from the Enemy base class
     public override void Neutral()
     {
+        // ...
+        hasBeenAlerted = false;
+
         // Sets the default destination to the current patrol station
         enemyController.SetDestination(patrolStations[currentPatrolIndex].position);
 

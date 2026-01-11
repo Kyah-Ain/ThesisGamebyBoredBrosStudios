@@ -4,7 +4,10 @@ public interface IAlertable
 {
     // ------------------- REQUIREMENT VARIABLES -------------------------
 
-    public bool IBeenAlerted { get; set; }
+    public Transform IDetect { get; set; }
+    public bool IAlerted { get; set; }
+
+
     //public enum EnemyState { Neutral, Chase } // Different states this AI can be in
 
     // ------------------------- CONTRACTS -------------------------
