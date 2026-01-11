@@ -117,22 +117,6 @@ public class Enemy : MonoBehaviour, IAlertable
             // Switches the 'Enemy' state to be 'Neutral'
             SwitchState(EnemyState.Neutral);
         }
-
-        //if (chaseDuration > 0f)
-        //{
-        //    chaseDuration -= Time.deltaTime;
-        //}
-        //else
-        //{
-        //    // Resets the chase duration timer
-        //    chaseDuration = 5f;
-
-        //    // Resets the alerted status
-        //    hasBeenAlerted = false;
-
-        //    // Switches the 'Enemy' state to be 'Neutral'
-        //    //SwitchState(EnemyState.Neutral);
-        //}
     }
 
     // Method for switching between AI Enemy Behaviours
@@ -187,16 +171,14 @@ public class Enemy : MonoBehaviour, IAlertable
     // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
     public virtual void Chase(Transform targetChase)
     {
-        if (isPlayerSpotted() || chaseDuration > 0)
+        // Evaluates if ...
+        if (isPlayerSpotted())
         {
-            //// ...
-            //hasBeenAlerted = false;
-
-            //// ...
-            //chaseDuration = 5f;
+            // ...
+            hasBeenAlerted = false;
 
             // ...
-            chaseDuration -= Time.deltaTime;
+            chaseDuration = 5f;
 
             // Sets the AI's destination to the detected player's position
             enemyController.SetDestination(targetChase.transform.position);
@@ -206,7 +188,22 @@ public class Enemy : MonoBehaviour, IAlertable
         }
         else
         {
-            hasBeenAlerted = false;
+            if (chaseDuration > 0)
+            {
+                // ...
+                chaseDuration -= Time.deltaTime;
+
+                // ...
+                ChaseStat();
+            }
+            else
+            {
+                // ...
+                hasBeenAlerted = false;
+
+                // ...
+                chaseDuration = 5f;
+            }
         }
     }
 
@@ -262,6 +259,9 @@ public class Enemy : MonoBehaviour, IAlertable
                             // Sets the player as the target destination for the AI
                             detectionTarget = player.transform;
 
+                            // ...
+                            hasBeenAlerted = true;
+
                             // Returns true that indicates that the player was seen
                             return true;
                         }
@@ -290,24 +290,15 @@ public class Enemy : MonoBehaviour, IAlertable
             // ...
             if (alertable != null) 
             {
-
-                // ...
-                //alertable.IDetect = detectionTarget;
-
-                // ...
-                //alertable.SwitchState(EnemyState.Chase);
-
-                // ...
-                //alertable.ForcedAlert(detectionTarget);
-
                 // ...
                 alertable.IDetect = detectionTarget;
-                
-                // ...
-                alertable.IAlerted = true;
 
                 // ...
-                //alertable.Chase(detectionTarget);
+                if (!alertable.IAlerted) 
+                {
+                    // ...
+                    alertable.IAlerted = true;
+                }
             }
         }
     }
