@@ -20,7 +20,7 @@ public class RoamingEnemy : Enemy
         hasBeenAlerted = false;
 
         // ...
-        chaseDuration = 5f;
+        chaseDuration = maxChaseDuration;
 
         // Sets the default destination to the current patrol station
         enemyController.SetDestination(patrolStations[currentPatrolIndex].position);

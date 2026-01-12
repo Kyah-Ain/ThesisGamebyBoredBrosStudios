@@ -26,7 +26,8 @@ public class Enemy : MonoBehaviour, IAlertable
     [SerializeField] protected float viewAngle = 90f; // How wide the Enemy can see (1f = 1 Degree)
     [SerializeField] protected float backupRadius = 10f; // How far the Enemy can call for backup
 
-    [SerializeField] protected float chaseDuration = 5f; // How long the Enemy will chase the player after losing sight
+    [SerializeField] protected float maxChaseDuration = 3f; // How long the Enemy can still chase the player after losing sight
+    [SerializeField] protected float chaseDuration = 0f; // ...
 
     [Header("AI STATES")]
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral; // Default starting state of the AI
@@ -34,6 +35,7 @@ public class Enemy : MonoBehaviour, IAlertable
 
     [Header("BOOLEANS")]
     [SerializeField] protected bool hasBeenAlerted = false; // Indicates if the AI has been alerted by another enemy
+    [SerializeField] protected bool canSeePlayer = false; // ...
 
     [Header("VISUAL DEBUGS")]
     [SerializeField] private float viewConeStrokeWidth = 0.05f; // How thick the lines are drawn
@@ -76,6 +78,9 @@ public class Enemy : MonoBehaviour, IAlertable
     // Start is called at the first frame
     protected virtual void Start()
     {
+        // ...
+        chaseDuration = maxChaseDuration;
+
         // Calls the method that initializes the visual cone for AI detection
         InitializeVisualCone();
     }
@@ -107,7 +112,7 @@ public class Enemy : MonoBehaviour, IAlertable
         if (isPlayerSpotted() || hasBeenAlerted == true)
         {
             // Switches the 'Enemy' state to Chase a 'Player'
-            SwitchState(EnemyState.Chase);
+            SwitchState(EnemyState.Chase); 
 
             // Calls the method for Nearby Enemy Backup
             AlertEveryoneNear();
@@ -126,7 +131,7 @@ public class Enemy : MonoBehaviour, IAlertable
         currentEnemyState = newState;
 
         // Switches the Enemy state based on the current case condition
-        switch (newState) 
+        switch (currentEnemyState) 
         {
             // Case for making the AI standby
             case EnemyState.Neutral:
@@ -178,7 +183,7 @@ public class Enemy : MonoBehaviour, IAlertable
             hasBeenAlerted = false;
 
             // ...
-            chaseDuration = 5f;
+            chaseDuration = maxChaseDuration;
 
             // Sets the AI's destination to the detected player's position
             enemyController.SetDestination(targetChase.transform.position);
@@ -193,6 +198,9 @@ public class Enemy : MonoBehaviour, IAlertable
                 // ...
                 chaseDuration -= Time.deltaTime;
 
+                // Sets the AI's destination to the detected player's position
+                enemyController.SetDestination(targetChase.transform.position);
+
                 // ...
                 ChaseStat();
             }
@@ -202,7 +210,7 @@ public class Enemy : MonoBehaviour, IAlertable
                 hasBeenAlerted = false;
 
                 // ...
-                chaseDuration = 5f;
+                chaseDuration = maxChaseDuration;
             }
         }
     }
@@ -262,6 +270,9 @@ public class Enemy : MonoBehaviour, IAlertable
                             // ...
                             hasBeenAlerted = true;
 
+                            // ...
+                            canSeePlayer = true;
+
                             // Returns true that indicates that the player was seen
                             return true;
                         }
@@ -269,6 +280,9 @@ public class Enemy : MonoBehaviour, IAlertable
                 }
             }
         }
+        // ...
+        canSeePlayer = false;
+
         // Returns false if the 'return true' have not reached
         return false;
     }
