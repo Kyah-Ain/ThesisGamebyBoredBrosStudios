@@ -34,8 +34,8 @@ public class RoamingEnemy : Enemy
         // Check if the enemy has arrived at the patrol station
         float stationDistance = Vector3.Distance(this.transform.position, patrolStations[currentPatrolIndex].position);
 
-        Debug.Log($"RoamingEnemy 1st: {patrolStations[currentPatrolIndex].position}");
-        Debug.Log($"RoamingEnemy 2nd: {stationDistance}");
+        // Debug.Log($"RoamingEnemy 1st: {patrolStations[currentPatrolIndex].position}");
+        // Debug.Log($"RoamingEnemy 2nd: {stationDistance}");
 
         // Evaluate if the enemy is within the arrival threshold of the patrol station
         if (stationDistance < arrivalThreshold)
@@ -47,9 +47,9 @@ public class RoamingEnemy : Enemy
                 currentPatrolIndex = (currentPatrolIndex + 1) % patrolStations.Count;
             }
 
-            Debug.Log($"RoamingEnemy 3rd: {currentPatrolIndex}");
+            // Debug.Log($"RoamingEnemy 3rd: {currentPatrolIndex}");
         }
 
-        Debug.Log($"RoamingEnemy 4th: {stationDistance < arrivalThreshold}");
+        // Debug.Log($"RoamingEnemy 4th: {stationDistance < arrivalThreshold}");
     }
 }

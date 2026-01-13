@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour, IAlertable
 
     [Header("BOOLEANS")]
     [SerializeField] protected bool hasBeenAlerted = false; // Indicates if the AI has been alerted by another enemy
-    [SerializeField] protected bool canSeePlayer = false; // ...
+    //[SerializeField] protected bool canSeePlayer = false; // ...
 
     [Header("VISUAL DEBUGS")]
     [SerializeField] private float viewConeStrokeWidth = 0.05f; // How thick the lines are drawn
@@ -64,11 +64,11 @@ public class Enemy : MonoBehaviour, IAlertable
             // Assigns the gameObject's "Animation Controller" automatically to this script
             animatorController = GetComponent<Animator>();
 
-            Debug.Log($"Navmesh Agent Controlller was set: {enemyController}");
+            //Debug.Log($"Navmesh Agent Controlller was set: {enemyController}");
         }
         else 
         {
-            Debug.LogError("ASSIGN A NAVMESH AGENT CONTROLLER FIRST BEFORE USING THIS SCRIPT");
+            //Debug.LogError("ASSIGN A NAVMESH AGENT CONTROLLER FIRST BEFORE USING THIS SCRIPT");
         }
 
         // Fills the array with gameObject refereces that has the tag 'Player'
@@ -108,9 +108,13 @@ public class Enemy : MonoBehaviour, IAlertable
     // Method for making the AI able to locate a Player
     protected void AIDetection()
     {
+        Debug.Log("1: AI Detection Logic is being called");
+
         // Evaluate's if the Enemy should Chase the player or not
-        if (isPlayerSpotted() || hasBeenAlerted == true)
+        if (isPlayerSpotted() || hasBeenAlerted)
         {
+            Debug.Log($"2: Current Status is isPlayerSpotted: {isPlayerSpotted()} & hasBeenAlerted: {hasBeenAlerted}");
+
             // Switches the 'Enemy' state to Chase a 'Player'
             SwitchState(EnemyState.Chase); 
 
@@ -119,6 +123,8 @@ public class Enemy : MonoBehaviour, IAlertable
         }
         else 
         {
+            Debug.Log($"2: Current Status is isPlayerSpotted: {isPlayerSpotted()} & hasBeenAlerted: {hasBeenAlerted}");
+
             // Switches the 'Enemy' state to be 'Neutral'
             SwitchState(EnemyState.Neutral);
         }
@@ -170,6 +176,9 @@ public class Enemy : MonoBehaviour, IAlertable
 
         // Sets the detection angle to a visual cone size
         viewAngle = 90f;
+
+        // ...
+        chaseDuration = maxChaseDuration;
     }
 
     // Overrideable Method for making the AI follows a player
@@ -177,21 +186,7 @@ public class Enemy : MonoBehaviour, IAlertable
     public virtual void Chase(Transform targetChase)
     {
         // Evaluates if ...
-        if (isPlayerSpotted())
-        {
-            // ...
-            hasBeenAlerted = false;
-
-            // ...
-            chaseDuration = maxChaseDuration;
-
-            // Sets the AI's destination to the detected player's position
-            enemyController.SetDestination(targetChase.transform.position);
-
-            // ...
-            ChaseStat();
-        }
-        else
+        if (!isPlayerSpotted())
         {
             if (chaseDuration > 0)
             {
@@ -208,10 +203,18 @@ public class Enemy : MonoBehaviour, IAlertable
             {
                 // ...
                 hasBeenAlerted = false;
-
-                // ...
-                chaseDuration = maxChaseDuration;
             }
+        }
+        else
+        {
+            // ...
+            hasBeenAlerted = false;
+
+            // Sets the AI's destination to the detected player's position
+            enemyController.SetDestination(targetChase.transform.position);
+
+            // ...
+            ChaseStat();
         }
     }
 
@@ -259,7 +262,7 @@ public class Enemy : MonoBehaviour, IAlertable
                     // - this means, middle is 0 angle while left and right are just mirrored angles (both have 45, 90, 180 degree positive)
                     // - a sample of desired 90 degree 'viewAngle' would mean 90 both sides instead of 45, which would make the AI's total detection 180 instead of 90, hence the need to divide by 2
                     if (angleToPlayer <= viewAngle / 2f)
-                    {
+                    {   
                         // Shoots a raycast detection directly to the player to evaluates if there is some obstacle blocking the AI's vision
                         // - it replicates real-life depth seeing, instead of just concluding a player can be seen by being at specific range
                         if (!Physics.Raycast(this.transform.position, directionToPlayer, distanceToPlayer, raycastObstacles))
@@ -271,7 +274,7 @@ public class Enemy : MonoBehaviour, IAlertable
                             hasBeenAlerted = true;
 
                             // ...
-                            canSeePlayer = true;
+                            //canSeePlayer = true;
 
                             // Returns true that indicates that the player was seen
                             return true;
@@ -280,8 +283,8 @@ public class Enemy : MonoBehaviour, IAlertable
                 }
             }
         }
-        // ...
-        canSeePlayer = false;
+        //// ...
+        //canSeePlayer = false;
 
         // Returns false if the 'return true' have not reached
         return false;
