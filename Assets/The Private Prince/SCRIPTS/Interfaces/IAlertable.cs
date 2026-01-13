@@ -6,7 +6,7 @@ public interface IAlertable
 
     public Transform IDetect { get; set; }
     public bool IAlerted { get; set; }
-
+    //public bool ISeePlayer { get; set; }
 
     //public enum EnemyState { Neutral, Chase } // Different states this AI can be in
 

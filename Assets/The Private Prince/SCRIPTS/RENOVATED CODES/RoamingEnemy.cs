@@ -16,11 +16,17 @@ public class RoamingEnemy : Enemy
     // Override the Neutral method from the Enemy base class
     public override void Neutral()
     {
-        // ...
-        hasBeenAlerted = false;
+        //// ...
+        //hasBeenAlerted = false;
 
-        // ...
-        chaseDuration = maxChaseDuration;
+        //// ...
+        //chaseDuration = maxChaseDuration;
+
+        // Updates Visual Cone Material
+        if (viewConeWireframe != null && viewConeRangeNeutral != null)
+        {
+            viewConeWireframe.material = viewConeRangeNeutral;
+        }
 
         // Sets the default destination to the current patrol station
         enemyController.SetDestination(patrolStations[currentPatrolIndex].position);
@@ -34,8 +40,8 @@ public class RoamingEnemy : Enemy
         // Check if the enemy has arrived at the patrol station
         float stationDistance = Vector3.Distance(this.transform.position, patrolStations[currentPatrolIndex].position);
 
-        // Debug.Log($"RoamingEnemy 1st: {patrolStations[currentPatrolIndex].position}");
-        // Debug.Log($"RoamingEnemy 2nd: {stationDistance}");
+        Debug.Log($"RoamingEnemy 1st: {patrolStations[currentPatrolIndex].position}");
+        Debug.Log($"RoamingEnemy 2nd: {stationDistance}");
 
         // Evaluate if the enemy is within the arrival threshold of the patrol station
         if (stationDistance < arrivalThreshold)
@@ -47,9 +53,9 @@ public class RoamingEnemy : Enemy
                 currentPatrolIndex = (currentPatrolIndex + 1) % patrolStations.Count;
             }
 
-            // Debug.Log($"RoamingEnemy 3rd: {currentPatrolIndex}");
+            Debug.Log($"RoamingEnemy 3rd: {currentPatrolIndex}");
         }
 
-        // Debug.Log($"RoamingEnemy 4th: {stationDistance < arrivalThreshold}");
+        Debug.Log($"RoamingEnemy 4th: {stationDistance < arrivalThreshold}");
     }
 }

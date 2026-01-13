@@ -35,13 +35,12 @@ public class Enemy : MonoBehaviour, IAlertable
 
     [Header("BOOLEANS")]
     [SerializeField] protected bool hasBeenAlerted = false; // Indicates if the AI has been alerted by another enemy
-    //[SerializeField] protected bool canSeePlayer = false; // ...
 
     [Header("VISUAL DEBUGS")]
-    [SerializeField] private float viewConeStrokeWidth = 0.05f; // How thick the lines are drawn
-    [SerializeField] private LineRenderer viewConeWireframe; // LineRenderer component to visualize the AI's field of view
-    [SerializeField] private Material viewConeRangeNeutral; // Color Material for the AI's vision cone when in neutral state
-    [SerializeField] private Material viewConeRangeAlerted; // Color Material for the AI's vision cone when in alerted state
+    [SerializeField] protected float viewConeStrokeWidth = 0.05f; // How thick the lines are drawn
+    [SerializeField] protected LineRenderer viewConeWireframe; // LineRenderer component to visualize the AI's field of view
+    [SerializeField] protected Material viewConeRangeNeutral; // Color Material for the AI's vision cone when in neutral state
+    [SerializeField] protected Material viewConeRangeAlerted; // Color Material for the AI's vision cone when in alerted state
 
     [SerializeField] protected enum ShowCone { EnableVisualDetection, DisableVisualDetection } // Enum to toggle visual detection cone
     [SerializeField] protected ShowCone detectionVisualStatus = ShowCone.EnableVisualDetection; // Default setting for visual detection cone
@@ -64,11 +63,11 @@ public class Enemy : MonoBehaviour, IAlertable
             // Assigns the gameObject's "Animation Controller" automatically to this script
             animatorController = GetComponent<Animator>();
 
-            //Debug.Log($"Navmesh Agent Controlller was set: {enemyController}");
+            Debug.Log($"Navmesh Agent Controlller was set: {enemyController}");
         }
-        else 
+        else
         {
-            //Debug.LogError("ASSIGN A NAVMESH AGENT CONTROLLER FIRST BEFORE USING THIS SCRIPT");
+            Debug.LogError("ASSIGN A NAVMESH AGENT CONTROLLER FIRST BEFORE USING THIS SCRIPT");
         }
 
         // Fills the array with gameObject refereces that has the tag 'Player'
@@ -79,7 +78,7 @@ public class Enemy : MonoBehaviour, IAlertable
     protected virtual void Start()
     {
         // ...
-        chaseDuration = maxChaseDuration;
+        chaseDuration = 0f;
 
         // Calls the method that initializes the visual cone for AI detection
         InitializeVisualCone();
@@ -89,7 +88,7 @@ public class Enemy : MonoBehaviour, IAlertable
     protected virtual void Update()
     {
         // Evaluates if the dev wants to see the visual cone in-game
-        if (detectionVisualStatus == ShowCone.EnableVisualDetection) 
+        if (detectionVisualStatus == ShowCone.EnableVisualDetection)
         {
             // Calls the method that updates the visual cone for AI detection   
             UpdateVisualCone();
@@ -108,43 +107,56 @@ public class Enemy : MonoBehaviour, IAlertable
     // Method for making the AI able to locate a Player
     protected void AIDetection()
     {
-        Debug.Log("1: AI Detection Logic is being called");
-
         // Evaluate's if the Enemy should Chase the player or not
         if (isPlayerSpotted() || hasBeenAlerted)
         {
-            Debug.Log($"2: Current Status is isPlayerSpotted: {isPlayerSpotted()} & hasBeenAlerted: {hasBeenAlerted}");
+            // Resets "chaseDuration" when starting a chase
+            if (currentEnemyState != EnemyState.Chase)
+            {
+                // ...
+                chaseDuration = maxChaseDuration;
+            }
 
             // Switches the 'Enemy' state to Chase a 'Player'
-            SwitchState(EnemyState.Chase); 
+            SwitchState(EnemyState.Chase);
 
             // Calls the method for Nearby Enemy Backup
             AlertEveryoneNear();
         }
-        else 
+        else
         {
-            Debug.Log($"2: Current Status is isPlayerSpotted: {isPlayerSpotted()} & hasBeenAlerted: {hasBeenAlerted}");
+            // ...
+            hasBeenAlerted = false;
 
-            // Switches the 'Enemy' state to be 'Neutral'
-            SwitchState(EnemyState.Neutral);
+            // ...
+            chaseDuration -= Time.fixedDeltaTime;
+
+            if (chaseDuration <= 0f)
+            {
+                // Chase duration depleted
+                chaseDuration = 0f;
+
+                // Switches the 'Enemy' state to be 'Neutral'
+                SwitchState(EnemyState.Neutral);
+            }
         }
     }
 
     // Method for switching between AI Enemy Behaviours
-    public void SwitchState(EnemyState newState) 
+    public void SwitchState(EnemyState newState)
     {
         // Stores the new Enemy state and overwrites the current
         currentEnemyState = newState;
 
         // Switches the Enemy state based on the current case condition
-        switch (currentEnemyState) 
+        switch (currentEnemyState)
         {
             // Case for making the AI standby
             case EnemyState.Neutral:
                 Neutral();
                 break;
 
-            // Case for making the AI follows a player
+            // Case for making the AI follows the player
             case EnemyState.Chase:
                 Chase(detectionTarget);
                 break;
@@ -155,9 +167,6 @@ public class Enemy : MonoBehaviour, IAlertable
     // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
     public virtual void Neutral()
     {
-        // ...
-        hasBeenAlerted = false;
-
         // Sets the AI's destination to its current position (standby)
         enemyController.SetDestination(this.transform.position);
 
@@ -168,61 +177,46 @@ public class Enemy : MonoBehaviour, IAlertable
     // Overrideable Method for Setting Neutral Stats
     public virtual void NeutralStat()
     {
+        // Updates Visual Cone Material
+        if (viewConeWireframe != null && viewConeRangeNeutral != null)
+        {
+            viewConeWireframe.material = viewConeRangeNeutral;
+        }
+
         // Sets the animation to walking/running state
-        Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
+        Animate("Input Magnitude", 0f, 0.05f, Time.fixedDeltaTime);
 
         // Neutral Speed
 
 
         // Sets the detection angle to a visual cone size
         viewAngle = 90f;
-
-        // ...
-        chaseDuration = maxChaseDuration;
     }
 
     // Overrideable Method for making the AI follows a player
     // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
     public virtual void Chase(Transform targetChase)
     {
-        // Evaluates if ...
+        if (targetChase == null) return;
+
+        // ...
         if (!isPlayerSpotted())
         {
-            if (chaseDuration > 0)
-            {
-                // ...
-                chaseDuration -= Time.deltaTime;
-
-                // Sets the AI's destination to the detected player's position
-                enemyController.SetDestination(targetChase.transform.position);
-
-                // ...
-                ChaseStat();
-            }
-            else
-            {
-                // ...
-                hasBeenAlerted = false;
-            }
-        }
-        else
-        {
-            // ...
             hasBeenAlerted = false;
-
-            // Sets the AI's destination to the detected player's position
-            enemyController.SetDestination(targetChase.transform.position);
-
-            // ...
-            ChaseStat();
         }
+
+        // Sets the AI's destination to the detected player's position
+        enemyController.SetDestination(targetChase.transform.position);
+
+        // ...
+        ChaseStat();
     }
 
     // Overrideable Method for Setting Chase Stats
     public virtual void ChaseStat()
     {
         // Sets the animation to walking/running state
-        Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
+        Animate("Input Magnitude", 1f, 0.05f, Time.fixedDeltaTime);
 
         // Chase Speed
 
@@ -234,7 +228,7 @@ public class Enemy : MonoBehaviour, IAlertable
     // -------------------------- DETECTION ---------------------------
 
     // Boolean Method for evaluating if the Player has been detected through AI's Cone-Shaped View Detection
-    protected bool isPlayerSpotted() 
+    protected bool isPlayerSpotted()
     {
         // Iterates through all 'Player' gameObjects fed inside the array called 'players'
         foreach (GameObject player in players)
@@ -262,7 +256,7 @@ public class Enemy : MonoBehaviour, IAlertable
                     // - this means, middle is 0 angle while left and right are just mirrored angles (both have 45, 90, 180 degree positive)
                     // - a sample of desired 90 degree 'viewAngle' would mean 90 both sides instead of 45, which would make the AI's total detection 180 instead of 90, hence the need to divide by 2
                     if (angleToPlayer <= viewAngle / 2f)
-                    {   
+                    {
                         // Shoots a raycast detection directly to the player to evaluates if there is some obstacle blocking the AI's vision
                         // - it replicates real-life depth seeing, instead of just concluding a player can be seen by being at specific range
                         if (!Physics.Raycast(this.transform.position, directionToPlayer, distanceToPlayer, raycastObstacles))
@@ -273,9 +267,6 @@ public class Enemy : MonoBehaviour, IAlertable
                             // ...
                             hasBeenAlerted = true;
 
-                            // ...
-                            //canSeePlayer = true;
-
                             // Returns true that indicates that the player was seen
                             return true;
                         }
@@ -283,20 +274,18 @@ public class Enemy : MonoBehaviour, IAlertable
                 }
             }
         }
-        //// ...
-        //canSeePlayer = false;
 
         // Returns false if the 'return true' have not reached
         return false;
     }
 
     // Method to Alert Every Nearby Enemy for Backup
-    public virtual void AlertEveryoneNear() 
+    public virtual void AlertEveryoneNear()
     {
         // Scans for nearby Enemies to Alert within its alert radius 
         Collider[] nearbyEnemies = Physics.OverlapSphere(this.transform.position, backupRadius);
 
-        foreach (Collider enemyCollider in nearbyEnemies) 
+        foreach (Collider enemyCollider in nearbyEnemies)
         {
             // Skip self to avoid re-alerting this gameObject
             if (enemyCollider.gameObject == this.gameObject) continue;
@@ -305,17 +294,13 @@ public class Enemy : MonoBehaviour, IAlertable
             IAlertable alertable = enemyCollider.GetComponent<IAlertable>();
 
             // ...
-            if (alertable != null) 
+            if (alertable != null)
             {
                 // ...
                 alertable.IDetect = detectionTarget;
 
                 // ...
-                if (!alertable.IAlerted) 
-                {
-                    // ...
-                    alertable.IAlerted = true;
-                }
+                alertable.IAlerted = hasBeenAlerted;
             }
         }
     }
@@ -332,7 +317,7 @@ public class Enemy : MonoBehaviour, IAlertable
     // ------------------------- DEBUGGERS -------------------------
 
     // Built-In Method for Gizmos Visualization in Editor
-    protected virtual void OnDrawGizmosSelected() 
+    protected virtual void OnDrawGizmosSelected()
     {
         // Draws a wire sphere to represent the AI's backup radius
         Gizmos.color = Color.yellow;
@@ -340,7 +325,7 @@ public class Enemy : MonoBehaviour, IAlertable
     }
 
     // Method for AI Wireframe Visualization
-    protected void InitializeVisualCone() 
+    protected void InitializeVisualCone()
     {
         // Evaluate's if there's no existing 'LineRenderer' for AI Enemy's range detection
         if (viewConeWireframe == null)
@@ -373,7 +358,7 @@ public class Enemy : MonoBehaviour, IAlertable
     }
 
     // Method for AI Wireframe Visualization
-    protected void UpdateVisualCone() 
+    protected void UpdateVisualCone()
     {
         // Evaluates if the Cone attributes where ready and the devs wants to see it in game, else do not proceed
         if (viewConeWireframe == null || detectionVisualStatus == ShowCone.DisableVisualDetection) return;
