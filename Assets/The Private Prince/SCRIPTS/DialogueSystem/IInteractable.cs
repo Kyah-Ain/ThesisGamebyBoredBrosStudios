@@ -2,5 +2,5 @@
 public interface IInteractable
 {
     // Method that must be implemented by any interactable object
-    void Interact(Player2Point5D player); // Takes the player as parameter to handle interaction
+    void Interact(PlayerController3D player); // Takes the player as parameter to handle interaction
 }

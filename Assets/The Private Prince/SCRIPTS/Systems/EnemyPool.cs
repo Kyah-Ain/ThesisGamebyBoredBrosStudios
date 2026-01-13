@@ -185,7 +185,7 @@ public class EnemyPool : MonoBehaviour
         if (alertables != null) 
         {
             // ...
-            alertables.HardResetAlert();
+            //alertables.HardResetAlert();
         }
 
         // Reset rotation only (DO NOT reset position to avoid moving to (0,0,0))

@@ -1,8 +1,23 @@
+using UnityEngine;
+
 public interface IAlertable
 {
+    // ------------------- REQUIREMENT VARIABLES -------------------------
+
+    public Transform IDetect { get; set; }
+    public bool IAlerted { get; set; }
+    //public bool ISeePlayer { get; set; }
+
+    //public enum EnemyState { Neutral, Chase } // Different states this AI can be in
+
     // ------------------------- CONTRACTS -------------------------
 
-    public void AlertEveryoneNear();
+    void Neutral();
 
-    public void HardResetAlert();
+    void Chase(Transform targetChase);
+
+    //void ForcedAlert(Transform targetChase);
+
+    //void SwitchState(EnemyState newState);
+
 }

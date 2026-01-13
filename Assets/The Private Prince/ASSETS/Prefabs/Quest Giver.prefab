@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 1399775169832967117}
   - component: {fileID: 2019302707957726537}
   - component: {fileID: 2910913249717362396}
+  - component: {fileID: 1399452728855687525}
   m_Layer: 6
   m_Name: Quest Giver
   m_TagString: Player
@@ -216,36 +217,27 @@ MonoBehaviour:
   - name: Yep, here you go!
     onPickedResponse:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2019302707957726537}
-          m_TargetAssemblyTypeName: QuestStarter, Assembly-CSharp
-          m_MethodName: StartQuestById
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Tandang_Quest
-            m_BoolArgument: 0
-          m_CallState: 2
-  - name: Nope, not yet.
-    onPickedResponse:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 3814801931295095874}
-          m_TargetAssemblyTypeName: DialogueActivator, Assembly-CSharp
-          m_MethodName: UpdateDialogueObject
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 11400000, guid: 9a1b0863eb61b1e45b7e93464efb9ca8,
-              type: 2}
-            m_ObjectArgumentAssemblyTypeName: DialogueObject, Assembly-CSharp
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
+--- !u!114 &1399452728855687525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747660662529318624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0860e485e317ef9468d9725c11c0d674, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requirementsNotMetStartIcon: {fileID: 7493865944887282732, guid: fae8fb66ceec4674b8715fc6184fcc83,
+    type: 3}
+  requirementsNotMetFinishIcon: {fileID: 7493865944887282732, guid: fae8fb66ceec4674b8715fc6184fcc83,
+    type: 3}
+  canStartIcon: {fileID: 6063908686042441558, guid: 46e76f7849bb58542b27fd04d7c40e1e,
+    type: 3}
+  canFinishIcon: {fileID: 6700301861437416238, guid: 21e2530669e203f49b16dc8211528569,
+    type: 3}
 --- !u!1 &2396874346983517776
 GameObject:
   m_ObjectHideFlags: 0

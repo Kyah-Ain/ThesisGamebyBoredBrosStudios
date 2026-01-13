@@ -18,11 +18,21 @@ public class DemoTask2 : MonoBehaviour
         enemiesToDefeat = 3; // Ensure this is set
     }
 
-    //// ...
-    //public void Update()
-    //{
-    //    UpdateSlainedEnemies();
-    //}
+    // ...
+    private void Awake()
+    {
+        // Singleton pattern initialization
+        if (Instance == null)
+        {
+            Instance = this;
+            Debug.Log("DemoTask2 instance created and assigned to Instance");
+        }
+        else
+        {
+            Debug.LogWarning("Multiple DemoTask2 instances detected! Destroying duplicate.");
+            Destroy(gameObject);
+        }
+    }
 
     // ...
     public void UpdateSlainedEnemies()

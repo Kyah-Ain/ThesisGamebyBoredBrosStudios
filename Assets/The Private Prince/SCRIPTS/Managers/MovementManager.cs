@@ -63,12 +63,29 @@ public class MovementManager : MonoBehaviour, IMoveable
         //CalculateJump(wantsToJump);
     }
 
+    // Handles rotation based on input direction
+    public virtual void HandleRotation(Vector2 inputDirection)
+    {
+        // Only rotate if there's significant input and the character can move
+        if (inputDirection.magnitude >= 0.1f && canMove)
+        {
+            // Use Atan2 to calculate the target angle (Brackeys' method)
+            float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.y) * Mathf.Rad2Deg;
+
+            // Apply the rotation
+            transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+        }
+    }
+
     // Calculates movement based on input direction and running state
     public virtual void CalculateMovement(Vector2 inputDirection, bool wantsToRun) 
     {
+        //// Handles character rotation first
+        //HandleRotation(inputDirection);
+
         // Calculates move direction based on axes
         Vector3 forward = transform.TransformDirection(Vector3.forward); // This checks forrward and backward movement
-        Vector3 right = transform.TransformDirection(Vector3.right); // This checks forward and backward movement
+        Vector3 right = transform.TransformDirection(Vector3.right); // This checks left and right movement
 
         // Condition for movement
         float targetSpeed = wantsToRun ? runningSpeed : walkingSpeed; // Sets target speed based on running or walking
@@ -80,6 +97,7 @@ public class MovementManager : MonoBehaviour, IMoveable
 
         //Debug.Log($"Move Direction: {moveDirection}"); // Logs the character's movement direction
     }
+
 
     // Calculates jump based on jump input and grounded state
     public virtual void CalculateJump(bool wantsToJump)

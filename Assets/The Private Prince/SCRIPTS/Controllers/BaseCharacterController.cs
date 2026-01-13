@@ -6,7 +6,7 @@ using UnityEngine; // Grants access to Unity's core features like Datatypes, Dat
 
 [RequireComponent(typeof(CharacterController))] // Adds CharacterController component to the GameObject if it doesn't already have one
 
-public class CharacterController3D : MovementManager
+public class BaseCharacterController : MovementManager
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -19,13 +19,13 @@ public class CharacterController3D : MovementManager
     //public float lookXLimit = 45.0f; // Maximum angle the camera can look up or down
     //public float rotationX = 0; // Placeholder for the camera's X rotation
 
-    public Vector2 inputDirection; // Placeholder for the character's input direction
+    public Vector2 inputDirection; // Change back to Vector2! This is what CalculateMovement expects
     public bool wantsToJump; // Determines if the character wants to jump
 
     // ------------------------- METHODS -------------------------
 
     // Start is called before the first frame update
-    void Start() 
+    void Start()
     {
         characterController = GetComponent<CharacterController>(); // Automatically references the CharacterController component
     }
@@ -47,7 +47,7 @@ public class CharacterController3D : MovementManager
     }
 
     // Gets player input for movement direction
-    public virtual void MoveControl() 
+    public virtual void MoveControl()
     {
         inputDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
     }
@@ -67,7 +67,7 @@ public class CharacterController3D : MovementManager
     // Gets player input for attack and defense
     public virtual void CombatControl()
     {
-        if (!isAttacking) 
+        if (!isAttacking)
         {
             // Left mouse button
             isAttacking = Input.GetKeyDown(KeyCode.Mouse0);
