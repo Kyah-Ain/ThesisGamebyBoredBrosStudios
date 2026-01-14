@@ -15,6 +15,11 @@ public class ThirdPersonController : MonoBehaviour
     [Header("MOVEMENT")]
     [SerializeField] private float movementSpeed = 6f; // Speed at which the character moves
 
+    [Header("INTERACTIONS")]
+    [SerializeField] private GameObject interactIcon; // Icon that will pop up when near interactable object
+
+    private Vector3 boxSize = new Vector3(0.1f, 1f, 0.5f); // -joseph
+
     /*
     [SerializeField] private float turningSpeed = 0.1f;
     [SerializeField] private float turningVelocity;
@@ -42,14 +47,50 @@ public class ThirdPersonController : MonoBehaviour
         }
     }
 
+    // Start is called once the script is loaded 
+    private void Start()
+    {
+        interactIcon.SetActive(false);
+    }
+
     // Update is called once per frame
     private void Update()
     {
         // Calls the method that handles character movement
         Move();
+
+        // Interact Key
+        if(Input.GetKeyUp(KeyCode.E))
+            CheckInteraction();
     }
 
     // ------------------------- DEV METHODS -------------------------
+
+    public void OpenInteractableIcon() // - joseph
+    {
+        interactIcon.SetActive(true);
+    }
+
+    public void CloseInteractableIcon() // - joseph
+    {
+        interactIcon.SetActive(false);
+    }
+
+    private void CheckInteraction() // - joseph
+    {
+        Collider[] hits = Physics.OverlapBox(transform.position, boxSize / 2f, transform.rotation);
+
+        if (hits.Length > 0)
+        {
+            foreach (Collider c in hits)
+            {
+                if (c.transform.GetComponent<IObject>())
+                {
+                    c.transform.GetComponent<IObject>().Interact();
+                }
+            }
+        }
+    }
 
     // Method for Character Movement Logic
     public void Move() 
