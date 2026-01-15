@@ -60,8 +60,20 @@ public class CharacterController3D : MonoBehaviour
         Move();
 
         // Interact Key
-        if(Input.GetKeyUp(KeyCode.E))
-            CheckInteraction();
+        if (Input.GetKeyUp(KeyCode.E))
+        {
+            Debug.Log($"E Key Pressed. CurrentInteractable is null: {currentInteractable == null}");
+
+            if (currentInteractable != null)
+            {
+                Debug.Log($"Calling Interact() on: {currentInteractable.gameObject.name}");
+                currentInteractable.Interact();
+            }
+            else
+            {
+                Debug.LogWarning("E pressed but no interactable object set!");
+            }
+        }
     }
 
     // ------------------------- DEV METHODS -------------------------
@@ -76,21 +88,34 @@ public class CharacterController3D : MonoBehaviour
         interactIcon.SetActive(false);
     }
 
-    private void CheckInteraction() // - joseph
+    private void CheckInteraction()
     {
         Collider[] hits = Physics.OverlapBox(transform.position, boxSize / 2f, transform.rotation);
 
-        if (hits.Length > 0)
+        foreach (Collider c in hits)
         {
-            foreach (Collider c in hits)
+            IObject interactable = c.GetComponentInParent<IObject>();
+            if (interactable != null)
             {
-                if (c.transform.GetComponent<IObject>())
-                {
-                    c.transform.GetComponent<IObject>().Interact();
-                }
+                interactable.Interact();
+                break;
             }
         }
     }
+
+    private IObject currentInteractable;
+
+    public void SetInteractable(IObject obj)
+    {
+        currentInteractable = obj;
+    }
+
+    public void ClearInteractable(IObject obj)
+    {
+        if (currentInteractable == obj)
+            currentInteractable = null;
+    }
+
 
     // Method for Character Movement Logic
     public void Move() 

@@ -12,13 +12,15 @@ public abstract class IObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if(collision.CompareTag("Player"))
-            collision.GetComponent<CharacterController3D>().OpenInteractableIcon();
+        if (collision.CompareTag("Player"))
+            collision.GetComponent<CharacterController3D>()
+                     .SetInteractable(this);
     }
 
     private void OnTriggerExit(Collider collision)
     {
-        if(collision.CompareTag("Player"))
-            collision.GetComponent<CharacterController3D>().CloseInteractableIcon();
+        if (collision.CompareTag("Player"))
+            collision.GetComponent<CharacterController3D>()
+                     .ClearInteractable(this);
     }
 }
