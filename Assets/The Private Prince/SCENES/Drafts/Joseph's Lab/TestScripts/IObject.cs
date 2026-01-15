@@ -13,12 +13,12 @@ public abstract class IObject : MonoBehaviour
     private void OnTriggerEnter(Collider collision)
     {
         if(collision.CompareTag("Player"))
-            collision.GetComponent<ThirdPersonController>().OpenInteractableIcon();
+            collision.GetComponent<CharacterController3D>().OpenInteractableIcon();
     }
 
     private void OnTriggerExit(Collider collision)
     {
         if(collision.CompareTag("Player"))
-            collision.GetComponent<ThirdPersonController>().CloseInteractableIcon();
+            collision.GetComponent<CharacterController3D>().CloseInteractableIcon();
     }
 }
