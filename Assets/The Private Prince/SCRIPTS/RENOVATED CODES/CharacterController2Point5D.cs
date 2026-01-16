@@ -30,13 +30,11 @@ public class CharacterController2Point5D : MonoBehaviour
 
     [Space(8f)] // Adds spacing in the Inspector
 
-
     [SerializeField] private GameObject interactIcon; // Icon that will pop up when near interactable object
 
     [Header("COMBAT STATS")]
     [SerializeField] private LayerMask obstacleLayer; // Layer for obstacles that can block attacks
     [SerializeField] private LayerMask enemyLayer; // Layer for enemies
-
 
     [Header("BOOLEANS")]
     [SerializeField] private bool isFacingRight = true; // Defines if the character is facing left or right
