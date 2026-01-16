@@ -12,18 +12,16 @@ public class CharacterController2Point5D : MonoBehaviour
     [Header("REFERENCES")]
     [SerializeField] private CharacterController characController; // Reference to the CharacterController component for controlling character movement
     [SerializeField] private Animator animatorController; // Reference to the Animator component for controlling character animations
-    [SerializeField] private SpriteRenderer spriteRenderer; // ...
-
-    //[SerializeField] private GameObject attackBox; // ...
-    //[SerializeField] private Collider attackBox; // ...
+    [SerializeField] private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer component for handling sprite rendering and flipping
 
     [Header("CHARACTER ATTRIBUTES")]
-    [SerializeField] private float horizontal; // ...
-    [SerializeField] private float vertical; // ...
+    [SerializeField] private float horizontal; // Placeholder for horizontal movement inputs
+    [SerializeField] private float vertical; // Placeholder for vertical movement inputs
     [SerializeField] private float movementSpeed = 6f; // Speed at which the character moves
 
     [Header("INTERACTIONS")]
-    [SerializeField] private Vector3 boxCastSize = new Vector3(0.5f, 0.5f, 0.5f); // ...
+    [SerializeField] private Vector3 attackBoxCastSize = new Vector3(0.5f, 0.5f, 0.5f); // Defines the size of the attack box cast
+    [SerializeField] private Vector3 interactionBoxSize = new Vector3(0.1f, 1f, 0.5f); // -joseph
 
     [Space(8f)] // Adds spacing in the Inspector
 
@@ -32,18 +30,16 @@ public class CharacterController2Point5D : MonoBehaviour
 
     [Space(8f)] // Adds spacing in the Inspector
 
+
     [SerializeField] private GameObject interactIcon; // Icon that will pop up when near interactable object
 
     [Header("COMBAT STATS")]
-    [SerializeField] private Bounds attackBounds; // Defines the bounds of the forward punch attack
     [SerializeField] private LayerMask obstacleLayer; // Layer for obstacles that can block attacks
     [SerializeField] private LayerMask enemyLayer; // Layer for enemies
-    //[SerializeField] private float punchRadius = 1f; // Radius of the forward punch attack
 
-    private Vector3 boxSize = new Vector3(0.1f, 1f, 0.5f); // -joseph
 
     [Header("BOOLEANS")]
-    [SerializeField] private bool isFacingRight = true;
+    [SerializeField] private bool isFacingRight = true; // Defines if the character is facing left or right
 
     // ------------------------- UNITY METHODS -------------------------
 
@@ -88,8 +84,9 @@ public class CharacterController2Point5D : MonoBehaviour
         // Calls the method that handles character movement
         Move();
 
-        // TEST (SHOULD BE REMOVED SOON)
-        Attack();
+        // Simple Statement for Attack Key
+        if (Input.GetButton("Fire1"))
+            Attack();
 
         // Interact Key
         if (Input.GetKeyUp(KeyCode.E))
@@ -110,7 +107,7 @@ public class CharacterController2Point5D : MonoBehaviour
 
     private void CheckInteraction() // - joseph
     {
-        Collider[] hits = Physics.OverlapBox(transform.position, boxSize / 2f, transform.rotation);
+        Collider[] hits = Physics.OverlapBox(transform.position, interactionBoxSize / 2f, transform.rotation);
 
         if (hits.Length > 0)
         {
@@ -130,27 +127,19 @@ public class CharacterController2Point5D : MonoBehaviour
        
         Debug.Log("Player performed attack");
 
-        //// Get the base mesh size (in local space)
-        //Mesh mesh = attackBox.GetComponent<MeshFilter>().sharedMesh;
-        //Vector3 baseSize = mesh.bounds.size;
+        // Gets the half dimension of the full attack box size
+        Vector3 halfExtents = attackBoxCastSize / 2f;
 
-        //// Applies any scale multiplier changes used by resizing the gameObject
-        //Vector3 scaledSize = Vector3.Scale(baseSize, attackBox.transform.localScale);
-
-        // Gets the half dimension of the full gameObject
-        Vector3 halfExtents = boxCastSize / 2f;
+        // Sets the direction the character is facing from the Sprite Renderer's flip logic
+        bool isFacingLeft = spriteRenderer.flipX;
 
         // Gets the direction of which way the character should be attacking
-        bool isFacingLeft = spriteRenderer.flipX;
         Vector3 attackDirection = isFacingLeft ? Vector3.left : Vector3.right ;
 
-        // ...
+        // Sets the current rotation of the box to follow the character's rotation
         Quaternion boxRotation = this.transform.rotation;
 
-        //// ...
-        //float castDistance = raycastLength;
-
-        // ...
+        // Performs the BoxCast and stores whether it hit something or not (it only stores the first hit)
         bool hasHit = Physics.BoxCast(
             raycastEmitter.transform.position, // Starting Point
             halfExtents, // HALF the box dimensions
@@ -160,28 +149,8 @@ public class CharacterController2Point5D : MonoBehaviour
             raycastLength // The max distance the boxCast could reach
             );
 
+        // Visualizes the BoxCast in the Scene View for debugging (uses the static class from DebugBoxCastbyArian.cs)
         DebugBoxCast.SimpleDrawBoxCast(raycastEmitter.transform.position, halfExtents, boxRotation, attackDirection, raycastLength, Color.red);
-
-        //// 1. Get direction
-        //bool facingRight = !spriteRenderer.flipX;
-        //Vector3 attackDirection = facingRight ? Vector3.right : Vector3.left;
-
-        //// 2. Get box size from attackBox
-        //Vector3 halfExtents = attackBox.bounds.extents;
-
-        //// 3. CRITICAL: Calculate where the box should START
-        //// Start 1 unit in front of character
-        //float startOffset = 0.95f;
-        //Vector3 boxStartPos = transform.position + (attackDirection * startOffset);
-
-        //// 4. How far to cast
-        //float castDistance = 2f;
-
-        //// 5. NOW do BoxCast
-        //if (Physics.BoxCast())
-        //{
-        //    Debug.Log($"Hit: {hitInfo.collider.name}");
-        //}
     }
 
     // --------------------------- MOVEMENT ---------------------------
@@ -207,13 +176,15 @@ public class CharacterController2Point5D : MonoBehaviour
             // Controls the "Character Controller" of a Unity game object
             characController.Move(direction * movementSpeed * Time.deltaTime);
 
-            // ...
+            // Determines the direction the character is facing
             if (horizontal < 0f)
             {
+                // Flips the sprite to face left if the horizontal input is negative
                 spriteRenderer.flipX = true;
             }
-            else 
+            else if (horizontal > 0f)
             {
+                // Resets the sprite to face right if the horizontal input is positive 
                 spriteRenderer.flipX = false;
             }
         }
@@ -232,8 +203,4 @@ public class CharacterController2Point5D : MonoBehaviour
         // - ("Name of the Animation Parameter", player.input value, transition smoothness, counter)
         animatorController.SetFloat(animParamater, inputValue, transitionSmooth, transitionCounter);
     }
-
-    // ------------------------- DEBUGGERS -------------------------
-
-    
 }
