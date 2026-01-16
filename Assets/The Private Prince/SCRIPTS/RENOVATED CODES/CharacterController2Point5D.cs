@@ -63,7 +63,7 @@ public class CharacterController2Point5D : MonoBehaviour
 
             if (spriteRenderer != null) return;
 
-            // ...
+            // Assigns the gameObject's "Sprite Renderer" automatically to this script
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
         else
