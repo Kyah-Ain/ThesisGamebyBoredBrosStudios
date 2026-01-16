@@ -15,7 +15,7 @@ public class CharacterController2Point5D : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer; // ...
 
     //[SerializeField] private GameObject attackBox; // ...
-    [SerializeField] private Collider attackBox; // ...
+    //[SerializeField] private Collider attackBox; // ...
 
     [Header("CHARACTER ATTRIBUTES")]
     [SerializeField] private float horizontal; // ...
@@ -23,8 +23,14 @@ public class CharacterController2Point5D : MonoBehaviour
     [SerializeField] private float movementSpeed = 6f; // Speed at which the character moves
 
     [Header("INTERACTIONS")]
-    //[SerializeField] private Transform raycastEmitter; // Point from which the raycast will be emitted
+    [SerializeField] private Vector3 boxCastSize = new Vector3(0.5f, 0.5f, 0.5f); // ...
+
+    [Space(8f)] // Adds spacing in the Inspector
+
+    [SerializeField] private Transform raycastEmitter; // Point from which the raycast will be emitted
     [SerializeField] private float raycastLength = 2f; // Defines how long the raycast would be
+
+    [Space(8f)] // Adds spacing in the Inspector
 
     [SerializeField] private GameObject interactIcon; // Icon that will pop up when near interactable object
 
@@ -121,71 +127,61 @@ public class CharacterController2Point5D : MonoBehaviour
     // Handles raycasting for Interaction and Combat
     protected virtual void Attack()
     {
-        //// ...
-        //bool isFacingRight = !spriteRenderer.flipX;
-
-        //// Establishes the raycast's origin and direction
-        //Vector3 rayOrigin = raycastEmitter.transform.position;
-        //Vector3 rayDirection = isFacingRight ? Vector3.right : Vector3.left;
-
-        //// Creates the ray and visualizes it in the Scene view
-        //Ray interactionRay = new Ray(rayOrigin, rayDirection);
-        //Debug.DrawRay(rayOrigin, rayDirection * interactRaycast, Color.blue);
-
-        //// Get CombatMomentum reference at the start
-        //CombatMomentum playerCombatMomentum = GetComponent<CombatMomentum>();
-
-        // ...
-        Vector3 attackDirection = Vector3.left;
-
-        //// ...
-        //if (spriteRenderer.flipX)
-        //{
-        //    // Left Attack
-        //    attackDirection = Vector3.left;
-        //}
-        //else
-        //{
-        //    // Right Attack
-        //    attackDirection = Vector3.right;
-        //}
-
+       
         Debug.Log("Player performed attack");
 
-        //  ...
-        attackBounds = attackBox.bounds;
+        //// Get the base mesh size (in local space)
+        //Mesh mesh = attackBox.GetComponent<MeshFilter>().sharedMesh;
+        //Vector3 baseSize = mesh.bounds.size;
+
+        //// Applies any scale multiplier changes used by resizing the gameObject
+        //Vector3 scaledSize = Vector3.Scale(baseSize, attackBox.transform.localScale);
+
+        // Gets the half dimension of the full gameObject
+        Vector3 halfExtents = boxCastSize / 2f;
+
+        // Gets the direction of which way the character should be attacking
+        bool isFacingLeft = spriteRenderer.flipX;
+        Vector3 attackDirection = isFacingLeft ? Vector3.left : Vector3.right ;
 
         // ...
-        Vector3 halfExtents = attackBounds.extents;
+        Quaternion boxRotation = this.transform.rotation;
 
-        //// Position attack box based on direction
-        //attackBox.transform.position = transform.position + attackDirection * raycastLength;
+        //// ...
+        //float castDistance = raycastLength;
 
         // ...
-        if (Physics.BoxCast(this.transform.position, halfExtents, attackDirection, out RaycastHit hitInfo, this.transform.rotation, 10f))
-        {
-            Debug.Log($"Custom hitbox detected: {hitInfo.collider.name}");
-        }
+        bool hasHit = Physics.BoxCast(
+            raycastEmitter.transform.position, // Starting Point
+            halfExtents, // HALF the box dimensions
+            attackDirection, // Direction on where to cast the box
+            out RaycastHit hitInfo, // Information about what was hit
+            boxRotation, // Current rotation of the box
+            raycastLength // The max distance the boxCast could reach
+            );
 
-        //// Attacks when Mouse Left Click button is pressed (with or without hitting something)
-        //if (Input.GetButtonDown("Fire1"))
+        DebugBoxCast.SimpleDrawBoxCast(raycastEmitter.transform.position, halfExtents, boxRotation, attackDirection, raycastLength, Color.red);
+
+        //// 1. Get direction
+        //bool facingRight = !spriteRenderer.flipX;
+        //Vector3 attackDirection = facingRight ? Vector3.right : Vector3.left;
+
+        //// 2. Get box size from attackBox
+        //Vector3 halfExtents = attackBox.bounds.extents;
+
+        //// 3. CRITICAL: Calculate where the box should START
+        //// Start 1 unit in front of character
+        //float startOffset = 0.95f;
+        //Vector3 boxStartPos = transform.position + (attackDirection * startOffset);
+
+        //// 4. How far to cast
+        //float castDistance = 2f;
+
+        //// 5. NOW do BoxCast
+        //if (Physics.BoxCast())
         //{
-        //    Debug.Log("Player performed attack");
-
-        //    //  ...
-        //    attackBounds = attackBox.bounds;
-
-        //    // ...
-        //    Vector3 halfExtents = attackBounds.extents;
-
-        //    if (Physics.BoxCast(this.transform.position, halfExtents, this.transform.forward, out RaycastHit hitInfo, this.transform.rotation, 10f)) 
-        //    {
-        //        Debug.Log($"Custom hitbox detected: {hitInfo.collider.name}");
-        //    }
+        //    Debug.Log($"Hit: {hitInfo.collider.name}");
         //}
-
-        // Debugger Calls
-        DrawAttackBounds(attackBounds, Color.green);
     }
 
     // --------------------------- MOVEMENT ---------------------------
@@ -239,11 +235,5 @@ public class CharacterController2Point5D : MonoBehaviour
 
     // ------------------------- DEBUGGERS -------------------------
 
-    void DrawAttackBounds(Bounds bounds, Color color)
-    {
-        Debug.DrawLine(bounds.min, new Vector3(bounds.max.x, bounds.min.y, bounds.min.z), color);
-        Debug.DrawLine(new Vector3(bounds.max.x, bounds.min.y, bounds.min.z), new Vector3(bounds.max.x, bounds.min.y, bounds.max.z), color);
-        Debug.DrawLine(new Vector3(bounds.max.x, bounds.min.y, bounds.max.z), new Vector3(bounds.min.x, bounds.min.y, bounds.max.z), color);
-        Debug.DrawLine(new Vector3(bounds.min.x, bounds.min.y, bounds.max.z), bounds.min, color);
-    }
+    
 }
