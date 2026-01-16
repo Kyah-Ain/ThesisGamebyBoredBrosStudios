@@ -19,9 +19,14 @@ public class CharacterController2Point5D : MonoBehaviour
     [SerializeField] private float vertical; // Placeholder for vertical movement inputs
     [SerializeField] private float movementSpeed = 6f; // Speed at which the character moves
 
+    [Header("COMBAT ATTRIBUTES")]
+    [SerializeField] private int attackDamage = 1; // Amount of damage dealt per attack
+
     [Header("INTERACTIONS")]
     [SerializeField] private Vector3 attackBoxCastSize = new Vector3(0.5f, 0.5f, 0.5f); // Defines the size of the attack box cast
     [SerializeField] private Vector3 interactionBoxSize = new Vector3(0.1f, 1f, 0.5f); // -joseph
+
+    [SerializeField] private LayerMask obstacleLayer; // Layer for obstacles that can block attacks
 
     [Space(8f)] // Adds spacing in the Inspector
 
@@ -32,12 +37,12 @@ public class CharacterController2Point5D : MonoBehaviour
 
     [SerializeField] private GameObject interactIcon; // Icon that will pop up when near interactable object
 
-    [Header("COMBAT STATS")]
-    [SerializeField] private LayerMask obstacleLayer; // Layer for obstacles that can block attacks
-    [SerializeField] private LayerMask enemyLayer; // Layer for enemies
+    [Header("DIALOGUE")]
+    [SerializeField] private DialogueUI dialogueUI; // Reference to the DialogueUI component for handling dialogues
 
-    [Header("BOOLEANS")]
-    [SerializeField] private bool isFacingRight = true; // Defines if the character is facing left or right
+    // Getter for dialogue UI
+    public DialogueUI DialogueUI => dialogueUI;
+    public IInteractable Interactable { get; set; }
 
     // ------------------------- UNITY METHODS -------------------------
 
@@ -47,6 +52,9 @@ public class CharacterController2Point5D : MonoBehaviour
         // Evaluates if there's no existing "Character Controller" component on the object
         if (characController == null)
         {
+            // Stops player from moving when in Dialogue
+            if (dialogueUI != null && dialogueUI.IsOpen) return;
+
             Debug.Log($"Character Controller was set: {characController}");
 
             if (characController != null) return;
@@ -73,12 +81,15 @@ public class CharacterController2Point5D : MonoBehaviour
     // Start is called once the script is loaded 
     private void Start()
     {
-        interactIcon.SetActive(false);
+        //interactIcon.SetActive(false);
     }
 
     // Update is called once per frame
     private void Update()
     {
+        //stops player from moving when in Dialogue
+        if (dialogueUI != null && dialogueUI.IsOpen) return;
+
         // Calls the method that handles character movement
         Move();
 
@@ -122,7 +133,6 @@ public class CharacterController2Point5D : MonoBehaviour
     // Handles raycasting for Interaction and Combat
     protected virtual void Attack()
     {
-       
         Debug.Log("Player performed attack");
 
         // Gets the half dimension of the full attack box size
@@ -145,7 +155,30 @@ public class CharacterController2Point5D : MonoBehaviour
             out RaycastHit hitInfo, // Information about what was hit
             boxRotation, // Current rotation of the box
             raycastLength // The max distance the boxCast could reach
-            );
+        );
+
+        // Evaluates if the BoxCast has hit something
+        if (hasHit) 
+        {
+            // Transforms the hit object into a damageable object if it implements IDamageable
+            IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
+
+            // Transforms the hit object into a knockable object if it implements IKnockable
+            IKnockable knockable = hitInfo.collider.GetComponent<IKnockable>();
+
+            // 
+            if (damageable != null)
+            {
+                // ...
+                damageable.TakeDamage(attackDamage);
+
+                if (knockable != null)
+                {
+                    // Applies knockback to the target if it implements IKnockable
+                    knockable.KnockBack(this.transform, hitInfo.transform);
+                }
+            }
+        }
 
         // Visualizes the BoxCast in the Scene View for debugging (uses the static class from DebugBoxCastbyArian.cs)
         DebugBoxCast.SimpleDrawBoxCast(raycastEmitter.transform.position, halfExtents, boxRotation, attackDirection, raycastLength, Color.red);
