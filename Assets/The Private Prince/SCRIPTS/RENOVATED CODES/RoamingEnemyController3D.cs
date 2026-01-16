@@ -2,7 +2,7 @@ using System.Collections; // Grants access to collecitons structures like ArrayL
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
 using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject, Transform, Vector3, etc.
 
-public class RoamingEnemy : Enemy
+public class RoamingEnemyController3D : Enemy
 {
     // -------------------------- VARIABLES -------------------------
 
@@ -24,9 +24,6 @@ public class RoamingEnemy : Enemy
 
         // Sets the default destination to the current patrol station
         enemyController.SetDestination(patrolStations[currentPatrolIndex].position);
-
-        // Handles sprite flipping based on movement direction
-        FlipSprite();
 
         // Sets the animation to walking/running state
         Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);

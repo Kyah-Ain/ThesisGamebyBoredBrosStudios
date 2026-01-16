@@ -1,21 +1,20 @@
 using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
 using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject, Transform, Vector3, etc.
-using UnityEngine.AI; // Grants access to Unity's AI and Navigation system like enemyController, NavMesh, etc.
+using UnityEngine.AI; // Grants access to Unity's AI and Navigation system like NavMeshAgent, NavMesh, etc.
 
 //using EnemyState = IAlertable.EnemyState; // Alias for easier reference to the EnemyState enum from IAlertable interface
 
-[RequireComponent(typeof(NavMeshAgent))] // Requires this game object to have a enemyController component in order to function properly
+[RequireComponent(typeof(NavMeshAgent))] // Requires this game object to have a NavMeshAgent component in order to function properly
 [RequireComponent(typeof(Animator))] // Requires this game object to have an Animator component in order to function properly
 
-public class Enemy : MonoBehaviour, IAlertable
+public class EnemyController3D : MonoBehaviour, IAlertable
 {
     // -------------------------- VARIABLES -------------------------
 
     [Header("REFERENCES")]
-    [SerializeField] protected NavMeshAgent enemyController; // Reference to the enemyController component for AI navigation
+    [SerializeField] protected NavMeshAgent enemyController; // Reference to the NavMeshAgent component for AI navigation
     [SerializeField] protected Animator animatorController; // Reference to the Animator component for character animations
-    [SerializeField] private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer component for handling sprite rendering and flipping
 
     [Header("AI DETECTION")]
     [SerializeField] protected GameObject[] players; // Array to hold references to all player game objects in the scene
@@ -28,7 +27,7 @@ public class Enemy : MonoBehaviour, IAlertable
     [SerializeField] protected float backupRadius = 10f; // How far the Enemy can call for backup
 
     [SerializeField] protected float maxChaseDuration = 3f; // How long the Enemy can still chase the player after losing sight
-    [SerializeField] protected float chaseDuration = 0f; // Current remaining time the Enemy can chase the player
+    [SerializeField] protected float chaseDuration = 0f; // ...
 
     [Header("AI STATES")]
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral; // Default starting state of the AI
@@ -58,20 +57,11 @@ public class Enemy : MonoBehaviour, IAlertable
         // Evaluates if there's no existing "NavMesh Controller" component on the object
         if (enemyController == null)
         {
-            if (enemyController != null) return;
-
             // Assigns the gameObject's "NavMesh Agent Controller" automatically to this script
             enemyController = GetComponent<NavMeshAgent>();
 
-            if (animatorController != null) return;
-
             // Assigns the gameObject's "Animation Controller" automatically to this script
             animatorController = GetComponent<Animator>();
-
-            if (spriteRenderer != null) return;
-
-            // Assigns the gameObject's "Sprite Renderer" automatically to this script
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
             Debug.Log($"Navmesh Agent Controlller was set: {enemyController}");
         }
@@ -87,7 +77,7 @@ public class Enemy : MonoBehaviour, IAlertable
     // Start is called at the first frame
     protected virtual void Start()
     {
-        // Initializes chase duration to zero at the start
+        // ...
         chaseDuration = 0f;
 
         // Calls the method that initializes the visual cone for AI detection
@@ -123,7 +113,7 @@ public class Enemy : MonoBehaviour, IAlertable
             // Resets "chaseDuration" when starting a chase
             if (currentEnemyState != EnemyState.Chase)
             {
-                // Resets chase duration to max value
+                // ...
                 chaseDuration = maxChaseDuration;
             }
 
@@ -135,10 +125,10 @@ public class Enemy : MonoBehaviour, IAlertable
         }
         else
         {
-            // Resets alerted status
+            // ...
             hasBeenAlerted = false;
 
-            // Depletes chase duration over time
+            // ...
             chaseDuration -= Time.fixedDeltaTime;
 
             if (chaseDuration <= 0f)
@@ -180,10 +170,7 @@ public class Enemy : MonoBehaviour, IAlertable
         // Sets the AI's destination to its current position (standby)
         enemyController.SetDestination(this.transform.position);
 
-        // Calls the method that flips the sprite based on movement direction
-        FlipSprite();
-
-        // Calls the method that sets neutral stats
+        // ...
         NeutralStat();
     }
 
@@ -212,7 +199,7 @@ public class Enemy : MonoBehaviour, IAlertable
     {
         if (targetChase == null) return;
 
-        // Determines if the player is still spotted, else resets the alerted status
+        // ...
         if (!isPlayerSpotted())
         {
             hasBeenAlerted = false;
@@ -221,10 +208,7 @@ public class Enemy : MonoBehaviour, IAlertable
         // Sets the AI's destination to the detected player's position
         enemyController.SetDestination(targetChase.transform.position);
 
-        // Calls the method that flips the sprite based on movement direction
-        FlipSprite();
-
-        // Calls the method that sets chase stats
+        // ...
         ChaseStat();
     }
 
@@ -261,14 +245,8 @@ public class Enemy : MonoBehaviour, IAlertable
                     // Locates the position and direction to reach the player
                     Vector3 directionToPlayer = (player.transform.position - this.transform.position).normalized;
 
-                    // Gets the horizontal velocity of the enemy
-                    float horizontal = enemyController.velocity.x;
-
-                    // Sets the direction the character is facing from the Sprite Renderer's flip logic
-                    bool isFacingLeft = spriteRenderer.flipX;
-
-                    // Gets the direction of which way the character should be attacking
-                    Vector3 angleDirection = isFacingLeft ? Vector3.left : Vector3.right;
+                    // Determines which way the enemy is facing (which serves a more accurate replica of eyesight detection)
+                    Vector3 angleDirection = this.transform.forward;
 
                     // Calculates how much face rotation the enemy need to do by the angle difference between two directions
                     float angleToPlayer = Vector3.Angle(angleDirection, directionToPlayer);
@@ -286,7 +264,7 @@ public class Enemy : MonoBehaviour, IAlertable
                             // Sets the player as the target destination for the AI
                             detectionTarget = player.transform;
 
-                            // Sets the alerted status to be true
+                            // ...
                             hasBeenAlerted = true;
 
                             // Returns true that indicates that the player was seen
@@ -315,13 +293,13 @@ public class Enemy : MonoBehaviour, IAlertable
             // ...
             IAlertable alertable = enemyCollider.GetComponent<IAlertable>();
 
-            // Evaluates if the nearby enemy has the 'IAlertable' interface to be alerted
+            // ...
             if (alertable != null)
             {
-                // Alerts the nearby enemy by setting its detection target to this AI's current target
+                // ...
                 alertable.IDetect = detectionTarget;
 
-                // Sets the nearby enemy's alerted status to true
+                // ...
                 alertable.IAlerted = hasBeenAlerted;
             }
         }
@@ -334,27 +312,6 @@ public class Enemy : MonoBehaviour, IAlertable
     {
         // - ("Name of the Animation Parameter", player.input value, transition smoothness, counter)
         animatorController.SetFloat(animParamater, inputValue, transitionSmooth, transitionCounter);
-    }
-
-    // Method for Flipping Sprite based on Movement Direction
-    protected virtual void FlipSprite()
-    {
-        if (enemyController.velocity.magnitude >= 0.1f) // Only flip when moving
-        {
-            float horizontal = enemyController.velocity.x; // Get horizontal velocity
-
-            // Determines the direction the character is facing
-            if (horizontal < 0f)
-            {
-                // Flips the sprite to face left if the horizontal input is negative
-                spriteRenderer.flipX = true;
-            }
-            else if (horizontal > 0f)
-            {
-                // Resets the sprite to face right if the horizontal input is positive 
-                spriteRenderer.flipX = false;
-            }
-        }
     }
 
     // ------------------------- DEBUGGERS -------------------------
@@ -406,65 +363,31 @@ public class Enemy : MonoBehaviour, IAlertable
         // Evaluates if the Cone attributes where ready and the devs wants to see it in game, else do not proceed
         if (viewConeWireframe == null || detectionVisualStatus == ShowCone.DisableVisualDetection) return;
 
-        // Determine which direction the enemy is facing based on sprite flip
-        Vector3 facingDirection = spriteRenderer.flipX ? Vector3.left : Vector3.right;
+        // Stores how many segments the wireframe will have based on the view angle (minimum of 10 segments for smoother appearance)
+        int segments = Mathf.Max(10, Mathf.RoundToInt(viewAngle / 10f));
 
-        if (viewAngle < 360f)
+        // Defines how many vertices the wireframe would have
+        // * Total Vertices = Segments + 2 (Center Point + Each Edge Point)
+        viewConeWireframe.positionCount = segments + 2;
+
+        // Positions the first vertex at the center of this gameobject
+        viewConeWireframe.SetPosition(0, transform.position);
+
+        // Calculates the angle step between each segment
+        float angleStep = viewAngle / segments; // How much angle difference each segment would have
+        float startAngle = -viewAngle * 0.5f; // Starting angle at the leftmost edge
+
+        // Iterates through each segment to calculate and set the positions of the wireframe vertices
+        for (int i = 0; i <= segments; i++)
         {
-            // For limited view angle (90 degrees) in neutral state
-            // Stores how many segments the wireframe will have based on the view angle (minimum of 10 segments for smoother appearance)
-            int segments = Mathf.Max(10, Mathf.RoundToInt(viewAngle / 10f));
+            // Calculates the angle for the current segment
+            float angle = startAngle + (angleStep * i); // Current angle for this segment
+            Quaternion rotation = Quaternion.Euler(0, angle, 0); // Creates a rotation based on the calculated angle
+            Vector3 direction = rotation * transform.forward; // Calculates the direction vector for this segment
+            Vector3 point = transform.position + direction * viewDistance; // Calculates the position of the vertex at the edge of the view distance
 
-            // Defines how many vertices the wireframe would have
-            // * Total Vertices = Segments + 2 (Center Point + Each Edge Point)
-            viewConeWireframe.positionCount = segments + 2;
-
-            // Positions the first vertex at the center of this gameobject
-            viewConeWireframe.SetPosition(0, transform.position);
-
-            // Calculates the angle step between each segment
-            float angleStep = viewAngle / segments; // How much angle difference each segment would have
-            float startAngle = -viewAngle * 0.5f; // Starting angle at the leftmost edge
-
-            // Iterates through each segment to calculate and set the positions of the wireframe vertices
-            for (int i = 0; i <= segments; i++)
-            {
-                // Calculates the angle for the current segment
-                float angle = startAngle + (angleStep * i); // Current angle for this segment
-                Quaternion rotation = Quaternion.Euler(0, angle, 0); // Creates a rotation based on the calculated angle
-                Vector3 direction = rotation * facingDirection; // Use facing direction instead of transform.forward
-                Vector3 point = transform.position + direction * viewDistance; // Calculates the position of the vertex at the edge of the view distance
-
-                // Starts iterating at position i+1 (since 0 is center which is this gameobject)
-                viewConeWireframe.SetPosition(i + 1, point); // Sets the position of the vertex in the LineRenderer
-            }
-        }
-        else
-        {
-            // For 360 degree view in chase state
-            int segments = 36; // Circle segments
-            viewConeWireframe.positionCount = segments + 1;
-
-            float angleStep = 360f / segments;
-
-            for (int i = 0; i <= segments; i++)
-            {
-                float angle = i * angleStep;
-                Quaternion rotation = Quaternion.Euler(0, angle, 0);
-                Vector3 direction = rotation * Vector3.right; // Use any direction for full circle
-                Vector3 point = transform.position + direction * viewDistance;
-                viewConeWireframe.SetPosition(i, point);
-            }
-        }
-
-        // Update material based on state
-        if (currentEnemyState == EnemyState.Chase && viewConeRangeAlerted != null)
-        {
-            viewConeWireframe.material = viewConeRangeAlerted;
-        }
-        else if (viewConeRangeNeutral != null)
-        {
-            viewConeWireframe.material = viewConeRangeNeutral;
+            // Starts iterating at position i+1 (since 0 is center which is this gameobject)
+            viewConeWireframe.SetPosition(i + 1, point); // Sets the position of the vertex in the LineRenderer
         }
 
         // -------------------------------- SIMPLE Method --------------------------------
