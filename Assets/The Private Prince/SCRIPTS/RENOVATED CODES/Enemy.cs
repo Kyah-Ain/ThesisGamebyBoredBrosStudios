@@ -30,9 +30,20 @@ public class Enemy : MonoBehaviour, IAlertable
     [SerializeField] protected float maxChaseDuration = 3f; // How long the Enemy can still chase the player after losing sight
     [SerializeField] protected float chaseDuration = 0f; // Current remaining time the Enemy can chase the player
 
+    [Header("COMBAT ATTRIBUTES")]
+    [SerializeField] private int attackDamage = 1; // Amount of damage dealt per attack
+
     [Header("AI STATES")]
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral; // Default starting state of the AI
     public enum EnemyState { Neutral, Chase } // Different states this AI can be in
+
+    [Header("INTERACTIONS")]
+    [SerializeField] protected Vector3 attackBoxCastSize = new Vector3(0.5f, 0.5f, 0.5f); // Defines the size of the attack box cast
+
+    [Space(8f)]
+
+    [SerializeField] protected Transform raycastEmitter; // Point from which the raycast will be emitted
+    [SerializeField] protected float raycastLength = 2f; // Defines how long the raycast would be
 
     [Header("BOOLEANS")]
     [SerializeField] protected bool hasBeenAlerted = false; // Indicates if the AI has been alerted by another enemy
@@ -51,6 +62,7 @@ public class Enemy : MonoBehaviour, IAlertable
     public bool IAlerted { get => hasBeenAlerted; set => hasBeenAlerted = value; }
 
     // ------------------------- UNITY METHODS -----------------------
+    #region UNITY LOGICS
 
     // Awake is called before all frame updates
     protected virtual void Awake()
@@ -103,6 +115,9 @@ public class Enemy : MonoBehaviour, IAlertable
             // Calls the method that updates the visual cone for AI detection   
             UpdateVisualCone();
         }
+
+        // Calls the method that handles AI attack logic
+        Attack(); 
     }
 
     // FixedUpdate is called at a fixed time interval
@@ -112,7 +127,10 @@ public class Enemy : MonoBehaviour, IAlertable
         AIDetection();
     }
 
+    #endregion
+
     // -------------------------- STATES ---------------------------
+    #region STATE LOGICS
 
     // Method for making the AI able to locate a Player
     protected void AIDetection()
@@ -173,8 +191,7 @@ public class Enemy : MonoBehaviour, IAlertable
         }
     }
 
-    // Overrideable Method for making the AI to standby
-    // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
+    // Overrideable Interface Method for making the AI to standby
     public virtual void Neutral()
     {
         // Sets the AI's destination to its current position (standby)
@@ -206,8 +223,7 @@ public class Enemy : MonoBehaviour, IAlertable
         viewAngle = 90f;
     }
 
-    // Overrideable Method for making the AI follows a player
-    // ---------- CANDIDATE FOR BEING AN INTERFACE ----------
+    // Overrideable Interface Method for making the AI follows a player
     public virtual void Chase(Transform targetChase)
     {
         if (targetChase == null) return;
@@ -241,7 +257,10 @@ public class Enemy : MonoBehaviour, IAlertable
         viewAngle = 360f;
     }
 
+    #endregion
+
     // -------------------------- DETECTION ---------------------------
+    #region DETECTION LOGICS
 
     // Boolean Method for evaluating if the Player has been detected through AI's Cone-Shaped View Detection
     protected bool isPlayerSpotted()
@@ -261,8 +280,8 @@ public class Enemy : MonoBehaviour, IAlertable
                     // Locates the position and direction to reach the player
                     Vector3 directionToPlayer = (player.transform.position - this.transform.position).normalized;
 
-                    // Gets the horizontal velocity of the enemy
-                    float horizontal = enemyController.velocity.x;
+                    //// Gets the horizontal velocity of the enemy
+                    //float horizontal = enemyController.velocity.x;
 
                     // Sets the direction the character is facing from the Sprite Renderer's flip logic
                     bool isFacingLeft = spriteRenderer.flipX;
@@ -327,7 +346,74 @@ public class Enemy : MonoBehaviour, IAlertable
         }
     }
 
+    #endregion
+
+    // ---------------------------- COMBATS ---------------------------
+    #region COMBAT LOGICS
+
+    // Handles raycasting for Interaction and Combat
+    protected virtual void Attack()
+    {
+        Debug.Log("Player performed attack");
+
+        // Gets the half dimension of the full attack box size
+        Vector3 halfExtents = attackBoxCastSize / 2f;
+
+        // Sets the direction the character is facing from the Sprite Renderer's flip logic
+        bool isFacingLeft = spriteRenderer.flipX;
+
+        // Gets the direction of which way the character should be attacking
+        Vector3 attackDirection = isFacingLeft ? Vector3.left : Vector3.right;
+
+        // Sets the current rotation of the box to follow the character's rotation
+        Quaternion boxRotation = this.transform.rotation;
+
+        // Variable to store information about what the BoxCast has hit
+        RaycastHit hitInfo;
+
+        // Performs the BoxCast and stores whether it hit something or not (it only stores the first hit)
+        bool hasHit = Physics.BoxCast(
+            raycastEmitter.transform.position, // Starting Point
+            halfExtents, // HALF the box dimensions
+            attackDirection, // Direction on where to cast the box
+            out hitInfo, // Information about what was hit
+            boxRotation, // Current rotation of the box
+            raycastLength // The max distance the boxCast could reach
+        );
+
+        // Evaluates if the BoxCast has hit something
+        if (hasHit && hitInfo.collider.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("HAS HIT: Player has been hit");
+
+            // Transforms the hit object into a damageable object if it implements IDamageable
+            IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
+
+            // Transforms the hit object into a knockable object if it implements IKnockable
+            IKnockable knockable = hitInfo.collider.GetComponent<IKnockable>();
+
+            // 
+            if (damageable != null)
+            {
+                // ...
+                damageable.TakeDamage(attackDamage);
+
+                if (knockable != null)
+                {
+                    // Applies knockback to the target if it implements IKnockable
+                    knockable.KnockBack(this.transform, hitInfo.transform);
+                }
+            }
+        }
+
+        // Visualizes the BoxCast in the Scene View for debugging (uses the static class from DebugBoxCastbyArian.cs)
+        DebugBoxCast.SimpleDrawBoxCast(raycastEmitter.transform.position, halfExtents, boxRotation, attackDirection, raycastLength, Color.red);
+    }
+
+    #endregion
+
     // -------------------------- ANIMATIONS ---------------------------
+    #region ANIMATION LOGICS
 
     // Method for Character Animation
     public void Animate(string animParamater, float inputValue, float transitionSmooth, float transitionCounter)
@@ -357,7 +443,10 @@ public class Enemy : MonoBehaviour, IAlertable
         }
     }
 
+    #endregion
+
     // ------------------------- DEBUGGERS -------------------------
+    #region DEBUGGING LOGICS
 
     // Built-In Method for Gizmos Visualization in Editor
     protected virtual void OnDrawGizmosSelected()
@@ -397,7 +486,6 @@ public class Enemy : MonoBehaviour, IAlertable
         // Configure 'LineRenderer' behaviours
         viewConeWireframe.loop = true; // Connects the last vertex back to the 'Origin' point
         viewConeWireframe.useWorldSpace = true; // Uses world space coordinates for positioning
-
     }
 
     // Method for AI Wireframe Visualization
@@ -515,4 +603,6 @@ public class Enemy : MonoBehaviour, IAlertable
             Debug.Log("Stopping distance: " + enemyController.stoppingDistance);
         }
     }
+
+    #endregion
 }

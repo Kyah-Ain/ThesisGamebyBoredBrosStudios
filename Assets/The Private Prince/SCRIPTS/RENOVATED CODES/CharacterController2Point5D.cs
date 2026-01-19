@@ -45,6 +45,7 @@ public class CharacterController2Point5D : MonoBehaviour
     public IInteractable Interactable { get; set; }
 
     // ------------------------- UNITY METHODS -------------------------
+    #region UNITY LOGICS
 
     // Awake is called before all frame updates
     private void Awake()
@@ -102,7 +103,10 @@ public class CharacterController2Point5D : MonoBehaviour
             CheckInteraction();
     }
 
+    #endregion
+
     // ------------------------- INTERACTIONS -------------------------
+    #region INTERACTION LOGICS
 
     public void OpenInteractableIcon() // - joseph
     {
@@ -130,6 +134,11 @@ public class CharacterController2Point5D : MonoBehaviour
         }
     }
 
+    #endregion
+
+    // ---------------------------- COMBATS ---------------------------
+    #region COMBAT LOGICS
+
     // Handles raycasting for Interaction and Combat
     protected virtual void Attack()
     {
@@ -147,18 +156,21 @@ public class CharacterController2Point5D : MonoBehaviour
         // Sets the current rotation of the box to follow the character's rotation
         Quaternion boxRotation = this.transform.rotation;
 
+        // Variable to store information about what the BoxCast has hit
+        RaycastHit hitInfo;
+
         // Performs the BoxCast and stores whether it hit something or not (it only stores the first hit)
         bool hasHit = Physics.BoxCast(
             raycastEmitter.transform.position, // Starting Point
             halfExtents, // HALF the box dimensions
             attackDirection, // Direction on where to cast the box
-            out RaycastHit hitInfo, // Information about what was hit
+            out hitInfo, // Information about what was hit
             boxRotation, // Current rotation of the box
             raycastLength // The max distance the boxCast could reach
         );
 
         // Evaluates if the BoxCast has hit something
-        if (hasHit) 
+        if (hasHit && hitInfo.collider.gameObject.CompareTag("Enemy")) 
         {
             // Transforms the hit object into a damageable object if it implements IDamageable
             IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
@@ -184,7 +196,10 @@ public class CharacterController2Point5D : MonoBehaviour
         DebugBoxCast.SimpleDrawBoxCast(raycastEmitter.transform.position, halfExtents, boxRotation, attackDirection, raycastLength, Color.red);
     }
 
+    #endregion
+
     // --------------------------- MOVEMENT ---------------------------
+    #region MOVEMENT LOGICS
 
     // Method for Character Movement Logic
     public void Move()
@@ -226,7 +241,10 @@ public class CharacterController2Point5D : MonoBehaviour
         }
     }
 
+    #endregion
+
     // -------------------------- ANIMATIONS ---------------------------
+    #region ANIMATION LOGICS
 
     // Method for Character Animation
     public void Animate(string animParamater, float inputValue, float transitionSmooth, float transitionCounter)
@@ -234,4 +252,6 @@ public class CharacterController2Point5D : MonoBehaviour
         // - ("Name of the Animation Parameter", player.input value, transition smoothness, counter)
         animatorController.SetFloat(animParamater, inputValue, transitionSmooth, transitionCounter);
     }
+
+    #endregion
 }
