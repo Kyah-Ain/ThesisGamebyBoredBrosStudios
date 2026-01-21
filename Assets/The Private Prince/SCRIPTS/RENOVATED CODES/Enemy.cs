@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour, IAlertable
     [SerializeField] protected float chaseDuration = 0f; // Current remaining time the Enemy can chase the player
 
     [Header("COMBAT ATTRIBUTES")]
-    [SerializeField] private int attackDamage = 1; // Amount of damage dealt per attack
+    [SerializeField] protected int attackDamage = 1; // Amount of damage dealt per attack
 
     [Header("AI STATES")]
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral; // Default starting state of the AI

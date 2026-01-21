@@ -2971,7 +2971,7 @@ Transform:
   m_GameObject: {fileID: 5266330665194727199}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 29, y: 1.25, z: 5.75}
+  m_LocalPosition: {x: 29.25, y: 1.25, z: 0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5635,7 +5635,7 @@ GameObject:
   - component: {fileID: 4756507495440493806}
   - component: {fileID: 695226556587301978}
   - component: {fileID: 1629110887802311258}
-  - component: {fileID: 6248975713793816015}
+  - component: {fileID: 7928213144495407985}
   - component: {fileID: 3596074342511077288}
   - component: {fileID: 4354452094477507607}
   - component: {fileID: 154575151149037839}
@@ -6294,50 +6294,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6248975713793816015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5401584551469340058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64c78af8762a33741becafa97adbc870, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyController: {fileID: 0}
-  animatorController: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  players: []
-  detectionTarget: {fileID: 0}
-  raycastObstacles:
-    serializedVersion: 2
-    m_Bits: 0
-  viewDistance: 10
-  viewAngle: 90
-  backupRadius: 10
-  maxChaseDuration: 3
-  chaseDuration: 0
-  attackDamage: 1
-  currentEnemyState: 0
-  attackBoxCastSize: {x: 0.5, y: 0.5, z: 0.5}
-  raycastEmitter: {fileID: 1209590429735030485}
-  raycastLength: 2
-  hasBeenAlerted: 0
-  viewConeStrokeWidth: 0.05
-  viewConeWireframe: {fileID: 154575151149037839}
-  viewConeRangeNeutral: {fileID: 2100000, guid: 0fce02c6bd844f5419514868f625c283,
-    type: 2}
-  viewConeRangeAlerted: {fileID: 0}
-  detectionVisualStatus: 0
-  patrolStations:
-  - {fileID: 426896464}
-  - {fileID: 1602139973}
-  - {fileID: 1190545087}
-  - {fileID: 191659844}
-  currentPatrolIndex: 0
-  arrivalThreshold: 1
 --- !u!1 &6264234252336592812
 GameObject:
   m_ObjectHideFlags: 0
@@ -7727,6 +7683,49 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7928213144495407985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5401584551469340058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfda1ae4b695ac443b9d320434919b11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyController: {fileID: 0}
+  animatorController: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  players: []
+  detectionTarget: {fileID: 0}
+  raycastObstacles:
+    serializedVersion: 2
+    m_Bits: 0
+  viewDistance: 10
+  viewAngle: 90
+  backupRadius: 10
+  maxChaseDuration: 3
+  chaseDuration: 0
+  attackDamage: 1
+  currentEnemyState: 0
+  attackBoxCastSize: {x: 0.5, y: 0.5, z: 0.5}
+  raycastEmitter: {fileID: 1209590429735030485}
+  raycastLength: 2
+  hasBeenAlerted: 0
+  viewConeStrokeWidth: 0.05
+  viewConeWireframe: {fileID: 0}
+  viewConeRangeNeutral: {fileID: 0}
+  viewConeRangeAlerted: {fileID: 0}
+  detectionVisualStatus: 0
+  patrolStations:
+  - {fileID: 426896464}
+  - {fileID: 1602139973}
+  - {fileID: 1190545087}
+  - {fileID: 191659844}
+  currentPatrolIndex: 0
+  arrivalThreshold: 1
 --- !u!1 &7942778324585929884
 GameObject:
   m_ObjectHideFlags: 0
