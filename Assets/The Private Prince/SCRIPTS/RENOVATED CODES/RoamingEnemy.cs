@@ -47,23 +47,26 @@ public class RoamingEnemy : Enemy
     public override void Neutral()
     {
         // Updates Visual Cone Material
-        if (viewConeWireframe != null && viewConeRangeNeutral != null)
+        if (base.viewConeWireframe != null && base.viewConeRangeNeutral != null)
         {
             // Sets the view cone material to neutral state
-            viewConeWireframe.material = viewConeRangeNeutral;
+            base.viewConeWireframe.material = base.viewConeRangeNeutral;
         }
 
-        // Sets the default destination to the current patrol station
-        enemyController.SetDestination(patrolStations[currentPatrolIndex].position);
+        if (!base.isAttacking) 
+        {
+            // Sets the default destination to the current patrol station
+            enemyController.SetDestination(patrolStations[currentPatrolIndex].position);
 
+            // Sets the animation to walking/running state
+            Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
+        }
+            
         // Handles sprite flipping based on movement direction
         FlipSprite();
 
-        // Sets the animation to walking/running state
-        Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
-
         // Sets the detection angle to a visual cone size
-        viewAngle = 90f;
+        base.viewAngle = 90f;
 
         // Check if the enemy has arrived at the patrol station
         float stationDistance = Vector3.Distance(this.transform.position, patrolStations[currentPatrolIndex].position);

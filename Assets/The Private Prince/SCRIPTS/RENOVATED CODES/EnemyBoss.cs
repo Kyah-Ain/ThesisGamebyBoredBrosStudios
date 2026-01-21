@@ -32,7 +32,7 @@ public class EnemyBoss : RoamingEnemy
         base.Update();
 
         // ...
-        if (Input.GetButton("Fire1")) 
+        if (Input.GetButton("Fire1") && base.canAttack) 
         {
             // ...
             AOEAttack();
@@ -57,34 +57,73 @@ public class EnemyBoss : RoamingEnemy
         float attackRadius = aoeRadius;
 
         // ...
-        Collider[] hasHit = Physics.OverlapSphere(
-            raycastEmitter.transform.position, // Center of the AOE attack
+        Collider[] inRange = Physics.OverlapSphere(
+            base.raycastEmitter.transform.position, // Center of the AOE attack
             attackRadius // Radius of the AOE attack
         );
 
         // ...
-        foreach (Collider hit in hasHit)
+        foreach (Collider target in inRange)
         {
             // Transforms the hit object into a damageable object if it implements IDamageable
-            IDamageable damageable = hit.GetComponent<IDamageable>();
+            IDamageable damageable = target.GetComponent<IDamageable>();
 
             // Transforms the hit object into a knockable object if it implements IKnockable
-            IKnockable knockable = hit.GetComponent<IKnockable>();
+            IKnockable knockable = target.GetComponent<IKnockable>();
 
             // ...
-            if (damageable != null && hit.CompareTag("Player"))
+            if (damageable != null && canAttack && !isAttacking && target.CompareTag("Player"))
             {
                 Debug.Log("Player has been hit by AOE!");
 
                 // ...
-                damageable.TakeDamage(attackDamage);
-
-                if (knockable != null)
-                {
-                    // Applies knockback to the target if it implements IKnockable
-                    knockable.KnockBack(this.transform, hit.transform);
-                }
+                StartCoroutine(AOEDelayDamage(damageable, knockable, target.transform, base.attackCooldown));
             }
+        }
+    }
+
+    // ...
+    protected IEnumerator AOEDelayDamage(IDamageable damageable, IKnockable knockable, Transform target, float cooldown)
+    {
+        // ...
+        base.isAttacking = true;
+        base.canAttack = false;
+
+        // ...
+        base.SwitchState(EnemyState.Neutral);
+        base.enemyController.SetDestination(this.transform.position); // Ensures that Roaming Enemy would not patrol on Neutral
+
+        // ...
+        yield return new WaitForSeconds(cooldown);
+
+        // ...
+        Collider[] victims = Physics.OverlapSphere(
+            base.raycastEmitter.transform.position, // Center of the AOE attack
+            aoeRadius // Radius of the AOE attack
+        );
+
+        foreach (Collider victim in victims)
+        {
+            // Apply damage after delay
+            damageable.TakeDamage(attackDamage);
+
+            if (knockable != null)
+            {
+                knockable.KnockBack(this.transform, target);
+            }
+        }
+
+        //// Wait for cooldown after damage
+        //yield return new WaitForSeconds(attackCooldown - attackStopper);
+
+        // Reset states
+        canAttack = true;
+        isAttacking = false;
+
+        // Resume chasing if target still exists
+        if (detectionTarget != null)
+        {
+            SwitchState(EnemyState.Chase);
         }
     }
 
@@ -100,7 +139,7 @@ public class EnemyBoss : RoamingEnemy
 
         // Visualizes the AOE attack radius
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(raycastEmitter.transform.position, aoeRadius);
+        Gizmos.DrawWireSphere(base.raycastEmitter.transform.position, aoeRadius);
     }
 
     #endregion

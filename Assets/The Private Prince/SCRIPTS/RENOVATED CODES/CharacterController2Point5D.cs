@@ -26,7 +26,8 @@ public class CharacterController2Point5D : MonoBehaviour
     [SerializeField] private Vector3 attackBoxCastSize = new Vector3(0.5f, 0.5f, 0.5f); // Defines the size of the attack box cast
     [SerializeField] private Vector3 interactionBoxSize = new Vector3(0.1f, 1f, 0.5f); // -joseph
 
-    [SerializeField] private LayerMask obstacleLayer; // Layer for obstacles that can block attacks
+    [SerializeField] protected LayerMask obstacleLayer; // Layer for obstacles that can block the cast
+    [SerializeField] protected LayerMask exludedLayerMask; // Layer mask to filter unwanted targets
 
     [Space(8f)] // Adds spacing in the Inspector
 
@@ -166,7 +167,8 @@ public class CharacterController2Point5D : MonoBehaviour
             attackDirection, // Direction on where to cast the box
             out hitInfo, // Information about what was hit
             boxRotation, // Current rotation of the box
-            raycastLength // The max distance the boxCast could reach
+            raycastLength, // The max distance the boxCast could reach
+            ~exludedLayerMask // Layer Mask to filter unwanted targets
         );
 
         // Evaluates if the BoxCast has hit something
