@@ -448,7 +448,7 @@ public class Enemy : MonoBehaviour, IAlertable
     // ------------------------- DEBUGGERS -------------------------
     #region DEBUGGING LOGICS
 
-    // Built-In Method for Gizmos Visualization in Editor
+    // Built-In Method for Gizmos Visualization in Editor (CAN ONLY SEEN THROUGH UNITY EDITOR VIEW)
     protected virtual void OnDrawGizmosSelected()
     {
         // Draws a wire sphere to represent the AI's backup radius
@@ -457,7 +457,7 @@ public class Enemy : MonoBehaviour, IAlertable
     }
 
     // Method for AI Wireframe Visualization
-    protected void InitializeVisualCone()
+    protected virtual void InitializeVisualCone()
     {
         // Evaluate's if there's no existing 'LineRenderer' for AI Enemy's range detection
         if (viewConeWireframe == null)
@@ -478,6 +478,9 @@ public class Enemy : MonoBehaviour, IAlertable
         // Sets the detection range color to what color material is chosen to be referenced on the inspector
         viewConeWireframe.material = viewConeRangeNeutral;
 
+        // ...
+        viewConeWireframe.useWorldSpace = true;
+
         // Configure 'LineRenderer' properties
         viewConeWireframe.positionCount = 0; // Starts empty vertices as default
         viewConeWireframe.startWidth = viewConeStrokeWidth; // Sets the width of the starting line stroke
@@ -489,7 +492,7 @@ public class Enemy : MonoBehaviour, IAlertable
     }
 
     // Method for AI Wireframe Visualization
-    protected void UpdateVisualCone()
+    protected virtual void UpdateVisualCone()
     {
         // Evaluates if the Cone attributes where ready and the devs wants to see it in game, else do not proceed
         if (viewConeWireframe == null || detectionVisualStatus == ShowCone.DisableVisualDetection) return;
@@ -585,7 +588,7 @@ public class Enemy : MonoBehaviour, IAlertable
     }
 
     // Method for Ai Navmesh Debugging Purposes
-    protected void AIComponentChecker()
+    protected virtual void AIComponentChecker()
     {
         // 1. Is the agent on a NavMesh?
         Debug.Log("Is on NavMesh: " + enemyController.isOnNavMesh);

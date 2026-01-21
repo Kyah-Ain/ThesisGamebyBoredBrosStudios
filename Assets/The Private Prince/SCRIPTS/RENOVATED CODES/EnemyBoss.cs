@@ -5,6 +5,26 @@ using UnityEngine; // Grants access to Unity's core classes and functions like M
 
 public class EnemyBoss : RoamingEnemy
 {
+    // -------------------------- VARIABLES -------------------------
+
+    [Header("AOE ATTRIBUTES")]
+    [SerializeField] protected float aoeRadius = 8f; // Radius of the AOE attack
+
+    // ------------------------- UNITY METHODS -----------------------
+    #region UNITY LOGICS
+
+    //// ...
+    //protected override void Awake()
+    //{
+    //    base.Awake();
+    //}
+
+    //// ...
+    //protected override void Start()
+    //{
+    //    base.FixedUpdate();
+    //}
+
     // Update is called once per frame
     protected override void Update()
     {
@@ -12,25 +32,37 @@ public class EnemyBoss : RoamingEnemy
         base.Update();
 
         // ...
-        if (Input.GetKey("Fire1"))
+        if (Input.GetButton("Fire1")) 
+        {
             // ...
             AOEAttack();
+        }
     }
+
+    //// ...
+    //protected override void FixedUpdate()
+    //{
+    //    base.FixedUpdate();
+    //}
+
+    #endregion
+
+    // ---------------------------- COMBATS ---------------------------
+    #region COMBAT LOGICS
 
     // ...
     protected void AOEAttack() 
     {
         // ...
-        float aoeRadius = 20f;
+        float attackRadius = aoeRadius;
 
         // ...
         Collider[] hasHit = Physics.OverlapSphere(
-            raycastEmitter.transform.position,
-            aoeRadius
+            raycastEmitter.transform.position, // Center of the AOE attack
+            attackRadius // Radius of the AOE attack
         );
 
-        Debug.Log("Player has been hit by AOE!");
-
+        // ...
         foreach (Collider hit in hasHit)
         {
             // Transforms the hit object into a damageable object if it implements IDamageable
@@ -40,8 +72,10 @@ public class EnemyBoss : RoamingEnemy
             IKnockable knockable = hit.GetComponent<IKnockable>();
 
             // ...
-            if (damageable != null)
+            if (damageable != null && hit.CompareTag("Player"))
             {
+                Debug.Log("Player has been hit by AOE!");
+
                 // ...
                 damageable.TakeDamage(attackDamage);
 
@@ -53,4 +87,21 @@ public class EnemyBoss : RoamingEnemy
             }
         }
     }
+
+    #endregion
+
+    // ------------------------- DEBUGGERS -------------------------
+    #region DEBUGGING LOGICS
+
+    // Built-In Method for Gizmos Visualization in Editor (CAN ONLY SEEN THROUGH UNITY EDITOR VIEW)
+    protected override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
+
+        // Visualizes the AOE attack radius
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(raycastEmitter.transform.position, aoeRadius);
+    }
+
+    #endregion
 }

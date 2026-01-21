@@ -11,35 +11,35 @@ public class RoamingEnemy : Enemy
     [SerializeField] protected int currentPatrolIndex = 0; // Current index in the patrol stations list
     [SerializeField] protected float arrivalThreshold = 1f; // Distance threshold to consider arrival at a patrol station
 
-    // ------------------------- PARENT METHODS -----------------------
-    #region UNITY LOGICS
+    //// ------------------------- PARENT METHODS -----------------------
+    //#region UNITY LOGICS
 
-    // Awake is called before all frame updates
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+    //// Awake is called before all frame updates
+    //protected override void Awake()
+    //{
+    //    base.Awake();
+    //}
 
-    // Start is called at the first frame
-    protected override void Start()
-    {
-        base.Start();
-    }
+    //// Start is called at the first frame
+    //protected override void Start()
+    //{
+    //    base.Start();
+    //}
 
-    // Update is called once per frame
-    protected override void Update()
-    {
-        base.Update();       
-    }
+    //// Update is called once per frame
+    //protected override void Update()
+    //{
+    //    base.Update();       
+    //}
 
-    // FixedUpdate is called at a fixed time interval
-    protected override void FixedUpdate()
-    {
-        // ...
-        base.FixedUpdate();
-    }
+    //// FixedUpdate is called at a fixed time interval
+    //protected override void FixedUpdate()
+    //{
+    //    // ...
+    //    base.FixedUpdate();
+    //}
 
-    #endregion
+    //#endregion
 
     // ------------------------- UNITY METHODS -----------------------
 
@@ -49,6 +49,7 @@ public class RoamingEnemy : Enemy
         // Updates Visual Cone Material
         if (viewConeWireframe != null && viewConeRangeNeutral != null)
         {
+            // Sets the view cone material to neutral state
             viewConeWireframe.material = viewConeRangeNeutral;
         }
 
