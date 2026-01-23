@@ -12,36 +12,32 @@ public class RoamingEnemy : Enemy
     [SerializeField] protected float arrivalThreshold = 1f; // Distance threshold to consider arrival at a patrol station
 
     //// ------------------------- PARENT METHODS -----------------------
-    //#region UNITY LOGICS
+    #region UNITY LOGICS
 
-    //// Awake is called before all frame updates
-    //protected override void Awake()
-    //{
-    //    base.Awake();
-    //}
+    // Awake is called before all frame updates
+    protected override void Awake()
+    {
+        base.Awake();
+    }
 
-    //// Start is called at the first frame
-    //protected override void Start()
-    //{
-    //    base.Start();
-    //}
+    // Start is called at the first frame
+    protected override void Start()
+    {
+        base.Start();
+    }
 
-    //// Update is called once per frame
-    //protected override void Update()
-    //{
-    //    base.Update();       
-    //}
+    // Update is called once per frame
+    protected override void Update()
+    {
+        base.Update();
+    }
 
-    //// FixedUpdate is called at a fixed time interval
-    //protected override void FixedUpdate()
-    //{
-    //    // ...
-    //    base.FixedUpdate();
-    //}
-
-    //#endregion
-
-    // ------------------------- UNITY METHODS -----------------------
+    // FixedUpdate is called at a fixed time interval
+    protected override void FixedUpdate()
+    {
+        // ...
+        base.FixedUpdate();
+    }
 
     // Override the Neutral method from the Enemy base class
     public override void Neutral()
@@ -53,7 +49,7 @@ public class RoamingEnemy : Enemy
             base.viewConeWireframe.material = base.viewConeRangeNeutral;
         }
 
-        if (!base.isAttacking) 
+        if (base.canAttack) 
         {
             // Sets the default destination to the current patrol station
             enemyController.SetDestination(patrolStations[currentPatrolIndex].position);
@@ -89,4 +85,6 @@ public class RoamingEnemy : Enemy
 
         Debug.Log($"RoamingEnemy 4th: {stationDistance < arrivalThreshold}");
     }
+
+    #endregion
 }

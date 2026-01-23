@@ -16,7 +16,6 @@ public class Enemy : MonoBehaviour, IAlertable
     [SerializeField] protected NavMeshAgent enemyController; // Reference to the enemyController component for AI navigation
     [SerializeField] protected Animator animatorController; // Reference to the Animator component for character animations
     [SerializeField] protected SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer component for handling sprite rendering and flipping
-    //[SerializeField] protected Collider[] attackColliders; // References to colliders used for attack detection
 
     [Header("AI DETECTION")]
     [SerializeField] protected GameObject[] players; // Array to hold references to all player game objects in the scene
@@ -33,8 +32,7 @@ public class Enemy : MonoBehaviour, IAlertable
 
     [Header("COMBAT ATTRIBUTES")]
     [SerializeField] protected int attackDamage = 1; // Amount of damage dealt per attack
-    [SerializeField] protected float attackCooldown = 5f; // ...
-    //[SerializeField] protected float attackStopper = 3f; // ...
+    [SerializeField] protected float attackCooldown = 5f; // Amount of time between each attack
 
     [Header("AI STATES")]
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral; // Default starting state of the AI
@@ -55,9 +53,8 @@ public class Enemy : MonoBehaviour, IAlertable
 
     [Header("BOOLEANS")]
     [SerializeField] protected bool hasBeenAlerted = false; // Indicates if the AI has been alerted by another enemy
-    [SerializeField] protected bool canAttack = true; // ...
-    [SerializeField] protected bool isAttacking = false; // ...
-    [SerializeField] protected bool hasHit = false; // ...
+    [SerializeField] protected bool canAttack = true; // Indicates if the AI can perform an attack
+    [SerializeField] protected bool hasHit = false; // Indicates if the AI has hit something with its attack
 
     [Header("VISUAL DEBUGS")]
     [SerializeField] protected float viewConeStrokeWidth = 0.05f; // How thick the lines are drawn
@@ -126,13 +123,12 @@ public class Enemy : MonoBehaviour, IAlertable
             // Calls the method that updates the visual cone for AI detection   
             UpdateVisualCone();
 
-            // ...
+            // Calls the method that visualizes the BoxCast for attack debugging
             AttackBoxWireframe();
         }
 
-        // ...
-        if (canAttack)
-            Attack(); // Calls the method that handles AI attack logic
+        // Calls the method that handles AI attack logic
+        Attack(); 
     }
 
     // FixedUpdate is called at a fixed time interval
@@ -150,7 +146,7 @@ public class Enemy : MonoBehaviour, IAlertable
     // Method for making the AI able to locate a Player
     protected void AIDetection()
     {
-        if (!isAttacking) 
+        if (canAttack) // Only let AI move when not attacking
         {
             // Evaluate's if the Enemy should Chase the player or not
             if (isPlayerSpotted() || hasBeenAlerted)
@@ -176,7 +172,7 @@ public class Enemy : MonoBehaviour, IAlertable
                 // Depletes chase duration over time
                 chaseDuration -= Time.fixedDeltaTime;
 
-                if (chaseDuration <= 0f)
+                if (chaseDuration <= 0f) // Evaluates if chase duration have run out
                 {
                     // Chase duration depleted
                     chaseDuration = 0f;
@@ -228,14 +224,12 @@ public class Enemy : MonoBehaviour, IAlertable
         // Updates Visual Cone Material
         if (viewConeWireframe != null && viewConeRangeNeutral != null)
         {
+            // Sets the view cone material to neutral state color
             viewConeWireframe.material = viewConeRangeNeutral;
         }
 
         // Sets the animation to walking/running state
         Animate("Input Magnitude", 0f, 0.05f, Time.fixedDeltaTime);
-
-        // Neutral Speed
-
 
         // Sets the detection angle to a visual cone size
         viewAngle = 90f;
@@ -249,6 +243,7 @@ public class Enemy : MonoBehaviour, IAlertable
         // Determines if the player is still spotted, else resets the alerted status
         if (!isPlayerSpotted())
         {
+            // Resets alerted status to lost sighting the player state
             hasBeenAlerted = false;
         }
 
@@ -269,7 +264,7 @@ public class Enemy : MonoBehaviour, IAlertable
         Animate("Input Magnitude", 1f, 0.05f, Time.fixedDeltaTime);
 
         // Chase Speed
-
+        // Might implement boost logic here soon...
 
         // Sets the detection angle to a visual cone size
         viewAngle = 360f;
@@ -338,18 +333,19 @@ public class Enemy : MonoBehaviour, IAlertable
         return false;
     }
 
-    // Method to Alert Every Nearby Enemy for Backup
+    // Overrideable Method to Alert Every Nearby Enemy for Backup
     public virtual void AlertEveryoneNear()
     {
         // Scans for nearby Enemies to Alert within its alert radius 
         Collider[] nearbyEnemies = Physics.OverlapSphere(this.transform.position, backupRadius);
 
+        // Iterates through each nearby enemy found within the alert radius
         foreach (Collider enemyCollider in nearbyEnemies)
         {
             // Skip self to avoid re-alerting this gameObject
             if (enemyCollider.gameObject == this.gameObject) continue;
 
-            // ...
+            // Transforms the nearby enemy into an alertable object if it implements IAlertable
             IAlertable alertable = enemyCollider.GetComponent<IAlertable>();
 
             // Evaluates if the nearby enemy has the 'IAlertable' interface to be alerted
@@ -372,84 +368,67 @@ public class Enemy : MonoBehaviour, IAlertable
     // Handles raycasting for Interaction and Combat
     protected virtual void Attack()
     {
-        Debug.Log("Enemy performed attack");
-
-        // Gets the half dimension of the full attack box size
-        halfExtents = attackBoxCastSize / 2f;
-
-        // Sets the direction the character is facing from the Sprite Renderer's flip logic
-        isFacingLeft = spriteRenderer.flipX;
-
-        // Gets the direction of which way the character should be attacking
-        attackDirection = isFacingLeft ? Vector3.left : Vector3.right;
-
-        // Sets the current rotation of the box to follow the character's rotation
-        boxRotation = this.transform.rotation;
-
-        // Performs the BoxCast and stores whether it hit something or not (it only stores the first hit)
-        hasHit = Physics.BoxCast(
-            raycastEmitter.transform.position, // Starting Point
-            halfExtents, // HALF the box dimensions
-            attackDirection, // Direction on where to cast the box
-            out hitInfo, // Information about what was hit
-            boxRotation, // Current rotation of the box
-            raycastLength // The max distance the boxCast could reach
-        );
-
-        // Evaluates if the BoxCast has hit something
-        if (hasHit && hitInfo.collider.gameObject.CompareTag("Player"))
+        if (canAttack) // Evaluates if the AI can perform an attack
         {
-            Debug.Log("HAS HIT: Player has been hit");
+            Debug.Log("Enemy is ready to Attack!");
 
-            // Transforms the hit object into a damageable object if it implements IDamageable
-            IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
+            // Gets the half dimension of the full attack box size
+            halfExtents = attackBoxCastSize / 2f;
 
-            // Transforms the hit object into a knockable object if it implements IKnockable
-            IKnockable knockable = hitInfo.collider.GetComponent<IKnockable>();
+            // Sets the direction the character is facing from the Sprite Renderer's flip logic
+            isFacingLeft = spriteRenderer.flipX;
 
-            // ...
-            if (damageable != null && canAttack && !isAttacking)
+            // Gets the direction of which way the character should be attacking
+            attackDirection = isFacingLeft ? Vector3.left : Vector3.right;
+
+            // Sets the current rotation of the box to follow the character's rotation
+            boxRotation = this.transform.rotation;
+
+            // Performs the BoxCast and stores whether it hit something or not (it only stores the first hit)
+            hasHit = Physics.BoxCast(
+                raycastEmitter.transform.position, // Starting Point
+                halfExtents, // HALF the box dimensions
+                attackDirection, // Direction on where to cast the box
+                out hitInfo, // Information about what was hit
+                boxRotation, // Current rotation of the box
+                raycastLength // The max distance the boxCast could reach
+            );
+
+            // Evaluates if the BoxCast has hit something
+            if (hasHit && hitInfo.collider.gameObject.CompareTag("Player"))
             {
-                // ...
-                StartCoroutine(DelayDamage(damageable, knockable, hitInfo.transform, attackCooldown));
+                Debug.Log("HAS HIT: Player has been hit");
+
+                // Transforms the hit object into a damageable object if it implements IDamageable
+                IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
+
+                // Transforms the hit object into a knockable object if it implements IKnockable
+                IKnockable knockable = hitInfo.collider.GetComponent<IKnockable>();
+
+                // Evaluates if the hit object is damageable
+                if (damageable != null)
+                {
+                    // Prevents further attacks until cooldown is over
+                    canAttack = false;
+
+                    // Calls the coroutine that handles the attack sequence
+                    StartCoroutine(AttackSequence(damageable, knockable, hitInfo.transform, attackCooldown));
+                }
             }
         }
     }
 
-    //// ...
-    //protected IEnumerator AttackCooldown(float cooldown) 
-    //{
-    //    // ...
-    //    canAttack = false;
-    //    isAttacking = true;
-
-    //    // ...
-    //    SwitchState(EnemyState.Neutral);
-    //    enemyController.SetDestination(this.transform.position); // Ensures that Roaming Enemy would not patrol on Neutral
-
-    //    // ...
-    //    yield return new WaitForSeconds(cooldown);
-
-    //    // ...
-    //    canAttack = true;
-    //    isAttacking = false;
-
-    //    // ...
-    //    SwitchState(EnemyState.Chase);
-    //}
-
-    // ...
-    protected IEnumerator DelayDamage(IDamageable damageable, IKnockable knockable, Transform target, float cooldown)
+    // Coroutine for handling the attack sequence with delay and cooldown
+    protected IEnumerator AttackSequence(IDamageable damageable, IKnockable knockable, Transform target, float cooldown)
     {
-        // ...
-        isAttacking = true;
-        canAttack = false;
+        // Initial delay for giving the program ample time to prepare for the attack computation
+        yield return new WaitForSeconds(0.25f);
 
-        // ...
+        // Stops the enemy movement during an attack
         SwitchState(EnemyState.Neutral);
         enemyController.SetDestination(this.transform.position); // Ensures that Roaming Enemy would not patrol on Neutral
 
-        // ...
+        // Attack Casting duration before apllying attack (e.g., anticipation time)
         yield return new WaitForSeconds(cooldown);
 
         if (Physics.BoxCast(
@@ -461,27 +440,24 @@ public class Enemy : MonoBehaviour, IAlertable
             raycastLength // The max distance the boxCast could reach
         )) 
         {
-            // Apply damage after delay
+            // Apply attack damage
             damageable.TakeDamage(attackDamage);
 
+            // Apply attack's knockback effect
             if (knockable != null)
             {
                 knockable.KnockBack(this.transform, target);
             }
         }
 
-        //// Wait for cooldown after damage
-        //yield return new WaitForSeconds(attackCooldown - attackStopper);
-
-        // Reset states
-        canAttack = true;
-        isAttacking = false;
-
         // Resume chasing if target still exists
         if (detectionTarget != null)
         {
             SwitchState(EnemyState.Chase);
         }
+
+        // Reset attack status
+        canAttack = true;
     }
 
     #endregion
@@ -552,7 +528,7 @@ public class Enemy : MonoBehaviour, IAlertable
         // Sets the detection range color to what color material is chosen to be referenced on the inspector
         viewConeWireframe.material = viewConeRangeNeutral;
 
-        // ...
+        // Sets the rendering mode to World Space for accurate positioning
         viewConeWireframe.useWorldSpace = true;
 
         // Configure 'LineRenderer' properties
@@ -625,10 +601,12 @@ public class Enemy : MonoBehaviour, IAlertable
         // Update material based on state
         if (currentEnemyState == EnemyState.Chase && viewConeRangeAlerted != null)
         {
+            // Sets the view cone material to alerted state color
             viewConeWireframe.material = viewConeRangeAlerted;
         }
         else if (viewConeRangeNeutral != null)
         {
+            // Sets the view cone material to neutral state color
             viewConeWireframe.material = viewConeRangeNeutral;
         }
 
@@ -681,10 +659,10 @@ public class Enemy : MonoBehaviour, IAlertable
         }
     }
 
-    // ...
+    // Method for Attack BoxCast Wireframe Visualization
     protected virtual void AttackBoxWireframe() 
     {
-        if (!isAttacking)
+        if (canAttack)
             // Visualizes the BoxCast in the Scene View for debugging (uses the static class from DebugBoxCastbyArian.cs)
             DebugBoxCast.SimpleDrawBoxCast(raycastEmitter.transform.position, halfExtents, boxRotation, attackDirection, raycastLength, Color.red);
         else
