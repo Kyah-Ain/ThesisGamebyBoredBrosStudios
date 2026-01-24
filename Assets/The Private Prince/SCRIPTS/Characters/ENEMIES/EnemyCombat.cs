@@ -209,7 +209,5 @@ public class EnemyCombat : CombatManager
 
         // Calls the base Die method from Parent
         base.Die();
-
-        
     }
 }

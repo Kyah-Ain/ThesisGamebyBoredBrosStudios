@@ -17,22 +17,23 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
     [Header("KNOCKBACK MECHANICS")]
     public float knockBackEffect = 0.1f; // Default force applied to the victim during knockback
     public float smoothDuration = 0.2f; // Duration for smooth knockback effect
+
     public enum KnockbackMode { Enabled, Disabled }
     public KnockbackMode knockbackMode = KnockbackMode.Enabled;
-
     public enum KnockBackType { JAGGED, SMOOTH }
     public KnockBackType knockBackType = KnockBackType.SMOOTH;
-
-    // Interface implementation for IDamageable
-    public float iHealth { get => health; set => health = value; }
-    public float iMaxHealth { get => maxHealth; set => maxHealth = value; }
 
     [Header("DEAD SUBJECT")]
     public GameObject objectToKill;
 
-    //[Header("KNOCKBACK")]
-    //public bool enableKnockback = true;
-    //private CombatMomentum combatMomentum;
+    [Header("BOOLEANS")]
+    public bool isBlocking = true; // Indicates if the character is currently blocking
+    public bool canEvade = false; // Indicates if the character has been hit
+
+    // Interface implementation for IDamageable
+    public float iHealth { get => health; set => health = value; }
+    public float iMaxHealth { get => maxHealth; set => maxHealth = value; }
+    public bool iBlock { get => isBlocking; set => isBlocking = value; }
 
     // ------------------------- METHODS -------------------------
 
@@ -81,17 +82,26 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
     // Handles character taking damage
     public virtual void TakeDamage(int damage)
     {
-        Debug.Log($"Character Damaged: {gameObject.name}");
-
-        // Reduce health, ensuring it doesn't go below zero
-        health = Mathf.Max(0, health - damage);
-
-        Debug.Log($"Health after damage: {health}");
-
-        // Check for immediate death
-        if (health <= 0)
+        // Apply damage only if not blocking
+        if (!isBlocking)
         {
-            Debug.Log($"{gameObject.name} has been defeated!");
+            Debug.Log($"Character Damaged: {gameObject.name}");
+
+            // Reduce health, ensuring it doesn't go below zero
+            health = Mathf.Max(0, health - damage);
+
+            Debug.Log($"Health after damage: {health}");
+
+            // Check for immediate death
+            if (health <= 0)
+            {
+                Debug.Log($"{gameObject.name} has been defeated!");
+            }
+        }
+        else // If blocking, just register the hit without damage
+        {
+            // ...
+            isBlocking = false; // Reset blocking state after successful block
         }
     }
 

@@ -1,11 +1,13 @@
 using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
 using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject, Transform, Vector3, etc.
 
 [RequireComponent(typeof(CharacterController))] // Requires this GameObject to have a CharacterController component in order to function properly
 
-public class CharacterController2Point5D : MonoBehaviour
+public class CharacterController2Point5D : MonoBehaviour, ICombatable
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -21,6 +23,8 @@ public class CharacterController2Point5D : MonoBehaviour
 
     [Header("COMBAT ATTRIBUTES")]
     [SerializeField] private int attackDamage = 1; // Amount of damage dealt per attack
+    [SerializeField] protected float attackCooldown = 2.5f; // Amount of time between each attack
+    [SerializeField] protected float blockCooldown = 1f; // Amount of recovery time after blocking an attack
 
     [Header("INTERACTIONS")]
     [SerializeField] private Vector3 attackBoxCastSize = new Vector3(0.5f, 0.5f, 0.5f); // Defines the size of the attack box cast
@@ -37,6 +41,11 @@ public class CharacterController2Point5D : MonoBehaviour
     [Space(8f)] // Adds spacing in the Inspector
 
     [SerializeField] private GameObject interactIcon; // Icon that will pop up when near interactable object
+
+    [Header("BOOLEANS")]
+    [SerializeField] protected bool canAttack = true; // Indicates if the player can perform an attack
+    [SerializeField] protected bool canBlock = false; // Indicates if the player can perform a block
+    [SerializeField] protected bool hasHit = false; // Indicates if the player has hit something with its attack
 
     [Header("DIALOGUE")]
     [SerializeField] private DialogueUI dialogueUI; // Reference to the DialogueUI component for handling dialogues
@@ -96,8 +105,12 @@ public class CharacterController2Point5D : MonoBehaviour
         Move();
 
         // Simple Statement for Attack Key
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
             Attack();
+
+        // Simple Statement for Block Key
+        if (Input.GetButton("Fire2"))
+            Block();
 
         // Interact Key
         if (Input.GetKeyUp(KeyCode.E))
@@ -137,110 +150,167 @@ public class CharacterController2Point5D : MonoBehaviour
 
     #endregion
 
-    // ---------------------------- COMBATS ---------------------------
-    #region COMBAT LOGICS
-
-    // Handles raycasting for Interaction and Combat
-    protected virtual void Attack()
-    {
-        Debug.Log("Player performed attack");
-
-        // Gets the half dimension of the full attack box size
-        Vector3 halfExtents = attackBoxCastSize / 2f;
-
-        // Sets the direction the character is facing from the Sprite Renderer's flip logic
-        bool isFacingLeft = spriteRenderer.flipX;
-
-        // Gets the direction of which way the character should be attacking
-        Vector3 attackDirection = isFacingLeft ? Vector3.left : Vector3.right ;
-
-        // Sets the current rotation of the box to follow the character's rotation
-        Quaternion boxRotation = this.transform.rotation;
-
-        // Variable to store information about what the BoxCast has hit
-        RaycastHit hitInfo;
-
-        // Performs the BoxCast and stores whether it hit something or not (it only stores the first hit)
-        bool hasHit = Physics.BoxCast(
-            raycastEmitter.transform.position, // Starting Point
-            halfExtents, // HALF the box dimensions
-            attackDirection, // Direction on where to cast the box
-            out hitInfo, // Information about what was hit
-            boxRotation, // Current rotation of the box
-            raycastLength, // The max distance the boxCast could reach
-            ~exludedLayerMask // Layer Mask to filter unwanted targets
-        );
-
-        // Evaluates if the BoxCast has hit something
-        if (hasHit && hitInfo.collider.gameObject.CompareTag("Enemy")) 
-        {
-            // Transforms the hit object into a damageable object if it implements IDamageable
-            IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
-
-            // Transforms the hit object into a knockable object if it implements IKnockable
-            IKnockable knockable = hitInfo.collider.GetComponent<IKnockable>();
-
-            // 
-            if (damageable != null)
-            {
-                // ...
-                damageable.TakeDamage(attackDamage);
-
-                if (knockable != null)
-                {
-                    // Applies knockback to the target if it implements IKnockable
-                    knockable.KnockBack(this.transform, hitInfo.transform);
-                }
-            }
-        }
-
-        // Visualizes the BoxCast in the Scene View for debugging (uses the static class from DebugBoxCastbyArian.cs)
-        DebugBoxCast.SimpleDrawBoxCast(raycastEmitter.transform.position, halfExtents, boxRotation, attackDirection, raycastLength, Color.red);
-    }
-
-    #endregion
-
     // --------------------------- MOVEMENT ---------------------------
     #region MOVEMENT LOGICS
 
     // Method for Character Movement Logic
     public void Move()
     {
-        // Get's the Horizontal & Vertical Value from Unity's Input System
-        horizontal = Input.GetAxisRaw("Horizontal");
-        vertical = Input.GetAxisRaw("Vertical");
-
-        // Computes for the direction by merging horizontal & vertical positions
-        // - ".normalized" so that moving diagonally would make us not move faster
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-        // Evaluates if there is a movement
-        // ".magnitude" to compute for the distance 
-        if (direction.magnitude >= 0.1f)
+        if (canAttack) 
         {
-            // Animates the character when moving
-            //Animate("Input Magnitude", direction.magnitude, 0.05f, Time.deltaTime);
+            // Get's the Horizontal & Vertical Value from Unity's Input System
+            horizontal = Input.GetAxisRaw("Horizontal");
+            vertical = Input.GetAxisRaw("Vertical");
 
-            // Controls the "Character Controller" of a Unity game object
-            characController.Move(direction * movementSpeed * Time.deltaTime);
+            // Computes for the direction by merging horizontal & vertical positions
+            // - ".normalized" so that moving diagonally would make us not move faster
+            Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-            // Determines the direction the character is facing
-            if (horizontal < 0f)
+            // Evaluates if there is a movement
+            // ".magnitude" to compute for the distance 
+            if (direction.magnitude >= 0.1f)
             {
-                // Flips the sprite to face left if the horizontal input is negative
-                spriteRenderer.flipX = true;
+                // Animates the character when moving
+                //Animate("Input Magnitude", direction.magnitude, 0.05f, Time.deltaTime);
+
+                // Controls the "Character Controller" of a Unity game object
+                characController.Move(direction * movementSpeed * Time.deltaTime);
+
+                // Determines the direction the character is facing
+                if (horizontal < 0f)
+                {
+                    // Flips the sprite to face left if the horizontal input is negative
+                    spriteRenderer.flipX = true;
+                }
+                else if (horizontal > 0f)
+                {
+                    // Resets the sprite to face right if the horizontal input is positive 
+                    spriteRenderer.flipX = false;
+                }
             }
-            else if (horizontal > 0f)
+            else
             {
-                // Resets the sprite to face right if the horizontal input is positive 
-                spriteRenderer.flipX = false;
+                // Animates the character when NOT moving
+                //Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
             }
         }
-        else
+    }
+
+    #endregion
+
+    // ---------------------------- COMBATS ---------------------------
+    #region COMBAT LOGICS
+
+    // Handles raycasting for Interaction and Combat
+    public virtual void Attack()
+    {
+        if (canAttack) // Evaluates if the AI can perform an attack
         {
-            // Animates the character when NOT moving
-            //Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
+            Debug.Log("Player performed attack");
+
+            // Gets the half dimension of the full attack box size
+            Vector3 halfExtents = attackBoxCastSize / 2f;
+
+            // Sets the direction the character is facing from the Sprite Renderer's flip logic
+            bool isFacingLeft = spriteRenderer.flipX;
+
+            // Gets the direction of which way the character should be attacking
+            Vector3 attackDirection = isFacingLeft ? Vector3.left : Vector3.right;
+
+            // Sets the current rotation of the box to follow the character's rotation
+            Quaternion boxRotation = this.transform.rotation;
+
+            // Variable to store information about what the BoxCast has hit
+            RaycastHit hitInfo;
+
+            // Performs the BoxCast and stores whether it hit something or not (it only stores the first hit)
+            bool hasHit = Physics.BoxCast(
+                raycastEmitter.transform.position, // Starting Point
+                halfExtents, // HALF the box dimensions
+                attackDirection, // Direction on where to cast the box
+                out hitInfo, // Information about what was hit
+                boxRotation, // Current rotation of the box
+                raycastLength, // The max distance the boxCast could reach
+                ~exludedLayerMask // Layer Mask to filter unwanted targets
+            );
+
+            // Evaluates if the BoxCast has hit something
+            if (hasHit && hitInfo.collider.gameObject.CompareTag("Enemy"))
+            {
+                // Transforms the hit object into a damageable object if it implements IDamageable
+                IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
+
+                // Transforms the hit object into a knockable object if it implements IKnockable
+                IKnockable knockable = hitInfo.collider.GetComponent<IKnockable>();
+
+                // Checks if the hit object can take damage
+                if (damageable != null)
+                {
+                    // Prevents further attacks until cooldown is over
+                    canAttack = false;
+
+                    // Calls the coroutine that handles the attack sequence
+                    StartCoroutine(AttackSequence(damageable, knockable, hitInfo.transform, attackCooldown));
+                }
+            }
+
+            // Visualizes the BoxCast in the Scene View for debugging (uses the static class from DebugBoxCastbyArian.cs)
+            DebugBoxCast.SimpleDrawBoxCast(raycastEmitter.transform.position, halfExtents, boxRotation, attackDirection, raycastLength, Color.red);
         }
+    }
+
+    // Coroutine for handling the attack sequence with delay and cooldown
+    protected IEnumerator AttackSequence(IDamageable damageable, IKnockable knockable, Transform target, float cooldown)
+    {
+        // Initial delay for giving the program ample time to prepare for the attack computation
+        yield return new WaitForSeconds(0.25f);
+       
+        // Apply attack damage
+        damageable.TakeDamage(attackDamage);
+
+        // Checks if the hit object can be knocked
+        if (knockable != null)
+        {
+            // Applies knockback to the target if it implements IKnockable
+            knockable.KnockBack(this.transform, target);
+        }
+
+        // Attack Cooldown duration before apllying attack 
+        yield return new WaitForSeconds(cooldown);
+
+        // Reset attack status
+        canAttack = true;
+    }
+
+    // Method for Blocking Attacks Logic
+    public virtual void Block()
+    {
+        // Prevents further attacks occur during an attack
+        canAttack = false;
+
+        //Collider thisCollider = this.gameObject.GetComponent<Collider>();
+        IDamageable thisDamageable = this.GetComponent<IDamageable>();
+
+        // ...
+        if (thisDamageable.iBlock)
+        {
+            // ...
+            thisDamageable.iBlock = true; 
+        }
+        else 
+        {
+            StartCoroutine(BlockSequence(thisDamageable, blockCooldown));
+        }
+    }
+
+    // Coroutine for handling the blocking sequence with delay and cooldown
+    protected IEnumerator BlockSequence(IDamageable damageable, float cooldown)
+    {
+        // Shileding Cooldown duration after blocking an attack
+        yield return new WaitForSeconds(cooldown);
+
+        // ...
+        damageable.iBlock = true;
     }
 
     #endregion

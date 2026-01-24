@@ -5,6 +5,9 @@ public interface IDamageable
     public float iHealth { get; set; }
     public float iMaxHealth { get; set; }
 
+    public bool iBlock { get; set; }
+    //public bool iEvade { get; set; }
+
     //public float iDefense { get; set; }
 
     //public int iAttackDamage { get; set; }

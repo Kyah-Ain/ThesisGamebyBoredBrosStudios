@@ -2,7 +2,8 @@ using UnityEngine; // Grants access to Unity's core features like Datatypes, Dat
 
 public interface ICombatable
 {
-    // ------------------- REQUIREMENT VARIABLES -------------------------
+    // ------------------------- CONTRACTS -------------------------
 
-    //public int iAttack { get; set; }
+    public void Attack();
+    public void Block();
 }

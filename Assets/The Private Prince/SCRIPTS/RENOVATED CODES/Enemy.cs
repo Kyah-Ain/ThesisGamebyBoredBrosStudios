@@ -1,5 +1,7 @@
 using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
+using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject, Transform, Vector3, etc.
 using UnityEngine.AI; // Grants access to Unity's AI and Navigation system like enemyController, NavMesh, etc.
 
@@ -20,7 +22,7 @@ public class Enemy : MonoBehaviour, IAlertable
     [Header("AI DETECTION")]
     [SerializeField] protected GameObject[] players; // Array to hold references to all player game objects in the scene
     [SerializeField] protected Transform detectionTarget; // The current target that the AI is focused on (e.g., the player)
-    [SerializeField] LayerMask raycastObstacles; // LayerMask to define which layers can block the AI's line of sight
+    [SerializeField] protected LayerMask raycastObstacles; // LayerMask to define which layers can block the AI's line of sight
 
     [Header("AI ATTRIBUTES")]
     [SerializeField] protected float viewDistance = 10f; // How far the Enemy can see
@@ -32,7 +34,9 @@ public class Enemy : MonoBehaviour, IAlertable
 
     [Header("COMBAT ATTRIBUTES")]
     [SerializeField] protected int attackDamage = 1; // Amount of damage dealt per attack
-    [SerializeField] protected float attackCooldown = 5f; // Amount of time between each attack
+    [SerializeField] protected float attackCharge = 5f; // Amount of time to charge up the attack
+    [SerializeField] protected float attackCooldown = 2f; // Amount of time before the next attack can be performed
+    [SerializeField] protected LayerMask attackLayers; // LayerMask to define which layers can be hit by the attack
 
     [Header("AI STATES")]
     [SerializeField] protected EnemyState currentEnemyState = EnemyState.Neutral; // Default starting state of the AI
@@ -44,7 +48,6 @@ public class Enemy : MonoBehaviour, IAlertable
     protected bool isFacingLeft; // Direction the character is facing from Sprite Renderer's flip logic
     protected Vector3 attackDirection; // Direction of which way the character should be attacking
     protected Quaternion boxRotation; // Current rotation of the box to follow character's rotation
-    protected RaycastHit hitInfo; // Information about what the BoxCast has hit
 
     [Space(8f)]
 
@@ -384,6 +387,8 @@ public class Enemy : MonoBehaviour, IAlertable
             // Sets the current rotation of the box to follow the character's rotation
             boxRotation = this.transform.rotation;
 
+            RaycastHit hitInfo; // Information about what the BoxCast has hit
+
             // Performs the BoxCast and stores whether it hit something or not (it only stores the first hit)
             hasHit = Physics.BoxCast(
                 raycastEmitter.transform.position, // Starting Point
@@ -402,9 +407,6 @@ public class Enemy : MonoBehaviour, IAlertable
                 // Transforms the hit object into a damageable object if it implements IDamageable
                 IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
 
-                // Transforms the hit object into a knockable object if it implements IKnockable
-                IKnockable knockable = hitInfo.collider.GetComponent<IKnockable>();
-
                 // Evaluates if the hit object is damageable
                 if (damageable != null)
                 {
@@ -412,14 +414,14 @@ public class Enemy : MonoBehaviour, IAlertable
                     canAttack = false;
 
                     // Calls the coroutine that handles the attack sequence
-                    StartCoroutine(AttackSequence(damageable, knockable, hitInfo.transform, attackCooldown));
+                    StartCoroutine(AttackSequence(hitInfo.transform, attackCharge));
                 }
             }
         }
     }
 
     // Coroutine for handling the attack sequence with delay and cooldown
-    protected IEnumerator AttackSequence(IDamageable damageable, IKnockable knockable, Transform target, float cooldown)
+    protected IEnumerator AttackSequence(Transform target, float attackCharge)
     {
         // Initial delay for giving the program ample time to prepare for the attack computation
         yield return new WaitForSeconds(0.25f);
@@ -429,23 +431,33 @@ public class Enemy : MonoBehaviour, IAlertable
         enemyController.SetDestination(this.transform.position); // Ensures that Roaming Enemy would not patrol on Neutral
 
         // Attack Casting duration before apllying attack (e.g., anticipation time)
-        yield return new WaitForSeconds(cooldown);
+        yield return new WaitForSeconds(attackCharge);
 
         if (Physics.BoxCast(
             raycastEmitter.transform.position, // Starting Point
             halfExtents, // HALF the box dimensions
             attackDirection, // Direction on where to cast the box
-            out hitInfo, // Information about what was hit
+            out RaycastHit newHitInfo, // Information about what was hit
             boxRotation, // Current rotation of the box
-            raycastLength // The max distance the boxCast could reach
+            raycastLength, // The max distance the boxCast could reach
+            attackLayers // Layers that the BoxCast can hit
         )) 
         {
-            // Apply attack damage
-            damageable.TakeDamage(attackDamage);
+            // Transforms the hit object into a damageable object if it implements IDamageable
+            IDamageable damageable = newHitInfo.collider.GetComponent<IDamageable>();
+            IKnockable knockable = newHitInfo.collider.GetComponent<IKnockable>();
 
-            // Apply attack's knockback effect
-            if (knockable != null)
+            if (damageable != null) 
             {
+                // Evaluates if the player should take damage or blocked it
+                if (!damageable.iBlock)
+                    // Apply attack damage
+                    damageable.TakeDamage(attackDamage);
+                else
+                    // Apply the damage to remove blocking state instead
+                    damageable.iBlock = false;
+
+                // Apply attack's knockback effect
                 knockable.KnockBack(this.transform, target);
             }
         }
@@ -455,6 +467,9 @@ public class Enemy : MonoBehaviour, IAlertable
         {
             SwitchState(EnemyState.Chase);
         }
+
+        // ...
+        yield return new WaitForSeconds(attackCooldown);
 
         // Reset attack status
         canAttack = true;
