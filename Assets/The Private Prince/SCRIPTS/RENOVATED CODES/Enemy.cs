@@ -449,16 +449,22 @@ public class Enemy : MonoBehaviour, IAlertable
 
             if (damageable != null) 
             {
-                // Evaluates if the player should take damage or blocked it
-                if (!damageable.iBlock)
-                    // Apply attack damage
-                    damageable.TakeDamage(attackDamage);
-                else
-                    // Apply the damage to remove blocking state instead
-                    damageable.iBlock = false;
+                // Apply attack damage
+                damageable.TakeDamage(attackDamage);
 
                 // Apply attack's knockback effect
                 knockable.KnockBack(this.transform, target);
+
+                #region UNFINISHED EVvasion Logic
+                //// Evaluates if the player should take damage or blocked it
+                //if (!damageable.iBlock)
+                //    // Apply attack damage
+                //    damageable.TakeDamage(attackDamage);
+                //else
+                //    // Apply the damage to remove blocking state instead
+                //    damageable.iBlock = false;
+
+                #endregion
             }
         }
 

@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: 3966252768394296201}
   - component: {fileID: 8270497237287564895}
   - component: {fileID: 98475479507859717}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: 'Body Collider | Default '
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -189,6 +189,7 @@ MonoBehaviour:
   vertical: 0
   movementSpeed: 6
   attackDamage: 1
+  attackCooldown: 0.25
   attackBoxCastSize: {x: 0.5, y: 0.5, z: 0.5}
   interactionBoxSize: {x: 0.1, y: 1, z: 0.5}
   obstacleLayer:
@@ -200,6 +201,9 @@ MonoBehaviour:
   raycastEmitter: {fileID: 2589686137595296405}
   raycastLength: 2
   interactIcon: {fileID: 0}
+  canAttack: 1
+  canMove: 1
+  hasHit: 0
   dialogueUI: {fileID: 0}
 --- !u!114 &8270497237287564895
 MonoBehaviour:

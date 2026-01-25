@@ -325,14 +325,17 @@ MonoBehaviour:
   maxChaseDuration: 3
   chaseDuration: 0
   attackDamage: 1
+  attackCharge: 5
   attackCooldown: 5
+  attackLayers:
+    serializedVersion: 2
+    m_Bits: 128
   currentEnemyState: 0
   attackBoxCastSize: {x: 0.5, y: 0.5, z: 0.5}
   raycastEmitter: {fileID: 2671016166845767810}
   raycastLength: 2
   hasBeenAlerted: 0
   canAttack: 1
-  isAttacking: 0
   hasHit: 0
   viewConeStrokeWidth: 0.05
   viewConeWireframe: {fileID: 8393465135046266509}
@@ -341,10 +344,16 @@ MonoBehaviour:
   viewConeRangeAlerted: {fileID: 2100000, guid: 3f4f3d8b16da4f44ea42a40b9eaa2527,
     type: 2}
   detectionVisualStatus: 0
-  patrolStations: []
+  patrolStations:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   currentPatrolIndex: 0
   arrivalThreshold: 1
   aoeRadius: 8
+  skillsCooldown: 20
+  isSkillActive: 1
 --- !u!114 &8512082008099931494
 MonoBehaviour:
   m_ObjectHideFlags: 0

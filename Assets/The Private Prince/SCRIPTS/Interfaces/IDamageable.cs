@@ -5,7 +5,7 @@ public interface IDamageable
     public float iHealth { get; set; }
     public float iMaxHealth { get; set; }
 
-    public bool iBlock { get; set; }
+    //public bool iBlock { get; set; }
     //public bool iEvade { get; set; }
 
     //public float iDefense { get; set; }
@@ -15,7 +15,6 @@ public interface IDamageable
     // ------------------------- CONTRACTS -------------------------
 
     public void Die();
-    //public void TakeDamage();
     public void TakeDamage(int damage);
     public void Heal();
 }
