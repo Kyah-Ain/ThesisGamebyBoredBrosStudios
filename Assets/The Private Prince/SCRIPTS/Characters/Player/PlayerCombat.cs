@@ -107,19 +107,10 @@ public class PlayerCombat : CombatManager
     }
 
     // Method to Take damage and Update the Player's hearts
-    public override void TakeDamage(int damage)
+    public override void TakeDamage(int damage, bool isUnavoidable = false)
     {
-        // ...
-        if (PlayerController3D.isBlocking)
-        {
-            // Turn this on if you changed the blocking logic to "Instance" instead of "Continous"
-            //PlayerController3D.isBlocking = false;
-
-            return; // Exits the method immediately ignoring the rest
-        }
-
         // The rest ...
-        base.TakeDamage(damage);
+        base.TakeDamage(damage, isUnavoidable);
         UpdateHeartsUI();
         //ModifyHeartsUI();
     }

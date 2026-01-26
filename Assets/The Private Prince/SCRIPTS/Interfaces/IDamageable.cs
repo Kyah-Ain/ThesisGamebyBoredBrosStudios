@@ -17,6 +17,6 @@ public interface IDamageable
     // ------------------------- CONTRACTS -------------------------
 
     public void Die();
-    public void TakeDamage(int damage);
+    public void TakeDamage(int damage, bool isUnavoidable = false);
     public void Heal();
 }

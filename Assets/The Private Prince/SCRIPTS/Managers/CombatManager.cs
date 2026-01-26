@@ -29,8 +29,8 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
     [Header("BOOLEANS")]
     public bool isVulnerable = true;
 
-    //public bool isBlocking = false; // Indicates if the character is currently blocking
-    //public bool canEvade = false; // Indicates if the character has been hit
+    [Header("COUNTER ATTRIBUTES")]
+    public float timer = 0f; // ...
 
     // Interface implementation for IDamageable
     //public bool iBlock { get => isBlocking; set => isBlocking = value; }
@@ -84,9 +84,9 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
     }
 
     // Handles character taking damage
-    public virtual void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage, bool isUnavoidable = false)
     {
-        if (!isVulnerable) return;
+        if (!isVulnerable && !isUnavoidable) return;
 
         Debug.Log($"Character Damaged: {gameObject.name}");
 
@@ -177,16 +177,16 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
         target.position = targetPosition;
     }
 
-    //// ...
-    //public bool inCooldown() 
-    //{
-    //    timer -= Time.fixedDeltaTime;
+    // ...
+    public bool inCooldown()
+    {
+        timer -= Time.fixedDeltaTime;
 
-    //    if (timer <= 0)
-    //        return false;
+        if (timer <= 0)
+            return false;
 
-    //    return true;
-    //}
+        return true;
+    }
 
     // Handles character healing over time
     public virtual void Heal()
