@@ -26,7 +26,9 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
     [Header("DEAD SUBJECT")]
     public GameObject objectToKill;
 
-    //[Header("BOOLEANS")]
+    [Header("BOOLEANS")]
+    public bool isVulnerable = true;
+
     //public bool isBlocking = false; // Indicates if the character is currently blocking
     //public bool canEvade = false; // Indicates if the character has been hit
 
@@ -34,6 +36,8 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
     //public bool iBlock { get => isBlocking; set => isBlocking = value; }
     public float iHealth { get => health; set => health = value; }
     public float iMaxHealth { get => maxHealth; set => maxHealth = value; }
+
+    public bool iVulnerable { get => isVulnerable; set => isVulnerable = value ; }
 
     // ------------------------- METHODS -------------------------
 
@@ -82,6 +86,8 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
     // Handles character taking damage
     public virtual void TakeDamage(int damage)
     {
+        if (!isVulnerable) return;
+
         Debug.Log($"Character Damaged: {gameObject.name}");
 
         // Reduce health, ensuring it doesn't go below zero
@@ -170,6 +176,17 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
 
         target.position = targetPosition;
     }
+
+    //// ...
+    //public bool inCooldown() 
+    //{
+    //    timer -= Time.fixedDeltaTime;
+
+    //    if (timer <= 0)
+    //        return false;
+
+    //    return true;
+    //}
 
     // Handles character healing over time
     public virtual void Heal()

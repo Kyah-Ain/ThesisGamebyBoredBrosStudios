@@ -45,8 +45,8 @@ public class CharacterController2Point5D : MonoBehaviour
     [Header("BOOLEANS")]
     [SerializeField] protected bool canAttack = true; // Indicates if the player can perform an attack
     [SerializeField] protected bool canMove = true; // Indicates if the player can move
-    //[SerializeField] protected bool canBlock = false; // Indicates if the player can perform a block
     [SerializeField] protected bool hasHit = false; // Indicates if the player has hit something with its attack
+    [SerializeField] protected bool isBlocking = false; // ...
 
     [Header("DIALOGUE")]
     [SerializeField] private DialogueUI dialogueUI; // Reference to the DialogueUI component for handling dialogues
@@ -113,14 +113,26 @@ public class CharacterController2Point5D : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.E))
             CheckInteraction();
 
-        #region UNFINISHED Logicl Call System...
-        //// Simple Statement for Block Key
-        //if (Input.GetButton("Fire2"))
-        //    Block();
-        //else
-        //    canAttack = true;
+        // Simple Statement for Block Key
+        if (Input.GetButton("Fire2")) 
+        {
+            Block();
+        }
+        else if (isBlocking)
+        {
+            // ...
+            IDamageable thisDamageable = this.GetComponent<IDamageable>();
 
-        #endregion
+            // ...
+            thisDamageable.iVulnerable = true;
+
+            // ...
+            isBlocking = false;
+
+            // ...
+            canAttack = true;
+            canMove = true;
+        }
     }
 
     #endregion
@@ -284,42 +296,20 @@ public class CharacterController2Point5D : MonoBehaviour
         canMove = true;
     }
 
-    #endregion
+    // Method for Blocking Attacks Logic
+    public virtual void Block()
+    {
+        // ...
+        canMove = false;
+        canAttack = false;
+        isBlocking = true;
 
-    #region UNFINISHED Block Logic...
-    //// Method for Blocking Attacks Logic
-    //public virtual void Block()
-    //{
-    //    if (!canAttack) return;
+        //Collider thisCollider = this.gameObject.GetComponent<Collider>();
+        IDamageable thisDamageable = this.GetComponent<IDamageable>();
 
-    //    // Prevents further attacks occur during an attack
-    //    canAttack = false;
-
-    //    //Collider thisCollider = this.gameObject.GetComponent<Collider>();
-    //    IDamageable thisDamageable = this.GetComponent<IDamageable>();
-
-    //    thisDamageable.iBlock = true;
-
-        //if (!thisDamageable.iBlock) 
-        //{
-        //    // Longer block recovery if received an attack
-        //    StartCoroutine(BlockSequence(thisDamageable, blockCooldown));
-
-        //    return;
-        //}
-
-        //// ...
-        //if (thisDamageable.iBlock)
-        //{
-        //    // Faster block recovery if haven't blocked an attack yet
-        //    StartCoroutine(BlockSequence(thisDamageable, 0.75f));
-        //}
-        //else 
-        //{
-        //    // Longer block recovery if received an attack
-        //    StartCoroutine(BlockSequence(thisDamageable, blockCooldown));
-        //}
-    //}
+        // ...
+        thisDamageable.iVulnerable = false;
+    }
 
     //// Coroutine for handling the blocking sequence with delay and cooldown
     //protected IEnumerator BlockSequence(IDamageable damageable, float cooldown)
