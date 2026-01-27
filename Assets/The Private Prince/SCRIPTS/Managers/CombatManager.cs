@@ -3,7 +3,7 @@ using System.Collections.Generic; // Grants access to collections structures lik
 using UnityEngine; // Grants access to Unity's core features like Data types, DateTime, Math, and Debug
 using System; // Grants access to base system functions and data types
 
-public class CombatManager : MonoBehaviour, IDamageable, IKnockable
+public class CombatManager : MonoBehaviour, IDamageable, IKnockable, ICooldownable
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -28,16 +28,22 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
 
     [Header("BOOLEANS")]
     public bool isVulnerable = true;
+    public bool onCooldown = false;
 
     [Header("COUNTER ATTRIBUTES")]
     public float timer = 0f; // ...
 
     // Interface implementation for IDamageable
-    //public bool iBlock { get => isBlocking; set => isBlocking = value; }
     public float iHealth { get => health; set => health = value; }
     public float iMaxHealth { get => maxHealth; set => maxHealth = value; }
 
     public bool iVulnerable { get => isVulnerable; set => isVulnerable = value ; }
+
+    // Interface implementation for ICooldownable
+    public bool isCooldown { get => onCooldown; set => onCooldown = value; }
+    public float cooldown { get => timer; set => timer = value; }
+
+
 
     // ------------------------- METHODS -------------------------
 
@@ -178,12 +184,29 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable
     }
 
     // ...
-    public bool inCooldown()
+    public bool isInCooldown(float duration)
     {
-        timer -= Time.fixedDeltaTime;
+        if (!onCooldown) 
+        {
+            Debug.Log("Combat Manager LINE 191: Timer Has Been Re-Started");
 
-        if (timer <= 0)
+            onCooldown = true;
+            timer = duration;
+        }
+
+        timer -= Time.deltaTime;
+
+        if (timer <= 0f) 
+        {
+            Debug.Log("Combat Manager LINE 201: Timer Has Reached the Final Value (0)");
+
+            timer = 0f;
             return false;
+
+            // NOTE: You need to set 'onCooldown = false' on the else of the script who would use this 
+        }
+
+        Debug.Log("Combat Manager LINE 209: Timer Has Not Yet Reached the Final Value (0)");
 
         return true;
     }
