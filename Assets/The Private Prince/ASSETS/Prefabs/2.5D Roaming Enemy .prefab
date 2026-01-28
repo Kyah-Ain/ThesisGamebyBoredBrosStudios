@@ -46,10 +46,11 @@ GameObject:
   - component: {fileID: 3077135357525590443}
   - component: {fileID: 6995036690194690335}
   - component: {fileID: 9092045993381248799}
+  - component: {fileID: 6113833357083455826}
   - component: {fileID: 4471650421354797194}
   - component: {fileID: 6436064566427896557}
-  - component: {fileID: 6113833357083455826}
   - component: {fileID: 7679628401484371018}
+  - component: {fileID: 6982365521400924746}
   m_Layer: 8
   m_Name: 'Body Collider | Roaming Enemy '
   m_TagString: Enemy
@@ -190,6 +191,18 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6113833357083455826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2468223935351388383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70129ff103c58444e98b74e6ecb296d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4471650421354797194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,11 +229,18 @@ MonoBehaviour:
   maxChaseDuration: 3
   chaseDuration: 0
   attackDamage: 1
+  attackCharge: 5
+  attackCooldown: 2
+  attackLayers:
+    serializedVersion: 2
+    m_Bits: 0
   currentEnemyState: 0
   attackBoxCastSize: {x: 0.5, y: 0.5, z: 0.5}
   raycastEmitter: {fileID: 8682931311284626320}
   raycastLength: 2
   hasBeenAlerted: 0
+  canAttack: 1
+  hasHit: 0
   viewConeStrokeWidth: 0.05
   viewConeWireframe: {fileID: 7679628401484371018}
   viewConeRangeNeutral: {fileID: 2100000, guid: 0fce02c6bd844f5419514868f625c283,
@@ -255,18 +275,9 @@ MonoBehaviour:
   knockbackMode: 0
   knockBackType: 1
   objectToKill: {fileID: 2423903921362733658}
---- !u!114 &6113833357083455826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2468223935351388383}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70129ff103c58444e98b74e6ecb296d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  isVulnerable: 1
+  onCooldown: 0
+  timer: 0
 --- !u!120 &7679628401484371018
 LineRenderer:
   serializedVersion: 2
@@ -371,6 +382,37 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &6982365521400924746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2468223935351388383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 1479372276
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.33333334
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: ea8ac18acfe08224fb376007af7bd075, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &3182822301931991795
 GameObject:
   m_ObjectHideFlags: 0
