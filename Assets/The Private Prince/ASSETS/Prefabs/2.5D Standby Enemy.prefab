@@ -184,11 +184,18 @@ MonoBehaviour:
   maxChaseDuration: 3
   chaseDuration: 0
   attackDamage: 1
+  attackCharge: 5
+  attackCooldown: 2
+  attackLayers:
+    serializedVersion: 2
+    m_Bits: 0
   currentEnemyState: 0
   attackBoxCastSize: {x: 0.5, y: 0.5, z: 0.5}
   raycastEmitter: {fileID: 7467450473983168689}
   raycastLength: 2
   hasBeenAlerted: 0
+  canAttack: 1
+  hasHit: 0
   viewConeStrokeWidth: 0.05
   viewConeWireframe: {fileID: 5380684832986509411}
   viewConeRangeNeutral: {fileID: 2100000, guid: 0fce02c6bd844f5419514868f625c283,
@@ -216,6 +223,9 @@ MonoBehaviour:
   knockbackMode: 0
   knockBackType: 1
   objectToKill: {fileID: 1823345074688980610}
+  isVulnerable: 1
+  onCooldown: 0
+  timer: 0
 --- !u!114 &7299124483559402048
 MonoBehaviour:
   m_ObjectHideFlags: 0
