@@ -183,48 +183,109 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    // Enhanced method to handle NavMeshAgent setup and positioning - UPDATED
+    // Enhanced method to handle NavMeshAgent setup and positioning - FIXED VERSION
     private void SetupNavMeshEnemy(GameObject enemy, Vector3 position, Quaternion rotation, Transform spawnPoint)
     {
         // Get the NavMeshAgent component if it exists
         NavMeshAgent agent = enemy.GetComponentInChildren<NavMeshAgent>();
+
         if (agent != null)
         {
-            // Ensure agent is enabled and use Warp for proper NavMesh positioning
-            agent.enabled = true;
-            agent.Warp(position);
-            agent.transform.rotation = rotation;
-            agent.isStopped = false;
-            agent.ResetPath();
+            // DEBUG: Log agent settings to understand the issue
+            Debug.Log($"[DEBUG] Agent: {enemy.name}, Radius: {agent.radius}, Height: {agent.height}, BaseOffset: {agent.baseOffset}");
 
-            // CRITICAL FIX: Set the NPC's origin place to the spawn point
+            // CRITICAL: FIRST disable the agent to prevent NavMesh conflicts
+            agent.enabled = false;
+
+            // Get the actual Y position we need based on agent's base offset
+            // NavMesh returns surface position, we need to offset by baseOffset
+            float targetY = position.y + agent.baseOffset;
+            Vector3 adjustedPosition = new Vector3(position.x, targetY, position.z);
+
+            // Set the transform position directly (while agent is disabled)
+            enemy.transform.position = adjustedPosition;
+            enemy.transform.rotation = rotation;
+
+            // NOW re-enable the agent
+            agent.enabled = true;
+
+            // Use Warp to properly place on NavMesh with correct height
+            bool warped = agent.Warp(adjustedPosition);
+
+            if (!warped)
+            {
+                Debug.LogWarning($"Failed to warp {enemy.name} at {adjustedPosition}. Trying fallback...");
+
+                // Fallback: Simple position adjustment
+                enemy.transform.position = adjustedPosition;
+
+                // Wait one frame and check if on NavMesh
+                StartCoroutine(CheckNavMeshAfterFrame(agent, enemy.name));
+            }
+
+            // IMPORTANT: Remove any call to agent.Resume() - it's deprecated
+            // Use isStopped = false instead
+            agent.isStopped = false;
+
+            // Check if agent is on NavMesh before resetting path
+            if (agent.isOnNavMesh)
+            {
+                // Optional: Reset path if needed
+                // agent.ResetPath();
+            }
+            else
+            {
+                Debug.LogWarning($"{enemy.name} not on NavMesh after positioning!");
+            }
+
+            // Set NPC origin
             NPCEnemyBehaviour npcBehaviour = enemy.GetComponentInChildren<NPCEnemyBehaviour>();
             if (npcBehaviour != null)
             {
                 npcBehaviour.npcOriginPlace = spawnPoint;
-                Debug.Log($"Set {enemy.name} origin to {spawnPoint.name} at position {spawnPoint.position}");
+                if (enableDebugLogs)
+                {
+                    Debug.Log($"Set {enemy.name} origin to {spawnPoint.name}");
+                }
             }
 
             if (enableDebugLogs)
             {
-                Debug.Log($"NavMeshAgent positioned at: {agent.transform.position}, OnNavMesh: {agent.isOnNavMesh}");
+                Debug.Log($"NavMeshAgent positioned at: {enemy.transform.position}, OnNavMesh: {agent.isOnNavMesh}");
             }
         }
         else
         {
-            // Fallback positioning for enemies without NavMeshAgent
+            // Fallback for enemies without NavMeshAgent
             enemy.transform.position = position;
             enemy.transform.rotation = rotation;
 
-            // CRITICAL FIX: Set the NPC's origin place to the spawn point
             NPCEnemyBehaviour npcBehaviour = enemy.GetComponentInChildren<NPCEnemyBehaviour>();
             if (npcBehaviour != null)
             {
                 npcBehaviour.npcOriginPlace = spawnPoint;
-                Debug.Log($"Set {enemy.name} origin to {spawnPoint.name} at position {spawnPoint.position}");
             }
 
-            Debug.LogWarning($"Enemy {enemy.name} has no NavMeshAgent, using direct positioning");
+            Debug.LogWarning($"{enemy.name} has no NavMeshAgent");
+        }
+    }
+
+    // Helper coroutine to check NavMesh status
+    private IEnumerator CheckNavMeshAfterFrame(NavMeshAgent agent, string enemyName)
+    {
+        yield return null; // Wait one frame
+
+        if (agent != null)
+        {
+            if (!agent.isOnNavMesh)
+            {
+                Debug.LogError($"{enemyName} still not on NavMesh after frame delay!");
+
+                // Try one more time with a different approach
+                agent.enabled = false;
+                yield return null;
+                agent.enabled = true;
+            }
         }
     }
 

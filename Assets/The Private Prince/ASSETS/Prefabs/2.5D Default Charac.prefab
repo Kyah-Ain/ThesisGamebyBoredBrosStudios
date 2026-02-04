@@ -65,7 +65,7 @@ Transform:
   m_GameObject: {fileID: 3867168576865684152}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 26, y: 2.25, z: -2}
+  m_LocalPosition: {x: 26, y: 1.5, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -204,6 +204,7 @@ MonoBehaviour:
   canAttack: 1
   canMove: 1
   hasHit: 0
+  isBlocking: 0
   dialogueUI: {fileID: 0}
 --- !u!114 &8270497237287564895
 MonoBehaviour:
@@ -225,6 +226,9 @@ MonoBehaviour:
   knockbackMode: 0
   knockBackType: 1
   objectToKill: {fileID: 138012989474794772}
+  isVulnerable: 1
+  onCooldown: 0
+  timer: 0
 --- !u!114 &98475479507859717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,7 +460,7 @@ Transform:
   m_GameObject: {fileID: 8212879722033893711}
   serializedVersion: 2
   m_LocalRotation: {x: 0.046443988, y: -0, z: -0, w: 0.9989209}
-  m_LocalPosition: {x: 26, y: 2.9778774, z: -5.7068596}
+  m_LocalPosition: {x: 26, y: 2.2278767, z: -5.7068596}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -66,7 +66,7 @@ Transform:
   m_GameObject: {fileID: 2468223935351388383}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -176,9 +176,9 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2468223935351388383}
   m_Enabled: 1
-  m_AgentTypeID: 0
+  m_AgentTypeID: 1479372276
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 1
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 0
@@ -232,7 +232,7 @@ MonoBehaviour:
   attackCooldown: 2
   attackLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   currentEnemyState: 0
   attackBoxCastSize: {x: 0.5, y: 0.5, z: 0.5}
   raycastEmitter: {fileID: 8682931311284626320}
@@ -247,13 +247,11 @@ MonoBehaviour:
   viewConeRangeAlerted: {fileID: 2100000, guid: 3f4f3d8b16da4f44ea42a40b9eaa2527,
     type: 2}
   detectionVisualStatus: 0
-  patrolStations:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  patrolStations: []
   currentPatrolIndex: 0
   arrivalThreshold: 1
+  patrolRadius: 10
+  maxNavMeshAttempts: 5
 --- !u!114 &6436064566427896557
 MonoBehaviour:
   m_ObjectHideFlags: 0
