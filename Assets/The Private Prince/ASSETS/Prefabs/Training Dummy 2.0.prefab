@@ -86,7 +86,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 3.579888, z: 1.75}
+  m_Size: {x: 1, y: 3.579888, z: 3}
   m_Center: {x: 0, y: -0.3649441, z: 0}
 --- !u!65 &7218362567124824487
 BoxCollider:
@@ -136,11 +136,14 @@ MonoBehaviour:
   health: 1000000
   maxHealth: 1000000
   healRate: 1000000
-  knockBackEffect: 2
+  knockBackEffect: 1
   smoothDuration: 0.2
   knockbackMode: 0
   knockBackType: 1
   objectToKill: {fileID: 7668657924700545163}
+  isVulnerable: 1
+  onCooldown: 0
+  timer: 0
   navMeshAgent: {fileID: 0}
   enemyBehaviour: {fileID: 0}
   isBeingAttacked: 0
