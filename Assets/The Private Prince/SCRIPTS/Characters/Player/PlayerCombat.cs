@@ -8,10 +8,13 @@ public class PlayerCombat : CombatManager
 {
     // ------------------------- VARIABLES -------------------------
 
-    [Header("Script Reference")]
+    [Header("REFERNCES")]
     public PlayerController3D PlayerController3D; // ...
 
-    [Header("UI Settings")]
+    // TEMPORARY: Might be deleted later
+    public string defaultSceneToLoad = "INPUT HERE YOUR DEFAULT SCENE NAME...";
+
+    [Header("UI SETTINGS")]
     public Image[] heartsLeft;
     public HeartDisplayMode heartMode = HeartDisplayMode.Simple;
     public enum HeartDisplayMode
@@ -132,7 +135,7 @@ public class PlayerCombat : CombatManager
         // ...
         if (GameManager.Instance != null) 
         {
-            GameManager.Instance.LoadLevel();
+            GameManager.Instance.LoadScene(defaultSceneToLoad);
         }
     }
 }

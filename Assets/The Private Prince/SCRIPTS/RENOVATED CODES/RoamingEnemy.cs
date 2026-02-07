@@ -18,7 +18,7 @@ public class RoamingEnemy : Enemy
     protected Vector3 currentDestination; // Current destination position
 
     // ------------------------- PARENT METHODS -----------------------
-    #region UNITY LOGICS
+    #region OVERRIDE LOGICS
 
     // Awake is called before all frame updates
     protected override void Awake()
@@ -89,7 +89,10 @@ public class RoamingEnemy : Enemy
         }
     }
 
-    // -------------------------- PATROL LOGIC -------------------------
+    #endregion
+
+    // -------------------------- PATROL METHODS -------------------------
+    #region PATROL LOGICS
 
     // Gets the next destination (patrol station or random point)
     protected void GetNextDestination()

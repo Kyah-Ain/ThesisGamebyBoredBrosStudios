@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
     public LevelManager levelManager; // Reference to the SaveManager.cs that handles saving and loading levels
     public ActivationManager activationManager; // Reference to the PanelManager.cs that handles UI panels and prompts
 
-    [Header("Scene Reference")]
-    public string levelToLoad; // Reference to the scene that will be loaded 
+    //[Header("Scene Reference")]
+    //public string defaultSceneToLoad = "INPUT HERE YOUR DEFAULT SCENE NAME"; // Reference to the scene that will be loaded 
 
     // ---------------------------- METHODS ---------------------------
 
@@ -40,44 +40,39 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Method ...
-    public void StartNewGame() 
+    // Method to start a new game
+    public void StartNewGame(string startingSceneName = null) 
     {
+        // Evaluate if the player has already played at least one level by checking the highest level reached
         if (levelManager.highestLevel > 1)
         {
             activationManager.Activate(); // Open the prompt panel to confirm starting a new game
         }
-        else 
+        else // If the player has not played any levels yet, we can directly start a new game without confirmation
         {
             ResetGame(); // Reset the game if no levels have been played yet
-            LoadLevel(); // Loads a level (best to direct at level 1)
+            LoadScene(startingSceneName); // Loads a specific Unity scene 
         }
     }
 
-    // Method that loads a specified level
-    public void LoadLevel() 
+    // Method that loads a specific Unity scene by its name (which can be set in the Inspector)
+    public void LoadScene(string levelSceneName = null) 
     {
-        if (levelToLoad != null)
+        // Evaluates if the scene name isn't a null default name
+        if (levelSceneName != null)
         {
-            SceneManager.LoadScene(levelToLoad); // Load the specified scene by its name
+            SceneManager.LoadScene(levelSceneName); // Load the specified scene by its name
         }
-        else 
+        else // Prompt an error if the scene name is not set in the Inspector
         {
             Debug.LogError("Scene to load is not specified!"); // Log an error if the scene name is not set
         }
     }
 
     // Method that quickly loads the player to the last level played
-    public void LoadLastLevel()
+    public void LoadLastScene()
     {
-        if (levelToLoad != null)
-        {
-            SceneManager.LoadScene($"Level_{levelManager.lastLevel}"); // Load the last level played by the player
-        }
-        else
-        {
-            Debug.LogError("There is no record of progress playing the game..."); // Log an error if the scene name is not set
-        }
+        SceneManager.LoadScene($"Level_{levelManager.lastLevel}"); // Load the last level played by the player
     }
 
     // Method to reset the game progress back to zero
@@ -91,10 +86,5 @@ public class GameManager : MonoBehaviour
     public void QuitGame() 
     {
         Application.Quit(); // Quit the application
-    }
-
-    public void LoadPuzzleLevel()
-    {
-        SceneManager.LoadScene("Mechanics Demo Test");
     }
 }
