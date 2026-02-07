@@ -21,6 +21,12 @@ public class CharacterController2Point5D : MonoBehaviour
     [SerializeField] private float vertical; // Placeholder for vertical movement inputs
     [SerializeField] private float movementSpeed = 6f; // Speed at which the character moves
 
+    [Space]
+
+    [SerializeField] private float gravity = -9.81f; // Gravity force applied to the character (Earth based gravity)
+    [SerializeField] private float gravityMultiplier = 3f; // Multiplier to increase the effect of gravity for a more grounded feel
+    [SerializeField] private float freefallVelocity = 0f; // Current vertical velocity of the character for applying gravity and simulating freefall
+
     [Header("COMBAT ATTRIBUTES")]
     [SerializeField] private int attackDamage = 1; // Amount of damage dealt per attack
     [SerializeField] protected float attackCooldown = 0.25f; // Amount of time between each attack
@@ -174,6 +180,13 @@ public class CharacterController2Point5D : MonoBehaviour
     // Method for Character Movement Logic
     public void Move()
     {
+        if (characController.isGrounded)
+        {
+            freefallVelocity = -1.0f; // Resets vertical velocity when grounded
+        }
+
+        freefallVelocity += gravity * gravityMultiplier * Time.deltaTime;
+
         if (!canMove) return;
 
         // Get's the Horizontal & Vertical Value from Unity's Input System
@@ -182,7 +195,7 @@ public class CharacterController2Point5D : MonoBehaviour
 
         // Computes for the direction by merging horizontal & vertical positions
         // - ".normalized" so that moving diagonally would make us not move faster
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+        Vector3 direction = new Vector3(horizontal, freefallVelocity, vertical).normalized;
 
         // Evaluates if there is a movement
         // ".magnitude" to compute for the distance 

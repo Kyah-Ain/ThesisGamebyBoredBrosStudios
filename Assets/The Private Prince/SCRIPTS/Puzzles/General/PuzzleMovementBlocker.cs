@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MovementManager))]
+//[RequireComponent(typeof(MovementManager))]
 public class PuzzleMovementBlocker : MonoBehaviour
 {
-    private MovementManager movementManager;
+    //private MovementManager movementManager;
     private CharacterController characterController;
 
     private void Awake()
     {
-        movementManager = GetComponent<MovementManager>();
+        //movementManager = GetComponent<MovementManager>();
         characterController = GetComponent<CharacterController>();
-        if (movementManager == null)
-            Debug.LogError("PuzzleMovementBlocker requires a MovementManager component on the same GameObject.");
+        //if (movementManager == null)
+        //    Debug.LogError("PuzzleMovementBlocker requires a MovementManager component on the same GameObject.");
     }
 
     private void OnEnable()
@@ -55,51 +55,60 @@ public class PuzzleMovementBlocker : MonoBehaviour
     private void Update()
     {
         var pm = PuzzleManager.Instance;
+
         if (pm == null) return;
 
         if (pm.State == PuzzleState.InProgress)
         {
-            if (movementManager != null && movementManager.canMove == true)
-            {
-                movementManager.canMove = false;
-                ZeroOutMovement();
-            }
+            Time.timeScale = 0f; // Pause the game
+
+            //if (movementManager != null && movementManager.canMove == true)
+            //{
+            //    movementManager.canMove = false;
+            //    ZeroOutMovement();
+            //}
         }
         else
         {
-            if (movementManager != null && movementManager.canMove == false)
-            {
-                movementManager.canMove = true;
-            }
-            return;
+            Time.timeScale = 1f; // Resume the game
+
+            //if (movementManager != null && movementManager.canMove == false)
+            //{
+            //    movementManager.canMove = true;
+            //}
+            //return;
         }
     }
 
     private void OnPuzzleStarted(PuzzleBase puzzle)
     {
-        if (movementManager != null)
-        {
-            movementManager.canMove = false;
-            ZeroOutMovement();
-        }
+        Time.timeScale = 0f; // Pause the game
+
+        //if (movementManager != null)
+        //{
+        //    movementManager.canMove = false;
+        //    ZeroOutMovement();
+        //}
     }
 
     private void OnPuzzleEnded(PuzzleBase puzzle, PuzzleResult result)
     {
-        if (movementManager != null)
-        {
-            movementManager.canMove = true;
-        }
+        Time.timeScale = 1f; // Resume the game
+
+        //if (movementManager != null)
+        //{
+        //    movementManager.canMove = true;
+        //}
     }
 
-    private void ZeroOutMovement()
-    {
-        movementManager.CalculateMovement(Vector2.zero, false);
-        movementManager.CalculateJump(false);
+    //private void ZeroOutMovement()
+    //{
+    //    movementManager.CalculateMovement(Vector2.zero, false);
+    //    movementManager.CalculateJump(false);
 
-        if (characterController != null)
-        {
-            movementManager.ApplyMovement(characterController);
-        }
-    }
+    //    if (characterController != null)
+    //    {
+    //        movementManager.ApplyMovement(characterController);
+    //    }
+    //}
 }
