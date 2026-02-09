@@ -135,7 +135,7 @@ public class EnemyBoss : RoamingEnemy
             if (damageable != null) 
             {
                 // Apply attack damage and knocback effects
-                damageable.TakeDamage(attackDamage, true);
+                damageable.TakeDamage(attackDamage, true, this.transform);
                 knockable.KnockBack(this.transform, target);
             }
         }

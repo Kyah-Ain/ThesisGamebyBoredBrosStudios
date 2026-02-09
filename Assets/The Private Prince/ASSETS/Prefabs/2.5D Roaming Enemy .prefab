@@ -60,6 +60,7 @@ GameObject:
   - component: {fileID: 6995036690194690335}
   - component: {fileID: 9092045993381248799}
   - component: {fileID: 4471650421354797194}
+  - component: {fileID: 4665127305219172156}
   - component: {fileID: 6436064566427896557}
   - component: {fileID: 7679628401484371018}
   m_Layer: 8
@@ -252,7 +253,7 @@ MonoBehaviour:
   arrivalThreshold: 1
   patrolRadius: 10
   maxNavMeshAttempts: 5
---- !u!114 &6436064566427896557
+--- !u!114 &4665127305219172156
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -260,6 +261,36 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2468223935351388383}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6e961bdf83e7634db6b021355adb809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 5
+  maxHealth: 5
+  healRate: 1
+  knockBackEffect: 0.1
+  smoothDuration: 0.2
+  knockbackMode: 0
+  knockBackType: 1
+  objectToKill: {fileID: 2423903921362733658}
+  isVulnerable: 1
+  onCooldown: 0
+  timer: 0
+  enemy: {fileID: 0}
+  navMeshAgent: {fileID: 0}
+  isBeingAttacked: 0
+  wasAgentEnabled: 0
+  movementRecoveryTime: 0.5
+  recoveryTimer: 0
+  isInRecovery: 0
+--- !u!114 &6436064566427896557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2468223935351388383}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a4c365b6c165b54da0a56e1681c9ae4, type: 3}
   m_Name: 

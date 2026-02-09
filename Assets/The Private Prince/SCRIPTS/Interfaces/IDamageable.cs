@@ -1,3 +1,6 @@
+using System.Numerics;
+using UnityEngine;
+
 public interface IDamageable
 {
     // ------------------- REQUIREMENT VARIABLES -------------------------
@@ -17,6 +20,6 @@ public interface IDamageable
     // ------------------------- CONTRACTS -------------------------
 
     public void Die();
-    public void TakeDamage(int damage, bool isUnavoidable = false);
+    public void TakeDamage(int damage, bool isUnavoidable = false, Transform damagedFromWhere = null);
     public void Heal();
 }

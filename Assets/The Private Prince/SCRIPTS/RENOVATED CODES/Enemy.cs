@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour, IAlertable
 
     [Header("AI DETECTION")]
     [SerializeField] protected GameObject[] players; // Array to hold references to all player game objects in the scene
-    [SerializeField] protected Transform detectionTarget; // The current target that the AI is focused on (e.g., the player)
+    [SerializeField] public Transform detectionTarget; // The current target that the AI is focused on (e.g., the player)
     [SerializeField] protected LayerMask raycastObstacles; // LayerMask to define which layers can block the AI's line of sight
 
     [Header("AI ATTRIBUTES")]
@@ -55,8 +55,8 @@ public class Enemy : MonoBehaviour, IAlertable
     [SerializeField] protected float raycastLength = 2f; // Defines how long the raycast would be
 
     [Header("BOOLEANS")]
-    [SerializeField] protected bool hasBeenAlerted = false; // Indicates if the AI has been alerted by another enemy
-    [SerializeField] protected bool canAttack = true; // Indicates if the AI can perform an attack
+    [SerializeField] public bool hasBeenAlerted = false; // Indicates if the AI has been alerted by another enemy
+    [SerializeField] public bool canAttack = true; // Indicates if the AI can perform an attack
     [SerializeField] protected bool hasHit = false; // Indicates if the AI has hit something with its attack
 
     [Header("VISUAL DEBUGS")]
@@ -450,7 +450,7 @@ public class Enemy : MonoBehaviour, IAlertable
             if (damageable != null) 
             {
                 // Apply attack damage
-                damageable.TakeDamage(attackDamage);
+                damageable.TakeDamage(attackDamage, this.transform);
 
                 // Apply attack's knockback effect
                 knockable.KnockBack(this.transform, target);

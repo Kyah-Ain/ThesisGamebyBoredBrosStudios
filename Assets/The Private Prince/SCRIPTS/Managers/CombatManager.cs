@@ -90,7 +90,7 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable, ICooldownab
     }
 
     // Handles character taking damage
-    public virtual void TakeDamage(int damage, bool isUnavoidable = false)
+    public virtual void TakeDamage(int damage, bool isUnavoidable = false, Transform damagedFromWhere = null)
     {
         if (!isVulnerable && !isUnavoidable) return;
 

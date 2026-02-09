@@ -117,6 +117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8979066953914594654}
+  - component: {fileID: 4910731373489175303}
   m_Layer: 0
   m_Name: 2.5D Boss Prototype
   m_TagString: Untagged
@@ -140,6 +141,18 @@ Transform:
   - {fileID: 2397714461291481130}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4910731373489175303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5789703901633756027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70129ff103c58444e98b74e6ecb296d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5985050854433496179
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,8 +168,8 @@ GameObject:
   - component: {fileID: 109530424100211265}
   - component: {fileID: 2070470991044568483}
   - component: {fileID: 3049327494274150778}
+  - component: {fileID: 7429524337891383306}
   - component: {fileID: 8512082008099931494}
-  - component: {fileID: 7396017072737702616}
   - component: {fileID: 8393465135046266509}
   m_Layer: 8
   m_Name: 'Body Collider | Roaming Enemy '
@@ -285,9 +298,9 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5985050854433496179}
   m_Enabled: 1
-  m_AgentTypeID: 0
+  m_AgentTypeID: 1479372276
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 1
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 0
@@ -344,17 +357,15 @@ MonoBehaviour:
   viewConeRangeAlerted: {fileID: 2100000, guid: 3f4f3d8b16da4f44ea42a40b9eaa2527,
     type: 2}
   detectionVisualStatus: 0
-  patrolStations:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  patrolStations: []
   currentPatrolIndex: 0
   arrivalThreshold: 1
+  patrolRadius: 10
+  maxNavMeshAttempts: 5
   aoeRadius: 8
   skillsCooldown: 20
   isSkillActive: 1
---- !u!114 &8512082008099931494
+--- !u!114 &7429524337891383306
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -362,6 +373,36 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5985050854433496179}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6e961bdf83e7634db6b021355adb809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 5
+  maxHealth: 5
+  healRate: 1
+  knockBackEffect: 0.1
+  smoothDuration: 0.2
+  knockbackMode: 0
+  knockBackType: 1
+  objectToKill: {fileID: 5789703901633756027}
+  isVulnerable: 1
+  onCooldown: 0
+  timer: 0
+  enemy: {fileID: 0}
+  navMeshAgent: {fileID: 0}
+  isBeingAttacked: 0
+  wasAgentEnabled: 0
+  movementRecoveryTime: 0.5
+  recoveryTimer: 0
+  isInRecovery: 0
+--- !u!114 &8512082008099931494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5985050854433496179}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a4c365b6c165b54da0a56e1681c9ae4, type: 3}
   m_Name: 
@@ -374,18 +415,9 @@ MonoBehaviour:
   knockbackMode: 0
   knockBackType: 1
   objectToKill: {fileID: 5789703901633756027}
---- !u!114 &7396017072737702616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5985050854433496179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70129ff103c58444e98b74e6ecb296d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  isVulnerable: 1
+  onCooldown: 0
+  timer: 0
 --- !u!120 &8393465135046266509
 LineRenderer:
   serializedVersion: 2

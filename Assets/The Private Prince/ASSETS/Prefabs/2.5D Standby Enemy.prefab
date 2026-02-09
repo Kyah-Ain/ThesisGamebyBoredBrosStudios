@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7002595416008109599}
   - component: {fileID: 4489838760196121413}
   - component: {fileID: 6935797961443814590}
+  - component: {fileID: 5584351343929302178}
   - component: {fileID: 6616218882687883057}
   - component: {fileID: 5380684832986509411}
   m_Layer: 8
@@ -202,7 +203,7 @@ MonoBehaviour:
   viewConeRangeAlerted: {fileID: 2100000, guid: 3f4f3d8b16da4f44ea42a40b9eaa2527,
     type: 2}
   detectionVisualStatus: 0
---- !u!114 &6616218882687883057
+--- !u!114 &5584351343929302178
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -210,6 +211,36 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1631322684351616102}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6e961bdf83e7634db6b021355adb809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 5
+  maxHealth: 5
+  healRate: 1
+  knockBackEffect: 0.1
+  smoothDuration: 0.2
+  knockbackMode: 0
+  knockBackType: 1
+  objectToKill: {fileID: 1823345074688980610}
+  isVulnerable: 1
+  onCooldown: 0
+  timer: 0
+  enemy: {fileID: 0}
+  navMeshAgent: {fileID: 0}
+  isBeingAttacked: 0
+  wasAgentEnabled: 0
+  movementRecoveryTime: 0.5
+  recoveryTimer: 0
+  isInRecovery: 0
+--- !u!114 &6616218882687883057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631322684351616102}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a4c365b6c165b54da0a56e1681c9ae4, type: 3}
   m_Name: 

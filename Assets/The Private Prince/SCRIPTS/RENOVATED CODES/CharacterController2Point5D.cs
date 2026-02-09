@@ -289,7 +289,7 @@ public class CharacterController2Point5D : MonoBehaviour
                 Debug.Log($"Enemy: {hitInfo.transform.name} HAS BEEN DAMAGED!");
 
                 // Apply attack damage
-                damageable.TakeDamage(attackDamage);
+                damageable.TakeDamage(attackDamage, false, this.transform);
 
                 // Applies knockback to the target if it implements IKnockable
                 knockable.KnockBack(this.transform, hitInfo.transform);

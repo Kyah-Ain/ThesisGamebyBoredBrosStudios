@@ -8,8 +8,9 @@ public class EnemyCombat : CombatManager
     // ------------------------- VARIABLES -------------------------
 
     [Header("ENEMY REFERENCE")]
+    public Enemy enemy; // Reference to the Enemy script for accessing enemy-specific properties and methods
     public NavMeshAgent navMeshAgent; // Reference to the NavMeshAgent component for AI movement
-    public NPCEnemyBehaviour enemyBehaviour; // Reference to the enemy behaviour script for AI logic
+    //public NPCEnemyBehaviour enemyBehaviour; // Reference to the enemy behaviour script for AI logic
 
     [Header("ENEMY COMBAT SETTINGS")]
     public bool isBeingAttacked = false; // Determines if the enemy is currently being attacked
@@ -25,9 +26,10 @@ public class EnemyCombat : CombatManager
     // Start is called before the first frame update
     void Start()
     {
-        // Get reference to movement component if it exists
+        // Get reference to this
+        enemy = this.GetComponent<Enemy>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        enemyBehaviour = GetComponent<NPCEnemyBehaviour>();
+        //enemyBehaviour = GetComponent<NPCEnemyBehaviour>();
     }
 
     // Update is called once per frame
@@ -61,6 +63,16 @@ public class EnemyCombat : CombatManager
         }
     }
 
+    // Override the TakeDamage method to handle damage
+    public override void TakeDamage(int damage, bool isUnavoidable = false, Transform damagedFromWhere = null)
+    {
+        enemy.detectionTarget = damagedFromWhere; // Set the detection target to the source of damage
+        enemy.canAttack = true; // Allow enemy to attack when it takes damage
+        enemy.hasBeenAlerted = true; // Alert the enemy when it takes damage
+
+        base.TakeDamage(damage, isUnavoidable);
+    }
+
     // Handles knockback when enemy is attacked
     public override void KnockBack(Transform objectKnocker, Transform knockableObject)
     {
@@ -86,11 +98,11 @@ public class EnemyCombat : CombatManager
             // Note: We don't set isStopped = true here, allowing knockback to move the enemy
         }
 
-        // Disable enemy AI behaviour to prevent interference during knockback
-        if (enemyBehaviour != null)
-        {
-            enemyBehaviour.enabled = false;
-        }
+        //// Disable enemy AI behaviour to prevent interference during knockback
+        //if (enemyBehaviour != null)
+        //{
+        //    enemyBehaviour.enabled = false;
+        //}
 
         // PHASE 2: APPLY KNOCKBACK - ENEMY GETS PUSHED
         // Apply the visual/physical knockback effect from base class
@@ -137,11 +149,11 @@ public class EnemyCombat : CombatManager
             navMeshAgent.isStopped = false;
         }
 
-        // Re-enable enemy AI behaviour
-        if (enemyBehaviour != null)
-        {
-            enemyBehaviour.enabled = true;
-        }
+        //// Re-enable enemy AI behaviour
+        //if (enemyBehaviour != null)
+        //{
+        //    enemyBehaviour.enabled = true;
+        //}
 
         Debug.Log("Enemy recovery completed - full movement restored");
     }
@@ -183,10 +195,10 @@ public class EnemyCombat : CombatManager
             navMeshAgent.isStopped = false;
         }
 
-        if (enemyBehaviour != null)
-        {
-            enemyBehaviour.enabled = true;
-        }
+        //if (enemyBehaviour != null)
+        //{
+        //    enemyBehaviour.enabled = true;
+        //}
 
         Debug.Log("Enemy attack state forcefully stopped");
     }

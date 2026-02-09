@@ -110,7 +110,7 @@ public class PlayerCombat : CombatManager
     }
 
     // Method to Take damage and Update the Player's hearts
-    public override void TakeDamage(int damage, bool isUnavoidable = false)
+    public override void TakeDamage(int damage, bool isUnavoidable = false, Transform damageFromWhere = null)
     {
         // The rest ...
         base.TakeDamage(damage, isUnavoidable);
