@@ -4,11 +4,15 @@ using UnityEngine;
 
 public abstract class QuestStep : MonoBehaviour
 {
-    private bool isFinished = false;
+    // ------------------------- VARIABLES -------------------------
 
-    private string questId;
+    private bool isFinished = false; // Indicates if the quest step is finished/completed
 
-    private int stepIndex;
+    private string questId; // The unique identifier for the quest this step belongs to
+
+    private int stepIndex; // The index of this step within the quest
+
+    // ------------------------- METHODS -------------------------
 
     public void InitializeQuestStep(string questId, int stepIndex, string questStepState)
     {

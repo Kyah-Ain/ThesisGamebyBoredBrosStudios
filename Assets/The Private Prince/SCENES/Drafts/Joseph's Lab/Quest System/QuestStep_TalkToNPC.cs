@@ -7,4 +7,6 @@ public class QuestStep_TalkToNPC : QuestStep
     {
         // No special state needed for talk quests
     }
+
+    // Ain's wondering why doesnt we call "base.FinishQuestStep()" here...?
 }
