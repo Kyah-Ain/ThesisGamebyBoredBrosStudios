@@ -17,7 +17,9 @@ public class Enemy : MonoBehaviour, IAlertable
     [Header("REFERENCES")]
     [SerializeField] protected NavMeshAgent enemyController; // Reference to the enemyController component for AI navigation
     [SerializeField] protected Animator animatorController; // Reference to the Animator component for character animations
-    [SerializeField] protected SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer component for handling sprite rendering and flipping
+    [SerializeField] private GameObject spriteRoot; // Reference to the root GameObject that contains the characer sprites for flipping their facing direction
+    //[SerializeField] private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer component for handling sprite rendering and flipping
+
 
     [Header("AI DETECTION")]
     [SerializeField] protected GameObject[] players; // Array to hold references to all player game objects in the scene
@@ -45,7 +47,6 @@ public class Enemy : MonoBehaviour, IAlertable
     [Header("INTERACTIONS")]
     [SerializeField] protected Vector3 attackBoxCastSize = new Vector3(0.5f, 0.5f, 0.5f); // Defines the size of the attack box cast
     protected Vector3 halfExtents; // Half dimension of the full attack box size
-    protected bool isFacingLeft; // Direction the character is facing from Sprite Renderer's flip logic
     protected Vector3 attackDirection; // Direction of which way the character should be attacking
     protected Quaternion boxRotation; // Current rotation of the box to follow character's rotation
 
@@ -55,6 +56,7 @@ public class Enemy : MonoBehaviour, IAlertable
     [SerializeField] protected float raycastLength = 2f; // Defines how long the raycast would be
 
     [Header("BOOLEANS")]
+    [SerializeField] protected bool isFacingLeft = false; // Direction the character is facing from Sprite Renderer's flip logic
     [SerializeField] public bool hasBeenAlerted = false; // Indicates if the AI has been alerted by another enemy
     [SerializeField] public bool canAttack = true; // Indicates if the AI can perform an attack
     [SerializeField] protected bool hasHit = false; // Indicates if the AI has hit something with its attack
@@ -78,33 +80,43 @@ public class Enemy : MonoBehaviour, IAlertable
     // Awake is called before all frame updates
     protected virtual void Awake()
     {
+        // Fills the array with gameObject refereces that has the tag 'Player'
+        players = GameObject.FindGameObjectsWithTag("Player");
+
         // Evaluates if there's no existing "NavMesh Controller" component on the object
         if (enemyController == null)
         {
-            if (enemyController != null) return;
+            // Assign NavMeshAgent if needed
+            if (enemyController == null)
+            {
+                enemyController = GetComponent<NavMeshAgent>();
+                Debug.Log($"Navmesh Agent Controller was set: {enemyController}");
+            }
 
-            // Assigns the gameObject's "NavMesh Agent Controller" automatically to this script
-            enemyController = GetComponent<NavMeshAgent>();
+            // Assign Animator if needed
+            if (animatorController == null)
+            {
+                animatorController = GetComponent<Animator>();
+            }
 
-            if (animatorController != null) return;
+            // Just warn, don't return!
+            if (spriteRoot == null)
+            {
+                Debug.LogWarning("Sprite Root was not set. Please assign manually.");
+            }
 
-            // Assigns the gameObject's "Animation Controller" automatically to this script
-            animatorController = GetComponent<Animator>();
+            // ALWAYS populate players array
+            players = GameObject.FindGameObjectsWithTag("Player");
 
-            if (spriteRenderer != null) return;
-
-            // Assigns the gameObject's "Sprite Renderer" automatically to this script
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-
-            Debug.Log($"Navmesh Agent Controlller was set: {enemyController}");
+            if (players.Length == 0)
+            {
+                Debug.LogWarning("No players found with 'Player' tag!");
+            }
         }
         else
         {
             Debug.LogError("ASSIGN A NAVMESH AGENT CONTROLLER FIRST BEFORE USING THIS SCRIPT");
         }
-
-        // Fills the array with gameObject refereces that has the tag 'Player'
-        players = GameObject.FindGameObjectsWithTag("Player");
     }
 
     // Start is called at the first frame
@@ -131,7 +143,7 @@ public class Enemy : MonoBehaviour, IAlertable
         }
 
         // Calls the method that handles AI attack logic
-        Attack(); 
+        Attack();
     }
 
     // FixedUpdate is called at a fixed time interval
@@ -300,7 +312,7 @@ public class Enemy : MonoBehaviour, IAlertable
                     //float horizontal = enemyController.velocity.x;
 
                     // Sets the direction the character is facing from the Sprite Renderer's flip logic
-                    bool isFacingLeft = spriteRenderer.flipX;
+                    isFacingLeft = spriteRoot.transform.localScale.x < 0f;
 
                     // Gets the direction of which way the character should be attacking
                     Vector3 angleDirection = isFacingLeft ? Vector3.left : Vector3.right;
@@ -379,7 +391,7 @@ public class Enemy : MonoBehaviour, IAlertable
             halfExtents = attackBoxCastSize / 2f;
 
             // Sets the direction the character is facing from the Sprite Renderer's flip logic
-            isFacingLeft = spriteRenderer.flipX;
+            isFacingLeft = spriteRoot.transform.localScale.x < 0f;
 
             // Gets the direction of which way the character should be attacking
             attackDirection = isFacingLeft ? Vector3.left : Vector3.right;
@@ -441,13 +453,13 @@ public class Enemy : MonoBehaviour, IAlertable
             boxRotation, // Current rotation of the box
             raycastLength, // The max distance the boxCast could reach
             attackLayers // Layers that the BoxCast can hit
-        )) 
+        ))
         {
             // Transforms the hit object into a damageable object if it implements IDamageable
             IDamageable damageable = newHitInfo.collider.GetComponent<IDamageable>();
             IKnockable knockable = newHitInfo.collider.GetComponent<IKnockable>();
 
-            if (damageable != null) 
+            if (damageable != null)
             {
                 // Apply attack damage
                 damageable.TakeDamage(attackDamage, this.transform);
@@ -500,16 +512,33 @@ public class Enemy : MonoBehaviour, IAlertable
         {
             float horizontal = enemyController.velocity.x; // Get horizontal velocity
 
+            // Gets a reference to the current scale of the sprite root
+            Vector3 currentScale = spriteRoot.transform.localScale;
+
             // Determines the direction the character is facing
             if (horizontal < 0f)
             {
-                // Flips the sprite to face left if the horizontal input is negative
-                spriteRenderer.flipX = true;
+                // Flips the sprite root to face left by negating the x scale
+                spriteRoot.transform.localScale = new Vector3(
+                    -Mathf.Abs(currentScale.x), // Multiplies the absolute value of the current x scale by -1 to flip it
+                    currentScale.y, // Keeps the current y scale unchanged
+                    currentScale.z // Keeps the current z scale unchanged
+                );
+
+                //// Flips the sprite to face left if the horizontal input is negative
+                //spriteRenderer.flipX = true;
             }
             else if (horizontal > 0f)
             {
-                // Resets the sprite to face right if the horizontal input is positive 
-                spriteRenderer.flipX = false;
+                // Flips the sprite root to face right by positivizing the x scale
+                spriteRoot.transform.localScale = new Vector3(
+                    Mathf.Abs(currentScale.x), // Multiplies the absolute value of the current x scale by 1 to re-flip it back to normal
+                    currentScale.y,
+                    currentScale.z
+                );
+
+                //// Resets the sprite to face right if the horizontal input is positive 
+                //spriteRenderer.flipX = false;
             }
         }
     }
@@ -569,7 +598,7 @@ public class Enemy : MonoBehaviour, IAlertable
         if (viewConeWireframe == null || detectionVisualStatus == ShowCone.DisableVisualDetection) return;
 
         // Determine which direction the enemy is facing based on sprite flip
-        Vector3 facingDirection = spriteRenderer.flipX ? Vector3.left : Vector3.right;
+        Vector3 facingDirection = spriteRoot.transform.localScale.x < 0f ? Vector3.left : Vector3.right;
 
         if (viewAngle < 360f)
         {
@@ -681,7 +710,7 @@ public class Enemy : MonoBehaviour, IAlertable
     }
 
     // Method for Attack BoxCast Wireframe Visualization
-    protected virtual void AttackBoxWireframe() 
+    protected virtual void AttackBoxWireframe()
     {
         if (canAttack)
             // Visualizes the BoxCast in the Scene View for debugging (uses the static class from DebugBoxCastbyArian.cs)
