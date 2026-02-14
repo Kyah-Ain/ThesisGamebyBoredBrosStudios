@@ -34,7 +34,7 @@ public class CharacterController2Point5D : MonoBehaviour
     //[SerializeField] protected float blockCooldown = 10f; // Amount of recovery time after blocking an attack
 
     [Header("INTERACTIONS")]
-    [SerializeField] private Vector3 attackBoxCastSize = new Vector3(0.5f, 0.5f, 0.5f); // Defines the size of the attack box cast
+    [SerializeField] private Vector3 attackBoxCastSize = new Vector3(1f, 1f, 1f); // Defines the size of the attack box cast
     [SerializeField] private Vector3 interactionBoxSize = new Vector3(0.1f, 1f, 0.5f); // -joseph
 
     [SerializeField] protected LayerMask obstacleLayer; // Layer for obstacles that can block the cast
@@ -124,7 +124,7 @@ public class CharacterController2Point5D : MonoBehaviour
             CheckInteraction();
 
         // Simple Statement for Block Key
-        if (Input.GetButton("Fire2")) 
+        if (Input.GetButton("Fire2"))
         {
             Block();
         }
@@ -203,7 +203,7 @@ public class CharacterController2Point5D : MonoBehaviour
 
         // Evaluates if there is a movement
         // ".magnitude" to compute for the distance 
-        if (direction.magnitude >= 0.1f)
+        if (horizontal <= -1f || horizontal >= 1f || vertical <= -1f || vertical >= 1f)
         {
             // Animates the character when moving
             //Animate("Input Magnitude", direction.magnitude, 0.05f, Time.deltaTime);
@@ -239,10 +239,15 @@ public class CharacterController2Point5D : MonoBehaviour
                 // Resets the sprite to face right if the horizontal input is positive 
                 //spriteRenderer.flipX = false;
             }
+
+            // Animates the character when IT IS moving
+            AnimationSetbool("isMoving", true);
         }
         else
         {
             // Animates the character when NOT moving
+            AnimationSetbool("isMoving", false);
+
             //Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
         }
     }
@@ -265,6 +270,9 @@ public class CharacterController2Point5D : MonoBehaviour
         // Prevents movement during attack
         canMove = false;
 
+        // ...
+        AnimationSetbool("isMoving", false);
+
         // Calls the coroutine that handles the attack sequence
         StartCoroutine(AttackSequence(attackCooldown));
     }
@@ -273,6 +281,7 @@ public class CharacterController2Point5D : MonoBehaviour
     protected IEnumerator AttackSequence(float cooldown)
     {
         #region BOXCAST Detection Logic...
+
         // Gets the half dimension of the full attack box size
         Vector3 halfExtents = attackBoxCastSize / 2f;
 
@@ -290,6 +299,12 @@ public class CharacterController2Point5D : MonoBehaviour
 
         // Variable to store information about what the BoxCast has hit
         RaycastHit hitInfo;
+
+        // ... 
+        AnimationSetbool("isAttacking", true);
+
+        // Cooldown duration before the player can attack again
+        yield return new WaitForSeconds(cooldown);
 
         if (Physics.BoxCast(
             raycastEmitter.transform.position, // Starting Point
@@ -325,8 +340,8 @@ public class CharacterController2Point5D : MonoBehaviour
 
         #endregion
 
-        // Cooldown duration before the player can attack again
-        yield return new WaitForSeconds(cooldown);
+        // Resets the attack animation state
+        AnimationSetbool("isAttacking", false);
 
         // Resets the ability to move and attack
         canAttack = true;
@@ -368,6 +383,13 @@ public class CharacterController2Point5D : MonoBehaviour
     {
         // - ("Name of the Animation Parameter", player.input value, transition smoothness, counter)
         animatorController.SetFloat(animParamater, inputValue, transitionSmooth, transitionCounter);
+    }
+
+    // Method for Character Animation with bool parameters
+    public void AnimationSetbool(string paramaterName, bool boolState)
+    {
+        // - ("Name of the Animation Parameter", bool state)
+        animatorController.SetBool(paramaterName, boolState);
     }
 
     #endregion
