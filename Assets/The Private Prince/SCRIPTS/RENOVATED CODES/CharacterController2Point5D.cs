@@ -14,7 +14,8 @@ public class CharacterController2Point5D : MonoBehaviour
     [Header("REFERENCES")]
     [SerializeField] private CharacterController characController; // Reference to the CharacterController component for controlling character movement
     [SerializeField] private Animator animatorController; // Reference to the Animator component for controlling character animations
-    [SerializeField] private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer component for handling sprite rendering and flipping
+    [SerializeField] private GameObject spriteRoot; // Reference to the root GameObject that contains the characer sprites for flipping their facing direction
+    //[SerializeField] private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer component for handling sprite rendering and flipping
 
     [Header("CHARACTER ATTRIBUTES")]
     [SerializeField] private float horizontal; // Placeholder for horizontal movement inputs
@@ -85,10 +86,13 @@ public class CharacterController2Point5D : MonoBehaviour
             // Assigns the gameObject's "Animator Controller" automatically to this script
             animatorController = GetComponent<Animator>();
 
-            if (spriteRenderer != null) return;
+            if (spriteRoot != null) return;
+            Debug.LogWarning("Sprite Root was not set. Please assign the root GameObject that contains the character sprites to flip them according to the input direction.");
 
-            // Assigns the gameObject's "Sprite Renderer" automatically to this script
-            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            //if (spriteRenderer != null) return;
+
+            //// Assigns the gameObject's "Sprite Renderer" automatically to this script
+            //spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
         else
         {
@@ -207,16 +211,33 @@ public class CharacterController2Point5D : MonoBehaviour
             // Controls the "Character Controller" of a Unity game object
             characController.Move(direction * movementSpeed * Time.deltaTime);
 
+            // Gets a reference to the current scale of the sprite root
+            Vector3 currentScale = spriteRoot.transform.localScale;
+
             // Determines the direction the character is facing
             if (horizontal < 0f)
             {
-                // Flips the sprite to face left if the horizontal input is negative
-                spriteRenderer.flipX = true;
+                // Flips the sprite root to face left by negating the x scale
+                spriteRoot.transform.localScale = new Vector3(
+                    -Mathf.Abs(currentScale.x), // Multiplies the absolute value of the current x scale by -1 to flip it
+                    currentScale.y, // Keeps the current y scale unchanged
+                    currentScale.z // Keeps the current z scale unchanged
+                );
+
+                // Flips the sprites to face left if the horizontal input is negative
+                //spriteRenderer.flipX = true;
             }
             else if (horizontal > 0f)
             {
+                // Flips the sprite root to face right by positivizing the x scale
+                spriteRoot.transform.localScale = new Vector3(
+                    Mathf.Abs(currentScale.x), // Multiplies the absolute value of the current x scale by 1 to re-flip it back to normal
+                    currentScale.y,
+                    currentScale.z
+                );
+
                 // Resets the sprite to face right if the horizontal input is positive 
-                spriteRenderer.flipX = false;
+                //spriteRenderer.flipX = false;
             }
         }
         else
@@ -255,8 +276,11 @@ public class CharacterController2Point5D : MonoBehaviour
         // Gets the half dimension of the full attack box size
         Vector3 halfExtents = attackBoxCastSize / 2f;
 
+        // Sets the direction the character is facing from the spriteRoots' flip logic
+        bool isFacingLeft = spriteRoot.transform.localScale.x < 0f;
+
         // Sets the direction the character is facing from the Sprite Renderer's flip logic
-        bool isFacingLeft = spriteRenderer.flipX;
+        //bool isFacingLeft = spriteRenderer.flipX;
 
         // Gets the direction of which way the character should be attacking
         Vector3 attackDirection = isFacingLeft ? Vector3.left : Vector3.right;
