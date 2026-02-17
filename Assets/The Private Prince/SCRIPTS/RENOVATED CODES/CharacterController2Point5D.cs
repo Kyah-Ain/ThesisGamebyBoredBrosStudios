@@ -50,10 +50,10 @@ public class CharacterController2Point5D : MonoBehaviour
     [SerializeField] private GameObject interactIcon; // Icon that will pop up when near interactable object
 
     [Header("BOOLEANS")]
-    [SerializeField] protected bool canAttack = true; // Indicates if the player can perform an attack
-    [SerializeField] protected bool canMove = true; // Indicates if the player can move
-    [SerializeField] protected bool hasHit = false; // Indicates if the player has hit something with its attack
-    [SerializeField] protected bool isBlocking = false; // ...
+    public bool canAttack = true; // Indicates if the player can perform an attack
+    public bool canMove = true; // Indicates if the player can move
+    public bool hasHit = false; // Indicates if the player has hit something with its attack
+    public bool isBlocking = false; // ...
 
     [Header("DIALOGUE")]
     [SerializeField] private DialogueUI dialogueUI; // Reference to the DialogueUI component for handling dialogues
@@ -117,7 +117,8 @@ public class CharacterController2Point5D : MonoBehaviour
 
         // Simple Statement for Attack Key
         if (Input.GetButtonDown("Fire1"))
-            Attack();
+            AnimationSetbool("isAttacking", true); // Calls the Animation that fires the attack animation using State Machine Behaviour
+            //Attack(); // Test call for the Attack method
 
         // Interact Key
         if (Input.GetKeyUp(KeyCode.E))
@@ -267,11 +268,11 @@ public class CharacterController2Point5D : MonoBehaviour
         // Prevents further attacks until cooldown is over
         canAttack = false;
 
-        // Prevents movement during attack
-        canMove = false;
+        //// Prevents movement during attack
+        //canMove = false;
 
-        // ...
-        AnimationSetbool("isMoving", false);
+        //// ...
+        //AnimationSetbool("isMoving", false);
 
         // Calls the coroutine that handles the attack sequence
         StartCoroutine(AttackSequence(attackCooldown));
@@ -300,11 +301,9 @@ public class CharacterController2Point5D : MonoBehaviour
         // Variable to store information about what the BoxCast has hit
         RaycastHit hitInfo;
 
-        // ... 
-        AnimationSetbool("isAttacking", true);
+        //// ... 
+        //AnimationSetbool("isAttacking", true);
 
-        // Cooldown duration before the player can attack again
-        yield return new WaitForSeconds(cooldown);
 
         if (Physics.BoxCast(
             raycastEmitter.transform.position, // Starting Point
@@ -337,8 +336,10 @@ public class CharacterController2Point5D : MonoBehaviour
 
         // Visualizes the BoxCast in the Scene View for debugging (uses the static class from DebugBoxCastbyArian.cs)
         DebugBoxCast.SimpleDrawBoxCast(raycastEmitter.transform.position, halfExtents, boxRotation, attackDirection, raycastLength, Color.red);
-
         #endregion
+
+        // Cooldown duration before the player can attack again
+        yield return new WaitForSeconds(cooldown);
 
         // Resets the attack animation state
         AnimationSetbool("isAttacking", false);
