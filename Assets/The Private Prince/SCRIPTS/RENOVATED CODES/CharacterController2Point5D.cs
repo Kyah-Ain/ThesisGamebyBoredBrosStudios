@@ -189,8 +189,10 @@ public class CharacterController2Point5D : MonoBehaviour
         {
             freefallVelocity = -1.0f; // Resets vertical velocity when grounded
         }
-
-        freefallVelocity += gravity * gravityMultiplier * Time.deltaTime;
+        else 
+        {
+            freefallVelocity += gravity * gravityMultiplier * Time.deltaTime;
+        }
 
         if (!canMove) return;
 
@@ -200,17 +202,14 @@ public class CharacterController2Point5D : MonoBehaviour
 
         // Computes for the direction by merging horizontal & vertical positions
         // - ".normalized" so that moving diagonally would make us not move faster
-        Vector3 direction = new Vector3(horizontal, freefallVelocity, vertical).normalized;
+        Vector3 movement = new Vector3(horizontal, freefallVelocity, vertical).normalized;
 
         // Evaluates if there is a movement
         // ".magnitude" to compute for the distance 
-        if (horizontal <= -1f || horizontal >= 1f || vertical <= -1f || vertical >= 1f)
+        if (horizontal != 0 || vertical != 0f)
         {
             // Animates the character when moving
             //Animate("Input Magnitude", direction.magnitude, 0.05f, Time.deltaTime);
-
-            // Controls the "Character Controller" of a Unity game object
-            characController.Move(direction * movementSpeed * Time.deltaTime);
 
             // Gets a reference to the current scale of the sprite root
             Vector3 currentScale = spriteRoot.transform.localScale;
@@ -251,6 +250,9 @@ public class CharacterController2Point5D : MonoBehaviour
 
             //Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
         }
+
+        // Controls the "Character Controller" of a Unity game object (Applies movement to the character)
+        characController.Move(movement * movementSpeed * Time.deltaTime);
     }
 
     #endregion

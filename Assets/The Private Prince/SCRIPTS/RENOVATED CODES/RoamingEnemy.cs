@@ -71,7 +71,7 @@ public class RoamingEnemy : Enemy
             enemyController.SetDestination(currentDestination);
 
             // Sets the animation to walking/running state
-            Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
+            animatorController.SetBool("isMoving", true);
         }
 
         // Handles sprite flipping based on movement direction

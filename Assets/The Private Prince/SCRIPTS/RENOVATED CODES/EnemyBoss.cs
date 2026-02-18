@@ -49,7 +49,7 @@ public class EnemyBoss : RoamingEnemy
     #region COMBAT LOGICS
 
     // Handles raycasting for Interaction and Combat
-    protected override void Attack()
+    protected override void InAttackRange()
     {
         if (isSkillActive)
         {
@@ -57,7 +57,7 @@ public class EnemyBoss : RoamingEnemy
         }
         else 
         {
-            base.Attack();
+            base.InAttackRange();
         }
     }
 

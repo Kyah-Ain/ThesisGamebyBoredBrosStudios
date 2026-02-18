@@ -25,6 +25,7 @@ public class Enemy : MonoBehaviour, IAlertable
     [SerializeField] protected GameObject[] players; // Array to hold references to all player game objects in the scene
     [SerializeField] public Transform detectionTarget; // The current target that the AI is focused on (e.g., the player)
     [SerializeField] protected LayerMask raycastObstacles; // LayerMask to define which layers can block the AI's line of sight
+    [SerializeField] protected RaycastHit hitInfo; // Information about what the BoxCast has hit
 
     [Header("AI ATTRIBUTES")]
     [SerializeField] protected float viewDistance = 10f; // How far the Enemy can see
@@ -142,8 +143,8 @@ public class Enemy : MonoBehaviour, IAlertable
             AttackBoxWireframe();
         }
 
-        // Calls the method that handles AI attack logic
-        Attack();
+        // ...
+        InAttackRange();
     }
 
     // FixedUpdate is called at a fixed time interval
@@ -244,7 +245,7 @@ public class Enemy : MonoBehaviour, IAlertable
         }
 
         // Sets the animation to walking/running state
-        Animate("Input Magnitude", 0f, 0.05f, Time.fixedDeltaTime);
+        animatorController.SetBool("isMoving", false);
 
         // Sets the detection angle to a visual cone size
         viewAngle = 90f;
@@ -276,7 +277,7 @@ public class Enemy : MonoBehaviour, IAlertable
     public virtual void ChaseStat()
     {
         // Sets the animation to walking/running state
-        Animate("Input Magnitude", 1f, 0.05f, Time.fixedDeltaTime);
+        animatorController.SetBool("isMoving", true);
 
         // Chase Speed
         // Might implement boost logic here soon...
@@ -381,7 +382,7 @@ public class Enemy : MonoBehaviour, IAlertable
     #region COMBAT LOGICS
 
     // Handles raycasting for Interaction and Combat
-    protected virtual void Attack()
+    protected virtual void InAttackRange()
     {
         if (canAttack) // Evaluates if the AI can perform an attack
         {
@@ -399,7 +400,7 @@ public class Enemy : MonoBehaviour, IAlertable
             // Sets the current rotation of the box to follow the character's rotation
             boxRotation = this.transform.rotation;
 
-            RaycastHit hitInfo; // Information about what the BoxCast has hit
+            //RaycastHit hitInfo; // Information about what the BoxCast has hit
 
             // Performs the BoxCast and stores whether it hit something or not (it only stores the first hit)
             hasHit = Physics.BoxCast(
@@ -414,36 +415,53 @@ public class Enemy : MonoBehaviour, IAlertable
             // Evaluates if the BoxCast has hit something
             if (hasHit && hitInfo.collider.gameObject.CompareTag("Player"))
             {
-                Debug.Log("HAS HIT: Player has been hit");
+                // Prevents further attacks until cooldown is over
+                canAttack = false;
 
-                // Transforms the hit object into a damageable object if it implements IDamageable
-                IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
+                // Stops the enemy movement during an attack
+                SwitchState(EnemyState.Neutral);
+                //enemyController.SetDestination(this.transform.position); // Ensures that Roaming Enemy would not patrol on Neutral
 
-                // Evaluates if the hit object is damageable
-                if (damageable != null)
-                {
-                    // Prevents further attacks until cooldown is over
-                    canAttack = false;
-
-                    // Calls the coroutine that handles the attack sequence
-                    StartCoroutine(AttackSequence(hitInfo.transform, attackCharge));
-                }
+                // ...
+                animatorController.SetBool("isAttacking", true);
             }
         }
     }
 
-    // Coroutine for handling the attack sequence with delay and cooldown
-    protected IEnumerator AttackSequence(Transform target, float attackCharge)
+    // CALLABLE METHOD from Animation Events
+    protected virtual void Attack() 
     {
-        // Initial delay for giving the program ample time to prepare for the attack computation
-        yield return new WaitForSeconds(0.25f);
+        // ...
+        animatorController.SetBool("isAttacking", false);
 
-        // Stops the enemy movement during an attack
-        SwitchState(EnemyState.Neutral);
-        enemyController.SetDestination(this.transform.position); // Ensures that Roaming Enemy would not patrol on Neutral
+        Debug.Log("HAS HIT: Player has been hit");
 
-        // Attack Casting duration before apllying attack (e.g., anticipation time)
-        yield return new WaitForSeconds(attackCharge);
+        // Calls the coroutine that handles the attack sequence
+        StartCoroutine(AttackSequence(hitInfo.transform));
+
+        //// Transforms the hit object into a damageable object if it implements IDamageable
+        //IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
+
+        //// Evaluates if the hit object is damageable
+        //if (damageable != null)
+        //{
+        //    // Calls the coroutine that handles the attack sequence
+        //    StartCoroutine(AttackSequence(hitInfo.transform));
+        //}
+    }
+
+    // Coroutine for handling the attack sequence with delay and cooldown
+    protected IEnumerator AttackSequence(Transform target)
+    {
+        //// Initial delay for giving the program ample time to prepare for the attack computation
+        //yield return new WaitForSeconds(0.25f);
+
+        //// Stops the enemy movement during an attack
+        //SwitchState(EnemyState.Neutral);
+        //enemyController.SetDestination(this.transform.position); // Ensures that Roaming Enemy would not patrol on Neutral
+
+        //// Attack Casting duration before apllying attack (e.g., anticipation time)
+        //yield return new WaitForSeconds(attackCharge);
 
         if (Physics.BoxCast(
             raycastEmitter.transform.position, // Starting Point
@@ -491,6 +509,9 @@ public class Enemy : MonoBehaviour, IAlertable
 
         // Reset attack status
         canAttack = true;
+
+        //// ...
+        //animatorController.SetBool("isAttacking", false);
     }
 
     #endregion
@@ -498,12 +519,12 @@ public class Enemy : MonoBehaviour, IAlertable
     // -------------------------- ANIMATIONS ---------------------------
     #region ANIMATION LOGICS
 
-    // Method for Character Animation
-    public void Animate(string animParamater, float inputValue, float transitionSmooth, float transitionCounter)
-    {
-        // - ("Name of the Animation Parameter", player.input value, transition smoothness, counter)
-        animatorController.SetFloat(animParamater, inputValue, transitionSmooth, transitionCounter);
-    }
+    //// Method for Character Animation
+    //public void Animate(string animParamater, float inputValue, float transitionSmooth, float transitionCounter)
+    //{
+    //    // - ("Name of the Animation Parameter", player.input value, transition smoothness, counter)
+    //    animatorController.SetFloat(animParamater, inputValue, transitionSmooth, transitionCounter);
+    //}
 
     // Method for Flipping Sprite based on Movement Direction
     protected virtual void FlipSprite()

@@ -41,7 +41,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Movement Magnitude
     m_Mirror: 0
-  m_BlendParameter: Movement Magnitude
+  m_BlendParameter: Attack Magnitude
   m_BlendParameterY: Movement Tree
   m_MinThreshold: 0
   m_MaxThreshold: 1
@@ -73,6 +73,18 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-1789059050411699954
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f90419a7886df0b4eacb48d68a6e98ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!206 &-964040276461444183
 BlendTree:
   m_ObjectHideFlags: 1
@@ -143,6 +155,12 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
   - m_Name: Movement Magnitude
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: Attack Magnitude
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -249,7 +267,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -2451940438101061234}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -1789059050411699954}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1

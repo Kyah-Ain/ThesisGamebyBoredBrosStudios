@@ -26,7 +26,7 @@ public class RoamingEnemyController3D : Enemy
         enemyController.SetDestination(patrolStations[currentPatrolIndex].position);
 
         // Sets the animation to walking/running state
-        Animate("Input Magnitude", 1f, 0.05f, Time.deltaTime);
+        animatorController.SetBool("isMoving", true);
 
         // Sets the detection angle to a visual cone size
         viewAngle = 90f;
