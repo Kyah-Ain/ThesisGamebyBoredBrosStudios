@@ -32,14 +32,14 @@ public class PlayerController3D : BaseCharacterController
 
     public bool isCoroutineDone = false; // Prevents overlapping attack coroutines
 
-    [Header("DIALOGUE")]
-    [SerializeField] private DialogueUI dialogueUI;
+    //[Header("DIALOGUE")]
+    //[SerializeField] private DialogueUI dialogueUI;
 
     // ------------------------- METHODS -------------------------
 
-    // Getter for dialogue UI
-    public DialogueUI DialogueUI => dialogueUI;
-    public IInteractable Interactable { get; set; }
+    //// Getter for dialogue UI
+    //public DialogueUI DialogueUI => dialogueUI;
+    //public IInteractable Interactable { get; set; }
 
     // Start is called before the first frame update
     private void Start()
@@ -51,7 +51,7 @@ public class PlayerController3D : BaseCharacterController
     private void Update()
     {
         //stops player from moving when in Dialogue
-        if (dialogueUI != null && dialogueUI.IsOpen) return;
+        //if (dialogueUI != null && dialogueUI.IsOpen) return;
 
         // ALWAYS call HandleInput - it handles all input processing
         HandleInput();
@@ -71,11 +71,11 @@ public class PlayerController3D : BaseCharacterController
         HandleStamina();
         HandleRaycast();
 
-        // Button prompt for Dialogue Interaction
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Interactable?.Interact(this); // Used null propagation for less lines
-        }
+        //// Button prompt for Dialogue Interaction
+        //if (Input.GetKeyDown(KeyCode.E))
+        //{
+        //    Interactable?.Interact(this); // Used null propagation for less lines
+        //}
     }
 
     // Handles player input for movements

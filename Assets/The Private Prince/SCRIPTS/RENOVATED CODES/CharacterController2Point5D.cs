@@ -58,9 +58,9 @@ public class CharacterController2Point5D : MonoBehaviour
     [Header("DIALOGUE")]
     [SerializeField] private DialogueUI dialogueUI; // Reference to the DialogueUI component for handling dialogues
 
-    // Getter for dialogue UI
-    public DialogueUI DialogueUI => dialogueUI;
-    public IInteractable Interactable { get; set; }
+    //// Getter for dialogue UI
+    //public DialogueUI DialogueUI => dialogueUI;
+    //public IInteractable Interactable { get; set; }
 
     // ------------------------- UNITY METHODS -------------------------
     #region UNITY LOGICS
@@ -71,8 +71,8 @@ public class CharacterController2Point5D : MonoBehaviour
         // Evaluates if there's no existing "Character Controller" component on the object
         if (characController == null)
         {
-            // Stops player from moving when in Dialogue
-            if (dialogueUI != null && dialogueUI.IsOpen) return;
+            //// Stops player from moving when in Dialogue
+            //if (dialogueUI != null && dialogueUI.IsOpen) return;
 
             Debug.Log($"Character Controller was set: {characController}");
 
