@@ -499,7 +499,7 @@ public class Enemy : MonoBehaviour, IAlertable
         }
 
         // Resume chasing if target still exists
-        if (detectionTarget != null)
+        if (detectionTarget.gameObject.CompareTag("Player"))
         {
             SwitchState(EnemyState.Chase);
         }
