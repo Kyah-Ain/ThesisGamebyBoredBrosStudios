@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1002523501810541756}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.002027, y: -1.8494489, z: -11.547379}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -272,6 +272,7 @@ GameObject:
   - component: {fileID: 6904786416529062533}
   - component: {fileID: 7151566426137683235}
   - component: {fileID: 7729888114417395638}
+  - component: {fileID: 7185799335810095674}
   m_Layer: 7
   m_Name: Body Collider | Jonas
   m_TagString: Player
@@ -427,6 +428,7 @@ MonoBehaviour:
   raycastEmitter: {fileID: 1434949631316882248}
   raycastLength: 2
   interactIcon: {fileID: 0}
+  inDialogue: 0
   canAttack: 1
   canMove: 1
   hasHit: 0
@@ -467,6 +469,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70129ff103c58444e98b74e6ecb296d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7185799335810095674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3465134628912371240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8b9efe7e9b840948bfd1e67847924e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueUI: {fileID: 0}
+  characterController: {fileID: 0}
 --- !u!1 &3542346787136581755
 GameObject:
   m_ObjectHideFlags: 0

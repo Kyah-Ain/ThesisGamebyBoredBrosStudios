@@ -7,39 +7,30 @@ public class DialogueInteraction : MonoBehaviour
     // ------------------------- VARIABLES -------------------------
 
     [Header("DIALOGUE")]
-    [SerializeField] private DialogueUI dialogueUI;
-    [SerializeField] private CharacterController2Point5D characterController;
+    [SerializeField] protected DialogueUI dialogueUI;
 
     public DialogueUI DialogueUI => dialogueUI;
     public IInteractable Interactable { get; set; }
 
+    public int dialogueIterationLimit;
+
     // ------------------------- UNITY METHODS -------------------------
 
     // ...
-    public void Awake()
+    public virtual void Awake()
     {
-        // Find the character controller component on this GameObject
-        characterController = this.GetComponent<CharacterController2Point5D>(); 
+        Debug.Log("DialogueInteraction Awake called, attempting to find DialogueUI component...");
     }
 
     // ...
-    public void Update()
+    public virtual void Start()
     {
-        if (dialogueUI != null && dialogueUI.IsOpen) return;
+        Debug.Log("DialogueInteraction Start called, DialogueUI reference: " + (dialogueUI != null ? "Found" : "Not Found"));
+    }
 
-        if (dialogueUI.dialogueFinished) 
-        { 
-            characterController.inDialogue = false; // Re-enable movement when dialogue finishes
-        }
-
-        // Button prompt for Dialogue Interaction
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log("Interact key pressed, attempting to interact with: " + Interactable);
-
-            characterController.inDialogue = true; // Disable movement when dialogue starts
-
-            Interactable?.Interact(this); // Used null propagation for less lines
-        }
+    // ...
+    public virtual void Update()
+    {
+        Interactable?.Interact(this); // Used null propagation for less lines
     }
 }
