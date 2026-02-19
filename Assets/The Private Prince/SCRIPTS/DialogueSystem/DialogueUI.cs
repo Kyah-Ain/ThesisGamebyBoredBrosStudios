@@ -8,6 +8,7 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private TMP_Text textLabel; // The text field for displaying dialogue
 
     public bool IsOpen { get; private set; } // Public flag to check if dialogue is open
+    public bool dialogueFinished; // Flag to indicate if dialogue has finished (used for response handling)
 
     private ResponseHandler responseHandler; // Handles showing and reacting to responses
     private TypeWriterEffect typeWriterEffect; // Handles text typing animation
@@ -31,6 +32,7 @@ public class DialogueUI : MonoBehaviour
         IsOpen = true; // Mark dialogue as open
         dialogueBox.SetActive(true); // Show the dialogue box
         currentDialogueCoroutine = StartCoroutine(StepThroughDialogue(dialogueObject)); // Start showing the dialogue
+        dialogueFinished = false; // Reset finished flag for new dialogue
     }
 
     public void AddResponseEvents(ResponseEvent[] responseEvents)
@@ -112,5 +114,6 @@ public class DialogueUI : MonoBehaviour
         IsOpen = false;
         dialogueBox.SetActive(false);
         textLabel.text = string.Empty;
+        dialogueFinished = true;
     }
 }

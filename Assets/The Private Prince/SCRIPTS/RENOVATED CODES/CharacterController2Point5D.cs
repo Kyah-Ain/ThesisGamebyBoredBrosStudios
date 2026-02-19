@@ -50,6 +50,7 @@ public class CharacterController2Point5D : MonoBehaviour
     [SerializeField] private GameObject interactIcon; // Icon that will pop up when near interactable object
 
     [Header("BOOLEANS")]
+    public bool inDialogue = false; // Indicates if the player is currently in a dialogue
     public bool canAttack = true; // Indicates if the player can perform an attack
     public bool canMove = true; // Indicates if the player can move
     public bool hasHit = false; // Indicates if the player has hit something with its attack
@@ -109,8 +110,13 @@ public class CharacterController2Point5D : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        //stops player from moving when in Dialogue
-        if (dialogueUI != null && dialogueUI.IsOpen) return;
+        // Stops player from moving when in Dialogue
+        if (inDialogue) 
+        {
+            animatorController.SetBool("isMoving", false); // Stops the movement animation when in dialogue
+
+            return;
+        }
 
         // Calls the method that handles character movement
         Move();

@@ -27,14 +27,19 @@ public class DialogueInteraction : MonoBehaviour
     {
         if (dialogueUI != null && dialogueUI.IsOpen) return;
 
+        if (dialogueUI.dialogueFinished) 
+        { 
+            characterController.inDialogue = false; // Re-enable movement when dialogue finishes
+        }
+
         // Button prompt for Dialogue Interaction
         if (Input.GetKeyDown(KeyCode.E))
         {
             Debug.Log("Interact key pressed, attempting to interact with: " + Interactable);
 
-            Interactable?.Interact(this); // Used null propagation for less lines
+            characterController.inDialogue = true; // Disable movement when dialogue starts
 
-            characterController.enabled = false; // Disable movement when dialogue starts
+            Interactable?.Interact(this); // Used null propagation for less lines
         }
     }
 }
