@@ -59,10 +59,6 @@ public class CharacterController2Point5D : MonoBehaviour
     [Header("DIALOGUE")]
     [SerializeField] private DialogueUI dialogueUI; // Reference to the DialogueUI component for handling dialogues
 
-    //// Getter for dialogue UI
-    //public DialogueUI DialogueUI => dialogueUI;
-    //public IInteractable Interactable { get; set; }
-
     // ------------------------- UNITY METHODS -------------------------
     #region UNITY LOGICS
 
