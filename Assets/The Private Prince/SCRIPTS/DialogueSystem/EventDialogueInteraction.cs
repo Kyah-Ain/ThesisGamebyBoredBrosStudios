@@ -7,6 +7,7 @@ public class EventDialogueInteraction : PlayerDialogueInteraction
     // ------------------------- VARIABLES -------------------------
 
     public QuestStarter questStarter; // Reference to the QuestStarter.cs component for starting quests
+    public GameObject ringtoneSFX; // Reference to the ringtone SFX GameObject to play when dialogue starts
 
     // ------------------------- UNITY METHODS -------------------------
 
@@ -15,6 +16,10 @@ public class EventDialogueInteraction : PlayerDialogueInteraction
     {
         // Find the character controller component on this GameObject
         characterController = FindAnyObjectByType<CharacterController2Point5D>();
+
+        // Find the ringtone SFX GameObject in the scene
+        if (ringtoneSFX == null)
+            ringtoneSFX = GameObject.FindWithTag("RingtoneSFX");
 
         // Find the QuestStarter component in the scene (assuming there's only one)
         questStarter = this.GetComponent<QuestStarter>();
@@ -41,6 +46,7 @@ public class EventDialogueInteraction : PlayerDialogueInteraction
         {
             // When dialogue iteration limit is reached, start the quest and destroy this component
             questStarter.StartQuestById("Check_Jonas_Phone");
+            ringtoneSFX.SetActive(true); // Play the ringtone SFX when dialogue starts
             Destroy(this.gameObject); // Destroy this component when dialogue iteration limit is reached
         }
     }
