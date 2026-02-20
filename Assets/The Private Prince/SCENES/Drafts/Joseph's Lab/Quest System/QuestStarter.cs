@@ -19,4 +19,3 @@ public class QuestStarter : MonoBehaviour
         GameEventsManager.Instance.questEvents.StartQuest(questId);
     }
 }
-

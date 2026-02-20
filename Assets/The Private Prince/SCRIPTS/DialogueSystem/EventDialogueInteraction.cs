@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class EventDialogueInteraction : PlayerDialogueInteraction
 {
+    // ------------------------- VARIABLES -------------------------
+
+    public QuestStarter questStarter; // Reference to the QuestStarter.cs component for starting quests
+
     // ------------------------- UNITY METHODS -------------------------
 
     // ...
@@ -11,6 +15,9 @@ public class EventDialogueInteraction : PlayerDialogueInteraction
     {
         // Find the character controller component on this GameObject
         characterController = FindAnyObjectByType<CharacterController2Point5D>();
+
+        // Find the QuestStarter component in the scene (assuming there's only one)
+        questStarter = this.GetComponent<QuestStarter>();
     }
 
     // ...
@@ -32,6 +39,8 @@ public class EventDialogueInteraction : PlayerDialogueInteraction
         }
         else
         {
+            // When dialogue iteration limit is reached, start the quest and destroy this component
+            questStarter.StartQuestById("Check_Jonas_Phone");
             Destroy(this.gameObject); // Destroy this component when dialogue iteration limit is reached
         }
     }
