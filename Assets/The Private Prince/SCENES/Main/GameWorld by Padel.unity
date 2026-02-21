@@ -3505,7 +3505,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.046443988, y: 0, z: 0, w: 0.9989209}
-  m_LocalPosition: {x: -4.054671, y: 2.4662807, z: -23.785305}
+  m_LocalPosition: {x: -4.054671, y: 1.7162806, z: -23.785303}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10768,7 +10768,7 @@ PrefabInstance:
         type: 3}
       propertyPath: dialogueObject
       value: 
-      objectReference: {fileID: 11400000, guid: a736cf5a0753531458205f32c4af5e67,
+      objectReference: {fileID: 11400000, guid: d27736b59fe06b54dad1249d6bf0e381,
         type: 2}
     - target: {fileID: 5568066849495755766, guid: d20218325a597334784108320e529137,
         type: 3}
@@ -31097,7 +31097,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8084549600520642704}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1973704338
+--- !u!114 &1973704343
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31106,9 +31106,113 @@ MonoBehaviour:
   m_GameObject: {fileID: 1973704333}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7546e9ba8b4487c4d9358e486a723b16, type: 3}
+  m_Script: {fileID: 11500000, guid: cfdc5aa0262ad234d88212027ee7ef1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogueObject: {fileID: 11400000, guid: 9b4289b6de73f27448383b8c6f835246, type: 2}
+  events:
+  - name: Pick it up.
+    onPickedResponse:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1973704345}
+          m_TargetAssemblyTypeName: QuestDialogueBridge, Assembly-CSharp
+          m_MethodName: FinishQuest
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Follow_The_Sound
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1973704344}
+          m_TargetAssemblyTypeName: QuestStarter, Assembly-CSharp
+          m_MethodName: StartQuestById
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Check_Jonas_Phone
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: Maybe later...
+    onPickedResponse:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1973704346}
+          m_TargetAssemblyTypeName: DialogueActivator, Assembly-CSharp
+          m_MethodName: ResetToDefaultDialogue
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &1973704344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973704333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6dcbe6da3f08c542a370e5083199693, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1973704345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973704333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa51014132553564a9ca93ce70dafd34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1973704346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973704333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39146fdf826c54f41832e90f680bf30f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueObject: {fileID: 11400000, guid: 9b4289b6de73f27448383b8c6f835246, type: 2}
+--- !u!135 &1973704347
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973704333}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &1979003638 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4304525572471723764, guid: f431133b5fb7d624582090e5f7f23706,
@@ -42596,6 +42700,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Dialogue Starter
+      objectReference: {fileID: 0}
+    - target: {fileID: 68007092366609187, guid: 0684541fa1d4b234ca850334967ba945,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2833250930166856392, guid: 0684541fa1d4b234ca850334967ba945,
         type: 3}
@@ -54957,7 +55066,7 @@ PrefabInstance:
     - target: {fileID: 5383863684260097595, guid: 1f86528bf72c24d40b40c8ec6856757e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.8494489
+      value: -2.599449
       objectReference: {fileID: 0}
     - target: {fileID: 5383863684260097595, guid: 1f86528bf72c24d40b40c8ec6856757e,
         type: 3}
@@ -82837,6 +82946,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1038264325193704188, guid: 2d36982acd66969469a55fd95ba94cac,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8706493149360161628, guid: 2d36982acd66969469a55fd95ba94cac,
         type: 3}
       propertyPath: m_Name
@@ -82848,8 +82962,24 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8706493149360161628, guid: 2d36982acd66969469a55fd95ba94cac,
         type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1973704347}
+    - targetCorrespondingSourceObject: {fileID: 8706493149360161628, guid: 2d36982acd66969469a55fd95ba94cac,
+        type: 3}
+      insertIndex: 5
+      addedObject: {fileID: 1973704346}
+    - targetCorrespondingSourceObject: {fileID: 8706493149360161628, guid: 2d36982acd66969469a55fd95ba94cac,
+        type: 3}
+      insertIndex: 6
+      addedObject: {fileID: 1973704344}
+    - targetCorrespondingSourceObject: {fileID: 8706493149360161628, guid: 2d36982acd66969469a55fd95ba94cac,
+        type: 3}
+      insertIndex: 7
+      addedObject: {fileID: 1973704345}
+    - targetCorrespondingSourceObject: {fileID: 8706493149360161628, guid: 2d36982acd66969469a55fd95ba94cac,
+        type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1973704338}
+      addedObject: {fileID: 1973704343}
   m_SourcePrefab: {fileID: 100100000, guid: 2d36982acd66969469a55fd95ba94cac, type: 3}
 --- !u!114 &8222635212373055100
 MonoBehaviour:
