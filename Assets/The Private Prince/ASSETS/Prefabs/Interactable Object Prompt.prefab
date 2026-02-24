@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 8157708037966733298}
   - component: {fileID: 5209187759447777296}
   - component: {fileID: 3694184811011792022}
+  - component: {fileID: 1429399884348156637}
+  - component: {fileID: 2551654104137992820}
+  - component: {fileID: 4827012506098136664}
   m_Layer: 0
   m_Name: Interactable Object Prompt
   m_TagString: Untagged
@@ -26,7 +29,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3145327029362017612}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 6}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_ConstrainProportionsScale: 1
@@ -85,7 +88,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &3694184811011792022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,6 +106,67 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!95 &1429399884348156637
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3145327029362017612}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9ac6819400a6ffd4783c43008ce225b7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!65 &2551654104137992820
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3145327029362017612}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 12719.145, y: 3461.8733, z: 14638.235}
+  m_Center: {x: -373.41785, y: -285.87387, z: -4519.166}
+--- !u!114 &4827012506098136664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3145327029362017612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdbbf3bd7ab00aa41a07ce5e0cc39643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultPromptDialogue: {fileID: 11400000, guid: 0093ae0bb5835434c989b0d53b87e784,
+    type: 2}
+  interactionPromptDialogue: {fileID: 11400000, guid: a84ae06fa1a1bbd428fa7f4ffc1a10dc,
+    type: 2}
+  interactablePanel: {fileID: 5560240382324773362}
+  interactPromptText: {fileID: 4573038783310460599}
+  interactionRange: 2
 --- !u!1 &5560240382324773362
 GameObject:
   m_ObjectHideFlags: 0
