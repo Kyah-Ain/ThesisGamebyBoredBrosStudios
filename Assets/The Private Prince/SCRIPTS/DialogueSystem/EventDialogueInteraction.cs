@@ -39,6 +39,7 @@ public class EventDialogueInteraction : PlayerDialogueInteraction
         {
             characterController.inDialogue = true; // Disable movement when dialogue starts
 
+            // WARNING: Make sure the object this script is attached to, is a player
             Interactable?.Interact(this); // Used null propagation for less lines
             dialogueIterationLimit--;
         }
@@ -50,7 +51,6 @@ public class EventDialogueInteraction : PlayerDialogueInteraction
             //ringtoneSFX.SetActive(true); // Play the ringtone SFX when dialogue starts
 
             Destroy(this.gameObject); // Destroy this component when dialogue iteration limit is reached
-            
         }
     }
 }
