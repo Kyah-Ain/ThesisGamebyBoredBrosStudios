@@ -1,25 +1,26 @@
 using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject, Transform, Vector3, etc.
 
-[RequireComponent(typeof(CharacterController))] // Requires this GameObject to have a CharacterController component in order to function properly
+using UnityEngine.InputSystem; // Grants access to Unity's new Input System for handling player inputs
 
+[RequireComponent(typeof(CharacterController))] // Requires this GameObject to have a CharacterController component in order to function properly
 public class CharacterController2Point5D : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
 
-    [Header("REFERENCES")]
+    // Reference to the PlayerInput component for handling new input system actions and controls
+    private PrivatePrinceControls ppControls;
+
+    [Header("OBJECT REFERENCES")]
     [SerializeField] private CharacterController characController; // Reference to the CharacterController component for controlling character movement
     [SerializeField] private Animator animatorController; // Reference to the Animator component for controlling character animations
     [SerializeField] private GameObject spriteRoot; // Reference to the root GameObject that contains the characer sprites for flipping their facing direction
     //[SerializeField] private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer component for handling sprite rendering and flipping
 
     [Header("CHARACTER ATTRIBUTES")]
-    [SerializeField] private float horizontal; // Placeholder for horizontal movement inputs
-    [SerializeField] private float vertical; // Placeholder for vertical movement inputs
+    //[SerializeField] private float horizontal; // Placeholder for horizontal movement inputs
+    //[SerializeField] private float vertical; // Placeholder for vertical movement inputs
     [SerializeField] private float movementSpeed = 6f; // Speed at which the character moves
 
     [Space]
@@ -31,7 +32,7 @@ public class CharacterController2Point5D : MonoBehaviour
     [Header("COMBAT ATTRIBUTES")]
     [SerializeField] private int attackDamage = 1; // Amount of damage dealt per attack
     [SerializeField] protected float attackCooldown = 0.25f; // Amount of time between each attack
-    //[SerializeField] protected float blockCooldown = 10f; // Amount of recovery time after blocking an attack
+    [SerializeField] protected float blockCooldown = 0f; // Amount of recovery time after blocking an attack
 
     [Header("INTERACTIONS")]
     [SerializeField] private Vector3 attackBoxCastSize = new Vector3(1f, 1f, 1f); // Defines the size of the attack box cast
@@ -55,9 +56,14 @@ public class CharacterController2Point5D : MonoBehaviour
     public bool canMove = true; // Indicates if the player can move
     public bool hasHit = false; // Indicates if the player has hit something with its attack
     public bool isBlocking = false; // ...
+    private bool wasBlocking = false; // Tracks previous block state to prevent continuous reset
 
     [Header("DIALOGUE")]
     [SerializeField] private DialogueUI dialogueUI; // Reference to the DialogueUI component for handling dialogues
+
+    // Coroutine references to prevent multiple coroutines
+    private Coroutine attackCoroutine;
+    private Coroutine blockCoroutine;
 
     // ------------------------- UNITY METHODS -------------------------
     #region UNITY LOGICS
@@ -65,35 +71,54 @@ public class CharacterController2Point5D : MonoBehaviour
     // Awake is called before all frame updates
     private void Awake()
     {
-        // Evaluates if there's no existing "Character Controller" component on the object
+        // Get required components if not assigned
         if (characController == null)
-        {
-            //// Stops player from moving when in Dialogue
-            //if (dialogueUI != null && dialogueUI.IsOpen) return;
+            characController = this.GetComponent<CharacterController>();
 
-            Debug.Log($"Character Controller was set: {characController}");
+        if (animatorController == null)
+            animatorController = this.GetComponent<Animator>();
 
-            if (characController != null) return;
-
-            // Assigns the gameObject's "Character Controller" autmatically to this script
-            characController = GetComponent<CharacterController>();
-
-            if (animatorController != null) return;
-
-            // Assigns the gameObject's "Animator Controller" automatically to this script
-            animatorController = GetComponent<Animator>();
-
-            if (spriteRoot != null) return;
+        if (spriteRoot == null)
             Debug.LogWarning("Sprite Root was not set. Please assign the root GameObject that contains the character sprites to flip them according to the input direction.");
 
-            //if (spriteRenderer != null) return;
+        // Validate raycast emitter
+        if (raycastEmitter == null)
+            Debug.LogWarning("Raycast Emitter is not assigned. Please assign a Transform for attack raycasts.");
 
-            //// Assigns the gameObject's "Sprite Renderer" automatically to this script
-            //spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        }
-        else
+        // Assigns the gameObject's "Player Input" component for the new input system to this script
+        if (ppControls == null && PlayerInputManager.Instance != null)
         {
-            Debug.LogError("ASSIGN A CHARACTER CONTROLLER FIRST BEFORE USING THIS SCRIPT");
+            // Accesses the controls from the PlayerInputManager singleton instance
+            ppControls = PlayerInputManager.Instance.Controls;
+
+            // Subscribes to the performed events
+            ppControls.Player.Attack.performed += NewAttack;
+            ppControls.Player.Block.performed += NewBlock;
+            ppControls.Player.Block.canceled += OnBlockReleased;
+
+            Debug.Log($"New Input System was set: {ppControls}");
+        }
+        else if (PlayerInputManager.Instance == null)
+        {
+            Debug.LogError("PlayerInputManager singleton not found! Make sure it exists in the scene.");
+        }
+    }
+
+    private void OnEnable()
+    {
+        // Ensure subscriptions are active when object is enabled
+        if (ppControls != null)
+        {
+            ppControls.Player.Block.canceled += OnBlockReleased;
+        }
+    }
+
+    private void OnDisable()
+    {
+        // Clean up subscriptions when object is disabled
+        if (ppControls != null)
+        {
+            ppControls.Player.Block.canceled -= OnBlockReleased;
         }
     }
 
@@ -101,51 +126,35 @@ public class CharacterController2Point5D : MonoBehaviour
     private void Start()
     {
         //interactIcon.SetActive(false);
+
+        // Initialize wasBlocking
+        wasBlocking = false;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        // Stops player from moving when in Dialogue
-        if (inDialogue) 
-        {
-            animatorController.SetBool("isMoving", false); // Stops the movement animation when in dialogue
+        // Early return if critical components are missing
+        if (characController == null || animatorController == null) return;
 
+        ApplyGravity();
+
+        if (InDialogue())
             return;
+
+        // Check block state only when it changes
+        float currentBlockValue = ppControls?.Player.Block.ReadValue<float>() ?? 0f;
+        if (currentBlockValue <= 0f && wasBlocking)
+        {
+            ResetCharacMood("Blocking");
+            wasBlocking = false;
+        }
+        else if (currentBlockValue > 0f)
+        {
+            wasBlocking = true;
         }
 
-        // Calls the method that handles character movement
         Move();
-
-        // Simple Statement for Attack Key
-        if (Input.GetButtonDown("Fire1"))
-            AnimationSetbool("isAttacking", true); // Calls the Animation that fires the attack animation using State Machine Behaviour
-            //Attack(); // Test call for the Attack method
-
-        // Interact Key
-        if (Input.GetKeyUp(KeyCode.E))
-            CheckInteraction();
-
-        // Simple Statement for Block Key
-        if (Input.GetButton("Fire2"))
-        {
-            Block();
-        }
-        else if (isBlocking)
-        {
-            // ...
-            IDamageable thisDamageable = this.GetComponent<IDamageable>();
-
-            // ...
-            thisDamageable.iVulnerable = true;
-
-            // ...
-            isBlocking = false;
-
-            // ...
-            canAttack = true;
-            canMove = true;
-        }
     }
 
     #endregion
@@ -153,14 +162,33 @@ public class CharacterController2Point5D : MonoBehaviour
     // ------------------------- INTERACTIONS -------------------------
     #region INTERACTION LOGICS
 
+    // Method to check if the player is currently in dialogue
+    public bool InDialogue()
+    {
+        if (inDialogue)
+        {
+            Debug.Log("Player in Dialogue!");
+
+            // Stops the movement animation when in dialogue
+            if (animatorController != null)
+                animatorController.SetBool("isMoving", false);
+
+            return true;
+        }
+
+        return false;
+    }
+
     public void OpenInteractableIcon() // - joseph
     {
-        interactIcon.SetActive(true);
+        if (interactIcon != null)
+            interactIcon.SetActive(true);
     }
 
     public void CloseInteractableIcon() // - joseph
     {
-        interactIcon.SetActive(false);
+        if (interactIcon != null)
+            interactIcon.SetActive(false);
     }
 
     private void CheckInteraction() // - joseph
@@ -171,9 +199,10 @@ public class CharacterController2Point5D : MonoBehaviour
         {
             foreach (Collider c in hits)
             {
-                if (c.transform.GetComponent<IObject>())
+                IObject interactable = c.transform.GetComponent<IObject>();
+                if (interactable != null)
                 {
-                    c.transform.GetComponent<IObject>().Interact();
+                    interactable.Interact();
                 }
             }
         }
@@ -181,79 +210,157 @@ public class CharacterController2Point5D : MonoBehaviour
 
     #endregion
 
+    // ---------------------------- STATES -------------------------
+
+    public void SetCharacMood(string mood)
+    {
+        switch (mood)
+        {
+            case "Blocking":
+                isBlocking = true;
+
+                // Safe check for IDamageable
+                IDamageable thisDamageable = this.GetComponent<IDamageable>();
+                if (thisDamageable != null)
+                    thisDamageable.iVulnerable = false;
+
+                canMove = false;
+                canAttack = false;
+                break;
+
+            case "Attacking":
+                canAttack = false;
+                canMove = false;
+                isBlocking = false;
+                break;
+
+            default:
+                Debug.LogWarning($"Unknown mood set: {mood}");
+                break;
+        }
+    }
+
+    public void ResetCharacMood(string mood)
+    {
+        switch (mood)
+        {
+            case "Blocking":
+                Debug.Log("Player block reset!");
+
+                isBlocking = false;
+
+                IDamageable thisDamageable = this.GetComponent<IDamageable>();
+                if (thisDamageable != null)
+                    thisDamageable.iVulnerable = true;
+
+                canMove = true;
+                canAttack = true;
+                break;
+
+            case "Attacking":
+                Debug.Log("Player attack reset!");
+
+                canAttack = true;
+                canMove = true;
+                isBlocking = false;
+                break;
+
+            case "Moving":
+                Debug.Log("Player movement reset!");
+
+                canMove = true;
+                canAttack = true;
+                isBlocking = false;
+                break;
+
+            default:
+                Debug.LogWarning($"Unknown mood reset: {mood}");
+                break;
+        }
+    }
+
     // --------------------------- MOVEMENT ---------------------------
     #region MOVEMENT LOGICS
 
-    // Method for Character Movement Logic
-    public void Move()
+    // Method for applying gravity to the character to simulate freefall and grounded movement
+    public virtual void ApplyGravity()
     {
-        if (characController.isGrounded)
+        if (characController == null) return;
+
+        if (!characController.isGrounded)
+        {
+            Debug.Log("Player is Falling!");
+
+            freefallVelocity += gravity * gravityMultiplier * Time.deltaTime;
+            characController.Move(new Vector3(0, freefallVelocity, 0) * Time.deltaTime);
+        }
+        else
         {
             freefallVelocity = -1.0f; // Resets vertical velocity when grounded
         }
-        else 
+    }
+
+    // Method for Character Movement Logic
+    public virtual void Move()
+    {
+        if (!canMove || ppControls == null) return;
+
+        Debug.Log("Player is Moving!");
+
+        // Reads the movement input from the new input system
+        Vector2 inputVector = ppControls.Player.Move.ReadValue<Vector2>();
+
+        // Handle zero input case for normalized vector
+        Vector3 movement;
+        if (inputVector.magnitude > 0.1f)
         {
-            freefallVelocity += gravity * gravityMultiplier * Time.deltaTime;
+            movement = new Vector3(inputVector.x, freefallVelocity, inputVector.y).normalized;
+        }
+        else
+        {
+            movement = new Vector3(0, freefallVelocity, 0);
         }
 
-        if (!canMove) return;
-
-        // Get's the Horizontal & Vertical Value from Unity's Input System
-        horizontal = Input.GetAxisRaw("Horizontal");
-        vertical = Input.GetAxisRaw("Vertical");
-
-        // Computes for the direction by merging horizontal & vertical positions
-        // - ".normalized" so that moving diagonally would make us not move faster
-        Vector3 movement = new Vector3(horizontal, freefallVelocity, vertical).normalized;
-
         // Evaluates if there is a movement
-        // ".magnitude" to compute for the distance 
-        if (horizontal != 0 || vertical != 0f)
+        if (inputVector.x != 0 || inputVector.y != 0f)
         {
+            // Flip sprite based on direction if spriteRoot exists
+            if (spriteRoot != null)
+            {
+                // Gets a reference to the current scale of the sprite root
+                Vector3 currentScale = spriteRoot.transform.localScale;
+
+                // Determines the direction the character is facing
+                if (inputVector.x < 0f)
+                {
+                    // Flips the sprite root to face left by negating the x scale
+                    spriteRoot.transform.localScale = new Vector3(
+                        -Mathf.Abs(currentScale.x),
+                        currentScale.y,
+                        currentScale.z
+                    );
+                }
+                else if (inputVector.x > 0f)
+                {
+                    // Flips the sprite root to face right
+                    spriteRoot.transform.localScale = new Vector3(
+                        Mathf.Abs(currentScale.x),
+                        currentScale.y,
+                        currentScale.z
+                    );
+                }
+            }
+
             // Animates the character when moving
-            //Animate("Input Magnitude", direction.magnitude, 0.05f, Time.deltaTime);
-
-            // Gets a reference to the current scale of the sprite root
-            Vector3 currentScale = spriteRoot.transform.localScale;
-
-            // Determines the direction the character is facing
-            if (horizontal < 0f)
-            {
-                // Flips the sprite root to face left by negating the x scale
-                spriteRoot.transform.localScale = new Vector3(
-                    -Mathf.Abs(currentScale.x), // Multiplies the absolute value of the current x scale by -1 to flip it
-                    currentScale.y, // Keeps the current y scale unchanged
-                    currentScale.z // Keeps the current z scale unchanged
-                );
-
-                // Flips the sprites to face left if the horizontal input is negative
-                //spriteRenderer.flipX = true;
-            }
-            else if (horizontal > 0f)
-            {
-                // Flips the sprite root to face right by positivizing the x scale
-                spriteRoot.transform.localScale = new Vector3(
-                    Mathf.Abs(currentScale.x), // Multiplies the absolute value of the current x scale by 1 to re-flip it back to normal
-                    currentScale.y,
-                    currentScale.z
-                );
-
-                // Resets the sprite to face right if the horizontal input is positive 
-                //spriteRenderer.flipX = false;
-            }
-
-            // Animates the character when IT IS moving
             AnimationSetbool("isMoving", true);
         }
         else
         {
             // Animates the character when NOT moving
             AnimationSetbool("isMoving", false);
-
-            //Animate("Input Magnitude", 0f, 0.05f, Time.deltaTime);
         }
 
-        // Controls the "Character Controller" of a Unity game object (Applies movement to the character)
+        // Applies movement to the character
         characController.Move(movement * movementSpeed * Time.deltaTime);
     }
 
@@ -262,84 +369,87 @@ public class CharacterController2Point5D : MonoBehaviour
     // ---------------------------- COMBATS ---------------------------
     #region COMBAT LOGICS
 
-    // Handles raycasting for Interaction and Combat
     public virtual void Attack()
     {
-        if (!canAttack) return;
+        if (!canAttack || inDialogue) return;
 
         Debug.Log("Player performed attack");
 
-        // Prevents further attacks until cooldown is over
-        canAttack = false;
+        SetCharacMood("Attacking");
 
-        //// Prevents movement during attack
-        //canMove = false;
+        // Stop any existing attack coroutine
+        if (attackCoroutine != null)
+            StopCoroutine(attackCoroutine);
 
-        //// ...
-        //AnimationSetbool("isMoving", false);
+        attackCoroutine = StartCoroutine(AttackSequence(attackCooldown));
+    }
 
-        // Calls the coroutine that handles the attack sequence
-        StartCoroutine(AttackSequence(attackCooldown));
+    public virtual void NewAttack(InputAction.CallbackContext context)
+    {
+        if (!canAttack || inDialogue || context.performed == false) return;
+
+        // Calls the Animation that fires the attack animation
+        AnimationSetbool("isAttacking", true);
+
+        // Call Attack directly since we're using coroutine management there
+        Attack();
     }
 
     // Coroutine for handling the attack sequence with delay and cooldown
     protected IEnumerator AttackSequence(float cooldown)
     {
-        #region BOXCAST Detection Logic...
+        #region BOXCAST Detection Logic
+
+        // Validate required components
+        if (raycastEmitter == null || spriteRoot == null)
+        {
+            Debug.LogError("Raycast Emitter or Sprite Root is missing! Cannot perform attack.");
+            yield break;
+        }
 
         // Gets the half dimension of the full attack box size
         Vector3 halfExtents = attackBoxCastSize / 2f;
 
-        // Sets the direction the character is facing from the spriteRoots' flip logic
+        // Sets the direction the character is facing
         bool isFacingLeft = spriteRoot.transform.localScale.x < 0f;
-
-        // Sets the direction the character is facing from the Sprite Renderer's flip logic
-        //bool isFacingLeft = spriteRenderer.flipX;
-
-        // Gets the direction of which way the character should be attacking
         Vector3 attackDirection = isFacingLeft ? Vector3.left : Vector3.right;
-
-        // Sets the current rotation of the box to follow the character's rotation
         Quaternion boxRotation = this.transform.rotation;
 
         // Variable to store information about what the BoxCast has hit
         RaycastHit hitInfo;
 
-        //// ... 
-        //AnimationSetbool("isAttacking", true);
-
-
+        // Perform the box cast
         if (Physics.BoxCast(
-            raycastEmitter.transform.position, // Starting Point
-            halfExtents, // HALF the box dimensions
-            attackDirection, // Direction on where to cast the box
-            out hitInfo, // Information about what was hit
-            boxRotation, // Current rotation of the box
-            raycastLength, // The max distance the boxCast could reach
-            ~exludedLayerMask // Layer Mask to filter unwanted targets
+            raycastEmitter.transform.position,
+            halfExtents,
+            attackDirection,
+            out hitInfo,
+            boxRotation,
+            raycastLength,
+            ~exludedLayerMask
         ))
         {
-            // Transforms the hit object into a damageable object if it implements IDamageable
+            // Get components from hit object
             IDamageable damageable = hitInfo.collider.GetComponent<IDamageable>();
-
-            // Transforms the hit object into a knockable object if it implements IKnockable
             IKnockable knockable = hitInfo.collider.GetComponent<IKnockable>();
 
-            // Checks if the hit object can take damage
+            // Apply damage if possible
             if (damageable != null)
             {
                 Debug.Log($"Enemy: {hitInfo.transform.name} HAS BEEN DAMAGED!");
-
-                // Apply attack damage
                 damageable.TakeDamage(attackDamage, false, this.transform);
 
-                // Applies knockback to the target if it implements IKnockable
-                knockable.KnockBack(this.transform, hitInfo.transform);
+                // Apply knockback if possible
+                if (knockable != null)
+                {
+                    knockable.KnockBack(this.transform, hitInfo.transform);
+                }
             }
         }
 
-        // Visualizes the BoxCast in the Scene View for debugging (uses the static class from DebugBoxCastbyArian.cs)
+        // Visualizes the BoxCast in the Scene View for debugging
         DebugBoxCast.SimpleDrawBoxCast(raycastEmitter.transform.position, halfExtents, boxRotation, attackDirection, raycastLength, Color.red);
+
         #endregion
 
         // Cooldown duration before the player can attack again
@@ -348,35 +458,59 @@ public class CharacterController2Point5D : MonoBehaviour
         // Resets the attack animation state
         AnimationSetbool("isAttacking", false);
 
-        // Resets the ability to move and attack
-        canAttack = true;
-        canMove = true;
+        // Resets the character's mood and states after the attack sequence is complete
+        ResetCharacMood("Attacking");
+
+        attackCoroutine = null;
     }
 
     // Method for Blocking Attacks Logic
     public virtual void Block()
     {
-        // ...
-        canMove = false;
-        canAttack = false;
-        isBlocking = true;
+        Debug.Log("Player is Blocking!");
 
-        //Collider thisCollider = this.gameObject.GetComponent<Collider>();
-        IDamageable thisDamageable = this.GetComponent<IDamageable>();
+        if (isBlocking || inDialogue) return;
 
-        // ...
-        thisDamageable.iVulnerable = false;
+        SetCharacMood("Blocking");
+
+        // Start block cooldown if needed
+        if (blockCooldown > 0f)
+        {
+            if (blockCoroutine != null)
+                StopCoroutine(blockCoroutine);
+            blockCoroutine = StartCoroutine(BlockCooldownSequence(blockCooldown));
+        }
     }
 
-    //// Coroutine for handling the blocking sequence with delay and cooldown
-    //protected IEnumerator BlockSequence(IDamageable damageable, float cooldown)
-    //{
-    //    // Shileding Cooldown duration after blocking an attack
-    //    yield return new WaitForSeconds(cooldown);
+    public virtual void NewBlock(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        Block();
+    }
 
-    //    // ...
-    //    damageable.iBlock = true;
-    //}
+    private void OnBlockReleased(InputAction.CallbackContext context)
+    {
+        // This will be called when the block button is released
+        ResetCharacMood("Blocking");
+    }
+
+    // Coroutine for handling the blocking sequence with delay and cooldown
+    protected IEnumerator BlockCooldownSequence(float cooldown)
+    {
+        // Shielding Cooldown duration after blocking an attack
+        yield return new WaitForSeconds(cooldown);
+
+        // Reset block state
+        IDamageable thisDamageable = this.GetComponent<IDamageable>();
+        if (thisDamageable != null)
+            thisDamageable.iVulnerable = true;
+
+        isBlocking = false;
+        canAttack = true;
+        canMove = true;
+
+        blockCoroutine = null;
+    }
 
     #endregion
 
@@ -386,16 +520,32 @@ public class CharacterController2Point5D : MonoBehaviour
     // Method for Character Animation
     public void Animate(string animParamater, float inputValue, float transitionSmooth, float transitionCounter)
     {
-        // - ("Name of the Animation Parameter", player.input value, transition smoothness, counter)
+        if (animatorController == null) return;
         animatorController.SetFloat(animParamater, inputValue, transitionSmooth, transitionCounter);
     }
 
     // Method for Character Animation with bool parameters
     public void AnimationSetbool(string paramaterName, bool boolState)
     {
-        // - ("Name of the Animation Parameter", bool state)
+        if (animatorController == null) return;
         animatorController.SetBool(paramaterName, boolState);
     }
 
     #endregion
+
+    // ------------------------- MEMORY CLEANERS -------------------------
+
+    private void OnDestroy()
+    {
+        if (ppControls != null)
+        {
+            // Unsubscribe from all events
+            ppControls.Player.Attack.performed -= NewAttack;
+            ppControls.Player.Block.performed -= NewBlock;
+            ppControls.Player.Block.canceled -= OnBlockReleased;
+        }
+
+        // Stop all coroutines
+        StopAllCoroutines();
+    }
 }
