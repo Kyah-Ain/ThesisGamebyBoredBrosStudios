@@ -32,11 +32,11 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.Save();
             Debug.Log("Cleared all saved data for new game session");
 
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this.transform.root);
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
     }
 

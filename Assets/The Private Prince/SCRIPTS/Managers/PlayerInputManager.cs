@@ -25,7 +25,7 @@ public class PlayerInputManager : MonoBehaviour
             instance = this; // Set the singleton instance
 
             // Marks this GameObjects' root parent if there is one, and sets it to itself if there's none
-            DontDestroyOnLoad(this.gameObject.transform.root);
+            DontDestroyOnLoad(this.transform.root);
         }
         else
         {
