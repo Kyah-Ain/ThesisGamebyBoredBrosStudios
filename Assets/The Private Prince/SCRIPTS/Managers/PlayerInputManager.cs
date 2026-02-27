@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInputManager : DoNotDestroyOnLoadManager
+public class PlayerInputManager : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -17,17 +17,15 @@ public class PlayerInputManager : DoNotDestroyOnLoadManager
     // ------------------------- UNITY METHODS -------------------------
 
     // Built-in Unity method called when this script was first loaded
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake(); // Call base class Awake that handles persistence logic
-
         // Implement singleton pattern to ensure only one instance of PlayerInputManager exists
         if (instance == null)
         {
             instance = this; // Set the singleton instance
 
-            // ...
-            DontDestroyOnLoad(this.gameObject);
+            // Marks this GameObjects' root parent if there is one, and sets it to itself if there's none
+            DontDestroyOnLoad(this.gameObject.transform.root);
         }
         else
         {
