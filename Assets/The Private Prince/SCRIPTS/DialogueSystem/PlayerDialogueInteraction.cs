@@ -51,6 +51,13 @@ public class PlayerDialogueInteraction : DialogueInteraction
     // Method to handle interaction input (Input Action callback for Interact)
     private void ExecuteInteract(InputAction.CallbackContext context)
     {
+        if (Interactable == null || Interactable.Equals(null))
+        {
+            Debug.Log("Interactable object no longer exists");
+            Interactable = null; // Clears the reference
+            return;
+        }
+
         // Only allow interaction if:
         // * Dialogue UI exists
         // * Dialogue is NOT currently active (prevents interrupting current dialogue)
@@ -66,20 +73,44 @@ public class PlayerDialogueInteraction : DialogueInteraction
             // Set the dialogue active flag to true to prevent starting another dialogue until this one finishes
             isDialogueActive = true;
 
-            // Invoke the Interact method on the interactable object for the Dialogue System
-            // * passing this PlayerDialogueInteraction as a parameter
-            Interactable.Interact(this);
+            try
+            {
+                // Invoke the Interact method on the interactable object for the Dialogue System
+                // * passing this PlayerDialogueInteraction as a parameter
+                Interactable.Interact(this);
+            }
+            catch (MissingReferenceException e)
+            {
+                Debug.LogError($"Interactable was destroyed before interaction could complete: {e}");
+                
+                Interactable = null;
+                isDialogueActive = false;
+                characterController.inDialogue = false;
+            }
         }
     }
 
     // Automated Unity Built-In method being called when this object is destroyed
     private void OnDestroy()
     {
-        // Checks if the ppControls reference is not null before trying to unsubscribe
+        // Clear the Interactable reference
+        Interactable = null;
+
+        // Unsubscribe from input events
         if (ppControls != null)
         {
-            // Clean up the input event subscription by unsubscribing from the 'ExecuteInteract' method 
             ppControls.Player.Interact.performed -= ExecuteInteract;
+        }
+    }
+
+    // Automated Unity Built-In method being called when this component is disabled
+    private void OnDisable()
+    {
+        // Reset dialogue state if component is disabled
+        if (isDialogueActive)
+        {
+            isDialogueActive = false;
+            characterController.inDialogue = false;
         }
     }
 }

@@ -32,9 +32,19 @@ public class DialogueActivator : MonoBehaviour, IInteractable
 
     public void Interact(DialogueInteraction player)
     {
-        foreach (DialogueResponseEvent responseEvent in GetComponents<DialogueResponseEvent>())
+        if (this == null || gameObject == null)
         {
-            if (responseEvent.DialogueObject == dialogueObject)
+            Debug.LogWarning("DialogueActivator has been destroyed");
+            return;
+        }
+
+        DialogueResponseEvent[] responseEvents = GetComponents<DialogueResponseEvent>();
+        
+        if (responseEvents == null) return;
+
+        foreach (DialogueResponseEvent responseEvent in responseEvents)
+        {
+            if (responseEvent != null && responseEvent.DialogueObject == dialogueObject)
             {
                 player.DialogueUI.AddResponseEvents(responseEvent.Events);
                 break;

@@ -153,7 +153,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                 {
                     ""name"": """",
                     ""id"": ""d914ea12-e42c-43a1-8cc1-b4edbebd46d1"",
-                    ""path"": ""<XInputController>/buttonNorth"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad Controller"",
@@ -175,7 +175,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                 {
                     ""name"": """",
                     ""id"": ""fd58e5e4-fff6-4429-98f1-3d8c1ee68758"",
-                    ""path"": ""<XInputController>/buttonSouth"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad Controller"",
@@ -197,7 +197,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                 {
                     ""name"": """",
                     ""id"": ""80227345-9d00-4430-8b1a-f255be72b927"",
-                    ""path"": ""<XInputController>/buttonWest"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad Controller"",
@@ -261,11 +261,66 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""cb9b47dc-a6b4-43b7-96c1-1767b7a95c4a"",
-                    ""path"": ""<XInputController>/leftStick"",
+                    ""name"": ""2D Vector"",
+                    ""id"": ""5994aec0-125c-4492-8298-9bfafe9c75b4"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""e2f51af0-901f-4f8c-b654-ac6d30d73db5"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""af87a372-6d3a-4c42-ab8f-71918d28617b"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""11bd7c09-6351-45f9-86a1-a54443cdd44e"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""75c37052-a4d3-4226-be04-6f0b77ed7232"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cb9b47dc-a6b4-43b7-96c1-1767b7a95c4a"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""groups"": "";Gamepad Controller"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
@@ -285,7 +340,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                 {
                     ""name"": """",
                     ""id"": ""a999b69d-8a68-4c18-b2bd-ea99511e7228"",
-                    ""path"": ""<XInputController>/buttonEast"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad Controller"",
@@ -316,6 +371,15 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NavigateUI"",
+                    ""type"": ""Value"",
+                    ""id"": ""7aa07d37-668c-4a29-818f-07862943f6a6"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -344,7 +408,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                 {
                     ""name"": """",
                     ""id"": ""3ddf2e11-937e-4f66-a682-00ed5b329404"",
-                    ""path"": ""<XInputController>/buttonWest"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad Controller"",
@@ -388,13 +452,123 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                 {
                     ""name"": """",
                     ""id"": ""3fc5e8b9-c185-457f-9c97-d6ab2186f5e3"",
-                    ""path"": ""<XInputController>/buttonWest"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": ""Hold(duration=3)"",
                     ""processors"": """",
                     ""groups"": "";Gamepad Controller"",
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""316bcdf7-2213-4256-912d-aa503cae9abc"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NavigateUI"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""01546710-185c-485a-a2c8-e3df0d12b411"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""NavigateUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""509f9101-d774-4f93-b75d-9d24e668793c"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""NavigateUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""4a83496f-ab5e-4b9e-af2b-42d14470166a"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""NavigateUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""093555aa-6add-42c0-aa32-f63a2010fdaa"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""NavigateUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""fb2cf37f-1c81-4351-8ad1-122c05d4f204"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NavigateUI"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""3c48e681-9f1b-4c53-a687-fa8140036114"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad Controller"",
+                    ""action"": ""NavigateUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""a033571b-8a17-460a-bca7-929eb4ee7f6e"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad Controller"",
+                    ""action"": ""NavigateUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""e063c72b-db13-4af7-89f0-d3dc864ab77e"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad Controller"",
+                    ""action"": ""NavigateUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""a89607b0-bb76-4a30-ad72-f211ce3ee9c8"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad Controller"",
+                    ""action"": ""NavigateUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -440,6 +614,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         m_UserNavigation = asset.FindActionMap("UserNavigation", throwIfNotFound: true);
         m_UserNavigation_Interact = m_UserNavigation.FindAction("Interact", throwIfNotFound: true);
         m_UserNavigation_Cancel = m_UserNavigation.FindAction("Cancel", throwIfNotFound: true);
+        m_UserNavigation_NavigateUI = m_UserNavigation.FindAction("NavigateUI", throwIfNotFound: true);
     }
 
     ~@PrivatePrinceControls()
@@ -663,6 +838,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
     private List<IUserNavigationActions> m_UserNavigationActionsCallbackInterfaces = new List<IUserNavigationActions>();
     private readonly InputAction m_UserNavigation_Interact;
     private readonly InputAction m_UserNavigation_Cancel;
+    private readonly InputAction m_UserNavigation_NavigateUI;
     /// <summary>
     /// Provides access to input actions defined in input action map "UserNavigation".
     /// </summary>
@@ -682,6 +858,10 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// Provides access to the underlying input action "UserNavigation/Cancel".
         /// </summary>
         public InputAction @Cancel => m_Wrapper.m_UserNavigation_Cancel;
+        /// <summary>
+        /// Provides access to the underlying input action "UserNavigation/NavigateUI".
+        /// </summary>
+        public InputAction @NavigateUI => m_Wrapper.m_UserNavigation_NavigateUI;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -714,6 +894,9 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
             @Cancel.started += instance.OnCancel;
             @Cancel.performed += instance.OnCancel;
             @Cancel.canceled += instance.OnCancel;
+            @NavigateUI.started += instance.OnNavigateUI;
+            @NavigateUI.performed += instance.OnNavigateUI;
+            @NavigateUI.canceled += instance.OnNavigateUI;
         }
 
         /// <summary>
@@ -731,6 +914,9 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
             @Cancel.started -= instance.OnCancel;
             @Cancel.performed -= instance.OnCancel;
             @Cancel.canceled -= instance.OnCancel;
+            @NavigateUI.started -= instance.OnNavigateUI;
+            @NavigateUI.performed -= instance.OnNavigateUI;
+            @NavigateUI.canceled -= instance.OnNavigateUI;
         }
 
         /// <summary>
@@ -854,5 +1040,12 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCancel(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "NavigateUI" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnNavigateUI(InputAction.CallbackContext context);
     }
 }
