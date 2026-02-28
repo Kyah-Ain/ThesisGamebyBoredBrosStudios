@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInputManager : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class PlayerInputManager : MonoBehaviour
     // GETTERS for accessing input actions from other scripts
     public static PlayerInputManager Instance => instance;
     public PrivatePrinceControls Controls => ppControls;
+
+    // SHORTCUTS for accessing specific action maps more easily from other scripts
+    private PrivatePrinceControls.PlayerActions PlayerMap => ppControls.Player; // Shortcut to access Player action map
+    private PrivatePrinceControls.UserNavigationActions UserNavigationMap => ppControls.UserNavigation; // Shortcut to access UserNavigation action map
+
+    private InputActionMap currentActionMap; // Stores the currently active action map for easy reference when switching maps
 
     // ------------------------- UNITY METHODS -------------------------
 
@@ -38,9 +45,47 @@ public class PlayerInputManager : MonoBehaviour
             return;
         }
 
-        // Initialize the PrivatePrinceControls instance for handling player input
+        // Initialize the PrivatePrinceControls Instance for handling Action Maps 
         ppControls = new PrivatePrinceControls();
-        ppControls.Player.Enable(); // Enable the 'Player' action map to start receiving input
+
+        // Set the default action map to Player (can be changed later with SwitchActionMap method)
+        currentActionMap = ppControls.Player;
+
+        currentActionMap.Enable(); // Enable the default action map to start receiving input
+    }
+
+    // Method for Switching Action Maps in the New Input System
+    public void SwitchActionMap(string actionMapName) 
+    {
+        // Check if current map exists
+        if (currentActionMap == null) 
+        {
+            Debug.LogError("currentActionMap is null! Make sure it's set in Awake.");
+            return;
+        }
+
+        // Look for the map specified by string name parameter 
+        var newActionMap = ppControls.asset.FindActionMap(actionMapName);
+
+        // Check if the requested map exists at all
+        if (newActionMap == null)
+        {
+            Debug.LogError($"Action map '{actionMapName}' not found! Staying on current map: '{currentActionMap.name}'.");
+            return;
+        }
+
+        // Check if we're already on this map
+        if (currentActionMap.name == actionMapName)
+        {
+            Debug.Log($"Action map '{currentActionMap.name}' is already active. No need to switch.");
+            return;
+        }
+
+        // Performs the Map Switching 
+        Debug.Log($"Switching from '{currentActionMap.name}' to '{actionMapName}'");
+        currentActionMap.Disable(); // Disable the currently active action map
+        currentActionMap = newActionMap;  // Updates the current action map (overwriting the previous map stored)
+        currentActionMap.Enable();  // Enable the new action map
     }
 
     // Automated Unity Built-In method being called when this object is destroyed

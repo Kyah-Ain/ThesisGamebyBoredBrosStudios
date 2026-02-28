@@ -26,6 +26,13 @@ public class EventDialogueInteraction : PlayerDialogueInteraction
     }
 
     // ...
+    public override void Start()
+    {
+        //// Switch to the UserNavigation action map when this component starts
+        //PlayerInputManager.Instance.SwitchActionMap("UserNavigation"); 
+    }
+
+    // ...
     public override void Update()
     {
         if (dialogueUI != null && dialogueUI.IsOpen) return;

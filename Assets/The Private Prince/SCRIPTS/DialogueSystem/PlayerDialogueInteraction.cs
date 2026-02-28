@@ -7,7 +7,7 @@ public class PlayerDialogueInteraction : DialogueInteraction
 {
     // ------------------------- VARIABLES -------------------------
 
-    // Reference to the PlayerInput component for handling new input system actions and controls
+    // Reference to the PrivatePrinceControls script that handles the new input system controls
     private PrivatePrinceControls ppControls;
 
     [Header("DIALOGUE")]
@@ -18,7 +18,7 @@ public class PlayerDialogueInteraction : DialogueInteraction
 
     // ------------------------- UNITY METHODS -------------------------
 
-    // ...
+    // Built-in Unity method called when this script was first loaded
     public override void Awake()
     {
         // Find the character controller component on this GameObject
@@ -29,7 +29,7 @@ public class PlayerDialogueInteraction : DialogueInteraction
             // * Initialize the input system controls
             // * Subscribes to the Interact action's performed event
             ppControls = PlayerInputManager.Instance.Controls;
-            ppControls.Player.Interact.performed += Interact;
+            ppControls.Player.Interact.performed += ExecuteInteract;
         }
         else
         {
@@ -37,7 +37,7 @@ public class PlayerDialogueInteraction : DialogueInteraction
         }
     }
 
-    // ...
+    // Built-in Unity method called once per frame
     public override void Update()
     {
         // Handle dialogue completion
@@ -48,28 +48,38 @@ public class PlayerDialogueInteraction : DialogueInteraction
         }
     }
 
-    // ...
-    private void Interact(InputAction.CallbackContext context)
+    // Method to handle interaction input (Input Action callback for Interact)
+    private void ExecuteInteract(InputAction.CallbackContext context)
     {
         // Only allow interaction if:
-        // n\ Dialogue UI exists
-        // n\ Dialogue is NOT currently active (prevents interrupting current dialogue)
-        // n\ There's an interactable object
+        // * Dialogue UI exists
+        // * Dialogue is NOT currently active (prevents interrupting current dialogue)
+        // * There's an interactable object
         if (dialogueUI != null && !isDialogueActive && Interactable != null)
         {
+            // Switch to the UserNavigation action map when dialogue starts
+            PlayerInputManager.Instance.SwitchActionMap("UserNavigation");
+
+            // Disable player movement when dialogue starts by setting the inDialogue flag on the character controller
             characterController.inDialogue = true;
+
+            // Set the dialogue active flag to true to prevent starting another dialogue until this one finishes
             isDialogueActive = true;
+
+            // Invoke the Interact method on the interactable object for the Dialogue System
+            // * passing this PlayerDialogueInteraction as a parameter
             Interactable.Interact(this);
         }
     }
 
-    // ...
+    // Automated Unity Built-In method being called when this object is destroyed
     private void OnDestroy()
     {
-        // Clean up the input event subscription
+        // Checks if the ppControls reference is not null before trying to unsubscribe
         if (ppControls != null)
         {
-            ppControls.Player.Interact.performed -= Interact;
+            // Clean up the input event subscription by unsubscribing from the 'ExecuteInteract' method 
+            ppControls.Player.Interact.performed -= ExecuteInteract;
         }
     }
 }

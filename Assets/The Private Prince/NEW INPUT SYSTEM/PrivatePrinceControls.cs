@@ -294,6 +294,76 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""UserNavigation"",
+            ""id"": ""dad18b79-640d-498d-bd86-73c3796d1ac0"",
+            ""actions"": [
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""bcd09446-3b53-4d43-b265-6709eed0ba39"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""ba53f414-9c6d-43cd-ac2a-2c63de539625"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""2db0ba39-63a5-422d-919a-e7bf2e8cd58c"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ddf2e11-937e-4f66-a682-00ed5b329404"",
+                    ""path"": ""<XInputController>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad Controller"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""743aed31-e92c-45f7-b714-dbf1690f5c77"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": ""Hold(duration=3)"",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3fc5e8b9-c185-457f-9c97-d6ab2186f5e3"",
+                    ""path"": ""<XInputController>/buttonWest"",
+                    ""interactions"": ""Hold(duration=3)"",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad Controller"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -333,11 +403,16 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        // UserNavigation
+        m_UserNavigation = asset.FindActionMap("UserNavigation", throwIfNotFound: true);
+        m_UserNavigation_Interact = m_UserNavigation.FindAction("Interact", throwIfNotFound: true);
+        m_UserNavigation_Cancel = m_UserNavigation.FindAction("Cancel", throwIfNotFound: true);
     }
 
     ~@PrivatePrinceControls()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PrivatePrinceControls.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_UserNavigation.enabled, "This will cause a leak and performance issues, PrivatePrinceControls.UserNavigation.Disable() has not been called.");
     }
 
     /// <summary>
@@ -549,6 +624,113 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
     /// Provides a new <see cref="PlayerActions" /> instance referencing this action map.
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
+
+    // UserNavigation
+    private readonly InputActionMap m_UserNavigation;
+    private List<IUserNavigationActions> m_UserNavigationActionsCallbackInterfaces = new List<IUserNavigationActions>();
+    private readonly InputAction m_UserNavigation_Interact;
+    private readonly InputAction m_UserNavigation_Cancel;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "UserNavigation".
+    /// </summary>
+    public struct UserNavigationActions
+    {
+        private @PrivatePrinceControls m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public UserNavigationActions(@PrivatePrinceControls wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "UserNavigation/Interact".
+        /// </summary>
+        public InputAction @Interact => m_Wrapper.m_UserNavigation_Interact;
+        /// <summary>
+        /// Provides access to the underlying input action "UserNavigation/Cancel".
+        /// </summary>
+        public InputAction @Cancel => m_Wrapper.m_UserNavigation_Cancel;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_UserNavigation; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="UserNavigationActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(UserNavigationActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="UserNavigationActions" />
+        public void AddCallbacks(IUserNavigationActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UserNavigationActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UserNavigationActionsCallbackInterfaces.Add(instance);
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
+            @Cancel.started += instance.OnCancel;
+            @Cancel.performed += instance.OnCancel;
+            @Cancel.canceled += instance.OnCancel;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="UserNavigationActions" />
+        private void UnregisterCallbacks(IUserNavigationActions instance)
+        {
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
+            @Cancel.started -= instance.OnCancel;
+            @Cancel.performed -= instance.OnCancel;
+            @Cancel.canceled -= instance.OnCancel;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UserNavigationActions.UnregisterCallbacks(IUserNavigationActions)" />.
+        /// </summary>
+        /// <seealso cref="UserNavigationActions.UnregisterCallbacks(IUserNavigationActions)" />
+        public void RemoveCallbacks(IUserNavigationActions instance)
+        {
+            if (m_Wrapper.m_UserNavigationActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="UserNavigationActions.AddCallbacks(IUserNavigationActions)" />
+        /// <seealso cref="UserNavigationActions.RemoveCallbacks(IUserNavigationActions)" />
+        /// <seealso cref="UserNavigationActions.UnregisterCallbacks(IUserNavigationActions)" />
+        public void SetCallbacks(IUserNavigationActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UserNavigationActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UserNavigationActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="UserNavigationActions" /> instance referencing this action map.
+    /// </summary>
+    public UserNavigationActions @UserNavigation => new UserNavigationActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -617,5 +799,27 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnJump(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UserNavigation" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="UserNavigationActions.AddCallbacks(IUserNavigationActions)" />
+    /// <seealso cref="UserNavigationActions.RemoveCallbacks(IUserNavigationActions)" />
+    public interface IUserNavigationActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInteract(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Cancel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCancel(InputAction.CallbackContext context);
     }
 }
