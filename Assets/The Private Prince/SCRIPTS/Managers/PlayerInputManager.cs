@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerInputManager : MonoBehaviour
+public class GameplayInputManager : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
 
     // SINGLETON instances for global access
-    private static PlayerInputManager instance;
+    private static GameplayInputManager instance;
     private PrivatePrinceControls ppControls;
 
     // GETTERS for accessing input actions from other scripts
-    public static PlayerInputManager Instance => instance;
+    public static GameplayInputManager Instance => instance;
     public PrivatePrinceControls Controls => ppControls;
 
     // SHORTCUTS for accessing specific action maps more easily from other scripts

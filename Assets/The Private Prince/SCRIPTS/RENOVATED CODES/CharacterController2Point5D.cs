@@ -55,7 +55,7 @@ public class CharacterController2Point5D : MonoBehaviour
     public bool canAttack = true; // Indicates if the player can perform an attack
     public bool canMove = true; // Indicates if the player can move
     public bool hasHit = false; // Indicates if the player has hit something with its attack
-    public bool isBlocking = false; // ...
+    public bool isBlocking = false; //  Indicates if the player is currently blocking an attack with their shield
     private bool wasBlocking = false; // Tracks previous block state to prevent continuous reset
 
     [Header("DIALOGUE")]
@@ -86,10 +86,10 @@ public class CharacterController2Point5D : MonoBehaviour
             Debug.LogWarning("Raycast Emitter is not assigned. Please assign a Transform for attack raycasts.");
 
         // Assigns the gameObject's "Player Input" component for the new input system to this script
-        if (ppControls == null && PlayerInputManager.Instance != null)
+        if (ppControls == null && GameplayInputManager.Instance != null)
         {
             // Accesses the controls from the PlayerInputManager singleton instance
-            ppControls = PlayerInputManager.Instance.Controls;
+            ppControls = GameplayInputManager.Instance.Controls;
 
             // Subscribes to the performed events
             ppControls.Player.Attack.performed += NewAttack;
@@ -98,7 +98,7 @@ public class CharacterController2Point5D : MonoBehaviour
 
             Debug.Log($"New Input System was set: {ppControls}");
         }
-        else if (PlayerInputManager.Instance == null)
+        else if (GameplayInputManager.Instance == null)
         {
             Debug.LogError("PlayerInputManager singleton not found! Make sure it exists in the scene.");
         }

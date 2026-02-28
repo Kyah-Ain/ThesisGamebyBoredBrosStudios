@@ -27,9 +27,9 @@ public class DialogueUI : MonoBehaviour
 
     public void Awake()
     {
-        if (PlayerInputManager.Instance != null) 
+        if (GameplayInputManager.Instance != null) 
         {
-            ppControls = PlayerInputManager.Instance.Controls;
+            ppControls = GameplayInputManager.Instance.Controls;
 
             // Subscribe to the Interact and Cancel actions' performed events
             ppControls.UserNavigation.Interact.performed += OnInteractPerformed;
@@ -107,7 +107,7 @@ public class DialogueUI : MonoBehaviour
         IsOpen = true; // Mark dialogue as open
         dialogueBox.SetActive(true); // Show the dialogue box
         ResetInputFlags(); // Reset input flags at the start of new dialogue
-        PlayerInputManager.Instance.SwitchActionMap("UserNavigation"); // Switch to the UserNavigation action map for dialogue interaction
+        GameplayInputManager.Instance.SwitchActionMap("UserNavigation"); // Switch to the UserNavigation action map for dialogue interaction
         currentDialogueCoroutine = StartCoroutine(StepThroughDialogue(dialogueObject)); // Start showing the dialogue
         dialogueFinished = false; // Reset finished flag for new dialogue
     }
@@ -224,10 +224,10 @@ public class DialogueUI : MonoBehaviour
         ResetDialogueStats(); // Reset all dialogue stats to default values
 
         // Checks if PlayerInputManager instance exists 
-        if (PlayerInputManager.Instance != null)
+        if (GameplayInputManager.Instance != null)
         {
             // Resets back to Player action map when dialogue intteraction closes
-            PlayerInputManager.Instance.SwitchActionMap("Player");
+            GameplayInputManager.Instance.SwitchActionMap("Player");
             Debug.Log("Dialogue closed - Switched back to Player map");
         }
     }

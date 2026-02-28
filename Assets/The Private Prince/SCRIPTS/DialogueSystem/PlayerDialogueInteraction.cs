@@ -24,11 +24,11 @@ public class PlayerDialogueInteraction : DialogueInteraction
         // Find the character controller component on this GameObject
         characterController = this.GetComponent<CharacterController2Point5D>();
 
-        if (PlayerInputManager.Instance != null)
+        if (GameplayInputManager.Instance != null)
         {
             // * Initialize the input system controls
             // * Subscribes to the Interact action's performed event
-            ppControls = PlayerInputManager.Instance.Controls;
+            ppControls = GameplayInputManager.Instance.Controls;
             ppControls.Player.Interact.performed += ExecuteInteract;
         }
         else
@@ -58,7 +58,7 @@ public class PlayerDialogueInteraction : DialogueInteraction
         if (dialogueUI != null && !isDialogueActive && Interactable != null)
         {
             // Switch to the UserNavigation action map when dialogue starts
-            PlayerInputManager.Instance.SwitchActionMap("UserNavigation");
+            GameplayInputManager.Instance.SwitchActionMap("UserNavigation");
 
             // Disable player movement when dialogue starts by setting the inDialogue flag on the character controller
             characterController.inDialogue = true;
