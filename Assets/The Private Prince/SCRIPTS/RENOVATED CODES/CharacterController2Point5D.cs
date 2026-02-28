@@ -76,7 +76,7 @@ public class CharacterController2Point5D : MonoBehaviour
             characController = this.GetComponent<CharacterController>();
 
         if (animatorController == null)
-            animatorController = this.GetComponent<Animator>();
+            animatorController = this.GetComponentInChildren<Animator>();
 
         if (spriteRoot == null)
             Debug.LogWarning("Sprite Root was not set. Please assign the root GameObject that contains the character sprites to flip them according to the input direction.");

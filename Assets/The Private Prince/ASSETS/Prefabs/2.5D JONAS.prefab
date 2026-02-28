@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 323054637716987779}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.7000017, y: 10.454094, z: 0}
+  m_LocalPosition: {x: 2.700002, y: 10.45409, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -181,7 +181,6 @@ GameObject:
   - component: {fileID: 9178684813098361915}
   - component: {fileID: 6527579950894009141}
   - component: {fileID: 72568196641525124}
-  - component: {fileID: 57678915575168996}
   - component: {fileID: 463435851357747735}
   - component: {fileID: 8585482692624764442}
   - component: {fileID: 1338100567327975527}
@@ -269,27 +268,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!95 &57678915575168996
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1229649401379606021}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f3d81fc9af9a52544b22e5034ea7e68b, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!143 &463435851357747735
 CharacterController:
   m_ObjectHideFlags: 0
@@ -331,14 +309,13 @@ MonoBehaviour:
   characController: {fileID: 0}
   animatorController: {fileID: 0}
   spriteRoot: {fileID: 5739753818322879552}
-  horizontal: 0
-  vertical: 0
   movementSpeed: 6
   gravity: -9.81
   gravityMultiplier: 3
   freefallVelocity: 0
   attackDamage: 1
   attackCooldown: 0.85
+  blockCooldown: 0
   attackBoxCastSize: {x: 1, y: 1, z: 1}
   interactionBoxSize: {x: 0.1, y: 1, z: 0.5}
   obstacleLayer:
@@ -1114,6 +1091,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7635841821101677841}
+  - component: {fileID: 8977466019929595715}
   m_Layer: 7
   m_Name: Sprite Root | Jonas
   m_TagString: Untagged
@@ -1138,6 +1116,27 @@ Transform:
   - {fileID: 6409101962635681338}
   m_Father: {fileID: 218130593208656781}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8977466019929595715
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5739753818322879552}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f3d81fc9af9a52544b22e5034ea7e68b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5961821694638237968
 GameObject:
   m_ObjectHideFlags: 0
