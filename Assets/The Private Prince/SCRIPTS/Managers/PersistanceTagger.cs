@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoNotDestroyOnLoadManager : MonoBehaviour
+public class PersistanceTagger : MonoBehaviour
 {
     // NOTE: INTHERIT FROM THIS FOR A MUCH MORE SAFEST APPROACH WITH NO CONFLICT TO TIMING
     // * only if you have your own DoNotDestroy logic on other script attached to the same object

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class DoorInteraction : Teleportation
+public class DoorInteraction : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -31,15 +31,15 @@ public class DoorInteraction : Teleportation
     // Built-In Unity method that called when a gameObject with a Collider enters
     private void OnTriggerEnter(Collider actor)
     {
-        // 1st: Evaluates if the portal is set to only teleport the player character
-        if (portalType == PortalType.ForPlayerOnly) 
-        {
-            // Filters the trigger event to only respond to a non 'Player' tagged gameObject
-            if (!actor.CompareTag("Player"))
-            {
-                return; // Exit the method early if the actor trying to access is not player
-            }
-        }
+        //// 1st: Evaluates if the portal is set to only teleport the player character
+        //if (portalType == PortalType.ForPlayerOnly) 
+        //{
+        //    // Filters the trigger event to only respond to a non 'Player' tagged gameObject
+        //    if (!actor.CompareTag("Player"))
+        //    {
+        //        return; // Exit the method early if the actor trying to access is not player
+        //    }
+        //}
 
         // 2nd: Evaluates if the door is set to require player interaction to teleport
         if (doorType == DoorType.InteractDoor) 
@@ -53,8 +53,8 @@ public class DoorInteraction : Teleportation
 
         ResetDoorInteraction();
 
-        // 3rd: Teleports the Character to the portal's destination position
-        base.TeleportPlayer(actor.gameObject);
+        //// 3rd: Teleports the Character to the portal's destination position
+        //base.TeleportPlayer(actor.gameObject);
     }
 
     // ...
@@ -71,8 +71,8 @@ public class DoorInteraction : Teleportation
             // ...
             ResetDoorInteraction();
 
-            // ...
-            base.TeleportPlayer(actor.gameObject);
+            //// ...
+            //base.TeleportPlayer(actor.gameObject);
         }
     }
 

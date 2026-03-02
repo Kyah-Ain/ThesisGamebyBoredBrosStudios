@@ -2,64 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Teleportation : MonoBehaviour
+public abstract class Teleportation : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
 
-    public Transform portalDestination; // The destination portal could teleport to
+    [SerializeField] protected Transform tpDestination; // The destination portal could teleport to
+    [SerializeField] protected float tpOffset = 0.5f; // Offset to prevent teleporting into the destination portal's collider
 
-    public enum PortalType // List of options for the portal condition type
+    // --------------------------- TP METHODS -------------------------
+
+    // Abstract method - derived classes MUST implement this
+    protected abstract void Teleport(GameObject passenger, Transform destination);
+
+    // Protected helper method that derived classes can use
+    protected virtual void ApplyTeleportPosition(GameObject passenger, Transform destination)
     {
-        ForPlayerOnly, // Only teleports the player character
-        ForAllCharacters // Teleports any character that enters the portal
+        // ...
+        Vector3 faceDirection = destination.TransformDirection(Vector3.forward) * tpOffset;
+        passenger.transform.position = destination.position + faceDirection;
+
+        // ...
+        Physics.SyncTransforms();
+
+        Debug.Log($"Teleported {passenger.name} to {destination.position}");
     }
 
-    // Sets the default portal type to only teleport the player character (the most use cases)
-    public PortalType portalType = PortalType.ForPlayerOnly; 
+    // ------------------------- OPTIONAL METHODS -------------------------
 
-    // ------------------------- UNITY METHODS -------------------------
-
-    // Built-In Unity method that called when a gameObject with a Collider enters
-    private void OnTriggerEnter(Collider actor)
+    // Built-In Unity method that allows you to draw gizmos in the editor for visualization
+    private void OnDrawGizmos()
     {
-        if (portalType == PortalType.ForPlayerOnly) 
-        {
-            // Filters the trigger event to only respond to a 'Player' tagged gameObject
-            if (!actor.CompareTag("Player"))
-            {
-                return; // Exit the method early if the actor is not the player
-            }
-        } 
+        if (tpDestination == null) return;
 
-        // Teleport the a Character to the portal's destination position
-        TeleportPlayer(actor.gameObject);
-    }
+        // 1. Sets the gizmo's wireframe pen color
+        // 2. Draws wireframe to the specified location (VISIBLE ON EDITOR ONLY)
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(tpDestination.position, 0.5f);
+        Gizmos.DrawWireCube(this.transform.position, this.transform.localScale);
 
-    // Method to handle teleporting the character to the destination portal's position
-    protected virtual void TeleportPlayer(GameObject passenger) 
-    {
-        // Try to get the CharacterController component from the passenger GameObject
-        // - this is important to prevent issues if the character contains CharacterController 
-        CharacterController actorController = passenger.GetComponent<CharacterController>();
-
-        // Evalutes if the passenger has a CharacterController that needs to disable before teleporting
-        if (actorController)
-        {
-            // Disable the CharacterController to avoid collision issues during teleportation
-            actorController.enabled = false;
-
-            // Teleport the player to the destination portal's position
-            passenger.transform.position = portalDestination.position;
-
-            // Re-enable the CharacterController after teleportation
-            actorController.enabled = true;
-        }
-        else 
-        {
-            // Teloports a Character with no CharacterController (like an Enemy, NPC, and such)
-            passenger.transform.position = portalDestination.position;
-        }
-
-        Debug.Log($"Teleported {passenger.name} to {portalDestination.position}");
+        // 1. Sets the gizmo's wireframe pen color
+        // 2. Gets and stores the forward direction of the portal destination
+        // 3. Draws a ray to visualize the facing direction of the portal (VISIBLE ON EDITOR ONLY)
+        Gizmos.color = Color.white;
+        var faceDirection = tpDestination.TransformDirection(Vector3.forward) * tpOffset;
+        Gizmos.DrawRay(tpDestination.position, faceDirection);
     }
 }
