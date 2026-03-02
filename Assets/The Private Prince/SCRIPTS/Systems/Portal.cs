@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+
+using TMPro;
 
 public class Portal : Teleportation
 {
@@ -107,6 +108,7 @@ public class Portal : Teleportation
             controller = null;
         }
 
+        // ...
         if (rb != null)
         {
             rb.velocity = Vector3.zero;
@@ -114,6 +116,28 @@ public class Portal : Teleportation
             controller = null;
         }
 
+        // ...
         passenger = null;
     }
+
+    // ------------------------- OPTIONAL METHODS -------------------------
+
+    //// Built-In Unity method that allows you to draw gizmos in the editor for visualization
+    //private void OnDrawGizmos()
+    //{
+    //    if (tpDestination == null) return;
+
+    //    // 1. Sets the gizmo's wireframe pen color
+    //    // 2. Draws wireframe to the specified location (VISIBLE ON EDITOR ONLY)
+    //    Gizmos.color = Color.green;
+    //    Gizmos.DrawWireSphere(tpDestination.position, 0.5f);
+    //    Gizmos.DrawWireCube(this.transform.position, this.transform.localScale);
+
+    //    // 1. Sets the gizmo's wireframe pen color
+    //    // 2. Gets and stores the forward direction of the portal destination
+    //    // 3. Draws a ray to visualize the facing direction of the portal (VISIBLE ON EDITOR ONLY)
+    //    Gizmos.color = Color.white;
+    //    var faceDirection = tpDestination.TransformDirection(Vector3.forward) * tpOffset;
+    //    Gizmos.DrawRay(tpDestination.position, faceDirection);
+    //}
 }
