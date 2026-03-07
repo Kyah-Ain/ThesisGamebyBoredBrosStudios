@@ -19,8 +19,13 @@ public class PuzzleManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null) 
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.transform.root);
+        }
+        else 
+            Destroy(this.gameObject);
     }
 
     public void StartPuzzle(PuzzleBase puzzle)

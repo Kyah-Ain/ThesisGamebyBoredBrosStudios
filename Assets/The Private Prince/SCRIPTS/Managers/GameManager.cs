@@ -9,49 +9,45 @@ public class GameManager : MonoBehaviour
 {
     // ---------------------------- VARIABLES -------------------------
 
-    // Singleton instance for global access (On Reading Onleh)
-    public static GameManager Instance { get; private set; }
+    //// Singleton value, changeabl only here on this script
+    //private static GameManager instance;
+
+    //// Singleton instance for global access (On Reading Onleh)
+    //public static GameManager Instance => instance;
 
     [Header("Script References")]
-    public LevelManager levelManager; // Reference to the SaveManager.cs that handles saving and loading levels
     public ActivationManager activationManager; // Reference to the PanelManager.cs that handles UI panels and prompts
 
-    //[Header("Scene Reference")]
-    //public string defaultSceneToLoad = "INPUT HERE YOUR DEFAULT SCENE NAME"; // Reference to the scene that will be loaded 
+    private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
+
+    public string _persistentGameplay = "Replace This With Your Scene Name!";
+
+    [SerializeField] private GameObject _loadingBarObject;
+    [SerializeField] private Image _loadingBar;
 
     // ---------------------------- METHODS ---------------------------
 
     // ...
     public void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-
-            PlayerPrefs.DeleteAll();
-            PlayerPrefs.Save();
-            Debug.Log("Cleared all saved data for new game session");
-
-            DontDestroyOnLoad(this.transform.root);
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        _loadingBarObject.SetActive(false);
     }
 
     // Method to start a new game
     public void StartNewGame(string startingSceneName = null) 
     {
+        _loadingBarObject.SetActive(true);
+
         // Evaluate if the player has already played at least one level by checking the highest level reached
-        if (levelManager.highestLevel > 1)
+        if (LevelManager.Instance.highestLevel > 1)
         {
             activationManager.Activate(); // Open the prompt panel to confirm starting a new game
         }
         else // If the player has not played any levels yet, we can directly start a new game without confirmation
         {
-            ResetGame(); // Reset the game if no levels have been played yet
+            LevelManager.Instance.ResetLevel(); // Reset the game if no levels have been played yet
             LoadScene(startingSceneName); // Loads a specific Unity scene 
+            StartCoroutine(ProgressLoadingBar());
         }
     }
 
@@ -61,7 +57,22 @@ public class GameManager : MonoBehaviour
         // Evaluates if the scene name isn't a null default name
         if (levelSceneName != null)
         {
-            SceneManager.LoadScene(levelSceneName); // Load the specified scene by its name
+            _scenesToLoad.Add(SceneManager.LoadSceneAsync(levelSceneName));
+            LoadSceneAdditive(_persistentGameplay);
+        }
+        else // Prompt an error if the scene name is not set in the Inspector
+        {
+            Debug.LogError("Scene to load is not specified!"); // Log an error if the scene name is not set
+        }
+    }
+
+    // Method that loads a specific Unity scene by its name (which can be set in the Inspector)
+    public void LoadSceneAdditive(string levelSceneName = null)
+    {
+        // Evaluates if the scene name isn't a null default name
+        if (levelSceneName != null)
+        {
+            _scenesToLoad.Add(SceneManager.LoadSceneAsync(levelSceneName, LoadSceneMode.Additive));
         }
         else // Prompt an error if the scene name is not set in the Inspector
         {
@@ -72,19 +83,32 @@ public class GameManager : MonoBehaviour
     // Method that quickly loads the player to the last level played
     public void LoadLastScene()
     {
-        SceneManager.LoadScene($"Level_{levelManager.lastLevel}"); // Load the last level played by the player
-    }
-
-    // Method to reset the game progress back to zero
-    public void ResetGame() 
-    {
-        PlayerPrefs.SetInt("player_highestLevel", 0); // Reset the highest level reached by the player
-        PlayerPrefs.SetInt("player_lastLevel", 0); // Reset the last level played by the player
+        SceneManager.LoadSceneAsync($"Level_{LevelManager.Instance.lastLevel}"); // Load the last level played by the player
     }
 
     // Method to quit the game
     public void QuitGame() 
     {
         Application.Quit(); // Quit the application
+    }
+
+    // ...
+    public IEnumerator ProgressLoadingBar() 
+    {
+        // Starting ... 
+        float loadProgress = 0.0f;
+
+        // ...
+        for (int i = 0; i < _scenesToLoad.Count; i++) 
+        {
+            // ...
+            while (!_scenesToLoad[i].isDone) 
+            {
+                // ...
+                loadProgress += _scenesToLoad[i].progress;
+                _loadingBar.fillAmount = loadProgress / _scenesToLoad.Count;
+                yield return null;
+            }
+        }
     }
 }

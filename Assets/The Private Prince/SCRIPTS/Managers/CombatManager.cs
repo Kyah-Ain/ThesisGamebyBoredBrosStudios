@@ -7,7 +7,7 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable, ICooldownab
 {
     // ------------------------- VARIABLES -------------------------
 
-    public event Action<CombatManager> onDeath; // Event triggered when character dies
+    public event Action <CombatManager> onDeath; // Event triggered when character dies
 
     [Header("COMBAT STATS")]
     public float health = 5f; // Current health points
@@ -42,8 +42,6 @@ public class CombatManager : MonoBehaviour, IDamageable, IKnockable, ICooldownab
     // Interface implementation for ICooldownable
     public bool isCooldown { get => onCooldown; set => onCooldown = value; }
     public float cooldown { get => timer; set => timer = value; }
-
-
 
     // ------------------------- METHODS -------------------------
 

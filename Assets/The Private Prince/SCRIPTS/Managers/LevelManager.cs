@@ -5,7 +5,13 @@ using UnityEngine.UI; // Grants access to Unity's UI classes and functions, such
 
 public class LevelManager : MonoBehaviour
 {
+    // ------------------------- INSTANCES ------------------------- 
+
+    private static LevelManager instance;
+    public static LevelManager Instance => instance;
+
     // ------------------------- VARIABLES -------------------------
+
     [Header("Save Manager Attributes")]
     public int highestLevel; // The highest level reached by the player
     public int lastLevel; // The last level the player played
@@ -15,6 +21,26 @@ public class LevelManager : MonoBehaviour
     public Button[] loadLevelButtons; // Array of buttons for loading levels
 
     // -------------------------- METHODS ---------------------------
+
+    // ...
+    public void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+            Debug.Log("Cleared all saved data for new game session");
+
+            DontDestroyOnLoad(this.transform.root);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
     // Built-in Unity method that is called at the start of activiting this whole script
     private void Start()
     {
@@ -25,10 +51,13 @@ public class LevelManager : MonoBehaviour
     // Built-in Unity method that is called once per frame
     private void Update()
     {
+        // ...
         for (int index = 0; index < highestLevel; index++)
         {
+            // ...
             if (index < loadLevelButtons.Length) // Safety check
             {
+                // ...
                 loadLevelButtons[index].interactable = true;
                 Debug.Log($"Button [{index}] has been unlocked!");
             }
@@ -38,5 +67,12 @@ public class LevelManager : MonoBehaviour
                 break; // Exit early to avoid unnecessary iterations
             }
         }
+    }
+
+    // Method to reset the game progress back to zero
+    public void ResetLevel()
+    {
+        PlayerPrefs.SetInt("player_highestLevel", 0); // Reset the highest level reached by the player
+        PlayerPrefs.SetInt("player_lastLevel", 0); // Reset the last level played by the player
     }
 }

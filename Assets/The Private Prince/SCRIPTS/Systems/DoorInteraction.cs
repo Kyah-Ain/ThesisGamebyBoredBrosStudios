@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using System;
 
+// Manually creates an Event Method that accepts Parameter
 [Serializable] public class DoorEvent : UnityEvent<string> { }
 
 public class DoorInteraction : Portal

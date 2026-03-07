@@ -74,8 +74,8 @@ public class EnemyPoolMember : MonoBehaviour
         Debug.LogError($"GameObject path: {GetGameObjectPath(this.gameObject)}");
         Debug.LogError($"Active in hierarchy: {gameObject.activeInHierarchy}");
 
-        // Destroy object since it can't be pooled
-        Destroy(gameObject);
+        //// Destroy object since it can't be pooled
+        //Destroy(gameObject);
     }
 
     // Generates full hierarchical path for debugging purposes

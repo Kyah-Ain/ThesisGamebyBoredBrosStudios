@@ -6,13 +6,14 @@ using TMPro; // Grants access to TextMesh Pro classes for advanced text renderin
 
 public class PlayerCombat : CombatManager
 {
+    // -------------------------- EVENTS -------------------------
+
+    [SerializeField] private GameEvent gameEvent; // Placeholder for the Event Trigger Scriptable Object
+
     // ------------------------- VARIABLES -------------------------
 
-    [Header("REFERNCES")]
-    public PlayerController3D PlayerController3D; // ...
-
-    // TEMPORARY: Might be deleted later
-    public string defaultSceneToLoad = "INPUT HERE YOUR DEFAULT SCENE NAME...";
+    //// TEMPORARY: Might be deleted later
+    //public string defaultSceneToLoad = "INPUT HERE YOUR DEFAULT SCENE NAME...";
 
     [Header("UI SETTINGS")]
     public Image[] heartsLeft;
@@ -130,12 +131,14 @@ public class PlayerCombat : CombatManager
     // Override Die method to handle player death differently
     public override void Die()
     {
-        //base.Die(); cinomment out ko mune may error lumalabas regarding dito - josep
+        base.Die();
 
-        // ...
-        if (GameManager.Instance != null) 
-        {
-            GameManager.Instance.LoadScene(defaultSceneToLoad);
-        }
+        gameEvent.TriggerEvent();
+
+        //// ...
+        //if (GameManager.Instance != null) 
+        //{
+        //    GameManager.Instance.LoadScene(defaultSceneToLoad);
+        //}
     }
 }
