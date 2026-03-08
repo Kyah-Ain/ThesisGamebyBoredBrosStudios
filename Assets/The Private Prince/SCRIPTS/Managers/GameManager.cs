@@ -68,9 +68,10 @@ public class GameManager : MonoBehaviour
         else // If the player has not played any levels yet, we can directly start a new game without confirmation
         {
             LevelManager.Instance.ResetLevel(); // Reset the game if no levels have been played yet
-            LoadScene(startingSceneName); // Loads a specific Unity scene 
 
-            //SceneManager.LoadSceneAsync(_loadingScreenScene, LoadSceneMode.Additive);
+            LoadScene(startingSceneName); // Loads a specific Unity scene 
+            _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay, LoadSceneMode.Additive));
+
             StartCoroutine(ProgressLoadingBar());
         }
     }
