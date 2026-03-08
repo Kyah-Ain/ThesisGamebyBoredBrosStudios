@@ -9,18 +9,21 @@ public class GameManager : MonoBehaviour
 {
     // ---------------------------- VARIABLES -------------------------
 
-    //// Singleton value, changeabl only here on this script
-    //private static GameManager instance;
+    // Singleton value, changeabl only here on this script
+    private static GameManager instance;
 
-    //// Singleton instance for global access (On Reading Onleh)
-    //public static GameManager Instance => instance;
+    // Singleton instance for global access (On Reading Onleh)
+    public static GameManager Instance => instance;
 
     [Header("Script References")]
     public ActivationManager activationManager; // Reference to the PanelManager.cs that handles UI panels and prompts
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
 
-    public string _persistentGameplay = "Replace This With Your Scene Name!";
+
+    [Header("Loading Screen References")]
+    public string _persistentGameplay = "Type Here Your Scene Name!";
+    //public string _loadingScreenScene = "Type Here Your Scene Name!";
 
     [SerializeField] private GameObject _loadingBarObject;
     [SerializeField] private Image _loadingBar;
@@ -31,6 +34,25 @@ public class GameManager : MonoBehaviour
     public void Awake()
     {
         _loadingBarObject.SetActive(false);
+
+        // Implement singleton pattern to ensure only one instance of PlayerInputManager exists
+        if (instance == null)
+        {
+            instance = this; // Set the singleton instance
+
+            // Marks this GameObjects' root parent if there is one, and sets it to itself if there's none
+            DontDestroyOnLoad(this.transform.root);
+        }
+        else
+        {
+            Debug.Log($"Instance of this PlayerInputManager already exists, destroying this duplicate instance to enforce singleton pattern.");
+
+            Destroy(this.gameObject); // Destroy duplicate instances
+
+            // Exit the Awake method early
+            // * to prevent further initialization of this duplicate instance
+            return;
+        }
     }
 
     // Method to start a new game
@@ -47,6 +69,8 @@ public class GameManager : MonoBehaviour
         {
             LevelManager.Instance.ResetLevel(); // Reset the game if no levels have been played yet
             LoadScene(startingSceneName); // Loads a specific Unity scene 
+
+            //SceneManager.LoadSceneAsync(_loadingScreenScene, LoadSceneMode.Additive);
             StartCoroutine(ProgressLoadingBar());
         }
     }
@@ -58,7 +82,7 @@ public class GameManager : MonoBehaviour
         if (levelSceneName != null)
         {
             _scenesToLoad.Add(SceneManager.LoadSceneAsync(levelSceneName));
-            LoadSceneAdditive(_persistentGameplay);
+            //LoadSceneAdditive(_persistentGameplay);
         }
         else // Prompt an error if the scene name is not set in the Inspector
         {
@@ -95,12 +119,16 @@ public class GameManager : MonoBehaviour
     // ...
     public IEnumerator ProgressLoadingBar() 
     {
+        Debug.Log("GameManager: Entered the ProgressLoadingBar Coroutine");
+
         // Starting ... 
         float loadProgress = 0.0f;
 
         // ...
         for (int i = 0; i < _scenesToLoad.Count; i++) 
         {
+            Debug.Log($"GameManager: Loading Scene {i}");
+
             // ...
             while (!_scenesToLoad[i].isDone) 
             {
@@ -110,5 +138,28 @@ public class GameManager : MonoBehaviour
                 yield return null;
             }
         }
+
+        //// --------------------- UNLOADING OF LOADING SCREEN MIGHT MIGRATE SOMEWHEEREE SOON ---------------------
+
+        //Debug.Log("GameManager: All scenes loaded!");
+
+        //// Small delay to ensure scenes are fully activated
+        //yield return new WaitForSeconds(0.1f);
+
+        //// UNLOAD THE LOADING SCREEN SCENE HERE
+        //if (!string.IsNullOrEmpty(_loadingScreenScene))
+        //{
+        //    SceneManager.UnloadSceneAsync(_loadingScreenScene);
+        //    Debug.Log($"GameManager: Unloaded loading screen scene: {_loadingScreenScene}");
+        //}
+
+        //// Hide loading bar (if it's still accessible)
+        //if (_loadingBarObject != null)
+        //{
+        //    _loadingBarObject.SetActive(false);
+        //}
+
+        //// Clear the list for next use
+        //_scenesToLoad.Clear();
     }
 }

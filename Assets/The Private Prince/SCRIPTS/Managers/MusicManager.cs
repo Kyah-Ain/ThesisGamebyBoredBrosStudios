@@ -24,7 +24,7 @@ public class MusicManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this.transform.root);
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             if (audioSource == null)
