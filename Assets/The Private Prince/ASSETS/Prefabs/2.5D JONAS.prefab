@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 5938827018597410799}
   - component: {fileID: 463435851357747735}
   - component: {fileID: 8585482692624764442}
-  - component: {fileID: 1338100567327975527}
+  - component: {fileID: 9171132215444236147}
   - component: {fileID: 302292181442474657}
   - component: {fileID: 3483216047257210615}
   - component: {fileID: 6505654505121654040}
@@ -356,7 +356,7 @@ MonoBehaviour:
   hasHit: 0
   isBlocking: 0
   dialogueUI: {fileID: 0}
---- !u!114 &1338100567327975527
+--- !u!114 &9171132215444236147
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -365,7 +365,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1229649401379606021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a4c365b6c165b54da0a56e1681c9ae4, type: 3}
+  m_Script: {fileID: 11500000, guid: a6ee4c006a00b3f4bb1e0ffca6e307dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: 5
@@ -379,6 +379,9 @@ MonoBehaviour:
   isVulnerable: 1
   onCooldown: 0
   timer: 0
+  gameEvent: {fileID: 11400000, guid: 9d35359c32669ed4b9dfef68c7689255, type: 2}
+  heartsLeft: []
+  heartMode: 0
 --- !u!114 &302292181442474657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,8 +407,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueUI: {fileID: 0}
-  dialogueIterationLimit: 0
-  characterController: {fileID: 0}
+  dialogueIterationLimit: 1
+  characterController: {fileID: 8585482692624764442}
 --- !u!114 &6505654505121654040
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -70,9 +70,9 @@ public class EnemyPoolMember : MonoBehaviour
     // Handles the case where pool reference is missing with detailed diagnostics
     private void HandleMissingPoolReference()
     {
-        Debug.LogError($"No pool reference! Destroying enemy: {gameObject.name}");
-        Debug.LogError($"GameObject path: {GetGameObjectPath(this.gameObject)}");
-        Debug.LogError($"Active in hierarchy: {gameObject.activeInHierarchy}");
+        //Debug.LogError($"No pool reference! Destroying enemy: {gameObject.name}");
+        //Debug.LogError($"GameObject path: {GetGameObjectPath(this.gameObject)}");
+        //Debug.LogError($"Active in hierarchy: {gameObject.activeInHierarchy}");
 
         //// Destroy object since it can't be pooled
         //Destroy(gameObject);
