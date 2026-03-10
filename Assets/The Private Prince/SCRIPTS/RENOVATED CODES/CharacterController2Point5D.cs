@@ -548,4 +548,41 @@ public class CharacterController2Point5D : MonoBehaviour
         // Stop all coroutines
         StopAllCoroutines();
     }
+
+    // -------------------------- SAVE SYSTEM (Temporary) ----------------------------
+
+    // Add a method to prepare player data for saving
+    public PlayerData GetPlayerDataForSave()
+    {
+        PlayerData data = new PlayerData();
+
+        // Save position
+        data.playerPosition = new SerializableVector3(transform.position);
+
+        // You can add more player data here as needed
+        // For example: health, current animation state, etc.
+
+        return data;
+    }
+
+    // Add a method to load player data from save
+    public void LoadFromPlayerData(PlayerData data)
+    {
+        if (data == null || data.playerPosition == null) return;
+
+        // Use CharacterController's enabled state to prevent issues when setting position
+        if (characController != null)
+        {
+            bool wasControllerEnabled = characController.enabled;
+            characController.enabled = false;
+            transform.position = data.playerPosition.ConvertToVector3();
+            characController.enabled = wasControllerEnabled;
+        }
+        else
+        {
+            transform.position = data.playerPosition.ConvertToVector3();
+        }
+
+        Debug.Log("Player position loaded from save data");
+    }
 }

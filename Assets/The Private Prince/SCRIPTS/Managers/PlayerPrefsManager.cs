@@ -2,7 +2,7 @@ using System.Collections; // Grants access to collections and data structures li
 using System.Collections.Generic; // Grants access to generic collections like List, Dictionary, etc.
 using UnityEngine; // Grants access to Unity's core classes and functions, such as MonoBehaviour, GameObject, Transform, etc.
 
-public class SaveManager : MonoBehaviour
+public class PlayerPrefsManager : MonoBehaviour
 {
     // --------------------------- VARIABLES --------------------------
     [Header("Stage Attributes")]

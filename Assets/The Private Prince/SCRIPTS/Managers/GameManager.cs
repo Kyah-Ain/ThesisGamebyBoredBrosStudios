@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
 
-
     [Header("Loading Screen References")]
     public string _persistentGameplay = "Type Here Your Scene Name!";
     //public string _loadingScreenScene = "Type Here Your Scene Name!";
