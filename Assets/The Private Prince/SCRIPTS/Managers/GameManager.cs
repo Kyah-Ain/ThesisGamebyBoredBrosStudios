@@ -133,6 +133,13 @@ public class GameManager : MonoBehaviour
             // ...
             while (!_scenesToLoad[i].isDone) 
             {
+                // Check if references are valid before using them
+                if (_loadingBar == null || _loadingBarObject == null)
+                {
+                    Debug.LogWarning("Loading bar references were destroyed - exiting coroutine");
+                    yield break; // Exit the coroutine completely
+                }
+
                 // ...
                 loadProgress += _scenesToLoad[i].progress;
                 _loadingBar.fillAmount = loadProgress / _scenesToLoad.Count;
