@@ -1,5 +1,6 @@
 using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
+using TMPro;
 using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject, Transform, Vector3, etc.
 
 using UnityEngine.InputSystem; // Grants access to Unity's new Input System for handling player inputs
@@ -111,6 +112,9 @@ public class CharacterController2Point5D : MonoBehaviour
         {
             ppControls.Player.Block.canceled += OnBlockReleased;
         }
+
+        // MIGHT BE TEMPORARY PLACEMENT
+        ApplySpawn();
     }
 
     private void OnDisable()
@@ -281,6 +285,26 @@ public class CharacterController2Point5D : MonoBehaviour
 
     // --------------------------- MOVEMENT ---------------------------
     #region MOVEMENT LOGICS
+
+    // Method for spawning the player at the Spawn Point
+    public virtual void ApplySpawn() 
+    {
+        if (SaveManager.Instance != null) 
+        {
+            characController.enabled = false;
+
+            Transform destination = SaveManager.Instance.spawnPoint;
+
+            // ...
+            Vector3 faceDirection = destination.TransformDirection(Vector3.forward);
+            this.transform.position = destination.position + faceDirection;
+
+            // ...
+            Physics.SyncTransforms();
+
+            characController.enabled = true;
+        }
+    }
 
     // Method for applying gravity to the character to simulate freefall and grounded movement
     public virtual void ApplyGravity()
@@ -549,40 +573,40 @@ public class CharacterController2Point5D : MonoBehaviour
         StopAllCoroutines();
     }
 
-    // -------------------------- SAVE SYSTEM (Temporary) ----------------------------
+    //// -------------------------- SAVE SYSTEM (Temporary) ----------------------------
 
-    // Add a method to prepare player data for saving
-    public PlayerData GetPlayerDataForSave()
-    {
-        PlayerData data = new PlayerData();
+    //// Add a method to prepare player data for saving
+    //public PlayerData GetPlayerDataForSave()
+    //{
+    //    PlayerData data = new PlayerData();
 
-        // Save position
-        data.playerPosition = new SerializableVector3(transform.position);
+    //    // Save position
+    //    data.playerPosition = new SerializableVector3(transform.position);
 
-        // You can add more player data here as needed
-        // For example: health, current animation state, etc.
+    //    // You can add more player data here as needed
+    //    // For example: health, current animation state, etc.
 
-        return data;
-    }
+    //    return data;
+    //}
 
-    // Add a method to load player data from save
-    public void LoadFromPlayerData(PlayerData data)
-    {
-        if (data == null || data.playerPosition == null) return;
+    //// Add a method to load player data from save
+    //public void LoadFromPlayerData(PlayerData data)
+    //{
+    //    if (data == null || data.playerPosition == null) return;
 
-        // Use CharacterController's enabled state to prevent issues when setting position
-        if (characController != null)
-        {
-            bool wasControllerEnabled = characController.enabled;
-            characController.enabled = false;
-            transform.position = data.playerPosition.ConvertToVector3();
-            characController.enabled = wasControllerEnabled;
-        }
-        else
-        {
-            transform.position = data.playerPosition.ConvertToVector3();
-        }
+    //    // Use CharacterController's enabled state to prevent issues when setting position
+    //    if (characController != null)
+    //    {
+    //        bool wasControllerEnabled = characController.enabled;
+    //        characController.enabled = false;
+    //        transform.position = data.playerPosition.ConvertToVector3();
+    //        characController.enabled = wasControllerEnabled;
+    //    }
+    //    else
+    //    {
+    //        transform.position = data.playerPosition.ConvertToVector3();
+    //    }
 
-        Debug.Log("Player position loaded from save data");
-    }
+    //    Debug.Log("Player position loaded from save data");
+    //}
 }

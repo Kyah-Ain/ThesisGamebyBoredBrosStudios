@@ -8,18 +8,56 @@ using UnityEngine; // Grants access to Unity's core classes and functions, such 
 public class SaveableData
 {
     // Referenceable Data Classes to Retrieve
+    public WorldData worldData; // Stores all current activated regions data  
+    //public QuestData questData;
     public PlayerData playerData; // Stores all player related data
     public InventoryData inventoryData; // Stores all inventory related data
-    public SettingsData settingData; // Stores all game setting related data
+    public SettingsData settingsData; // Stores all game setting related data
 
     // Constructor for easy initialization
     public SaveableData()
     {
+        worldData = new WorldData();
         playerData = new PlayerData();
         inventoryData = new InventoryData();
-        settingData = new SettingsData();
+        settingsData = new SettingsData();
     }
 }
+
+// ------------------------------ WORLD DATA -----------------------------
+
+[System.Serializable]
+public class WorldData
+{
+    public string currentRegion;
+    public RegionData[] unlockedRegions;
+}
+
+[System.Serializable]
+public class RegionData
+{
+    public string regionName;
+    public bool status;
+}
+
+//// ------------------------------ QUEST DATA -----------------------------
+
+//[System.Serializable]
+//public class QuestData
+//{
+//    public QuestState state;
+
+//    public int questStepIndex;
+
+//    public QuestStepState[] questStepStates;
+
+//    public QuestData(QuestState state, int questStepIndex, QuestStepState[] questStepState)
+//    {
+//        this.state = state;
+//        this.questStepIndex = questStepIndex;
+//        this.questStepStates = questStepState;
+//    }
+//}
 
 // ------------------------------ PLAYER DATA -----------------------------
 
@@ -27,7 +65,7 @@ public class SaveableData
 public class PlayerData 
 {
     // Referenceable Data Class to Retrieve
-    public SerializableVector3 playerPosition; // Stores the player's world position (x,y,z)
+    public SerializableVector3 spawnPosition; // Stores the player's spawn point (x,y,z)
 }
 
 [System.Serializable]

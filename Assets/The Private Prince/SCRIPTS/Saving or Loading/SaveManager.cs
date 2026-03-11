@@ -4,17 +4,34 @@ using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
-    // ---------------------------- VARIABLES -------------------------
+    // ------------------------- EVENTS -------------------------
 
-    // Singleton value, changeabl only here on this script
+    [SerializeField] private GameEvent onLoadGame; // ...
+
+    // --------------------------- VARIABLES -------------------------
+
+    // Singleton value, changeable only here on this script
     private static SaveManager instance;
 
     // Singleton instance for global access (On Reading Onleh)
     public static SaveManager Instance => instance;
 
+    // SAVING CORE COMPONENTS: 
+    private SaveableData dataBus; // Placholder of data/s that would be stored in SaveableData.cs 
     private string savingFilePath; // Can store a computer's directory file path
 
-    // ---------------------------- METHODS ---------------------------
+    [Header("DATA REFERENCES")]
+
+    // NOTE: This referenced objects MUST EXIST from MAIN MENU unto the GAME (In-Short: All The Time) 
+    public string currentRegion; // Reference to the current region where the player is
+    public Transform spawnPoint; // Reference to the current spawn point of the player
+
+    public float MUSIC; // Reference to the current Music loudness
+    public float SFX; // Reference to thee current In-Game sounds volume
+
+    // ADD MORE REFERENCE HERE IN THE FUTURE (Eg. Inventory)....
+
+    // ------------------------- UNITY METHODS -------------------------
 
     // ...
     private void Awake()
@@ -40,9 +57,21 @@ public class SaveManager : MonoBehaviour
 
         // Set the path on where to save the file and store it into a variable
         savingFilePath = Application.persistentDataPath + "/saveData.dat";
+
+        //// Loads player's last saved session (can be implement on load last)
+        //LoadGameOnStart();
     }
 
-    // Metthod to Save Game Data
+    // ------------------------ SAVE METHODS ---------------------------
+
+    // ...
+    public void Save() 
+    {
+        // ...
+        ThingsToSave();
+    }
+
+    // Accessible Method to process Save Game Data
     public void SaveGame(SaveableData dataToSave)
     {
         // ...
@@ -56,8 +85,63 @@ public class SaveManager : MonoBehaviour
         Debug.Log($"Game saved to {savingFilePath}!");
     }
 
-    // Method to Load Game Data
-    public SaveableData LoadGame() 
+    // Pre-Built Method to save Core Data/s (Dev's Custom Method)
+    private void ThingsToSave()
+    {
+        // Initialize dataBus if it's null
+        if (dataBus == null)
+        {
+            dataBus = new SaveableData();
+        }
+
+        // Calls Methods that 'Overwrites' data/s on the dataBus
+        SetWorldData();
+        SetPlayerData();
+        SetInventoryData();
+        SetSettingsData();
+
+        // Calls the execution of the data/s written in order to be saved
+        SaveGame(dataBus);
+    }
+
+    // ------------------------ LOAD METHODS ---------------------------
+
+    // ...
+    public void Load()
+    {
+        // ...
+        LoadGame();
+    }
+
+    // Method to process Load Game Data
+    public void LoadGame()
+    {
+        // ...
+        if (File.Exists(savingFilePath))
+        {
+            // ...
+            FileStream file = File.Open(savingFilePath, FileMode.Open);
+            BinaryFormatter bf = new BinaryFormatter();
+
+            // ...
+            dataBus = (SaveableData)bf.Deserialize(file);
+            file.Close();
+
+            // ...
+            Debug.Log($"Game loaded from {savingFilePath}!");
+        }
+        else
+        {
+            // ...
+            Debug.LogWarning("Saved file not found!");
+        }
+
+        // ...
+        ThingsToLoad();
+    }
+
+    // Method to return Load Game Data
+    public SaveableData LoadGameReturn() 
     {
         // ...
         if (File.Exists(savingFilePath))
@@ -71,7 +155,7 @@ public class SaveManager : MonoBehaviour
             file.Close();
 
             // ...
-            Debug.Log($"Game load from {savingFilePath}!");
+            Debug.Log($"Game loaded from {savingFilePath}!");
             return dataToLoad;
         }
         else 
@@ -80,5 +164,93 @@ public class SaveManager : MonoBehaviour
             Debug.LogWarning("Saved file not found!");
             return null;
         }
+    }
+
+    // Pre-Built Method to load Core Data/s (Dev's Custom Method)
+    public void ThingsToLoad()
+    {
+        if (dataBus != null) 
+        {
+            // Calls Methods that 'Overwrites' data/s on the referenced objects
+            GetWorldData();
+            GetPlayerData();
+            GetInventoryData();
+            GetSettingsData();
+        }
+
+        // ...
+        onLoadGame.TriggerEvent();
+    }
+
+    // ------------------------ SETTER METHODS ---------------------------
+
+    // ...
+    public void SetWorldData()
+    {
+        // ...
+        dataBus.worldData.currentRegion = currentRegion;
+    }
+
+    //// ...
+    //public void SetQuestData()
+    //{
+    //    // Add Here Quest Data Soon...
+    //}
+
+    // ...
+    public void SetPlayerData()
+    {
+        // ...
+        dataBus.playerData.spawnPosition = new SerializableVector3(spawnPoint.position);
+    }
+
+    // ...
+    public void SetInventoryData()
+    {
+        // Could Implement Inventory here soon ...
+    }
+
+    // ...
+    public void SetSettingsData()
+    {
+        // ...
+        dataBus.settingsData.musicVolume = MUSIC;
+        dataBus.settingsData.soundVolume = SFX;
+    }
+
+    // ------------------------ GETTER METHODS ---------------------------
+
+    // ...
+    public void GetWorldData()
+    {
+        // ...
+        currentRegion = dataBus.worldData.currentRegion;
+    }
+
+    //// ...
+    //public void GetQuestData()
+    //{
+    //    // Add Here Quest Data Soon...
+    //}
+
+    // ...
+    public void GetPlayerData()
+    {
+        // ...
+        spawnPoint.position = dataBus.playerData.spawnPosition.ConvertToVector3();
+    }
+
+    // ...
+    public void GetInventoryData()
+    {
+        // Could Implement Inventory here soon ...
+    }
+
+    // ...
+    public void GetSettingsData()
+    {
+        // ...
+        MUSIC = dataBus.settingsData.musicVolume;
+        SFX = dataBus.settingsData.soundVolume;
     }
 }

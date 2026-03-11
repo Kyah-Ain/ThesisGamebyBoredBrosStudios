@@ -68,26 +68,30 @@ public class GameManager : MonoBehaviour
         {
             LevelManager.Instance.ResetLevel(); // Reset the game if no levels have been played yet
 
-            LoadScene(startingSceneName); // Loads a specific Unity scene 
-            _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay, LoadSceneMode.Additive));
+            _scenesToLoad.Add(SceneManager.LoadSceneAsync(startingSceneName));
+            SaveManager.Instance.currentRegion = startingSceneName;
+
+            LoadSceneAdditive(_persistentGameplay);
 
             StartCoroutine(ProgressLoadingBar());
         }
     }
 
     // Method that loads a specific Unity scene by its name (which can be set in the Inspector)
-    public void LoadScene(string levelSceneName = null) 
+    public void LoadScene() 
     {
         // Evaluates if the scene name isn't a null default name
-        if (levelSceneName != null)
+        if (SaveManager.Instance.currentRegion != null)
         {
-            _scenesToLoad.Add(SceneManager.LoadSceneAsync(levelSceneName));
-            //LoadSceneAdditive(_persistentGameplay);
+            _scenesToLoad.Add(SceneManager.LoadSceneAsync(SaveManager.Instance.currentRegion));
+            LoadSceneAdditive(_persistentGameplay);
         }
         else // Prompt an error if the scene name is not set in the Inspector
         {
             Debug.LogError("Scene to load is not specified!"); // Log an error if the scene name is not set
         }
+
+        StartCoroutine(ProgressLoadingBar());
     }
 
     // Method that loads a specific Unity scene by its name (which can be set in the Inspector)
