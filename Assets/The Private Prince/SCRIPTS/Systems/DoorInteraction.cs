@@ -83,10 +83,16 @@ public class DoorInteraction : Portal
     {
         if (!actor.CompareTag("Player")) return;
 
+        // Check if ppControls is null and try to get it again
+        if (ppControls == null)
+        {
+            SubscribeToInputEvents();
+        }
+
         // ...
-        if (isInteractable &&
-            ppControls.Player.Interact.WasPerformedThisFrame() || 
-            doorType == DoorType.OpenDoor)
+        if (isInteractable && 
+           (ppControls.Player.Interact.WasPerformedThisFrame() || 
+            doorType == DoorType.OpenDoor))
         {
             onTeleportStart?.Invoke(actor.gameObject, base.tpDestination);
             doorVFX?.Invoke();
