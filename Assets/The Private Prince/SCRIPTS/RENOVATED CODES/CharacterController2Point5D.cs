@@ -52,6 +52,7 @@ public class CharacterController2Point5D : MonoBehaviour
     [SerializeField] private GameObject interactIcon; // Icon that will pop up when near interactable object
 
     [Header("BOOLEANS")]
+    public bool onCyberScan = false; // ...
     public bool inDialogue = false; // Indicates if the player is currently in a dialogue
     public bool canAttack = true; // Indicates if the player can perform an attack
     public bool canMove = true; // Indicates if the player can move
@@ -92,11 +93,6 @@ public class CharacterController2Point5D : MonoBehaviour
             // Accesses the controls from the PlayerInputManager singleton instance
             ppControls = GameplayInputManager.Instance.Controls;
 
-            // Subscribes to the performed events
-            ppControls.Player.Attack.performed += NewAttack;
-            ppControls.Player.Block.performed += NewBlock;
-            ppControls.Player.Block.canceled += OnBlockReleased;
-
             Debug.Log($"New Input System was set: {ppControls}");
         }
         else if (GameplayInputManager.Instance == null)
@@ -110,10 +106,14 @@ public class CharacterController2Point5D : MonoBehaviour
         // Ensure subscriptions are active when object is enabled
         if (ppControls != null)
         {
+            // Subscribes to the performed events
+            ppControls.Player.Attack.performed += NewAttack;
+            ppControls.Player.Block.performed += NewBlock;
             ppControls.Player.Block.canceled += OnBlockReleased;
         }
 
-        // MIGHT BE TEMPORARY PLACEMENT
+        // NOTE: MIGHT BE JUST THE TEMPORARY PLACEMENT 
+        // Calls the method that sets the player to the saved checkpoint spawn
         ApplySpawn();
     }
 
@@ -122,6 +122,9 @@ public class CharacterController2Point5D : MonoBehaviour
         // Clean up subscriptions when object is disabled
         if (ppControls != null)
         {
+            // Subscribes to the performed events
+            ppControls.Player.Attack.performed -= NewAttack;
+            ppControls.Player.Block.performed -= NewBlock;
             ppControls.Player.Block.canceled -= OnBlockReleased;
         }
     }
@@ -181,6 +184,35 @@ public class CharacterController2Point5D : MonoBehaviour
         }
 
         return false;
+    }
+
+    // ...
+    public void InCyberScan()
+    {
+        // ...
+        onCyberScan = !onCyberScan;
+
+        // ...
+        if (onCyberScan == true) 
+        {
+            // Disables Movements
+            canAttack = false;
+            isBlocking = false;
+
+            // Slows down time
+            Time.timeScale = 0.5f;
+
+            return;
+        }
+
+        // Disables Movements
+        canAttack = true;
+        isBlocking = true;
+
+        // Turn back normal time
+        Time.timeScale = 1f;
+
+        return;
     }
 
     public void OpenInteractableIcon() // - joseph
@@ -572,41 +604,4 @@ public class CharacterController2Point5D : MonoBehaviour
         // Stop all coroutines
         StopAllCoroutines();
     }
-
-    //// -------------------------- SAVE SYSTEM (Temporary) ----------------------------
-
-    //// Add a method to prepare player data for saving
-    //public PlayerData GetPlayerDataForSave()
-    //{
-    //    PlayerData data = new PlayerData();
-
-    //    // Save position
-    //    data.playerPosition = new SerializableVector3(transform.position);
-
-    //    // You can add more player data here as needed
-    //    // For example: health, current animation state, etc.
-
-    //    return data;
-    //}
-
-    //// Add a method to load player data from save
-    //public void LoadFromPlayerData(PlayerData data)
-    //{
-    //    if (data == null || data.playerPosition == null) return;
-
-    //    // Use CharacterController's enabled state to prevent issues when setting position
-    //    if (characController != null)
-    //    {
-    //        bool wasControllerEnabled = characController.enabled;
-    //        characController.enabled = false;
-    //        transform.position = data.playerPosition.ConvertToVector3();
-    //        characController.enabled = wasControllerEnabled;
-    //    }
-    //    else
-    //    {
-    //        transform.position = data.playerPosition.ConvertToVector3();
-    //    }
-
-    //    Debug.Log("Player position loaded from save data");
-    //}
 }

@@ -129,7 +129,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Jump"",
+                    ""name"": ""Cyberscan"",
                     ""type"": ""Button"",
                     ""id"": ""712ba837-77a9-45ca-83a8-08fd09961c5b"",
                     ""expectedControlType"": """",
@@ -146,7 +146,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard & Mouse"",
-                    ""action"": ""Jump"",
+                    ""action"": ""Cyberscan"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -157,7 +157,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad Controller"",
-                    ""action"": ""Jump"",
+                    ""action"": ""Cyberscan"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -609,7 +609,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
-        m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_Cyberscan = m_Player.FindAction("Cyberscan", throwIfNotFound: true);
         // UserNavigation
         m_UserNavigation = asset.FindActionMap("UserNavigation", throwIfNotFound: true);
         m_UserNavigation_Interact = m_UserNavigation.FindAction("Interact", throwIfNotFound: true);
@@ -700,7 +700,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Block;
-    private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_Cyberscan;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -729,9 +729,9 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// </summary>
         public InputAction @Block => m_Wrapper.m_Player_Block;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Jump".
+        /// Provides access to the underlying input action "Player/Cyberscan".
         /// </summary>
-        public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @Cyberscan => m_Wrapper.m_Player_Cyberscan;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -770,9 +770,9 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
             @Block.started += instance.OnBlock;
             @Block.performed += instance.OnBlock;
             @Block.canceled += instance.OnBlock;
-            @Jump.started += instance.OnJump;
-            @Jump.performed += instance.OnJump;
-            @Jump.canceled += instance.OnJump;
+            @Cyberscan.started += instance.OnCyberscan;
+            @Cyberscan.performed += instance.OnCyberscan;
+            @Cyberscan.canceled += instance.OnCyberscan;
         }
 
         /// <summary>
@@ -796,9 +796,9 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
             @Block.started -= instance.OnBlock;
             @Block.performed -= instance.OnBlock;
             @Block.canceled -= instance.OnBlock;
-            @Jump.started -= instance.OnJump;
-            @Jump.performed -= instance.OnJump;
-            @Jump.canceled -= instance.OnJump;
+            @Cyberscan.started -= instance.OnCyberscan;
+            @Cyberscan.performed -= instance.OnCyberscan;
+            @Cyberscan.canceled -= instance.OnCyberscan;
         }
 
         /// <summary>
@@ -1012,12 +1012,12 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnBlock(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Cyberscan" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnJump(InputAction.CallbackContext context);
+        void OnCyberscan(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UserNavigation" which allows adding and removing callbacks.
