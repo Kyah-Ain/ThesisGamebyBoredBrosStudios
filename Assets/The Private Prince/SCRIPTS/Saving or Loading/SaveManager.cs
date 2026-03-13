@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using TMPro;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
@@ -7,6 +9,8 @@ public class SaveManager : MonoBehaviour
     // ------------------------- EVENTS -------------------------
 
     [SerializeField] private GameEvent onLoadGame; // ...
+
+    public Action onEnteringNewRegion;
 
     // --------------------------- VARIABLES -------------------------
 
@@ -23,7 +27,8 @@ public class SaveManager : MonoBehaviour
     [Header("DATA REFERENCES")]
 
     // NOTE: This referenced objects MUST EXIST from MAIN MENU unto the GAME (In-Short: All The Time) 
-    public string currentRegion; // Reference to the current region where the player is
+    public string currentRegionPoint; // Reference to the current region where the player is
+    public string previousRegion; // ...
     public Transform spawnPoint; // Reference to the current spawn point of the player
 
     public float MUSIC; // Reference to the current Music loudness
@@ -188,7 +193,8 @@ public class SaveManager : MonoBehaviour
     public void SetWorldData()
     {
         // ...
-        dataBus.worldData.currentRegion = currentRegion;
+        dataBus.worldData.savedRegion = currentRegionPoint;
+        dataBus.worldData.previousRegion = previousRegion;
     }
 
     //// ...
@@ -224,7 +230,8 @@ public class SaveManager : MonoBehaviour
     public void GetWorldData()
     {
         // ...
-        currentRegion = dataBus.worldData.currentRegion;
+        currentRegionPoint = dataBus.worldData.savedRegion;
+        previousRegion = dataBus.worldData.previousRegion;
     }
 
     //// ...

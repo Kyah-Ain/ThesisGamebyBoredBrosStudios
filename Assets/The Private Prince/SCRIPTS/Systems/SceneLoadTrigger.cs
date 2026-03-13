@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 using UnityEngine.SceneManagement;
@@ -11,6 +12,10 @@ public class SceneLoadTrigger : MonoBehaviour
     [SerializeField] private SceneField[] _scenesToLoad;
     [SerializeField] private SceneField[] _scenesToUnload;
 
+    [Header("Set Here Only When Necessary (IT'S OKAY TO LEAVE IT EMPTY)")]
+
+    [SerializeField] private string regionName = null; // Current region where the saving happen
+
     // -------------------------- METHODS -------------------------
 
     // ...
@@ -21,6 +26,33 @@ public class SceneLoadTrigger : MonoBehaviour
         {
             LoadScenes();
             UnloadScenes();
+
+            if (actor.transform.position.x < this.transform.position.x &&
+                regionName != null && regionName.Length > 0)
+            {
+                // ...
+                SaveManager.Instance.previousRegion = SaveManager.Instance.currentRegionPoint;
+
+                // ...
+                SaveManager.Instance.currentRegionPoint = regionName;
+                SaveManager.Instance.onEnteringNewRegion?.Invoke();
+            }
+        }
+    }
+
+    // ...
+    private void OnTriggerExit(Collider actor)
+    {
+        // ...
+        if (actor.CompareTag("Player"))
+        {
+            if (actor.transform.position.x < this.transform.position.x &&
+                (regionName != null && regionName.Length > 0))
+            {
+                // ...
+                SaveManager.Instance.currentRegionPoint = SaveManager.Instance.previousRegion;
+                SaveManager.Instance.onEnteringNewRegion?.Invoke();
+            }
         }
     }
 

@@ -29,7 +29,8 @@ public class SaveableData
 [System.Serializable]
 public class WorldData
 {
-    public string currentRegion;
+    public string savedRegion;
+    public string previousRegion;
     public RegionData[] unlockedRegions;
 }
 

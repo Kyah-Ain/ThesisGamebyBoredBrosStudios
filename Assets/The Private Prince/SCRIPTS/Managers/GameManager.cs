@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
             LevelManager.Instance.ResetLevel(); // Reset the game if no levels have been played yet
 
             _scenesToLoad.Add(SceneManager.LoadSceneAsync(startingSceneName));
-            SaveManager.Instance.currentRegion = startingSceneName;
+            SaveManager.Instance.currentRegionPoint = startingSceneName;
 
             LoadSceneAdditive(_persistentGameplay);
 
@@ -81,9 +81,9 @@ public class GameManager : MonoBehaviour
     public void LoadScene() 
     {
         // Evaluates if the scene name isn't a null default name
-        if (SaveManager.Instance.currentRegion != null)
+        if (SaveManager.Instance.currentRegionPoint != null)
         {
-            _scenesToLoad.Add(SceneManager.LoadSceneAsync(SaveManager.Instance.currentRegion));
+            _scenesToLoad.Add(SceneManager.LoadSceneAsync(SaveManager.Instance.currentRegionPoint));
             LoadSceneAdditive(_persistentGameplay);
         }
         else // Prompt an error if the scene name is not set in the Inspector
