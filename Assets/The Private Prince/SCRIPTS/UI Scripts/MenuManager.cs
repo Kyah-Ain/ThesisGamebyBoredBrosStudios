@@ -269,4 +269,10 @@ public class MenuManager : MonoBehaviour
     {
         animatorUI.SetTrigger("isInteracted");
     }
+
+    //// ...
+    //private void StopAnim() 
+    //{
+    //    animatorUI.StopPlayback();
+    //}
 }
