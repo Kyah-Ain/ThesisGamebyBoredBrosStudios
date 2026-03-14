@@ -49,8 +49,10 @@ public class GameplayInputManager : MonoBehaviour
         // Initialize the PrivatePrinceControls Instance for handling Action Maps 
         ppControls = new PrivatePrinceControls();
 
-        // Set the default action map to Player (can be changed later with SwitchActionMap method)
-        currentActionMap = ppControls.Player;
+        //// Set the default action map to Player (can be changed later with SwitchActionMap method)
+        //currentActionMap = ppControls.Player;
+
+        currentActionMap = ppControls.UserNavigation;
 
         currentActionMap.Enable(); // Enable the default action map to start receiving input
     }
