@@ -2,62 +2,137 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventDialogueInteraction : PlayerDialogueInteraction
+public class EventDialogueInteraction : MonoBehaviour, IInteractable
 {
     // ------------------------- VARIABLES -------------------------
 
-    public QuestStarter questStarter; // Reference to the QuestStarter.cs component for starting quests
-    //public GameObject ringtoneSFX; // Reference to the ringtone SFX GameObject to play when dialogue starts
+    [SerializeField] private DialogueObject dialogueObject;
+    [SerializeField] private int dialogueIterationLimit = 1;
+    [SerializeField] private QuestStarter questStarter; // Reference to start quest after dialogue
+    //[SerializeField] private GameObject ringtoneSFX; // Optional SFX to play when triggered
+
+    private int currentIteration = 0;
+    private bool isDialogueActive = false;
 
     // ------------------------- UNITY METHODS -------------------------
 
-    // ...
-    public override void Awake()
+    private void OnTriggerEnter(Collider other)
     {
-        // Find the character controller component on this GameObject
-        characterController = FindAnyObjectByType<CharacterController2Point5D>();
+        if (other.CompareTag("Player") && other.TryGetComponent(out PlayerDialogueInteraction player))
+        {
+            // Set this as the interactable object for the player
+            player.Interactable = this;
 
-        //// Find the ringtone SFX GameObject in the scene
-        //if (ringtoneSFX == null)
-        //    ringtoneSFX = GameObject.FindWithTag("RingtoneSFX");
-
-        // Find the QuestStarter component in the scene (assuming there's only one)
-        questStarter = this.GetComponent<QuestStarter>();
+            // Automatically trigger dialogue when player enters trigger
+            StartNarrating(player);
+        }
     }
 
-    // ...
-    public override void Start()
+    private void OnTriggerExit(Collider other)
     {
-        //// Switch to the UserNavigation action map when this component starts
-        //PlayerInputManager.Instance.SwitchActionMap("UserNavigation"); 
+        if (other.CompareTag("Player") && other.TryGetComponent(out PlayerDialogueInteraction player))
+        {
+            // Clear the interactable reference when player leaves
+            if (player.Interactable is EventDialogueInteraction eventDialogue && eventDialogue == this)
+            {
+                player.Interactable = null;
+            }
+        }
     }
 
-    // ...
-    public override void Update()
+    // ------------------------- DIALOGUE METHODS -------------------------
+
+    public void StartNarrating(PlayerDialogueInteraction player)
     {
-        if (dialogueUI != null && dialogueUI.IsOpen) return;
+        // Don't start if dialogue is already active
+        if (isDialogueActive) return;
 
-        if (dialogueUI.dialogueFinished)
+        // Check if we've reached the iteration limit
+        if (currentIteration >= dialogueIterationLimit)
         {
-            characterController.inDialogue = false; // Re-enable movement when dialogue finishes
+            HandleDialogueComplete(player);
+            return;
         }
 
-        if (dialogueIterationLimit > 0 && !dialogueUI.IsOpen)
-        {
-            characterController.inDialogue = true; // Disable movement when dialogue starts
+        //// Play ringtone SFX if assigned
+        //if (ringtoneSFX != null)
+        //{
+        //    ringtoneSFX.SetActive(true);
+        //}
 
-            // WARNING: Make sure the object this script is attached to, is a player
-            Interactable?.Interact(this); // Used null propagation for less lines
-            dialogueIterationLimit--;
-        }
-        else
+        // Set dialogue active flag
+        isDialogueActive = true;
+
+        // Disable player movement
+        if (player.characterController != null)
         {
-            // When dialogue iteration limit is reached, start the quest and destroy this component
+            player.characterController.inDialogue = true;
+        }
+
+        // Switch to navigation action map
+        if (GameplayInputManager.Instance != null)
+        {
+            GameplayInputManager.Instance.SwitchActionMap("UserNavigation");
+        }
+
+        // Show the dialogue
+        if (player.DialogueUI != null)
+        {
+            // Handle response events if any
+            DialogueResponseEvent[] responseEvents = GetComponents<DialogueResponseEvent>();
+            if (responseEvents != null)
+            {
+                foreach (DialogueResponseEvent responseEvent in responseEvents)
+                {
+                    if (responseEvent != null && responseEvent.DialogueObject == dialogueObject)
+                    {
+                        player.DialogueUI.AddResponseEvents(responseEvent.Events);
+                        break;
+                    }
+                }
+            }
+
+            // Show the dialogue
+            player.DialogueUI.ShowDialogue(dialogueObject);
+
+            // Increment iteration counter
+            currentIteration++;
+        }
+    }
+
+    private void HandleDialogueComplete(PlayerDialogueInteraction player)
+    {
+        // Re-enable player movement
+        if (player.characterController != null)
+        {
+            player.characterController.inDialogue = false;
+        }
+
+        // Start quest if assigned
+        if (questStarter != null)
+        {
             questStarter.StartQuestById("Follow_The_Sound");
-
-            //ringtoneSFX.SetActive(true); // Play the ringtone SFX when dialogue starts
-
-            Destroy(this.gameObject); // Destroy this component when dialogue iteration limit is reached
         }
+
+        // Optionally destroy this trigger object
+        Destroy(this.gameObject);
+    }
+
+    // ------------------------- IINTERACTABLE IMPLEMENTATION -------------------------
+
+    public void Interact(DialogueInteraction player)
+    {
+        // Cast to PlayerDialogueInteraction since that's what we're working with
+        if (player is PlayerDialogueInteraction playerDialogue)
+        {
+            StartNarrating(playerDialogue);
+        }
+    }
+
+    // ------------------------- PUBLIC METHODS -------------------------
+
+    public void UpdateDialogueObject(DialogueObject newDialogueObject)
+    {
+        dialogueObject = newDialogueObject;
     }
 }
