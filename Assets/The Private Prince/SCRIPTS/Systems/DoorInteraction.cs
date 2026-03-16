@@ -7,14 +7,15 @@ using UnityEngine.Events;
 using System;
 
 // Manually creates an Event Method that accepts Parameter
-[Serializable] public class DoorEvent : UnityEvent<string> { }
+//[Serializable] public class DoorEvent : UnityEvent<string> { }
 
 public class DoorInteraction : Portal
 {
     // ------------------------- EVENTS -------------------------
 
     // ...
-    public DoorEvent onEnterDoor;
+    public UnityEvent onEnterDoor;
+
     public UnityEvent doorVFX;
     public UnityEvent doorSFX;
 
@@ -40,8 +41,8 @@ public class DoorInteraction : Portal
     {
         SubscribeToInputEvents();
 
-        // Subscribes to the Delegate Events
-        onEnterDoor.AddListener(OnEnterDoor);
+        //// Subscribes to the Delegate Events
+        //onEnterDoor.AddListener(OnEnterDoor);
 
         // Subscribes the Neutralizer method to the onTeleportStart event
         onTeleportStart += Teleport;
@@ -53,8 +54,8 @@ public class DoorInteraction : Portal
     {
         UnsubscribeFromInputEvents();
 
-        // Unsubscribes to the Delegate Events
-        onEnterDoor.RemoveListener(OnEnterDoor);
+        //// Unsubscribes to the Delegate Events
+        //onEnterDoor.RemoveListener(OnEnterDoor);
 
         // Subscribes the Neutralizer method to the onTeleportStart event
         onTeleportStart -= Teleport;
@@ -94,6 +95,8 @@ public class DoorInteraction : Portal
            (ppControls.Player.Interact.WasPerformedThisFrame() || 
             doorType == DoorType.OpenDoor))
         {
+            onEnterDoor?.Invoke();
+
             onTeleportStart?.Invoke(actor.gameObject, base.tpDestination);
             doorVFX?.Invoke();
             doorSFX?.Invoke();
@@ -137,10 +140,5 @@ public class DoorInteraction : Portal
     protected override void Teleport(GameObject passenger, Transform destination)
     {
         base.Teleport(passenger, destination);
-
-        onEnterDoor?.Invoke(null);
     }
-
-    // ...
-    public void OnEnterDoor(string message = "") { Debug.Log(message); }
 }

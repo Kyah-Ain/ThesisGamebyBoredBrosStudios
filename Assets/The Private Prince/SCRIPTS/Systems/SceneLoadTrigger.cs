@@ -25,10 +25,9 @@ public class SceneLoadTrigger : MonoBehaviour
         if (actor.CompareTag("Player")) 
         {
             LoadScenes();
-            UnloadScenes();
+            //UnloadScenes();
 
-            if (actor.transform.position.x < this.transform.position.x &&
-                regionName != null && regionName.Length > 0)
+            if (regionName != null && regionName.Length > 0)
             {
                 // ...
                 SaveManager.Instance.previousRegion = SaveManager.Instance.currentRegionPoint;
@@ -37,6 +36,18 @@ public class SceneLoadTrigger : MonoBehaviour
                 SaveManager.Instance.currentRegionPoint = regionName;
                 SaveManager.Instance.onEnteringNewRegion?.Invoke();
             }
+
+            //// ...
+            //if (actor.transform.position.x < this.transform.position.x &&
+            //    regionName != null && regionName.Length > 0)
+            //{
+            //    // ...
+            //    SaveManager.Instance.previousRegion = SaveManager.Instance.currentRegionPoint;
+
+            //    // ...
+            //    SaveManager.Instance.currentRegionPoint = regionName;
+            //    SaveManager.Instance.onEnteringNewRegion?.Invoke();
+            //}
         }
     }
 
@@ -46,18 +57,25 @@ public class SceneLoadTrigger : MonoBehaviour
         // ...
         if (actor.CompareTag("Player"))
         {
-            if (actor.transform.position.x < this.transform.position.x &&
-                (regionName != null && regionName.Length > 0))
+            if (regionName != null && regionName.Length > 0)
             {
                 // ...
                 SaveManager.Instance.currentRegionPoint = SaveManager.Instance.previousRegion;
                 SaveManager.Instance.onEnteringNewRegion?.Invoke();
             }
+
+            //if (actor.transform.position.x < this.transform.position.x &&
+            //    (regionName != null && regionName.Length > 0))
+            //{
+            //    // ...
+            //    SaveManager.Instance.currentRegionPoint = SaveManager.Instance.previousRegion;
+            //    SaveManager.Instance.onEnteringNewRegion?.Invoke();
+            //}
         }
     }
 
     // ...
-    private void LoadScenes() 
+    public void LoadScenes() 
     {
         // ...
         for (int i = 0; i < _scenesToLoad.Length; i++) 
@@ -87,7 +105,7 @@ public class SceneLoadTrigger : MonoBehaviour
     }
 
     // ...
-    private void UnloadScenes()
+    public void UnloadScenes()
     {
         // ...
         for (int i = 0; i < _scenesToUnload.Length; i++)
