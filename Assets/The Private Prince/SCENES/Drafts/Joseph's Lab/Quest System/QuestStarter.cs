@@ -12,7 +12,7 @@ public class QuestStarter : MonoBehaviour
     // ------------------------- UNITY METHODS -------------------------
 
     // Public method so UnityEvent can call it with a string parameter
-    public void StartQuestById(string questId)
+    public void StartQuestByIdString(string questId)
     {
         // Defensive check to avoid null references
         if (GameEventsManager.Instance == null)
@@ -23,6 +23,20 @@ public class QuestStarter : MonoBehaviour
 
         // Fire the global quest start event
         GameEventsManager.Instance.questEvents.StartQuest(questId);
+    }
+
+    // Overload Method for cases where you want the code extract the questId for you (No Typing)
+    public void StartQuestByIdSO(QuestInfoSO questId)
+    {
+        // Defensive check to avoid null references
+        if (GameEventsManager.Instance == null)
+        {
+            Debug.LogError("GameEventsManager.Instance is null. Ensure GameEventsManager exists in the scene.");
+            return;
+        }
+
+        // Fire the global quest start event
+        GameEventsManager.Instance.questEvents.StartQuest(questId.id);
     }
 
     // ------------------------- OBJECT METHODS -------------------------

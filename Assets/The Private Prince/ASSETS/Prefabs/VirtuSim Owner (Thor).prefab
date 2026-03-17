@@ -131,6 +131,132 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &2258842466848103906
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5664924350419955515}
+  - component: {fileID: 1556425985742611756}
+  - component: {fileID: 3389177264752144425}
+  - component: {fileID: 6586630302463917656}
+  - component: {fileID: 4357440308457747329}
+  m_Layer: 6
+  m_Name: QuestIcon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5664924350419955515
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2258842466848103906}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8846452479238227934}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &1556425985742611756
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2258842466848103906}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &3389177264752144425
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2258842466848103906}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 2a41d4802afff304db1da1eb3fec17f4, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6586630302463917656
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2258842466848103906}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4357440308457747329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2258842466848103906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0860e485e317ef9468d9725c11c0d674, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requirementsNotMetStartIcon: {fileID: 7493865944887282732, guid: fae8fb66ceec4674b8715fc6184fcc83,
+    type: 3}
+  requirementsNotMetFinishIcon: {fileID: 7493865944887282732, guid: fae8fb66ceec4674b8715fc6184fcc83,
+    type: 3}
+  canStartIcon: {fileID: 6063908686042441558, guid: 46e76f7849bb58542b27fd04d7c40e1e,
+    type: 3}
+  canFinishIcon: {fileID: 6700301861437416238, guid: 21e2530669e203f49b16dc8211528569,
+    type: 3}
 --- !u!1 &2455169265601611596
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,6 +529,8 @@ GameObject:
   - component: {fileID: 925377100121762405}
   - component: {fileID: 8342054267012476219}
   - component: {fileID: 5936988899223664921}
+  - component: {fileID: 2318442492208046369}
+  - component: {fileID: 8347632888210698438}
   m_Layer: 6
   m_Name: VirtuSim Owner (Thor)
   m_TagString: Player
@@ -426,6 +554,7 @@ Transform:
   - {fileID: 8736326363794302341}
   - {fileID: 7051610654895919535}
   - {fileID: 5743428729879918860}
+  - {fileID: 5664924350419955515}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &999118815204505468
@@ -501,39 +630,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfdc5aa0262ad234d88212027ee7ef1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueObject: {fileID: 11400000, guid: 0d9a107290502a44cb66d42b4b78a27d, type: 2}
+  dialogueObject: {fileID: 11400000, guid: e155fcabc427d9249a380db46cb50793, type: 2}
   events:
-  - name: Tandang's Order
+  - name: I'm ready!
     onPickedResponse:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 8342054267012476219}
           m_TargetAssemblyTypeName: QuestDialogueBridge, Assembly-CSharp
-          m_MethodName: AdvanceQuest
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Tandang_Quest
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8342054267012476219}
-          m_TargetAssemblyTypeName: QuestDialogueBridge, Assembly-CSharp
-          m_MethodName: AdvanceQuest
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Tandang_Quest
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8342054267012476219}
-          m_TargetAssemblyTypeName: QuestDialogueBridge, Assembly-CSharp
-          m_MethodName: StartQuest
+          m_MethodName: FinishQuest
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -543,6 +648,22 @@ MonoBehaviour:
             m_StringArgument: FightClub_Rumor
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 2318442492208046369}
+          m_TargetAssemblyTypeName: SceneTransitionTrigger, Assembly-CSharp
+          m_MethodName: TransitionToCombatScene
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: Not right now.
+    onPickedResponse:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!135 &8803702880198383750
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -615,30 +736,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92c3c64192129094194ecd63c3e22167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questId: Tandang_Quest
+  questId: FightClub_Rumor
   dialogueStates:
   - questState: 0
     minStepIndex: -1
     maxStepIndex: -1
-    dialogue: {fileID: 11400000, guid: 0bb1b24c068efb145afc448dd400d4db, type: 2}
+    dialogue: {fileID: 11400000, guid: e155fcabc427d9249a380db46cb50793, type: 2}
   - questState: 1
     minStepIndex: -1
     maxStepIndex: -1
-    dialogue: {fileID: 11400000, guid: 0bb1b24c068efb145afc448dd400d4db, type: 2}
+    dialogue: {fileID: 11400000, guid: e155fcabc427d9249a380db46cb50793, type: 2}
   - questState: 2
-    minStepIndex: 0
-    maxStepIndex: 1
-    dialogue: {fileID: 11400000, guid: 0d9a107290502a44cb66d42b4b78a27d, type: 2}
-  - questState: 2
-    minStepIndex: 2
-    maxStepIndex: -1
-    dialogue: {fileID: 11400000, guid: f8be1e3eced358a42bdacdbcc44d0a45, type: 2}
-  - questState: 3
     minStepIndex: -1
     maxStepIndex: -1
-    dialogue: {fileID: 11400000, guid: f8be1e3eced358a42bdacdbcc44d0a45, type: 2}
+    dialogue: {fileID: 11400000, guid: e155fcabc427d9249a380db46cb50793, type: 2}
   - questState: 4
     minStepIndex: -1
     maxStepIndex: -1
-    dialogue: {fileID: 11400000, guid: f8be1e3eced358a42bdacdbcc44d0a45, type: 2}
-  defaultDialogue: {fileID: 11400000, guid: 0bb1b24c068efb145afc448dd400d4db, type: 2}
+    dialogue: {fileID: 11400000, guid: ec9701a5fb12dcf4ebde8402e841ec94, type: 2}
+  defaultDialogue: {fileID: 11400000, guid: e155fcabc427d9249a380db46cb50793, type: 2}
+--- !u!114 &2318442492208046369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8500111636319046600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b865464db6abf0488532bf8324297b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneToLoad: Ain's 2D Charac Lab
+--- !u!114 &8347632888210698438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8500111636319046600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfdc5aa0262ad234d88212027ee7ef1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueObject: {fileID: 11400000, guid: ec9701a5fb12dcf4ebde8402e841ec94, type: 2}
+  events:
+  - name: Yes sir!
+    onPickedResponse:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2318442492208046369}
+          m_TargetAssemblyTypeName: SceneTransitionTrigger, Assembly-CSharp
+          m_MethodName: TransitionToCombatScene
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - name: Not now
+    onPickedResponse:
+      m_PersistentCalls:
+        m_Calls: []

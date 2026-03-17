@@ -6,7 +6,7 @@ public class DialogueInteraction : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
 
-    [Header("DIALOGUE")]
+    [Header("IMPORTANT: DIALOGUE CANVAS")]
     [SerializeField] protected DialogueUI dialogueUI;
 
     public DialogueUI DialogueUI => dialogueUI;

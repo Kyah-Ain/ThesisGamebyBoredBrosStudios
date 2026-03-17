@@ -23,10 +23,19 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private bool enableInputNavigation = true;
     [SerializeField] private bool wrapAround = true;
 
+    enum DefaultState 
+    {
+        AutoSelectFirstButton,
+        ManualSelectFirstButton
+    }
+
+    [SerializeField] private DefaultState state = DefaultState.AutoSelectFirstButton;
+
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color selectedColor = Color.yellow;
 
     [Header("Button References")]
+    [SerializeField] private Button startingButton; // Drag your default selected menu buttons here
     [SerializeField] private Button[] menuButtons; // Drag ALL your menu buttons here
 
     // ------------------------- UNITY METHODS -------------------------
@@ -34,8 +43,24 @@ public class MenuManager : MonoBehaviour
     // ...
     private void Start()
     {
-        // Find the first active button to start selection
-        FindFirstActiveButton();
+        if (state == DefaultState.AutoSelectFirstButton)
+        {
+            // Automatically find and select the first active button
+            FindFirstActiveButton();
+        }
+        else
+        {
+            // Manually set the default selected button
+            if (startingButton != null)
+            {
+                SetDefaultButton(startingButton);
+            }
+            else
+            {
+                Debug.LogWarning("Starting button not assigned! Falling back to auto selection.");
+                FindFirstActiveButton();
+            }
+        }
     }
 
     // ...
@@ -65,7 +90,7 @@ public class MenuManager : MonoBehaviour
 
             ppControls.UserNavigation.NavigateUI.performed += OnNavigatePerformed;
             ppControls.UserNavigation.Interact.performed += OnSubmitPerformed;
-            ppControls.UserNavigation.Interact.performed += TriggerSplashScreens;
+            ppControls.UserNavigation.Interact.performed += TriggerSkip;
             //ppControls.UserNavigation.Cancel.performed += OnCancelPerformed;
         }
         else
@@ -81,12 +106,41 @@ public class MenuManager : MonoBehaviour
         {
             ppControls.UserNavigation.NavigateUI.performed -= OnNavigatePerformed;
             ppControls.UserNavigation.Interact.performed -= OnSubmitPerformed;
-            ppControls.UserNavigation.Interact.performed -= TriggerSplashScreens;
+            ppControls.UserNavigation.Interact.performed -= TriggerSkip;
             //ppControls.UserNavigation.Cancel.performed -= OnCancelPerformed;
         }
     }
 
-    // ------------------------- CHECKER METHODS ------------------------- 
+    // ------------------------- STARTER METHODS ------------------------- 
+
+    // ...
+    private void SetDefaultButton(Button startingButton)
+    {
+        if (menuButtons.Length == 0) return;
+
+        // Find the index of the starting button in the menuButtons array
+        for (int i = 0; i < menuButtons.Length; i++)
+        {
+            if (menuButtons[i] == startingButton)
+            {
+                currentSelectedIndex = i;
+                break;
+            }
+        }
+
+        // Make sure the button is valid before selecting
+        if (IsButtonValid(menuButtons[currentSelectedIndex]))
+        {
+            UpdateButtonHighlight(currentSelectedIndex, true);
+            Debug.Log($"MenuManager: Manually set default button: {menuButtons[currentSelectedIndex].name}");
+        }
+        else
+        {
+            Debug.LogWarning("Starting button is not valid! Finding first active button instead.");
+            FindFirstActiveButton();
+        }
+    }
+
 
     // ...
     private void FindFirstActiveButton()
@@ -96,19 +150,23 @@ public class MenuManager : MonoBehaviour
         // Find the first active and interactable button
         for (int i = 0; i < menuButtons.Length; i++)
         {
-            if (menuButtons[i] != null && menuButtons[i].isActiveAndEnabled && menuButtons[i].interactable)
+            if (IsButtonValid(menuButtons[i]))
             {
                 currentSelectedIndex = i;
                 UpdateButtonHighlight(currentSelectedIndex, true);
-                break;
+                Debug.Log($"MenuManager: Auto-selected button: {menuButtons[i].name}");
+                return;
             }
         }
+        
+        Debug.LogWarning("No active buttons found in menu!");
     }
 
     private bool IsButtonValid(Button button)
     {
         return button != null && button.isActiveAndEnabled && button.interactable;
     }
+
 
     // ------------------------- NAVIGATION METHODS ------------------------- 
 
@@ -220,28 +278,36 @@ public class MenuManager : MonoBehaviour
 
         if (selected)
         {
+            if (EventSystem.current != null)
+            {
+                EventSystem.current.SetSelectedGameObject(button.gameObject);
+            }
+
             // Method 1: Use Select() - this triggers the button's selected state
             button.Select();
+
+            // Optional: Force the button to be in highlighted state
+            button.OnSelect(null);
 
             // Optional: If you want to ensure it stays highlighted
             // button.OnSelect(null); // This manually triggers the selection highlight
 
             Debug.Log($"Button {button.name} highlighted");
         }
-        else
-        {
-            // Method 2: If you want to manually control the transition
-            if (EventSystem.current != null)
-            {
-                // Only deselect if this button is currently selected
-                if (EventSystem.current.currentSelectedGameObject == button.gameObject)
-                {
-                    EventSystem.current.SetSelectedGameObject(null);
-                }
-            }
+        //else
+        //{
+        //    // Method 2: If you want to manually control the transition
+        //    if (EventSystem.current != null)
+        //    {
+        //        // Only deselect if this button is currently selected
+        //        if (EventSystem.current.currentSelectedGameObject == button.gameObject)
+        //        {
+        //            EventSystem.current.SetSelectedGameObject(null);
+        //        }
+        //    }
 
-            Debug.Log($"Button {button.name} unhighlighted");
-        }
+        //    Debug.Log($"Button {button.name} unhighlighted");
+        //}
     }
 
     // ------------------------- INTERACTION METHODS ------------------------- 
@@ -264,10 +330,16 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    // ...
-    private void TriggerSplashScreens(InputAction.CallbackContext context) 
+    // Method for triggering 
+    public void SkipAnimation()
     {
         animatorUI.SetTrigger("isInteracted");
+    }
+
+    // ...
+    public void TriggerSkip(InputAction.CallbackContext context) 
+    {
+        SkipAnimation();
     }
 
     //// ...

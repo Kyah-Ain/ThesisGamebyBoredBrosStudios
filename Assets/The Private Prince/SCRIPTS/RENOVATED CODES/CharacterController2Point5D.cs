@@ -61,7 +61,7 @@ public class CharacterController2Point5D : MonoBehaviour
     private bool wasBlocking = false; // Tracks previous block state to prevent continuous reset
 
     [Header("DIALOGUE")]
-    [SerializeField] private DialogueUI dialogueUI; // Reference to the DialogueUI component for handling dialogues
+    //[SerializeField] private DialogueUI dialogueUI; // Reference to the DialogueUI component for handling dialogues
 
     // Coroutine references to prevent multiple coroutines
     private Coroutine attackCoroutine;
