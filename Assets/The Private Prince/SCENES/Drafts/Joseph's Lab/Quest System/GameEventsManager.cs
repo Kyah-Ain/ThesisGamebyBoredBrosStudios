@@ -18,7 +18,7 @@ public class GameEventsManager : MonoBehaviour
             if (manager != this && manager.gameObject.scene.buildIndex == -1) // Persistent object
             {
                 Debug.Log("Destroying duplicate GameEventsManager - one already exists");
-                Destroy(gameObject);
+                Destroy(this.gameObject);
                 return;
             }
         }
@@ -32,7 +32,7 @@ public class GameEventsManager : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
     }
 }

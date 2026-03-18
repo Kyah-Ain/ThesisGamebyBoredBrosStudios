@@ -9,7 +9,7 @@ public class SaveableData
 {
     // Referenceable Data Classes to Retrieve
     public WorldData worldData; // Stores all current activated regions data  
-    //public QuestData questData;
+    public QuestDataContainer questData; // Stores all quest relaed data
     public PlayerData playerData; // Stores all player related data
     public InventoryData inventoryData; // Stores all inventory related data
     public SettingsData settingsData; // Stores all game setting related data
@@ -18,6 +18,7 @@ public class SaveableData
     public SaveableData()
     {
         worldData = new WorldData();
+        questData = new QuestDataContainer();
         playerData = new PlayerData();
         inventoryData = new InventoryData();
         settingsData = new SettingsData();
@@ -41,24 +42,50 @@ public class RegionData
     public bool status;
 }
 
-//// ------------------------------ QUEST DATA -----------------------------
+// ------------------------------ QUEST DATA -----------------------------
 
-//[System.Serializable]
-//public class QuestData
-//{
-//    public QuestState state;
+[System.Serializable]
+public class QuestData
+{
+    public QuestState state;
+    public int questStepIndex;
+    public QuestStepState[] questStepStates;
 
-//    public int questStepIndex;
+    public QuestData(QuestState state, int questStepIndex, QuestStepState[] questStepState)
+    {
+        this.state = state;
+        this.questStepIndex = questStepIndex;
+        this.questStepStates = questStepState;
+    }
+}
 
-//    public QuestStepState[] questStepStates;
+[System.Serializable]
+public class QuestDataContainer
+{
+    public List<SerializedQuest> quests = new List<SerializedQuest>();
+}
 
-//    public QuestData(QuestState state, int questStepIndex, QuestStepState[] questStepState)
-//    {
-//        this.state = state;
-//        this.questStepIndex = questStepIndex;
-//        this.questStepStates = questStepState;
-//    }
-//}
+[System.Serializable]
+public class SerializedQuest
+{
+    public string questId;
+    public QuestState state;
+    public int questStepIndex;
+    public QuestStepState[] questStepStates;
+
+    public SerializedQuest(string id, QuestData questData)
+    {
+        questId = id;
+        state = questData.state;
+        questStepIndex = questData.questStepIndex;
+        questStepStates = questData.questStepStates;
+    }
+
+    public QuestData ToQuestData()
+    {
+        return new QuestData(state, questStepIndex, questStepStates);
+    }
+}
 
 // ------------------------------ PLAYER DATA -----------------------------
 

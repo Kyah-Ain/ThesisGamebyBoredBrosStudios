@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using TMPro;
@@ -27,7 +28,10 @@ public class SaveManager : MonoBehaviour
     [Header("DATA REFERENCES")]
 
     // NOTE: This referenced objects MUST EXIST from MAIN MENU unto the GAME (In-Short: All The Time) 
+
+    [Header("Type Here Your Staring Scene Name!")]
     public string currentRegionPoint; // Reference to the current region where the player is
+    [Space]
     public string previousRegion; // ...
     public Transform spawnPoint; // Reference to the current spawn point of the player
 
@@ -101,6 +105,7 @@ public class SaveManager : MonoBehaviour
 
         // Calls Methods that 'Overwrites' data/s on the dataBus
         SetWorldData();
+        SetQuestData();
         SetPlayerData();
         SetInventoryData();
         SetSettingsData();
@@ -178,6 +183,7 @@ public class SaveManager : MonoBehaviour
         {
             // Calls Methods that 'Overwrites' data/s on the referenced objects
             GetWorldData();
+            GetQuestData();
             GetPlayerData();
             GetInventoryData();
             GetSettingsData();
@@ -197,11 +203,20 @@ public class SaveManager : MonoBehaviour
         dataBus.worldData.previousRegion = previousRegion;
     }
 
-    //// ...
-    //public void SetQuestData()
-    //{
-    //    // Add Here Quest Data Soon...
-    //}
+    // ...
+    public void SetQuestData()
+    {
+        if (QuestManager.Instance != null)
+        {
+            var allQuestData = QuestManager.Instance.GetAllQuestData();
+            dataBus.questData.quests.Clear();
+
+            foreach (var kvp in allQuestData)
+            {
+                dataBus.questData.quests.Add(new SerializedQuest(kvp.Key, kvp.Value));
+            }
+        }
+    }
 
     // ...
     public void SetPlayerData()
@@ -234,11 +249,27 @@ public class SaveManager : MonoBehaviour
         previousRegion = dataBus.worldData.previousRegion;
     }
 
-    //// ...
-    //public void GetQuestData()
-    //{
-    //    // Add Here Quest Data Soon...
-    //}
+    // NEW: Load quest data and initialize QuestManager
+    public void GetQuestData()
+    {
+        if (QuestManager.Instance != null && dataBus.questData != null)
+        {
+            Dictionary<string, QuestData> questDataMap = new Dictionary<string, QuestData>();
+
+            foreach (var serializedQuest in dataBus.questData.quests)
+            {
+                questDataMap.Add(serializedQuest.questId, serializedQuest.ToQuestData());
+            }
+
+            // Initialize QuestManager with saved data
+            QuestManager.Instance.InitializeQuests(questDataMap);
+        }
+        else if (QuestManager.Instance != null)
+        {
+            // Initialize with no saved data (fresh game)
+            QuestManager.Instance.InitializeQuests();
+        }
+    }
 
     // ...
     public void GetPlayerData()
