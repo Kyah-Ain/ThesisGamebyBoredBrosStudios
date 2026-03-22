@@ -108,7 +108,7 @@ public class SaveManager : MonoBehaviour
 
         // Calls Methods that 'Overwrites' data/s on the dataBus
         SetWorldData();
-        SetQuestData();  // Make sure this is SetQuestData() not SetQuestsData()
+        SetQuestData();
         SetPlayerData();
         SetInventoryData();
         SetSettingsData();
