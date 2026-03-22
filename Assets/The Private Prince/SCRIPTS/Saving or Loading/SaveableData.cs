@@ -51,11 +51,11 @@ public class QuestData
     public int questStepIndex;
     public QuestStepState[] questStepStates;
 
-    public QuestData(QuestState state, int questStepIndex, QuestStepState[] questStepState)
+    public QuestData(QuestState state, int questStepIndex, QuestStepState[] questStepStates)
     {
         this.state = state;
         this.questStepIndex = questStepIndex;
-        this.questStepStates = questStepState;
+        this.questStepStates = questStepStates;
     }
 }
 

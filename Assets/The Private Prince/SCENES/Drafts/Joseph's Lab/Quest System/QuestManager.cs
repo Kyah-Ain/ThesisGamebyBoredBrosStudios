@@ -77,10 +77,19 @@ public class QuestManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        //foreach (Quest quest in questMap.Values)
-        //{
-        //    SaveQuest(quest);
-        //}
+        Debug.Log($"QuestManager: OnApplicationQuit() - Saving all quests");
+
+        if (questMap != null)
+        {
+            foreach (Quest quest in questMap.Values)
+            {
+                // Optional: Save to PlayerPrefs as backup
+                SaveQuest(quest);
+
+                // Your main save system will also save when the game saves
+                // So you don't need to call SaveManager here unless you want to auto-save on quit
+            }
+        }
     }
 
     // ------------------------- EVENT METHODS -------------------------
@@ -96,7 +105,10 @@ public class QuestManager : MonoBehaviour
             GameEventsManager.Instance.questEvents.onStartQuest += StartQuest;
             GameEventsManager.Instance.questEvents.onAdvanceQuest += AdvanceQuest;
             GameEventsManager.Instance.questEvents.onFinishQuest += FinishQuest;
+
             GameEventsManager.Instance.questEvents.onQuestStepStateChange += QuestStepStateChange;
+
+            //GameEventsManager.Instance.playerEvents.onPlayerLevelChange += PlayerLevelChange;
 
             Debug.Log("QuestManager: Successfully subscribed to all events");
         }
@@ -107,6 +119,7 @@ public class QuestManager : MonoBehaviour
         GameEventsManager.Instance.questEvents.onStartQuest -= StartQuest;
         GameEventsManager.Instance.questEvents.onAdvanceQuest -= AdvanceQuest;
         GameEventsManager.Instance.questEvents.onFinishQuest -= FinishQuest;
+
         GameEventsManager.Instance.questEvents.onQuestStepStateChange -= QuestStepStateChange;
 
         //GameEventsManager.Instance.playerEvents.onPlayerLevelChange -= PlayerLevelChange no level up currently will add on a later date
@@ -261,11 +274,30 @@ public class QuestManager : MonoBehaviour
 
     public Dictionary<string, QuestData> GetAllQuestData()
     {
+        Debug.Log($"QuestManager: GetAllQuestData() called - questMap count: {questMap?.Count ?? 0}");
+
+        if (questMap == null)
+        {
+            Debug.LogWarning($"QuestManager: questMap is null, returning empty dictionary");
+            return new Dictionary<string, QuestData>();
+        }
+
         Dictionary<string, QuestData> questDataMap = new Dictionary<string, QuestData>();
         foreach (var kvp in questMap)
         {
-            questDataMap.Add(kvp.Key, kvp.Value.GetQuestData());
+            QuestData questData = kvp.Value.GetQuestData();
+            questDataMap.Add(kvp.Key, questData);
+
+            Debug.Log($"QuestManager: Getting data for quest {kvp.Key} - State: {questData.state}, StepIndex: {questData.questStepIndex}");
+
+            // Optional: Log step states for debugging
+            for (int i = 0; i < questData.questStepStates.Length; i++)
+            {
+                Debug.Log($"QuestManager: Quest {kvp.Key} - Step {i} state: {questData.questStepStates[i].state}");
+            }
         }
+
+        Debug.Log($"QuestManager: Returning {questDataMap.Count} quest data entries");
         return questDataMap;
     }
 
@@ -300,7 +332,6 @@ public class QuestManager : MonoBehaviour
         return meetsRequirements;
     }
 
-
     //private void ClaimRewards(Quest quest)
     //{
     //GameEventsManager.Instance.goldEvents.GoldGained(quest.info.goldReward);
@@ -311,19 +342,22 @@ public class QuestManager : MonoBehaviour
 
     private void SaveQuest(Quest quest)
     {
-        //try
-        //{
-        //    QuestData questData = quest.GetQuestData();
-        //    string serializedData = JsonUtility.ToJson(questData);
-        //    // PlayerPrefs is a temp, will make an actual save and load system
-        //    PlayerPrefs.SetString(quest.info.id, serializedData);
+        try
+        {
+            QuestData questData = quest.GetQuestData();
 
-        //    Debug.Log(serializedData);
-        //}
-        //catch (System.Exception e)
-        //{
-        //    Debug.LogError("Failed to save quest with id " + quest.info.id + ": " + e);
-        //}
+            // This creates a JSON string (for debugging or backup)
+            string serializedData = JsonUtility.ToJson(questData);
+
+            // Optional: Save to PlayerPrefs as backup (like the YouTube tutorial)
+            PlayerPrefs.SetString(quest.info.id, serializedData);
+
+            Debug.Log($"QuestManager: Saved quest {quest.info.id} to PlayerPrefs: {serializedData}");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"QuestManager: Failed to save quest with id {quest.info.id}: {e}");
+        }
     }
 
     private Quest LoadQuest(QuestInfoSO questInfo)

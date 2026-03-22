@@ -97,20 +97,23 @@ public class SaveManager : MonoBehaviour
     // Pre-Built Method to save Core Data/s (Dev's Custom Method)
     private void ThingsToSave()
     {
+        Debug.Log($"SaveManager: ThingsToSave() - Starting data collection");
+
         // Initialize dataBus if it's null
         if (dataBus == null)
         {
             dataBus = new SaveableData();
+            Debug.Log($"SaveManager: Created new SaveableData instance");
         }
 
         // Calls Methods that 'Overwrites' data/s on the dataBus
         SetWorldData();
-        SetQuestData();
+        SetQuestData();  // Make sure this is SetQuestData() not SetQuestsData()
         SetPlayerData();
         SetInventoryData();
         SetSettingsData();
 
-        // Calls the execution of the data/s written in order to be saved
+        Debug.Log($"SaveManager: Data collection complete, calling SaveGame()");
         SaveGame(dataBus);
     }
 
@@ -206,35 +209,47 @@ public class SaveManager : MonoBehaviour
     // ...
     public void SetQuestData()
     {
+        Debug.Log($"SaveManager: SetQuestData() - Starting quest data collection");
+
         if (QuestManager.Instance != null)
         {
+            // Get ALL quest data from the QuestManager
             var allQuestData = QuestManager.Instance.GetAllQuestData();
             dataBus.questData.quests.Clear();
 
+            Debug.Log($"SaveManager: Found {allQuestData.Count} quests to save");
+
+            // Convert each quest to SerializedQuest and add to container
             foreach (var kvp in allQuestData)
             {
                 dataBus.questData.quests.Add(new SerializedQuest(kvp.Key, kvp.Value));
+                Debug.Log($"SaveManager: Saved quest - ID: {kvp.Key}, State: {kvp.Value.state}, StepIndex: {kvp.Value.questStepIndex}");
             }
+        }
+        else
+        {
+            Debug.LogWarning($"SaveManager: QuestManager.Instance is null, cannot save quest data");
         }
     }
 
     // ...
     public void SetPlayerData()
     {
-        // ...
+        Debug.Log($"SaveManager: SetPlayerData() - Saving player position: {spawnPoint.position}");
         dataBus.playerData.spawnPosition = new SerializableVector3(spawnPoint.position);
     }
 
     // ...
     public void SetInventoryData()
     {
+        Debug.Log($"SaveManager: SetInventoryData() - Called (not implemented yet)");
         // Could Implement Inventory here soon ...
     }
 
     // ...
     public void SetSettingsData()
     {
-        // ...
+        Debug.Log($"SaveManager: SetSettingsData() - Saving audio settings - Music: {MUSIC}, SFX: {SFX}");
         dataBus.settingsData.musicVolume = MUSIC;
         dataBus.settingsData.soundVolume = SFX;
     }
