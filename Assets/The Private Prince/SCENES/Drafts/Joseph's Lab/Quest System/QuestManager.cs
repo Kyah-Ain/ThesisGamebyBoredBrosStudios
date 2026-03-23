@@ -43,34 +43,20 @@ public class QuestManager : MonoBehaviour
     {
         //// Recreate quest map with fresh data
         //questMap = CreateQuestMap();
-
-        if (questMap != null)
-        {
-            // Broadcast the initial state of all quests on startup
-            foreach (Quest quest in questMap.Values)
-            {
-                if (quest.state == QuestState.IN_PROGRESS)
-                {
-                    quest.InstantiateCurrentQuestStep(this.transform);
-                }
-                GameEventsManager.Instance.questEvents.QuestStateChange(quest);
-            }
-        }
-        else 
-        {
-            InitializeQuests();
-        }
     }
 
     private void Update()
     {
-        // loops through all quests
-        foreach (Quest quest in questMap.Values)
+        if (questMap != null) 
         {
-            // if we are now meeting the requirements, switch over to the CAN_START state
-            if (quest.state == QuestState.REQUIREMENTS_NOT_MET && CheckRequirementsMet(quest))
+            // loops through all quests
+            foreach (Quest quest in questMap.Values)
             {
-                ChangeQuestState(quest.info.id, QuestState.CAN_START);
+                // if we are now meeting the requirements, switch over to the CAN_START state
+                if (quest.state == QuestState.REQUIREMENTS_NOT_MET && CheckRequirementsMet(quest))
+                {
+                    ChangeQuestState(quest.info.id, QuestState.CAN_START);
+                }
             }
         }
     }
@@ -198,6 +184,33 @@ public class QuestManager : MonoBehaviour
         ChangeQuestState(quest.info.id, QuestState.IN_PROGRESS);
     }
 
+    // ...
+    public void LoadQuests() 
+    {
+        if (questMap != null)
+        {
+            // Broadcast the initial state of all quests on startup
+            foreach (Quest quest in questMap.Values)
+            {
+                if (quest.state == QuestState.IN_PROGRESS)
+                {
+                    quest.InstantiateCurrentQuestStep(this.transform);
+                }
+                GameEventsManager.Instance.questEvents.QuestStateChange(quest);
+            }
+        }
+        else
+        {
+            InitializeQuests();
+        }
+
+        Debug.Log($"QuestManager: THIS IS PROBLEMATIC WHEN BEING CALLED AT Awake() or Start()" +
+                  $" if your game has multiple scene ASYNCs loading at the same time" +
+                  $" THAT RECEIVES UPDATES FROM THIS MANAGER!! \n" +
+                  $"NOTE - If they are ON A DIFFRENT SCENE (The Manager and The Observer) the Manager" +
+                  $" would brodcast data that WOULD BE MISSED by the observeer because IT'S NOT" +
+                  $" BEEN ENABLED YET WHEN THE MANAGER BRODCAST IT.");
+    }
     private void AdvanceQuest(string id)
     {
         Debug.Log($"QuestManager: Advancing quest {id}");

@@ -12,7 +12,11 @@ GameObject:
   - component: {fileID: 851669224336568542}
   - component: {fileID: 7267130197241370440}
   - component: {fileID: 5847006690893874977}
+  - component: {fileID: 7571531367243963740}
   - component: {fileID: 9124881399888339842}
+  - component: {fileID: 5112367502178480129}
+  - component: {fileID: 1983346954151263452}
+  - component: {fileID: 4328713379505036057}
   m_Layer: 0
   m_Name: QuestPoint_Prologue
   m_TagString: Untagged
@@ -109,7 +113,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9124881399888339842
+--- !u!114 &7571531367243963740
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,6 +121,21 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4996441995862388574}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfd630231fba648468e148d3835467f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questInfoForPoint: {fileID: 11400000, guid: 752acbe3c62ea3545a05037cdaa5d663, type: 2}
+  startPoint: 1
+  finishPoint: 1
+--- !u!114 &9124881399888339842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996441995862388574}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db9492ea930d96d4c85b1930647c2c81, type: 3}
   m_Name: 
@@ -128,7 +147,75 @@ MonoBehaviour:
   autoTriggerDelay: 1
   canTriggerOnlyOnce: 1
   iconDisplayMode: 2
-  showIconInManualModeOnly: 0
+--- !u!114 &5112367502178480129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996441995862388574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6dcbe6da3f08c542a370e5083199693, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1983346954151263452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996441995862388574}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ad6adca4520a98489ec39f8fc9a9dcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 66ed545f7358e9547bf57e70218df295, type: 2}
+  onEventTriggered:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5112367502178480129}
+        m_TargetAssemblyTypeName: QuestStarter, Assembly-CSharp
+        m_MethodName: StartQuestByIdSO
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: 752acbe3c62ea3545a05037cdaa5d663,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: QuestInfoSO, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &4328713379505036057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996441995862388574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ad6adca4520a98489ec39f8fc9a9dcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 66ed545f7358e9547bf57e70218df295, type: 2}
+  onEventTriggered:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9124881399888339842}
+        m_TargetAssemblyTypeName: QuestPointV2, Assembly-CSharp
+        m_MethodName: TriggerQuestPoint
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &6085179875825236711
 PrefabInstance:
   m_ObjectHideFlags: 0

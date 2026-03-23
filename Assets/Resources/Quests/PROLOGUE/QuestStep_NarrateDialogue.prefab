@@ -224,12 +224,11 @@ GameObject:
   - component: {fileID: 2265664521530735250}
   - component: {fileID: 7897676215928797142}
   - component: {fileID: 3213212062373752754}
-  - component: {fileID: 1232328139028614171}
-  - component: {fileID: 6735669446803548046}
-  - component: {fileID: 8982964442608568587}
-  - component: {fileID: 392033981844414179}
-  - component: {fileID: 5412745009081872676}
   - component: {fileID: 6960638038641771555}
+  - component: {fileID: 6735669446803548046}
+  - component: {fileID: 392033981844414179}
+  - component: {fileID: 8982964442608568587}
+  - component: {fileID: 5412745009081872676}
   m_Layer: 7
   m_Name: QuestStep_NarrateDialogue
   m_TagString: Player
@@ -320,23 +319,31 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1232328139028614171
-MonoBehaviour:
+--- !u!65 &6960638038641771555
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3087746508427583259}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39146fdf826c54f41832e90f680bf30f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueObject: {fileID: 11400000, guid: a736cf5a0753531458205f32c4af5e67, type: 2}
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6735669446803548046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -381,7 +388,19 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 0
+--- !u!114 &392033981844414179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3087746508427583259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ff2a1046b6b2b345b11fd4cecefd5db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8982964442608568587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,18 +431,6 @@ MonoBehaviour:
           m_StringArgument: Tandang_Quest
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &392033981844414179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3087746508427583259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ff2a1046b6b2b345b11fd4cecefd5db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5412745009081872676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -431,7 +438,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3087746508427583259}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db9492ea930d96d4c85b1930647c2c81, type: 3}
   m_Name: 
@@ -443,27 +450,6 @@ MonoBehaviour:
   autoTriggerDelay: 1
   canTriggerOnlyOnce: 0
   iconDisplayMode: 2
---- !u!65 &6960638038641771555
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3087746508427583259}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4640941313540187681
 GameObject:
   m_ObjectHideFlags: 0

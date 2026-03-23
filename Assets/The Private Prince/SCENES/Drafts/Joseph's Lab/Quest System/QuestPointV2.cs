@@ -47,29 +47,29 @@ public class QuestPointV2 : MonoBehaviour
 
     // ------------------------- UNITY METHODS -------------------------
 
-    // ...
     private void Awake()
     {
+        Debug.Log($"[QuestPointV2] Awake called on {gameObject.name}");
         CacheQuestId();
         GetQuestIcon();
         SetupCollider();
         UpdateIconVisibility();
+        Debug.Log($"[QuestPointV2] Initialization complete. Quest ID: {questId}, StartPoint: {startPoint}, FinishPoint: {finishPoint}, TriggerMode: {triggerMode}");
     }
 
-    // ...
     private void OnEnable()
     {
+        Debug.Log($"[QuestPointV2] OnEnable called on {gameObject.name}");
         SubscribeToEvents();
         ResetAutoTriggerFlag();
     }
 
-    // ...
     private void OnDisable()
     {
+        Debug.Log($"[QuestPointV2] OnDisable called on {gameObject.name}");
         UnsubscribeFromEvents();
     }
 
-    // ...
     private void OnValidate()
     {
         ValidateTriggerSettings();
@@ -78,169 +78,207 @@ public class QuestPointV2 : MonoBehaviour
 
     // ------------------------- INITIALIZATION METHODS -------------------------
 
-    // Method to cache the quest ID from the assigned ScriptableObject
     private void CacheQuestId()
     {
         if (questInfoForPoint != null)
         {
             questId = questInfoForPoint.id;
+            Debug.Log($"[QuestPointV2] Cached quest ID: {questId} from {questInfoForPoint.name}");
         }
         else
         {
-            Debug.LogError($"QuestPointV2 on {gameObject.name} has no QuestInfoSO assigned!");
+            Debug.LogError($"[QuestPointV2] ERROR: QuestPointV2 on {gameObject.name} has no QuestInfoSO assigned!");
         }
     }
 
-    // Method to get QuestIcon component from child GameObject
     private void GetQuestIcon()
     {
         questIcon = GetComponentInChildren<QuestIcon>();
+        if (questIcon != null)
+        {
+            Debug.Log($"[QuestPointV2] Found QuestIcon component in children of {gameObject.name}");
+        }
+        else
+        {
+            Debug.Log($"[QuestPointV2] No QuestIcon component found in children of {gameObject.name} (this is optional)");
+        }
     }
 
-    // Method to setup the sphere collider for trigger detection
     private void SetupCollider()
     {
         SphereCollider col = GetComponent<SphereCollider>();
-        col.isTrigger = true;   // Must be a trigger collider for OnTriggerEnter/Exit to fire
-        col.radius = 2f;        // Default interaction range
+        col.isTrigger = true;
+        col.radius = 2f;
+        Debug.Log($"[QuestPointV2] Setup SphereCollider on {gameObject.name}: isTrigger={col.isTrigger}, radius={col.radius}");
     }
 
     // ------------------------- EVENT SUBSCRIPTIONS -------------------------
 
-    // Method to subscribe to quest events when enabled
     private void SubscribeToEvents()
     {
-        if (GameEventsManager.Instance == null) return;
+        if (GameEventsManager.Instance == null)
+        {
+            Debug.LogWarning($"[QuestPointV2] GameEventsManager.Instance is null on {gameObject.name}. Make sure GameEventsManager exists in the scene!");
+            return;
+        }
+
         GameEventsManager.Instance.questEvents.onQuestStateChange += QuestStateChange;
+        Debug.Log($"[QuestPointV2] Subscribed to quest state change events for quest {questId}");
     }
 
-    // Method to unsubscribe from quest events when disabled
     private void UnsubscribeFromEvents()
     {
         if (GameEventsManager.Instance != null)
         {
             GameEventsManager.Instance.questEvents.onQuestStateChange -= QuestStateChange;
+            Debug.Log($"[QuestPointV2] Unsubscribed from quest state change events for quest {questId}");
         }
     }
 
     // ------------------------- QUEST STATE HANDLING -------------------------
 
-    // Event callback when quest state changes globally
     private void QuestStateChange(Quest quest)
     {
-        // Only update if this quest point is linked to the quest that changed
-        if (!quest.info.id.Equals(questId)) return;
+        Debug.Log($"[QuestPointV2] QuestStateChange event received. Quest ID: {quest.info.id}, My Quest ID: {questId}");
 
+        if (!quest.info.id.Equals(questId))
+        {
+            Debug.Log($"[QuestPointV2] Quest ID mismatch, ignoring event");
+            return;
+        }
+
+        Debug.Log($"[QuestPointV2] Updating quest state for {questId}: {quest.state}");
         UpdateCurrentQuestState(quest.state);
         UpdateQuestIcon();
         ResetAutoTriggerIfAllowed();
+
+        Debug.Log($"[QuestPointV2] Current state after update: {currentQuestState}, CanTrigger: {IsQuestTriggerable()}");
     }
 
-    // Method to update the cached quest state
     private void UpdateCurrentQuestState(QuestState newState)
     {
+        Debug.Log($"[QuestPointV2] Updating currentQuestState from {currentQuestState} to {newState}");
         currentQuestState = newState;
     }
 
-    // Method to update the quest icon based on current state
     private void UpdateQuestIcon()
     {
-        if (questIcon == null) return;
+        if (questIcon == null)
+        {
+            Debug.Log($"[QuestPointV2] No QuestIcon to update");
+            return;
+        }
 
-        // Update icon state if we're in a mode that shows state
         if (ShouldUpdateIconState())
         {
+            Debug.Log($"[QuestPointV2] Updating QuestIcon state to {currentQuestState}");
             questIcon.SetState(currentQuestState, startPoint, finishPoint);
         }
 
-        // Update visibility based on display mode
         UpdateIconVisibility();
     }
 
-    // Method to determine if icon state should be updated
     private bool ShouldUpdateIconState()
     {
-        return iconDisplayMode == IconDisplayMode.Auto ||
-               iconDisplayMode == IconDisplayMode.AlwaysShow;
+        bool shouldUpdate = iconDisplayMode == IconDisplayMode.Auto || iconDisplayMode == IconDisplayMode.AlwaysShow;
+        Debug.Log($"[QuestPointV2] ShouldUpdateIconState: {shouldUpdate} (Mode: {iconDisplayMode})");
+        return shouldUpdate;
     }
 
-    // Method to reset auto-trigger flag if allowed by settings
     private void ResetAutoTriggerIfAllowed()
     {
         if (!canTriggerOnlyOnce)
         {
             hasAutoTriggered = false;
+            Debug.Log($"[QuestPointV2] Reset auto-trigger flag (canTriggerOnlyOnce=false)");
+        }
+        else
+        {
+            Debug.Log($"[QuestPointV2] Cannot reset auto-trigger (canTriggerOnlyOnce=true)");
         }
     }
 
     // ------------------------- ICON VISUAL METHODS -------------------------
 
-    // Method to update icon visibility based on display mode
     private void UpdateIconVisibility()
     {
         if (questIcon == null) return;
 
         bool shouldShow = DetermineIconVisibility();
+        Debug.Log($"[QuestPointV2] UpdateIconVisibility: shouldShow={shouldShow} (Mode: {iconDisplayMode})");
 
-        // Set icon active state
         questIcon.gameObject.SetActive(shouldShow);
 
-        // If visible, update its state
         if (shouldShow)
         {
             questIcon.SetState(currentQuestState, startPoint, finishPoint);
         }
     }
 
-    // Method to determine if icon should be visible based on display mode
     private bool DetermineIconVisibility()
     {
         switch (iconDisplayMode)
         {
             case IconDisplayMode.Auto:
-                return IsQuestTriggerable();
+                bool isTriggerable = IsQuestTriggerable();
+                Debug.Log($"[QuestPointV2] Auto mode: IsQuestTriggerable={isTriggerable}");
+                return isTriggerable;
 
             case IconDisplayMode.AlwaysShow:
+                Debug.Log($"[QuestPointV2] AlwaysShow mode: returning true");
                 return true;
 
             case IconDisplayMode.AlwaysHide:
+                Debug.Log($"[QuestPointV2] AlwaysHide mode: returning false");
                 return false;
 
             case IconDisplayMode.ShowOnlyOnManual:
-                return (triggerMode == TriggerMode.Manual);
+                bool isManual = (triggerMode == TriggerMode.Manual);
+                Debug.Log($"[QuestPointV2] ShowOnlyOnManual mode: isManual={isManual}");
+                return isManual;
 
             default:
                 return false;
         }
     }
 
-    // Method to check if the quest is in a triggerable state
     private bool IsQuestTriggerable()
     {
-        return (currentQuestState == QuestState.CAN_START && startPoint) ||
-               (currentQuestState == QuestState.CAN_FINISH && finishPoint);
+        bool canStart = (currentQuestState == QuestState.CAN_START && startPoint);
+        bool canFinish = (currentQuestState == QuestState.CAN_FINISH && finishPoint);
+        bool isTriggerable = canStart || canFinish;
+
+        Debug.Log($"[QuestPointV2] IsQuestTriggerable check - State: {currentQuestState}, StartPoint: {startPoint}, FinishPoint: {finishPoint}, CanStart: {canStart}, CanFinish: {canFinish}, Result: {isTriggerable}");
+
+        return isTriggerable;
     }
 
     // ------------------------- TRIGGER METHODS -------------------------
 
-    // This method is called when player presses the interact button
     public void Interact()
     {
+        Debug.Log($"[QuestPointV2] Interact() called. TriggerMode: {triggerMode}, PlayerIsNear: {playerIsNear}");
+
         if (triggerMode == TriggerMode.Manual && playerIsNear)
         {
+            Debug.Log($"[QuestPointV2] Manual trigger condition met, attempting quest trigger");
             AttemptQuestTrigger();
+        }
+        else
+        {
+            Debug.Log($"[QuestPointV2] Cannot trigger manually - Mode: {triggerMode}, PlayerNear: {playerIsNear}");
         }
     }
 
-    // Public method to trigger the quest point from UnityEvents or other scripts
     public void TriggerQuestPoint()
     {
+        Debug.Log($"[QuestPointV2] TriggerQuestPoint() called externally");
         AttemptQuestTrigger();
     }
 
-    // Overload with optional force parameter
     public void TriggerQuestPoint(bool forceTrigger)
     {
+        Debug.Log($"[QuestPointV2] TriggerQuestPoint(forceTrigger={forceTrigger}) called externally");
         if (forceTrigger)
         {
             AttemptQuestTrigger();
@@ -251,15 +289,18 @@ public class QuestPointV2 : MonoBehaviour
         }
     }
 
-    // Core method to attempt starting or finishing the quest
     private void AttemptQuestTrigger()
     {
+        Debug.Log($"[QuestPointV2] AttemptQuestTrigger - Current State: {currentQuestState}, StartPoint: {startPoint}, FinishPoint: {finishPoint}");
+
         if (currentQuestState == QuestState.CAN_START && startPoint)
         {
+            Debug.Log($"[QuestPointV2] Conditions met for STARTING quest");
             StartQuest();
         }
         else if (currentQuestState == QuestState.CAN_FINISH && finishPoint)
         {
+            Debug.Log($"[QuestPointV2] Conditions met for FINISHING quest");
             FinishQuest();
         }
         else
@@ -268,141 +309,176 @@ public class QuestPointV2 : MonoBehaviour
         }
     }
 
-    // Method to start the quest
     private void StartQuest()
     {
+        if (GameEventsManager.Instance == null)
+        {
+            Debug.LogError($"[QuestPointV2] Cannot start quest - GameEventsManager.Instance is null!");
+            return;
+        }
+
+        Debug.Log($"[QuestPointV2] ===== STARTING QUEST {questId} =====");
         GameEventsManager.Instance.questEvents.StartQuest(questId);
-        Debug.Log($"QuestPointV2: Started quest {questId} via {GetTriggerType()}");
+        Debug.Log($"[QuestPointV2] Quest start event sent via {GetTriggerType()}");
     }
 
-    // Method to finish the quest
     private void FinishQuest()
     {
+        if (GameEventsManager.Instance == null)
+        {
+            Debug.LogError($"[QuestPointV2] Cannot finish quest - GameEventsManager.Instance is null!");
+            return;
+        }
+
+        Debug.Log($"[QuestPointV2] ===== FINISHING QUEST {questId} =====");
         GameEventsManager.Instance.questEvents.FinishQuest(questId);
-        Debug.Log($"QuestPointV2: Finished quest {questId} via {GetTriggerType()}");
+        Debug.Log($"[QuestPointV2] Quest finish event sent via {GetTriggerType()}");
     }
 
-    // Helper method to get trigger type for debug logs
     private string GetTriggerType()
     {
         return triggerMode == TriggerMode.Manual ? "manual" : "auto";
     }
 
-    // Method to log when quest cannot be triggered
     private void LogCannotTrigger()
     {
-        Debug.Log($"QuestPointV2: Cannot trigger quest {questId}. " +
-                 $"Current state: {currentQuestState}, " +
-                 $"StartPoint: {startPoint}, " +
-                 $"FinishPoint: {finishPoint}");
+        Debug.LogWarning($"[QuestPointV2] CANNOT TRIGGER QUEST {questId} \n" +
+                        $"  Current state: {currentQuestState}\n" +
+                        $"  StartPoint: {startPoint}\n" +
+                        $"  FinishPoint: {finishPoint}\n" +
+                        $"  Required conditions:\n" +
+                        $"    - To START: State must be CAN_START AND startPoint=true\n" +
+                        $"    - To FINISH: State must be CAN_FINISH AND finishPoint=true");
     }
 
     // ------------------------- AUTO TRIGGER METHODS -------------------------
 
-    // Coroutine for delayed auto-trigger
     private System.Collections.IEnumerator DelayedAutoTrigger()
     {
+        Debug.Log($"[QuestPointV2] Starting delayed auto-trigger coroutine with delay {autoTriggerDelay}s");
         yield return new WaitForSeconds(autoTriggerDelay);
 
-        // Only trigger if player is still nearby and we haven't triggered yet
         if (playerIsNear && !hasAutoTriggered)
         {
+            Debug.Log($"[QuestPointV2] Delay completed, player still near, triggering quest");
             hasAutoTriggered = true;
             AttemptQuestTrigger();
         }
+        else
+        {
+            Debug.Log($"[QuestPointV2] Delay completed but conditions not met - PlayerNear: {playerIsNear}, HasTriggered: {hasAutoTriggered}");
+        }
     }
 
-    // Method to reset the auto-trigger flag
     private void ResetAutoTriggerFlag()
     {
         hasAutoTriggered = false;
+        Debug.Log($"[QuestPointV2] Reset auto-trigger flag to false");
     }
 
-    // Public method to manually reset auto-trigger (useful for debugging or special cases)
     public void ResetAutoTrigger()
     {
         hasAutoTriggered = false;
+        Debug.Log($"[QuestPointV2] Auto-trigger manually reset");
     }
 
     // ------------------------- COLLIDER METHODS -------------------------
 
-    // Detect player entering trigger zone
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        Debug.Log($"[QuestPointV2] OnTriggerEnter with {other.gameObject.name} (Tag: {other.tag})");
+
+        if (!other.CompareTag("Player"))
+        {
+            Debug.Log($"[QuestPointV2] Ignoring non-player collision");
+            return;
+        }
 
         playerIsNear = true;
+        Debug.Log($"[QuestPointV2] Player entered trigger zone! PlayerNear = true");
         HandleAutoTriggerOnEnter();
     }
 
-    // Handle auto-trigger logic when player enters
     private void HandleAutoTriggerOnEnter()
     {
-        if (triggerMode == TriggerMode.Manual) return;
-        if (hasAutoTriggered) return;
-        if (!IsQuestTriggerable()) return;
+        Debug.Log($"[QuestPointV2] HandleAutoTriggerOnEnter - Mode: {triggerMode}, HasAutoTriggered: {hasAutoTriggered}");
+
+        if (triggerMode == TriggerMode.Manual)
+        {
+            Debug.Log($"[QuestPointV2] Manual mode, no auto-trigger");
+            return;
+        }
+
+        if (hasAutoTriggered)
+        {
+            Debug.Log($"[QuestPointV2] Already auto-triggered, skipping");
+            return;
+        }
+
+        if (!IsQuestTriggerable())
+        {
+            Debug.Log($"[QuestPointV2] Quest not triggerable in current state");
+            return;
+        }
 
         switch (triggerMode)
         {
             case TriggerMode.AutoOnEnter:
+                Debug.Log($"[QuestPointV2] AutoOnEnter mode - triggering immediately");
                 TriggerImmediate();
                 break;
 
             case TriggerMode.AutoWithDelay:
+                Debug.Log($"[QuestPointV2] AutoWithDelay mode - starting delayed trigger");
                 TriggerWithDelay();
                 break;
         }
     }
 
-    // Trigger quest immediately
     private void TriggerImmediate()
     {
         hasAutoTriggered = true;
+        Debug.Log($"[QuestPointV2] Immediate trigger activated");
         AttemptQuestTrigger();
     }
 
-    // Trigger quest with delay
     private void TriggerWithDelay()
     {
+        Debug.Log($"[QuestPointV2] Starting coroutine for delayed trigger");
         StartCoroutine(DelayedAutoTrigger());
     }
 
-    // Detect player exiting trigger zone
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerIsNear = false;
+            Debug.Log($"[QuestPointV2] Player exited trigger zone. PlayerNear = false");
         }
     }
 
     // ------------------------- VALIDATION METHODS -------------------------
 
-    // Validate trigger settings in the inspector
     private void ValidateTriggerSettings()
     {
-        // Clamp delay to reasonable values
         autoTriggerDelay = Mathf.Max(0f, autoTriggerDelay);
 
-        // Warn if manual mode has delay configured
         if (triggerMode == TriggerMode.Manual && autoTriggerDelay > 0f)
         {
-            Debug.LogWarning($"QuestPointV2 on {gameObject.name}: autoTriggerDelay is only used in AutoWithDelay mode.", this);
+            Debug.LogWarning($"[QuestPointV2] Warning on {gameObject.name}: autoTriggerDelay is only used in AutoWithDelay mode.", this);
         }
 
-        // Warn if AutoWithDelay mode has zero delay
         if (triggerMode == TriggerMode.AutoWithDelay && autoTriggerDelay <= 0f)
         {
-            Debug.LogWarning($"QuestPointV2 on {gameObject.name}: AutoWithDelay mode selected but delay is 0. Consider using AutoOnEnter mode.", this);
+            Debug.LogWarning($"[QuestPointV2] Warning on {gameObject.name}: AutoWithDelay mode selected but delay is 0. Consider using AutoOnEnter mode.", this);
         }
     }
 
-    // Validate icon settings in the inspector
     private void ValidateIconSettings()
     {
         if (iconDisplayMode == IconDisplayMode.ShowOnlyOnManual && triggerMode != TriggerMode.Manual)
         {
-            Debug.LogWarning($"QuestPointV2 on {gameObject.name}: IconDisplayMode is 'ShowOnlyOnManual' but trigger mode is {triggerMode}. Icon will not appear!", this);
+            Debug.LogWarning($"[QuestPointV2] Warning on {gameObject.name}: IconDisplayMode is 'ShowOnlyOnManual' but trigger mode is {triggerMode}. Icon will not appear!", this);
         }
     }
 }

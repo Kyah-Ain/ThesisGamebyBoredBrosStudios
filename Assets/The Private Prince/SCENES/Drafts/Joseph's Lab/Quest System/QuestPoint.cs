@@ -85,6 +85,8 @@ public class QuestPoint : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerIsNear = true;
+
+            Interact();
         }
     }
 
