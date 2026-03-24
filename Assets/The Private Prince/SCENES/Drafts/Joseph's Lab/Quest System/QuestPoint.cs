@@ -86,7 +86,7 @@ public class QuestPoint : MonoBehaviour
         {
             playerIsNear = true;
 
-            Interact();
+            //Interact();
         }
     }
 
