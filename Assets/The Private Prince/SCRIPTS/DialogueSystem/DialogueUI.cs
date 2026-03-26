@@ -23,6 +23,9 @@ public class DialogueUI : MonoBehaviour
     private bool interactPressed = false; // Flag to track if the interact button was pressed (for Traversing through dialogue)
     private bool cancelPressed = false; // Flag to track if the cancel button was pressed (for Cancelling the dialogue)
 
+    [Header("OPTIONAL EVENTS")]
+    public GameEvent onDialogueBoxClosedGlobal;
+
     // ------------------------- UNITY METHODS -------------------------
 
     public void Awake()
@@ -230,6 +233,8 @@ public class DialogueUI : MonoBehaviour
             GameplayInputManager.Instance.SwitchActionMap("Player");
             Debug.Log("Dialogue closed - Switched back to Player map");
         }
+
+        onDialogueBoxClosedGlobal?.TriggerEvent();
     }
 
     // Automated Unity Built-In method being called when this object is destroyed

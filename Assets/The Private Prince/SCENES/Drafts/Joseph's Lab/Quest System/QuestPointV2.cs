@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SphereCollider))]
+//[RequireComponent(typeof(SphereCollider))]
 public class QuestPointV2 : MonoBehaviour
 {
     // ------------------------- ENUMS -------------------------

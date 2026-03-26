@@ -380,9 +380,10 @@ GameObject:
   - component: {fileID: 851669224336568542}
   - component: {fileID: 7267130197241370440}
   - component: {fileID: 5847006690893874977}
-  - component: {fileID: 8541367409190461058}
   - component: {fileID: 3087981952797907782}
+  - component: {fileID: 8541367409190461058}
   - component: {fileID: 9124881399888339842}
+  - component: {fileID: 7449050426077988583}
   - component: {fileID: 1420608440325996830}
   - component: {fileID: 3817198812872717131}
   m_Layer: 0
@@ -482,18 +483,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8541367409190461058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4996441995862388574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa51014132553564a9ca93ce70dafd34, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3087981952797907782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,7 +503,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 9124881399888339842}
         m_TargetAssemblyTypeName: QuestPointV2, Assembly-CSharp
-        m_MethodName: Interact
+        m_MethodName: ForceStartQuest
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -524,6 +513,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8541367409190461058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996441995862388574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa51014132553564a9ca93ce70dafd34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &9124881399888339842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,6 +544,46 @@ MonoBehaviour:
   autoTriggerDelay: 1
   canTriggerOnlyOnce: 1
   iconDisplayMode: 2
+--- !u!114 &7449050426077988583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996441995862388574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c72e494a4e5593d44968b2dcdcbe4845, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questInfo: {fileID: 11400000, guid: 0198892daf0b14c458924972e02ae6c7, type: 2}
+  onQuestFinish:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 9124881399888339842}
+        m_TargetAssemblyTypeName: QuestPointV2, Assembly-CSharp
+        m_MethodName: DestroyTriggeredObject
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 4996441995862388574}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1420608440325996830
 MonoBehaviour:
   m_ObjectHideFlags: 0
