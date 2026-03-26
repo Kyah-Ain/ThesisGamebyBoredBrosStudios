@@ -160,6 +160,7 @@ MonoBehaviour:
   dialogueBox: {fileID: 1762396710198038820}
   textLabel: {fileID: 6119825048115108795}
   dialogueFinished: 0
+  onDialogueBoxClosedGlobal: {fileID: 0}
 --- !u!114 &155283607225173748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,7 +558,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questInfo: {fileID: 11400000, guid: 0198892daf0b14c458924972e02ae6c7, type: 2}
-  onQuestFinish:
+  onQuestFinishGlobal: {fileID: 0}
+  onQuestFinishLocal:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
@@ -582,7 +584,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1420608440325996830
 MonoBehaviour:
@@ -1383,6 +1385,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: QuestIcon (Start)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6063908686042441558, guid: 46e76f7849bb58542b27fd04d7c40e1e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

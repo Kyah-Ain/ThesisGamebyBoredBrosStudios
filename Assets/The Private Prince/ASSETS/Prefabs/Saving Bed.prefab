@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8199781601627579011}
   - component: {fileID: 3425534073404922144}
   - component: {fileID: 99644050814035113}
+  - component: {fileID: 4242726541102776160}
+  - component: {fileID: 5895496408764213694}
   m_Layer: 0
   m_Name: Saving Bed
   m_TagString: Untagged
@@ -109,6 +111,49 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4242726541102776160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57658917671867602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ad6adca4520a98489ec39f8fc9a9dcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 2569f59334739614786470ff967fb218, type: 2}
+  onEventTriggered:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5895496408764213694}
+        m_TargetAssemblyTypeName: ScannableObjects, Assembly-CSharp
+        m_MethodName: InCyberScan
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5895496408764213694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57658917671867602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 831101170ad837f48b7291c4616f6439, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onCyberScan: 0
+  unScannedColor: {fileID: 2100000, guid: a68ba9cf60b9e894aa44310816231023, type: 2}
+  scannedColor: {fileID: 2100000, guid: 1cc89565fc12ca44781d4a846bd185ba, type: 2}
 --- !u!1 &252713066230915465
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,7 +182,7 @@ Transform:
   m_GameObject: {fileID: 252713066230915465}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.3333335, y: 2.25, z: -0.6}
+  m_LocalPosition: {x: 0.9376729, y: 1.25, z: -0.10000001}
   m_LocalScale: {x: 0.33337, y: 1, z: 0.19059126}
   m_ConstrainProportionsScale: 0
   m_Children: []

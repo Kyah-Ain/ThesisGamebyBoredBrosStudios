@@ -9,6 +9,8 @@ public class SaveManager : MonoBehaviour
 {
     // ------------------------- EVENTS -------------------------
 
+    public static event Action OnSaveStateChanged;
+
     [SerializeField] private GameEvent onLoadGame; // ...
 
     public Action onEnteringNewRegion;
@@ -38,6 +40,8 @@ public class SaveManager : MonoBehaviour
     public float MUSIC; // Reference to the current Music loudness
     public float SFX; // Reference to thee current In-Game sounds volume
 
+    public bool HasSavedProgress => File.Exists(savingFilePath);
+
     // ADD MORE REFERENCE HERE IN THE FUTURE (Eg. Inventory)....
 
     // ------------------------- UNITY METHODS -------------------------
@@ -45,6 +49,9 @@ public class SaveManager : MonoBehaviour
     // ...
     private void Awake()
     {
+        // ...
+        OnSaveStateChanged?.Invoke();
+
         // Implement singleton pattern to ensure only one instance of PlayerInputManager exists
         if (instance == null)
         {
@@ -83,6 +90,9 @@ public class SaveManager : MonoBehaviour
     // Accessible Method to process Save Game Data
     public void SaveGame(SaveableData dataToSave)
     {
+        // ...
+        OnSaveStateChanged?.Invoke();
+
         // ...
         FileStream file = File.Create(savingFilePath);
         BinaryFormatter bf = new BinaryFormatter();

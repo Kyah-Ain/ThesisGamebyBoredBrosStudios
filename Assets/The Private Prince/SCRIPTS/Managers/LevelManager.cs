@@ -29,7 +29,7 @@ public class LevelManager : MonoBehaviour
         {
             instance = this;
 
-            PlayerPrefs.DeleteAll();
+            //PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
             Debug.Log("Cleared all saved data for new game session");
 
