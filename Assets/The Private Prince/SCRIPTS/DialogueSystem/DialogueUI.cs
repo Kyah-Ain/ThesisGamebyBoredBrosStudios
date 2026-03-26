@@ -234,6 +234,9 @@ public class DialogueUI : MonoBehaviour
             Debug.Log("Dialogue closed - Switched back to Player map");
         }
 
+        Debug.Log($"onDialogueBoxClosedGlobal was triggered through: {this.gameObject.name} " +
+                  $"from {this.gameObject.transform.parent.name}");
+
         onDialogueBoxClosedGlobal?.TriggerEvent();
     }
 
