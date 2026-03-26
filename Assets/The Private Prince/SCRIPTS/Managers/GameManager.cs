@@ -59,41 +59,36 @@ public class GameManager : MonoBehaviour
     {
         _loadingBarObject.SetActive(true);
 
+        // Evaluate if the player has already played at least one level by checking the highest level reached
         if (LevelManager.Instance.highestLevel > 1)
         {
-            activationManager.Activate();
+            activationManager.Activate(); // Open the prompt panel to confirm starting a new game
         }
-        else
+        else // If the player has not played any levels yet, we can directly start a new game without confirmation
         {
-            LevelManager.Instance.ResetLevel();
+            LevelManager.Instance.ResetLevel(); // Reset the game if no levels have been played yet
 
-            // Store the operation reference BEFORE adding to list
-            AsyncOperation op = SceneManager.LoadSceneAsync(startingSceneName);
-            op.allowSceneActivation = false; // Hold the scene — don't activate yet
-            _scenesToLoad.Add(op);
-
+            _scenesToLoad.Add(SceneManager.LoadSceneAsync(startingSceneName));
             SaveManager.Instance.currentRegionPoint = startingSceneName;
+
             LoadSceneAdditive(_persistentGameplay);
 
             StartCoroutine(ProgressLoadingBar());
         }
     }
 
-
     // Method that loads a specific Unity scene by its name (which can be set in the Inspector)
     public void LoadScene()
     {
+        // Evaluates if the scene name isn't a null default name
         if (SaveManager.Instance.currentRegionPoint != null)
         {
-            AsyncOperation op = SceneManager.LoadSceneAsync(SaveManager.Instance.currentRegionPoint);
-            op.allowSceneActivation = false; // Hold the scene — don't activate yet
-            _scenesToLoad.Add(op);
-
+            _scenesToLoad.Add(SceneManager.LoadSceneAsync(SaveManager.Instance.currentRegionPoint));
             LoadSceneAdditive(_persistentGameplay);
         }
-        else
+        else // Prompt an error if the scene name is not set in the Inspector
         {
-            Debug.LogError("Scene to load is not specified!");
+            Debug.LogError("Scene to load is not specified!"); // Log an error if the scene name is not set
         }
 
         StartCoroutine(ProgressLoadingBar());
@@ -120,7 +115,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Method to quit the game
-    public void QuitGame() 
+    public void QuitGame()
     {
         Application.Quit(); // Quit the application
     }
@@ -130,84 +125,31 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GameManager: Entered the ProgressLoadingBar Coroutine");
 
-        // Minimum time (in seconds) the bar must take — raise this to slow it down
-        float minimumLoadDuration = 3.0f;
+        // Starting ... 
+        float loadProgress = 0.0f;
 
-        float elapsed = 0f;
-        float displayProgress = 0f; // The visual fill we show the player
-
-        // Keep looping until ALL scenes report they're ready (progress >= 0.9 means done but held)
-        bool allScenesReady = false;
-
-        while (!allScenesReady || elapsed < minimumLoadDuration)
-        {
-            if (_loadingBar == null || _loadingBarObject == null)
-            {
-                Debug.LogWarning("Loading bar references were destroyed - exiting coroutine");
-                yield break;
-            }
-
-            elapsed += Time.deltaTime;
-
-            // Calculate the real combined load progress across all scenes
-            // Note: Unity caps AsyncOperation.progress at 0.9f when allowSceneActivation = false
-            // So we remap 0–0.9 → 0–1 for our display
-            float realProgress = 0f;
-            for (int i = 0; i < _scenesToLoad.Count; i++)
-            {
-                realProgress += Mathf.Clamp01(_scenesToLoad[i].progress / 0.9f);
-            }
-            realProgress /= _scenesToLoad.Count; // Normalize to 0–1
-
-            // Check if all scenes have finished loading (held at 0.9)
-            allScenesReady = true;
-            for (int i = 0; i < _scenesToLoad.Count; i++)
-            {
-                if (_scenesToLoad[i].progress < 0.9f)
-                {
-                    allScenesReady = false;
-                    break;
-                }
-            }
-
-            // Blend between time-based and real progress — whichever is SLOWER wins
-            // This forces the bar to take at least minimumLoadDuration seconds
-            float timeBasedProgress = elapsed / minimumLoadDuration;
-            displayProgress = Mathf.Min(realProgress, timeBasedProgress);
-
-            // Smoothly animate the fill (optional — remove Lerp for instant jump)
-            _loadingBar.fillAmount = Mathf.Lerp(_loadingBar.fillAmount, displayProgress, Time.deltaTime * 5f);
-
-            yield return null;
-        }
-
-        // Snap bar to exactly 100% so it looks clean
-        _loadingBar.fillAmount = 1f;
-
-        // Small pause at 100% so the player can see it complete
-        yield return new WaitForSeconds(0.3f);
-
-        Debug.Log("GameManager: Bar at 100% — activating all scenes now!");
-
-        // Unlock all scenes — they will now fully activate
+        // ...
         for (int i = 0; i < _scenesToLoad.Count; i++)
         {
-            _scenesToLoad[i].allowSceneActivation = true;
-        }
+            Debug.Log($"GameManager: Loading Scene {i}");
 
-        // Wait for all scenes to truly finish activating
-        for (int i = 0; i < _scenesToLoad.Count; i++)
-        {
+            // ...
             while (!_scenesToLoad[i].isDone)
+            {
+                // Check if references are valid before using them
+                if (_loadingBar == null || _loadingBarObject == null)
+                {
+                    Debug.LogWarning("Loading bar references were destroyed - exiting coroutine");
+                    yield break; // Exit the coroutine completely
+                }
+
+                // ...
+                loadProgress += _scenesToLoad[i].progress;
+                _loadingBar.fillAmount = loadProgress / _scenesToLoad.Count;
                 yield return null;
+            }
         }
 
-        // Clean up
-        _loadingBarObject.SetActive(false);
-        _scenesToLoad.Clear();
-
-        Debug.Log("GameManager: All scenes fully activated and loading complete.");
-    
         //// --------------------- UNLOADING OF LOADING SCREEN MIGHT MIGRATE SOMEWHEEREE SOON ---------------------
 
         //Debug.Log("GameManager: All scenes loaded!");
