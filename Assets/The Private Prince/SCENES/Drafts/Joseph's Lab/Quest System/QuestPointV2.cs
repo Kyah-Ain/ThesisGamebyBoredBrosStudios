@@ -62,6 +62,9 @@ public class QuestPointV2 : MonoBehaviour
         Debug.Log($"QuestPointV2: OnEnable called on {gameObject.name}");
         SubscribeToEvents();
         ResetAutoTriggerFlag();
+
+        // Calls the method of receiving current Quest States to avoid "REQUIREMENT_NOT_MET" logical error  
+        RequestCurrentQuestState();
     }
 
     private void OnDisable()
@@ -77,6 +80,20 @@ public class QuestPointV2 : MonoBehaviour
     }
 
     // ------------------------- INITIALIZATION METHODS -------------------------
+
+    // Method to request Update from QuestManager to make sure every quest is ready
+    private void RequestCurrentQuestState()
+    {
+        if (QuestManager.Instance == null || string.IsNullOrEmpty(questId)) return;
+
+        Quest quest = QuestManager.Instance.GetQuestById(questId);
+        if (quest != null)
+        {
+            UpdateCurrentQuestState(quest.state);
+            UpdateQuestIcon();
+            Debug.Log($"QuestPointV2: Caught up state on enable: {currentQuestState}");
+        }
+    }
 
     private void CacheQuestId()
     {
