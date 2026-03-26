@@ -172,6 +172,8 @@ public class QuestManager : MonoBehaviour
             GameEventsManager.Instance.questEvents.QuestStateChange(quest);
         }
     }
+
+    // ...
     private void StartQuest(string id)
     {
         // Start the quest
@@ -211,6 +213,8 @@ public class QuestManager : MonoBehaviour
                   $" would brodcast data that WOULD BE MISSED by the observeer because IT'S NOT" +
                   $" BEEN ENABLED YET WHEN THE MANAGER BRODCAST IT.");
     }
+
+    // ...
     private void AdvanceQuest(string id)
     {
         Debug.Log($"QuestManager: Advancing quest {id}");

@@ -48,7 +48,7 @@ public class DialogueActivator : MonoBehaviour, IInteractable
             {
                 player.DialogueUI.AddResponseEvents(responseEvent.Events);
                 break;
-            }
+            }            
         }
 
         player.DialogueUI.ShowDialogue(dialogueObject);

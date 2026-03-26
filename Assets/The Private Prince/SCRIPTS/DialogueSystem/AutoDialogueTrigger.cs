@@ -38,7 +38,7 @@ public class AutoDialogueTrigger : DialogueInteraction, IInteractable
         FindAndStartDialogue();
     }
 
-    private void FindAndStartDialogue()
+    public void FindAndStartDialogue()
     {
         if (hasTriggered) return;
 

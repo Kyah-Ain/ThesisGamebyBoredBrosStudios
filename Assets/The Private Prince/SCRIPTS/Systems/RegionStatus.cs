@@ -12,27 +12,27 @@ public class RegionStatus : MonoBehaviour
 
     // -------------------------- METHODS -------------------------
 
-    // ...
+    // Built-In Unity method that automatically called 1st 
     private void Awake()
     {
         UpdateStatus();
     }
 
-    // Built-In Unity method that called when this script's gameObject is first loaded
+    // Built-In Unity method that automatically called 2nd (when Active) 
     private void OnEnable()
     {
         // Subscribes 
         SaveManager.Instance.onEnteringNewRegion += UpdateStatus;
     }
 
-    // Built-In Unity method that called when this script's gameObject is disabled
+    // Built-In Unity method that automatically called 2nd (when Inactive) 
     private void OnDisable()
     {
         // Unsubscribes 
         SaveManager.Instance.onEnteringNewRegion -= UpdateStatus;
     }
 
-    // Built-In Unity method that called when this script's gameObject is destroyed
+    // Built-In Unity method that automatically called 3rd (when the object was being destroyed)
     private void OnDestroy()
     {
         // Unsubscribes

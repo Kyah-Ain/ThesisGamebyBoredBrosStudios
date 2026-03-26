@@ -58,6 +58,19 @@ public class Quest
 
     public void InstantiateCurrentQuestStep(Transform parentTransform)
     {
+        //GameObject questStepPrefab = GetCurrentQuestStepPrefab();
+        //if (questStepPrefab != null)
+        //{
+        //    // Instantiate without a parent to preserve the prefab's world transform
+        //    GameObject instance = Object.Instantiate(questStepPrefab);
+
+        //    // Then parent it while keeping its world position/rotation/scale intact
+        //    instance.transform.SetParent(parentTransform, worldPositionStays: true);
+
+        //    QuestStep questStep = instance.GetComponent<QuestStep>();
+        //    questStep.InitializeQuestStep(info.id, currentQuestStepIndex, questStepStates[currentQuestStepIndex].state);
+        //}
+
         GameObject questStepPrefab = GetCurrentQuestStepPrefab();
         if (questStepPrefab != null)
         {
