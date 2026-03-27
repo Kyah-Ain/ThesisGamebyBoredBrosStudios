@@ -1,5 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class VolumeManager : MonoBehaviour
 {
@@ -14,9 +17,6 @@ public class VolumeManager : MonoBehaviour
     [Header("VISUAL REFERENCES")]
     public Slider musicSlider;
     public Slider sfxSlider;
-
-    // Blocks Set/Save calls from firing during initialization
-    private bool isInitializing = true;
 
     // ----------------------- UNITY METHODS -----------------------
 
@@ -37,25 +37,6 @@ public class VolumeManager : MonoBehaviour
         }
     }
 
-    // Built-In Unity method that being called 3rd (when Enabled)
-    void Start()
-    {
-        Debug.Log($"[VolumeManager] RAW KEY CHECK — Music: {PlayerPrefs.GetFloat(MUSIC_VOL_KEY, -1f)}, SFX: {PlayerPrefs.GetFloat(SFX_VOL_KEY, -1f)}");
-
-        isInitializing = true;
-
-        Debug.Log("[VolumeManager] Start() — init flag ON, loading saved volumes.");
-
-        LoadMusicVolume();
-        LoadSFXVolume();
-        isInitializing = false;
-
-        Debug.Log("[VolumeManager] Init flag OFF — slider events will now save normally.");
-
-        SetMusicVolume();
-        SetSFXVolume();
-    }
-
     // Built-In Unity method that being called last (upon Quitting the Game)
     private void OnApplicationQuit()
     {
@@ -64,36 +45,37 @@ public class VolumeManager : MonoBehaviour
         SaveSFXVolume();
     }
 
-    // ------------------------- SET METHODS -------------------------
+    // ------------------------- APPLY/SET METHODS -------------------------
+
+    // For Start method to apply loaded volume values to Music
+    private void ApplyVolumes()
+    {
+        float music = PlayerPrefs.GetFloat(MUSIC_VOL_KEY, 1f);
+        float sfx = PlayerPrefs.GetFloat(SFX_VOL_KEY, 1f);
+
+        if (musicSlider != null) musicSlider.value = music;
+        if (sfxSlider != null) sfxSlider.value = sfx;
+
+        if (MusicManager.Instance != null && MusicManager.Instance.audioSource != null)
+            MusicManager.Instance.audioSource.volume = music;
+        SfxManager.Instance?.SetVolume(sfx);
+    }
 
     // Method that applies the Slider Values to set the loudness of the BGM
-    public void SetMusicVolume()
+    public void SetMusicVolume(float value)
     {
-        // Slider fired during init, ignore it
-        if (isInitializing)
-        {
-            Debug.Log("[VolumeManager] SetMusicVolume() blocked during initialization.");
-            return;
-        }
-
-        MusicManager.Instance.audioSource.volume = musicSlider.value;
-        Debug.Log($"[VolumeManager] Music volume set to: {musicSlider.value}");
-        SaveMusicVolume();
+        if (MusicManager.Instance != null)
+            MusicManager.Instance.audioSource.volume = value;
+        PlayerPrefs.SetFloat(MUSIC_VOL_KEY, value);
+        PlayerPrefs.Save();
     }
 
     // Method that applies the Slider Values to set the loudness of the SFX
-    public void SetSFXVolume()
+    public void SetSFXVolume(float value)
     {
-        // Slider fired during init, ignore it
-        if (isInitializing)
-        {
-            Debug.Log("[VolumeManager] SetSFXVolume() blocked during initialization.");
-            return;
-        }
-
-        // Add SFX Manager instance here
-        Debug.Log($"[VolumeManager] SFX volume set to: {sfxSlider.value}");
-        SaveSFXVolume();
+        SfxManager.Instance?.SetVolume(value);
+        PlayerPrefs.SetFloat(SFX_VOL_KEY, value);
+        PlayerPrefs.Save();
     }
 
     // ---------------------- SAVE/LOAD METHODS -----------------------
