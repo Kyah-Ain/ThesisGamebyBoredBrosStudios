@@ -3,9 +3,13 @@ using System.Collections.Generic; // Grants access to collections structures lik
 using UnityEngine; // Grants access to Unity's core features like Datatypes, DateTime, Math, and Debug
 using UnityEngine.AI; // Grants access to Unity's AI and Navigation features
 
+using UnityEngine.Events;
+
 public class EnemyCombat : CombatManager
 {
     // ------------------------- VARIABLES -------------------------
+
+    public UnityEvent onEnemyDies;
 
     [Header("ENEMY REFERENCE")]
     public Enemy enemy; // Reference to the Enemy script for accessing enemy-specific properties and methods
@@ -212,12 +216,14 @@ public class EnemyCombat : CombatManager
         //// Update the Demo Task 2 enemy defeat count
         //DemoTask2.Instance.UpdateSlainedEnemies();
 
-        if (DemoTask2.Instance != null)
-        {
-            // Update the Demo Task 2 enemy defeat count
-            DemoTask2.Instance.UpdateSlainedEnemies();
-            Debug.Log($"EnemyCombat Die method called - notifying DemoTask2 of enemy defeat");
-        }
+        //if (DemoTask2.Instance != null)
+        //{
+        //    // Update the Demo Task 2 enemy defeat count
+        //    DemoTask2.Instance.UpdateSlainedEnemies();
+        //    Debug.Log($"EnemyCombat Die method called - notifying DemoTask2 of enemy defeat");
+        //}
+
+        onEnemyDies?.Invoke();
 
         // Calls the base Die method from Parent
         base.Die();
