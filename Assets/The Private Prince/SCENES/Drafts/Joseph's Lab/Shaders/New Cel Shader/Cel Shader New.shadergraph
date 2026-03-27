@@ -92,9 +92,6 @@
         },
         {
             "m_Id": "0921cfa1f2354d63a127fe8f48dae9eb"
-        },
-        {
-            "m_Id": "9c0c0b1bfb5c432db589a66d29c36651"
         }
     ],
     "m_GroupDatas": [],
@@ -1447,21 +1444,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "639781d493a24c048eda6e2735755f34",
-    "m_Id": 0,
-    "m_DisplayName": "New",
-    "m_SlotType": 1,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "New",
-    "m_StageCapability": 3,
-    "m_Value": 0.0,
-    "m_DefaultValue": 0.0,
-    "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
     "m_ObjectId": "64f29ec35c774c7c9cc91eda922177aa",
     "m_Group": {
@@ -2082,46 +2064,6 @@
     "m_Property": {
         "m_Id": "95f43704b3604c6ab80315eea690cf9b"
     }
-}
-
-{
-    "m_SGVersion": 1,
-    "m_Type": "UnityEditor.ShaderGraph.CustomFunctionNode",
-    "m_ObjectId": "9c0c0b1bfb5c432db589a66d29c36651",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "MainLightWithShadows (Custom Function)",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": -1010.9999389648438,
-            "y": 207.00001525878907,
-            "width": 288.0,
-            "height": 245.00001525878907
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "639781d493a24c048eda6e2735755f34"
-        }
-    ],
-    "synonyms": [
-        "code",
-        "HLSL"
-    ],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_SourceType": 1,
-    "m_FunctionName": "MainLightWithShadows",
-    "m_FunctionSource": "",
-    "m_FunctionBody": "void MainLightWithShadows_half(float3 WorldPos, out half3 Direction, out half3 Color, out half DistanceAtten, out half ShadowAtten)\r\n{\r\n    #if defined(SHADERGRAPH_PREVIEW)\r\n        Direction = half3(0.5, 0.5, 0);\r\n        Color = 1;\r\n        DistanceAtten = 1;\r\n        ShadowAtten = 1;\r\n    #else\r\n        #if SHADOWS_SCREEN\r\n            half4 clipPos = TransformWorldToHClip(WorldPos);\r\n            half4 shadowCoord = ComputeScreenPos(clipPos);\r\n        #else\r\n            half4 shadowCoord = TransformWorldToShadowCoord(WorldPos);\r\n        #endif\r\n\r\n        Light mainLight = GetMainLight(shadowCoord);\r\n        Direction = mainLight.direction;\r\n        Color = mainLight.color;\r\n        DistanceAtten = mainLight.distanceAttenuation;\r\n        ShadowAtten = mainLight.shadowAttenuation;\r\n    #endif\r\n}"
 }
 
 {
