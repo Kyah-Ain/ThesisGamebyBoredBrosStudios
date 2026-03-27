@@ -6856,7 +6856,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &257796713
 Transform:
   m_ObjectHideFlags: 0
@@ -9337,7 +9337,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &338937674
 Transform:
   m_ObjectHideFlags: 0
@@ -17389,9 +17389,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0177e4b7fbff92d48a7b2b9418961a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelManager: {fileID: 0}
   activationManager: {fileID: 0}
-  levelToLoad: Ain's 2D Charac Lab
+  _persistentGameplay: Type Here Your Scene Name!
+  _loadingBarObject: {fileID: 0}
+  _loadingBar: {fileID: 0}
 --- !u!1 &643586737
 GameObject:
   m_ObjectHideFlags: 0
@@ -58169,8 +58170,11 @@ MonoBehaviour:
   knockbackMode: 0
   knockBackType: 1
   objectToKill: {fileID: 0}
+  isVulnerable: 1
+  onCooldown: 0
+  timer: 0
+  enemy: {fileID: 0}
   navMeshAgent: {fileID: 0}
-  enemyBehaviour: {fileID: 0}
   isBeingAttacked: 0
   wasAgentEnabled: 0
   movementRecoveryTime: 0.5
