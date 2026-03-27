@@ -34,8 +34,8 @@ public class Billboarding : MonoBehaviour
         // Modify the rotation in Euler space to lock certain dimensions
         Vector3 rotation = transform.rotation.eulerAngles;
         if (lockX) { rotation.x = originalRotation.x; }
-        if (lockX) { rotation.x = originalRotation.x; }
-        if (lockX) { rotation.x = originalRotation.x; }
+        if (lockY) { rotation.x = originalRotation.y; }
+        if (lockZ) { rotation.x = originalRotation.z; }
         transform.rotation = Quaternion.Euler(rotation); // Assign new rotations with locks
     }
 }
