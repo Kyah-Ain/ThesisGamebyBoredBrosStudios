@@ -40,6 +40,8 @@ public class SaveManager : MonoBehaviour
     public float MUSIC; // Reference to the current Music loudness
     public float SFX; // Reference to thee current In-Game sounds volume
 
+    public List<String> questCheckpoints = new List<String>();
+
     public bool HasSavedProgress => File.Exists(savingFilePath);
 
     // ADD MORE REFERENCE HERE IN THE FUTURE (Eg. Inventory)....
@@ -214,6 +216,7 @@ public class SaveManager : MonoBehaviour
         // ...
         dataBus.worldData.savedRegion = currentRegionPoint;
         dataBus.worldData.previousRegion = previousRegion;
+        dataBus.worldData.destroyedObjects = new List<string>(questCheckpoints);
     }
 
     // ...
@@ -272,6 +275,11 @@ public class SaveManager : MonoBehaviour
         // ...
         currentRegionPoint = dataBus.worldData.savedRegion;
         previousRegion = dataBus.worldData.previousRegion;
+
+        if (dataBus.worldData.destroyedObjects != null) 
+        {
+            questCheckpoints = new List<string>(dataBus.worldData.destroyedObjects);
+        }
     }
 
     // NEW: Load quest data and initialize QuestManager

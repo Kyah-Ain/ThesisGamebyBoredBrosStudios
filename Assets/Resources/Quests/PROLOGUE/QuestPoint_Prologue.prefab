@@ -385,6 +385,7 @@ GameObject:
   - component: {fileID: 8541367409190461058}
   - component: {fileID: 9124881399888339842}
   - component: {fileID: 7449050426077988583}
+  - component: {fileID: 2027464633111053597}
   - component: {fileID: 1420608440325996830}
   - component: {fileID: 3817198812872717131}
   m_Layer: 0
@@ -428,7 +429,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4996441995862388574}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -574,18 +575,31 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 9124881399888339842}
-        m_TargetAssemblyTypeName: QuestPointV2, Assembly-CSharp
-        m_MethodName: DestroyTriggeredObject
-        m_Mode: 2
+      - m_Target: {fileID: 2027464633111053597}
+        m_TargetAssemblyTypeName: QuestPointsStateSaver, Assembly-CSharp
+        m_MethodName: CacheDestroyThis
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 4996441995862388574}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2027464633111053597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996441995862388574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02378bdee20bb1a4c87bd018dbe2f02d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chapterId: Prologue_
 --- !u!114 &1420608440325996830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -807,7 +821,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6423442651816383987
 RectTransform:
   m_ObjectHideFlags: 0

@@ -33,6 +33,7 @@ public class WorldData
     public string savedRegion;
     public string previousRegion;
     public RegionData[] unlockedRegions;
+    public List<string> destroyedObjects = new List<string>();
 }
 
 [System.Serializable]
