@@ -23,6 +23,7 @@ public class ActivationManager : MonoBehaviour
         {
             gameObjectsToActivate[objectToA].SetActive(true); // Activates
         }
+        SfxManager.Instance.PlayUISFX(SfxManager.Instance.audioSelect); // Plays SFX
     }
 
     // Method to "Deactivate" a GameObject or UI element

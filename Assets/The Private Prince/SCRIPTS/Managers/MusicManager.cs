@@ -25,15 +25,27 @@ public class MusicManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(this.transform.root);
-            SceneManager.sceneLoaded += OnSceneLoaded;
 
             if (audioSource == null)
                 audioSource = GetComponent<AudioSource>();
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+    }
+
+    private void ApplySavedVolume()
+    {
+        float volume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        audioSource.volume = volume;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -64,6 +76,7 @@ public class MusicManager : MonoBehaviour
         {
             audioSource.clip = mainMenuMusic;
             audioSource.loop = true;
+            ApplySavedVolume();
             audioSource.Play();
             Debug.Log("Main menu music started");
         }
@@ -75,6 +88,7 @@ public class MusicManager : MonoBehaviour
         {
             audioSource.clip = gameMusic;
             audioSource.loop = true;
+            ApplySavedVolume();
             audioSource.Play();
             Debug.Log("Game music started");
         }
