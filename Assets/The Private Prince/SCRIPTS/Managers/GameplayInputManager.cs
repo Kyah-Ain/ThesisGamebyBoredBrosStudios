@@ -4,6 +4,12 @@ using UnityEngine;
 
 using UnityEngine.InputSystem;
 
+public enum ActionMapType
+{
+    Player,
+    UserNavigation
+}
+
 public class GameplayInputManager : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
@@ -20,7 +26,9 @@ public class GameplayInputManager : MonoBehaviour
     private PrivatePrinceControls.PlayerActions PlayerMap => ppControls.Player; // Shortcut to access Player action map
     private PrivatePrinceControls.UserNavigationActions UserNavigationMap => ppControls.UserNavigation; // Shortcut to access UserNavigation action map
 
-    private InputActionMap currentActionMap; // Stores the currently active action map for easy reference when switching maps
+    [Header("MAP STATUS")]
+    [SerializeField] ActionMapType currentMapType = ActionMapType.UserNavigation; 
+    [SerializeField] InputActionMap currentActionMap; // Stores the currently active action map for easy reference when switching maps
 
     // ------------------------- UNITY METHODS -------------------------
 
@@ -57,11 +65,36 @@ public class GameplayInputManager : MonoBehaviour
         currentActionMap.Enable(); // Enable the default action map to start receiving input
     }
 
+    // ...
+    private void Update()
+    {
+        if (currentMapType == ActionMapType.UserNavigation) 
+        {
+            SwitchActionMap("UserNavigation");
+        }
+        else if (currentMapType == ActionMapType.Player)
+        {
+            SwitchActionMap("Player");
+        }
+    }
+
+    // Automated Unity Built-In method being called when this object is destroyed
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            ppControls?.Player.Disable(); // Disable the 'Player' action map to stop receiving input
+            instance = null; // Clear the singleton instance when this object is destroyed
+        }
+    }
+
+    // ------------------------- MAP METHODS -------------------------
+
     // Method for Switching Action Maps in the New Input System
-    public void SwitchActionMap(string actionMapName) 
+    public void SwitchActionMap(string actionMapName)
     {
         // Check if current map exists
-        if (currentActionMap == null) 
+        if (currentActionMap == null)
         {
             Debug.LogError("currentActionMap is null! Make sure it's set in Awake.");
             return;
@@ -89,15 +122,5 @@ public class GameplayInputManager : MonoBehaviour
         currentActionMap.Disable(); // Disable the currently active action map
         currentActionMap = newActionMap;  // Updates the current action map (overwriting the previous map stored)
         currentActionMap.Enable();  // Enable the new action map
-    }
-
-    // Automated Unity Built-In method being called when this object is destroyed
-    private void OnDestroy()
-    {
-        if (instance == this)
-        {
-            ppControls?.Player.Disable(); // Disable the 'Player' action map to stop receiving input
-            instance = null; // Clear the singleton instance when this object is destroyed
-        }
     }
 }
