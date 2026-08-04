@@ -1,62 +1,65 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 public class PuzzleTrigger : MonoBehaviour
 {
-    [Header("Puzzle Trigger Settings")]
-    public PuzzleWall puzzleWall;
-    public TextMeshProUGUI triggerText;
+    [SerializeField] private PuzzleController controller;
+    [SerializeField] private TextMeshProUGUI triggerText;
 
-    private bool playerInside = false;
+    private bool playerInside;
 
     private void Update()
     {
-        if (playerInside && Input.GetKeyDown(KeyCode.Tab))
+        if (!playerInside)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
-            HandlePuzzleTab();
+            HandleInteraction();
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
+        if (!other.CompareTag("Player"))
+            return;
+
+        playerInside = true;
+
+        if (triggerText != null)
             triggerText.gameObject.SetActive(true);
-            playerInside = true;
-        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
+        if (!other.CompareTag("Player"))
+            return;
+
+        playerInside = false;
+
+        if (triggerText != null)
             triggerText.gameObject.SetActive(false);
-            playerInside = false;
-        }
     }
 
-    private void HandlePuzzleTab()
+    private void HandleInteraction()
     {
-        if (puzzleWall == null || puzzleWall.puzzle == null) return;
-        if (puzzleWall.HasActiveEnemies) return;
+        PuzzleManager manager = PuzzleManager.Instance;
 
-        var pm = PuzzleManager.Instance;
-        if (pm == null) return;
+        if (manager == null)
+            return;
 
-        if (pm.HasPausedPuzzle(puzzleWall.puzzle))
+        if (manager.IsPuzzlePaused(controller))
         {
-            pm.ResumePuzzle();
+            manager.ResumePuzzle();
         }
-        else if (pm.State == PuzzleState.InProgress && pm.ActivePuzzle == puzzleWall.puzzle)
+        else if (manager.IsPuzzleActive(controller))
         {
-            pm.PausePuzzle();
+            manager.PausePuzzle();
         }
-        else if (pm.State == PuzzleState.Idle)
+        else if (manager.State == PuzzleState.Idle)
         {
-            pm.StartPuzzle(puzzleWall.puzzle);
+            manager.StartPuzzle(controller);
         }
     }
 }

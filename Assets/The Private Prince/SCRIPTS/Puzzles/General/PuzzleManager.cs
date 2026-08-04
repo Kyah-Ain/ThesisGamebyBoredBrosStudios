@@ -1,61 +1,72 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public enum PuzzleResult { None, Solved, Failed }
-public enum PuzzleState { Idle, InProgress, Paused, Completed }
+public enum PuzzleState
+{
+    Idle,
+    Playing,
+    Paused
+}
 
 public class PuzzleManager : MonoBehaviour
 {
-    public static PuzzleManager Instance;
-    public event System.Action<PuzzleBase> OnPuzzleStarted;
-    public event System.Action<PuzzleBase, PuzzleResult> OnPuzzleEnded;
+    public static PuzzleManager Instance { get; private set; }
 
-    private PuzzleBase activePuzzle;
+    public event Action<PuzzleController> OnPuzzleStarted;
+    public event Action<PuzzleController, PuzzleResult> OnPuzzleEnded;
+
+    private PuzzleController activePuzzle;
     private PuzzleState state = PuzzleState.Idle;
 
-    public PuzzleBase ActivePuzzle => activePuzzle;
+    public PuzzleController ActivePuzzle => activePuzzle;
     public PuzzleState State => state;
 
     private void Awake()
     {
-        if (Instance == null) 
+        if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(this.transform.root);
+            DontDestroyOnLoad(transform.root);
         }
-        else 
-            Destroy(this.gameObject);
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    public void StartPuzzle(PuzzleBase puzzle)
+    public bool StartPuzzle(PuzzleController puzzle)
     {
-        if (state == PuzzleState.InProgress) return;
+        if (state != PuzzleState.Idle)
+            return false;
 
         activePuzzle = puzzle;
-        state = PuzzleState.InProgress;
+        state = PuzzleState.Playing;
 
         activePuzzle.StartPuzzle();
 
-        OnPuzzleStarted?.Invoke(puzzle);
+        OnPuzzleStarted?.Invoke(activePuzzle);
+        return true;
     }
 
     public void EndPuzzle(PuzzleResult result)
     {
-        if (activePuzzle == null) return;
+        if (activePuzzle == null)
+            return;
 
-        PuzzleBase finished = activePuzzle; // Capture finished puzzle reference
-        state = PuzzleState.Completed; // Set state to Completed before calling EndPuzzle
-        finished.EndPuzzle(result); // Call EndPuzzle on the finished puzzle
-        Debug.Log($"Finished {finished.name} with result: {result}");
-        OnPuzzleEnded?.Invoke(finished, result); // Invoke event with finished puzzle reference
-        activePuzzle = null; // Clear active puzzle reference
-        state = PuzzleState.Idle; // Reset state to Idle to allow new puzzles to start
+        PuzzleController finished = activePuzzle;
+
+        finished.EndPuzzle(result);
+
+        OnPuzzleEnded?.Invoke(finished, result);
+
+        activePuzzle = null;
+        state = PuzzleState.Idle;
     }
 
     public void PausePuzzle()
     {
-        if (activePuzzle == null || !activePuzzle.Pausable) return;
+        if (state != PuzzleState.Playing || activePuzzle == null)
+            return;
 
         state = PuzzleState.Paused;
         activePuzzle.PausePuzzle();
@@ -63,14 +74,20 @@ public class PuzzleManager : MonoBehaviour
 
     public void ResumePuzzle()
     {
-        if (activePuzzle == null || state != PuzzleState.Paused) return;
+        if (state != PuzzleState.Paused || activePuzzle == null)
+            return;
 
-        state = PuzzleState.InProgress;
+        state = PuzzleState.Playing;
         activePuzzle.ResumePuzzle();
     }
 
-    public bool HasPausedPuzzle(PuzzleBase puzzle)
+    public bool IsPuzzleActive(PuzzleController puzzle)
     {
-        return (state == PuzzleState.Paused && activePuzzle == puzzle);
+        return activePuzzle == puzzle;
+    }
+
+    public bool IsPuzzlePaused(PuzzleController puzzle)
+    {
+        return state == PuzzleState.Paused && activePuzzle == puzzle;
     }
 }
