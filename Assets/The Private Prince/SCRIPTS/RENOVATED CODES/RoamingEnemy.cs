@@ -78,7 +78,7 @@ public class RoamingEnemy : Enemy
         FlipSprite();
 
         // Sets the detection angle to a visual cone size
-        base.viewAngle = 90f;
+        base.viewAngle = base.defaultViewAngle;
 
         // Check if the enemy has arrived at the destination
         // Use NavMeshAgent's pathing info for more reliable distance checking

@@ -24,7 +24,7 @@ public class OffScreenIndicator : MonoBehaviour
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
+        rectTransform = this.GetComponent<RectTransform>();
 
         if (targetCamera == null)
             targetCamera = Camera.main;

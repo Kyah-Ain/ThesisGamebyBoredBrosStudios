@@ -28,7 +28,9 @@ public class Enemy : MonoBehaviour, IAlertable
 
     [Header("AI ATTRIBUTES")]
     [SerializeField] protected float viewDistance = 10f; // How far the Enemy can see
-    [SerializeField] protected float viewAngle = 90f; // How wide the Enemy can see (1f = 1 Degree)
+    [SerializeField] protected float defaultViewAngle = 90f;
+    [SerializeField] protected float chasingViewAngle = 360f;
+    protected float viewAngle; // How wide the Enemy can see (1f = 1 Degree)
     [SerializeField] protected float backupRadius = 10f; // How far the Enemy can call for backup
 
     [SerializeField] protected float maxChaseDuration = 3f; // How long the Enemy can still chase the player after losing sight
@@ -247,7 +249,7 @@ public class Enemy : MonoBehaviour, IAlertable
         animatorController.SetBool("isMoving", false);
 
         // Sets the detection angle to a visual cone size
-        viewAngle = 90f;
+        viewAngle = defaultViewAngle;
     }
 
     // Overrideable Interface Method for making the AI follows a player
@@ -282,7 +284,7 @@ public class Enemy : MonoBehaviour, IAlertable
         // Might implement boost logic here soon...
 
         // Sets the detection angle to a visual cone size
-        viewAngle = 360f;
+        viewAngle = chasingViewAngle;
     }
 
     #endregion
