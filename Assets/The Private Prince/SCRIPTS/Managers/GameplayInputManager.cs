@@ -10,6 +10,10 @@ public enum ActionMapType
     UserNavigation
 }
 
+// Required DebuggerNiAinPjls.cs for this to be able to monitor debugs, otherwise use the old one
+[RequireComponent(typeof(DebuggerNiAinPjls))]
+// Sets this script to execute before most other scripts
+[DefaultExecutionOrder(-100)]
 public class GameplayInputManager : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
@@ -26,101 +30,200 @@ public class GameplayInputManager : MonoBehaviour
     private PrivatePrinceControls.PlayerActions PlayerMap => ppControls.Player; // Shortcut to access Player action map
     private PrivatePrinceControls.UserNavigationActions UserNavigationMap => ppControls.UserNavigation; // Shortcut to access UserNavigation action map
 
-    [Header("MAP STATUS")]
-    [SerializeField] ActionMapType currentMapType = ActionMapType.UserNavigation; 
-    [SerializeField] InputActionMap currentActionMap; // Stores the currently active action map for easy reference when switching maps
+    [Header("REFERENCES")]
+    [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
 
+    [Header("MAP STATUS")]
+    [SerializeField] List <ActionMapType> activatedMaps = new(); // Stores the currently active input map type (Player, UI, etc.)
+    [SerializeField] List <InputActionMap> currentActiveMaps = new();// Stores the currently active InputActionMap reference (used for enabling/disabling maps)
+   
     // ------------------------- UNITY METHODS -------------------------
 
     // Built-in Unity method called when this script was first loaded
     private void Awake()
     {
-        // Implement singleton pattern to ensure only one instance of PlayerInputManager exists
-        if (instance == null)
+        // Checks if our reference for the script was not set
+        if(debuggerNiAin == null)
+            // If it is not, then set it automatically by looking for the script class from this object
+            debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
+        
+        // Ensure only one instance of InputManager exists (Singleton pattern)
+        if (Instance != null && Instance != this)
         {
-            instance = this; // Set the singleton instance
+            debuggerNiAin.Log($"A copy of GameplayInputManager has been deleted: {this.gameObject.name}");
+            
+            Destroy(this.gameObject); // Destroy duplicate InputManager instances
 
-            // Marks this GameObjects' root parent if there is one, and sets it to itself if there's none
-            DontDestroyOnLoad(this.transform.root);
-        }
-        else
-        {
-            Debug.Log($"Instance of this PlayerInputManager already exists, destroying this duplicate instance to enforce singleton pattern.");
-
-            Destroy(this.gameObject); // Destroy duplicate instances
-
-            // Exit the Awake method early
-            // * to prevent further initialization of this duplicate instance
             return;
         }
+        
+        // Assign this instance as the global reference
+        instance = this;
+
+        // Keep this object alive across scene changes
+        DontDestroyOnLoad(this.transform.root.gameObject);
 
         // Initialize the PrivatePrinceControls Instance for handling Action Maps 
         ppControls = new PrivatePrinceControls();
 
-        //// Set the default action map to Player (can be changed later with SwitchActionMap method)
-        //currentActionMap = ppControls.Player;
+        // Prompt that the control has been successfull
+        debuggerNiAin.Log($"Successfully persist InputManager through {this.transform.root.gameObject.name}");
 
-        currentActionMap = ppControls.UserNavigation;
-
-        currentActionMap.Enable(); // Enable the default action map to start receiving input
+        // Enable the default action map when this object becomes active
+        EnableDefaultMap();
     }
 
-    // ...
-    private void Update()
+     // Update is called once per frame
+    void Update()
     {
-        if (currentMapType == ActionMapType.UserNavigation) 
+        // For TESTING PURPOSES ONLY:
+        // Switch input maps using enum dropdown in the Inspector during play mode to verify functionality
+        //SwitchMap(currentMapType);
+    }
+
+    // OnDisable is called when the object becomes disabled
+    void OnDisable()
+    {
+        // Disable all input maps to prevent unwanted input processing
+        DisableAllMaps();
+    }
+
+    // OnDestroy is called when the object is destroyed
+    void OnDestroy()
+    {
+        // Only clean up if this instance is the active singleton
+        if (Instance == this)
         {
-            SwitchActionMap("UserNavigation");
-        }
-        else if (currentMapType == ActionMapType.Player)
-        {
-            SwitchActionMap("Player");
+            DisableAllMaps(); // Ensure no input remains active
+
+            // Clear singleton reference
+            instance = null;
         }
     }
 
-    // Automated Unity Built-In method being called when this object is destroyed
-    private void OnDestroy()
+    // ----------------------- HELPER METHODS -------------------------
+
+    // Enables the default input map when the game starts
+    public void EnableDefaultMap()
     {
-        if (instance == this)
+        //// Set the default map type (Usually the "UI" Action Map)
+        //currentActionMap = GetMap(currentMapType);
+
+        //// Enable the default action map at first initialization
+        //currentActionMap.Enable();
+
+        // EnableMap("UserNavigation");  
+        EnableMap("Player"); 
+    }
+
+    // Disables all input maps 
+    public void DisableAllMaps()
+    {
+        // Disable all known action maps and clear the current action map reference
+        foreach (InputActionMap map in currentActiveMaps) 
         {
-            ppControls?.Player.Disable(); // Disable the 'Player' action map to stop receiving input
-            instance = null; // Clear the singleton instance when this object is destroyed
+            map.Disable();
         }
     }
 
     // ------------------------- MAP METHODS -------------------------
 
-    // Method for Switching Action Maps in the New Input System
-    public void SwitchActionMap(string actionMapName)
+    // Converts enum values into actual InputActionMap references directly
+    private InputActionMap GetMap(ActionMapType mapType)
     {
-        // Check if current map exists
-        if (currentActionMap == null)
+        switch (mapType)
         {
-            Debug.LogError("currentActionMap is null! Make sure it's set in Awake.");
-            return;
+            // case ActionMapType.GLOBALKEYS:
+            //     return Controls.GlobalKeys;
+
+            case ActionMapType.UserNavigation:
+                return Controls.UserNavigation;
+
+            case ActionMapType.Player:
+                return Controls.Player;
+
+            default:
+                debuggerNiAin.Log($"No mapping exists for InputMapType '{mapType}'.");
+                return null;
         }
+    }
 
-        // Look for the map specified by string name parameter 
-        var newActionMap = ppControls.asset.FindActionMap(actionMapName);
-
-        // Check if the requested map exists at all
-        if (newActionMap == null)
+    // Method to enable a new input map using a string representation of the enum value
+    public void EnableMap(string newMapTypeStr)
+    {
+        // Convert string to enum (Case-Insensitive) and pass it to the main logic below
+        if (System.Enum.TryParse(newMapTypeStr, true, out ActionMapType parsedEnum))
         {
-            Debug.LogError($"Action map '{actionMapName}' not found! Staying on current map: '{currentActionMap.name}'.");
-            return;
+            MapEnabler(parsedEnum);
         }
-
-        // Check if we're already on this map
-        if (currentActionMap.name == actionMapName)
+        else
         {
-            Debug.Log($"Action map '{currentActionMap.name}' is already active. No need to switch.");
-            return;
+            debuggerNiAin.Log($"String '{newMapTypeStr}' could not be converted to ActionMapType.");
         }
+    }
 
-        // Performs the Map Switching 
-        Debug.Log($"Switching from '{currentActionMap.name}' to '{actionMapName}'");
-        currentActionMap.Disable(); // Disable the currently active action map
-        currentActionMap = newActionMap;  // Updates the current action map (overwriting the previous map stored)
-        currentActionMap.Enable();  // Enable the new action map
+    // Method to disable a new input map using a string representation of the enum value
+    public void DisableMap(string newMapTypeStr)
+    {
+        // Convert string to enum (Case-Insensitive) and pass it to the main logic below
+        if (System.Enum.TryParse(newMapTypeStr, true, out ActionMapType parsedEnum))
+        {
+            MapDisabler(parsedEnum);
+        }
+        else
+        {
+            debuggerNiAin.Log($"String '{newMapTypeStr}' could not be converted to ActionMapType.");
+        }
+    }
+
+    // ------------------------- PROCESSOR METHODS -------------------------
+
+    // Method to enable a new input map 
+    void MapEnabler(ActionMapType newMapType)
+    {
+        // Get the InputActionMap associated with the requested enum value
+        InputActionMap newActionMap = GetMap(newMapType); 
+
+        // Stop if the requested map does not exist or is already active
+        if (newActionMap != null && !currentActiveMaps.Contains(newActionMap)) // && newMapType != currentMapType (BACKUP)
+        {
+            // Update the current map type & action map reference to the new values
+            //currentMapType = newMapType; // Fixed syntax error here
+            //currentActionMap = newActionMap;
+
+            // Enable the new action map
+            newActionMap.Enable();
+            //currentActionMap.Enable();
+
+            // Add the new action map to the list of active map
+            currentActiveMaps.Add(newActionMap);
+
+            // Updates the map tracking list to include the newly activated map
+            activatedMaps.Add(newMapType);
+
+            debuggerNiAin.Log($"Successfully enabled {newActionMap} Action Map!");
+        }
+    }
+
+    // Method to disable a new input map 
+    void MapDisabler(ActionMapType newMapType)
+    {
+        // Get the InputActionMap associated with the requested enum value
+        InputActionMap selectedActionMap = GetMap(newMapType);
+
+        // Stop if the requested map does not exist
+        if (selectedActionMap != null && currentActiveMaps.Contains(selectedActionMap))
+        {
+            // Disable one of the current active action map
+            selectedActionMap.Disable();
+
+            // Remove the disabled action map from the list of active maps
+            currentActiveMaps.Remove(selectedActionMap);
+
+            // Updates the map tracking list to remove a disabled map
+            activatedMaps.Remove(newMapType);
+
+            debuggerNiAin.Log($"Successfully disabled {selectedActionMap} Action Map!");
+        }
     }
 }

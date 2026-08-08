@@ -110,7 +110,7 @@ public class DialogueUI : MonoBehaviour
         IsOpen = true; // Mark dialogue as open
         dialogueBox.SetActive(true); // Show the dialogue box
         ResetInputFlags(); // Reset input flags at the start of new dialogue
-        GameplayInputManager.Instance.SwitchActionMap("UserNavigation"); // Switch to the UserNavigation action map for dialogue interaction
+        GameplayInputManager.Instance.EnableMap("UserNavigation"); // Switch to the UserNavigation action map for dialogue interaction
         currentDialogueCoroutine = StartCoroutine(StepThroughDialogue(dialogueObject)); // Start showing the dialogue
         dialogueFinished = false; // Reset finished flag for new dialogue
     }
@@ -197,7 +197,7 @@ public class DialogueUI : MonoBehaviour
         // Start the typewriter effect
         typeWriterEffect.Run(dialogue, textLabel);
 
-        // Wait while it’s typing
+        // Wait while itï¿½s typing
         while (typeWriterEffect.isRunning)
         {
             // Return null each frame while the effect is running to allow it to animate properly
@@ -230,7 +230,7 @@ public class DialogueUI : MonoBehaviour
         if (GameplayInputManager.Instance != null)
         {
             // Resets back to Player action map when dialogue intteraction closes
-            GameplayInputManager.Instance.SwitchActionMap("Player");
+            GameplayInputManager.Instance.EnableMap("Player");
             Debug.Log("Dialogue closed - Switched back to Player map");
         }
 

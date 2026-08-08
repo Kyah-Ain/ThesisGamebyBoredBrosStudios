@@ -1,13 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
-public class InteractableObject : MonoBehaviour
+using UnityEngine.Events;
+// using static UnityEngine.Rendering.DebugUI;
+
+public class InteractableObject : MonoBehaviour, IInteractable
 {
     // ------------------------- VARIABLES -------------------------
 
-    [Header("UI REFERENCES")]
+    [Header("EVENTS")]
+    [SerializeField] UnityEvent onInteract;
+    [SerializeField] UnityEvent onUnInteract;
+
+    [Header("UI")]
     [SerializeField] GameObject[] interactablePrompts;
     [SerializeField] GameObject navigationVisual;
 
@@ -43,5 +49,21 @@ public class InteractableObject : MonoBehaviour
                 panel.SetActive(false);
             }
         }
+    }
+
+    // ------------------------- INTERFACE -------------------------
+
+    // Method to execute logics when being interacting
+    public void Interact()
+    {
+        // Executes the event if it's not null (broadcasts the event to the listener/s or subscriber/s)
+        onInteract?.Invoke();
+    }
+
+    // Method to execute logics when un-interacting
+    public void UnInteract()
+    {
+        // Executes the event if it's not null (broadcasts the event to the listener/s or subscriber/s)
+        onUnInteract?.Invoke();
     }
 }

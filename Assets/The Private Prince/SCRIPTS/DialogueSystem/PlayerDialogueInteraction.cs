@@ -65,7 +65,7 @@ public class PlayerDialogueInteraction : DialogueInteraction
         if (dialogueUI != null && !isDialogueActive && Interactable != null)
         {
             // Switch to the UserNavigation action map when dialogue starts
-            GameplayInputManager.Instance.SwitchActionMap("UserNavigation");
+            GameplayInputManager.Instance.EnableMap("UserNavigation");
 
             // Disable player movement when dialogue starts by setting the inDialogue flag on the character controller
             characterController.inDialogue = true;
