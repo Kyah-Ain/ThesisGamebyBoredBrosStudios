@@ -93,6 +93,15 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
             ""id"": ""2fe2be24-1a83-41bd-9762-382335ab2767"",
             ""actions"": [
                 {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""a9ab2dbd-ef7a-4f87-a1d9-66d1502d2b6c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""c2e031b3-a2fd-4f67-8942-825fcdc96a94"",
@@ -100,15 +109,6 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Interact"",
-                    ""type"": ""Button"",
-                    ""id"": ""6eb83f6c-9cc8-433b-86d0-c498a2b164f8"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Attack"",
@@ -180,28 +180,6 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                     ""processors"": """",
                     ""groups"": "";Gamepad Controller"",
                     ""action"": ""Attack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""aa6eb22c-86ba-4fdd-81a8-f91b3386fc1d"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard & Mouse"",
-                    ""action"": ""Interact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""80227345-9d00-4430-8b1a-f255be72b927"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad Controller"",
-                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -328,6 +306,28 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                 },
                 {
                     ""name"": """",
+                    ""id"": ""2e9c6dc8-8ad4-4ea6-851d-16f4a8fb8ab5"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3a7a989e-584c-479a-bb87-4d37d625216e"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad Controller"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""939aaad3-3621-407d-9bf8-1793daf267dd"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
@@ -351,13 +351,13 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
             ]
         },
         {
-            ""name"": ""UserNavigation"",
+            ""name"": ""UI"",
             ""id"": ""dad18b79-640d-498d-bd86-73c3796d1ac0"",
             ""actions"": [
                 {
-                    ""name"": ""Interact"",
+                    ""name"": ""Proceed"",
                     ""type"": ""Button"",
-                    ""id"": ""bcd09446-3b53-4d43-b265-6709eed0ba39"",
+                    ""id"": ""11b09d11-40ac-41a3-b1ff-d2ec35493739"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -385,42 +385,9 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""2db0ba39-63a5-422d-919a-e7bf2e8cd58c"",
+                    ""id"": ""743aed31-e92c-45f7-b714-dbf1690f5c77"",
                     ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard & Mouse"",
-                    ""action"": ""Interact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f5478003-1820-478a-bdbd-a6ca519135af"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard & Mouse"",
-                    ""action"": ""Interact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3ddf2e11-937e-4f66-a682-00ed5b329404"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Gamepad Controller"",
-                    ""action"": ""Interact"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0f50a73d-b725-4d6d-b105-f692afd3255d"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold(duration=3)"",
                     ""processors"": """",
                     ""groups"": "";Keyboard & Mouse"",
                     ""action"": ""Cancel"",
@@ -440,23 +407,45 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                 },
                 {
                     ""name"": """",
-                    ""id"": ""743aed31-e92c-45f7-b714-dbf1690f5c77"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": ""Hold(duration=3)"",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard & Mouse"",
-                    ""action"": ""Cancel"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""3fc5e8b9-c185-457f-9c97-d6ab2186f5e3"",
                     ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": ""Hold(duration=3)"",
                     ""processors"": """",
                     ""groups"": "";Gamepad Controller"",
                     ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""14fe804b-9283-4553-825c-253b65e5c922"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""Proceed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ca015af-9e21-4f6a-946f-bcae98b0d0e8"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""Proceed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7bdb22d0-3435-433e-8db6-fa705ae74549"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad Controller"",
+                    ""action"": ""Proceed"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -571,6 +560,45 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""GlobalKeys"",
+            ""id"": ""47e06165-4a3b-41ac-bcdd-43c109b46638"",
+            ""actions"": [
+                {
+                    ""name"": ""Settings"",
+                    ""type"": ""Button"",
+                    ""id"": ""020f36f3-3ff7-42e0-bca5-531926e38705"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""bd0c3fde-caf8-4c2b-92f5-bb740bd00b48"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Settings"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""79ea7d4d-c9b5-4a43-89b9-ccaee77edffa"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""Settings"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -605,22 +633,26 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
         m_Player_Cyberscan = m_Player.FindAction("Cyberscan", throwIfNotFound: true);
-        // UserNavigation
-        m_UserNavigation = asset.FindActionMap("UserNavigation", throwIfNotFound: true);
-        m_UserNavigation_Interact = m_UserNavigation.FindAction("Interact", throwIfNotFound: true);
-        m_UserNavigation_Cancel = m_UserNavigation.FindAction("Cancel", throwIfNotFound: true);
-        m_UserNavigation_NavigateUI = m_UserNavigation.FindAction("NavigateUI", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_Proceed = m_UI.FindAction("Proceed", throwIfNotFound: true);
+        m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
+        m_UI_NavigateUI = m_UI.FindAction("NavigateUI", throwIfNotFound: true);
+        // GlobalKeys
+        m_GlobalKeys = asset.FindActionMap("GlobalKeys", throwIfNotFound: true);
+        m_GlobalKeys_Settings = m_GlobalKeys.FindAction("Settings", throwIfNotFound: true);
     }
 
     ~@PrivatePrinceControls()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PrivatePrinceControls.Player.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_UserNavigation.enabled, "This will cause a leak and performance issues, PrivatePrinceControls.UserNavigation.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PrivatePrinceControls.UI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_GlobalKeys.enabled, "This will cause a leak and performance issues, PrivatePrinceControls.GlobalKeys.Disable() has not been called.");
     }
 
     /// <summary>
@@ -696,8 +728,8 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
     // Player
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Block;
     private readonly InputAction m_Player_Cyberscan;
@@ -713,13 +745,13 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// </summary>
         public PlayerActions(@PrivatePrinceControls wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Player/Move".
-        /// </summary>
-        public InputAction @Move => m_Wrapper.m_Player_Move;
-        /// <summary>
         /// Provides access to the underlying input action "Player/Interact".
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Move".
+        /// </summary>
+        public InputAction @Move => m_Wrapper.m_Player_Move;
         /// <summary>
         /// Provides access to the underlying input action "Player/Attack".
         /// </summary>
@@ -758,12 +790,12 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         {
             if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-            @Move.started += instance.OnMove;
-            @Move.performed += instance.OnMove;
-            @Move.canceled += instance.OnMove;
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
@@ -784,12 +816,12 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// <seealso cref="PlayerActions" />
         private void UnregisterCallbacks(IPlayerActions instance)
         {
-            @Move.started -= instance.OnMove;
-            @Move.performed -= instance.OnMove;
-            @Move.canceled -= instance.OnMove;
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
@@ -833,39 +865,39 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
 
-    // UserNavigation
-    private readonly InputActionMap m_UserNavigation;
-    private List<IUserNavigationActions> m_UserNavigationActionsCallbackInterfaces = new List<IUserNavigationActions>();
-    private readonly InputAction m_UserNavigation_Interact;
-    private readonly InputAction m_UserNavigation_Cancel;
-    private readonly InputAction m_UserNavigation_NavigateUI;
+    // UI
+    private readonly InputActionMap m_UI;
+    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+    private readonly InputAction m_UI_Proceed;
+    private readonly InputAction m_UI_Cancel;
+    private readonly InputAction m_UI_NavigateUI;
     /// <summary>
-    /// Provides access to input actions defined in input action map "UserNavigation".
+    /// Provides access to input actions defined in input action map "UI".
     /// </summary>
-    public struct UserNavigationActions
+    public struct UIActions
     {
         private @PrivatePrinceControls m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public UserNavigationActions(@PrivatePrinceControls wrapper) { m_Wrapper = wrapper; }
+        public UIActions(@PrivatePrinceControls wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "UserNavigation/Interact".
+        /// Provides access to the underlying input action "UI/Proceed".
         /// </summary>
-        public InputAction @Interact => m_Wrapper.m_UserNavigation_Interact;
+        public InputAction @Proceed => m_Wrapper.m_UI_Proceed;
         /// <summary>
-        /// Provides access to the underlying input action "UserNavigation/Cancel".
+        /// Provides access to the underlying input action "UI/Cancel".
         /// </summary>
-        public InputAction @Cancel => m_Wrapper.m_UserNavigation_Cancel;
+        public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         /// <summary>
-        /// Provides access to the underlying input action "UserNavigation/NavigateUI".
+        /// Provides access to the underlying input action "UI/NavigateUI".
         /// </summary>
-        public InputAction @NavigateUI => m_Wrapper.m_UserNavigation_NavigateUI;
+        public InputAction @NavigateUI => m_Wrapper.m_UI_NavigateUI;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_UserNavigation; }
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -873,9 +905,9 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="UserNavigationActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="UIActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(UserNavigationActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -883,14 +915,14 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="UserNavigationActions" />
-        public void AddCallbacks(IUserNavigationActions instance)
+        /// <seealso cref="UIActions" />
+        public void AddCallbacks(IUIActions instance)
         {
-            if (instance == null || m_Wrapper.m_UserNavigationActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_UserNavigationActionsCallbackInterfaces.Add(instance);
-            @Interact.started += instance.OnInteract;
-            @Interact.performed += instance.OnInteract;
-            @Interact.canceled += instance.OnInteract;
+            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+            @Proceed.started += instance.OnProceed;
+            @Proceed.performed += instance.OnProceed;
+            @Proceed.canceled += instance.OnProceed;
             @Cancel.started += instance.OnCancel;
             @Cancel.performed += instance.OnCancel;
             @Cancel.canceled += instance.OnCancel;
@@ -905,12 +937,12 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="UserNavigationActions" />
-        private void UnregisterCallbacks(IUserNavigationActions instance)
+        /// <seealso cref="UIActions" />
+        private void UnregisterCallbacks(IUIActions instance)
         {
-            @Interact.started -= instance.OnInteract;
-            @Interact.performed -= instance.OnInteract;
-            @Interact.canceled -= instance.OnInteract;
+            @Proceed.started -= instance.OnProceed;
+            @Proceed.performed -= instance.OnProceed;
+            @Proceed.canceled -= instance.OnProceed;
             @Cancel.started -= instance.OnCancel;
             @Cancel.performed -= instance.OnCancel;
             @Cancel.canceled -= instance.OnCancel;
@@ -920,12 +952,12 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UserNavigationActions.UnregisterCallbacks(IUserNavigationActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UIActions.UnregisterCallbacks(IUIActions)" />.
         /// </summary>
-        /// <seealso cref="UserNavigationActions.UnregisterCallbacks(IUserNavigationActions)" />
-        public void RemoveCallbacks(IUserNavigationActions instance)
+        /// <seealso cref="UIActions.UnregisterCallbacks(IUIActions)" />
+        public void RemoveCallbacks(IUIActions instance)
         {
-            if (m_Wrapper.m_UserNavigationActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -935,21 +967,117 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="UserNavigationActions.AddCallbacks(IUserNavigationActions)" />
-        /// <seealso cref="UserNavigationActions.RemoveCallbacks(IUserNavigationActions)" />
-        /// <seealso cref="UserNavigationActions.UnregisterCallbacks(IUserNavigationActions)" />
-        public void SetCallbacks(IUserNavigationActions instance)
+        /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
+        /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
+        /// <seealso cref="UIActions.UnregisterCallbacks(IUIActions)" />
+        public void SetCallbacks(IUIActions instance)
         {
-            foreach (var item in m_Wrapper.m_UserNavigationActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_UserNavigationActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="UserNavigationActions" /> instance referencing this action map.
+    /// Provides a new <see cref="UIActions" /> instance referencing this action map.
     /// </summary>
-    public UserNavigationActions @UserNavigation => new UserNavigationActions(this);
+    public UIActions @UI => new UIActions(this);
+
+    // GlobalKeys
+    private readonly InputActionMap m_GlobalKeys;
+    private List<IGlobalKeysActions> m_GlobalKeysActionsCallbackInterfaces = new List<IGlobalKeysActions>();
+    private readonly InputAction m_GlobalKeys_Settings;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "GlobalKeys".
+    /// </summary>
+    public struct GlobalKeysActions
+    {
+        private @PrivatePrinceControls m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public GlobalKeysActions(@PrivatePrinceControls wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "GlobalKeys/Settings".
+        /// </summary>
+        public InputAction @Settings => m_Wrapper.m_GlobalKeys_Settings;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_GlobalKeys; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="GlobalKeysActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(GlobalKeysActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="GlobalKeysActions" />
+        public void AddCallbacks(IGlobalKeysActions instance)
+        {
+            if (instance == null || m_Wrapper.m_GlobalKeysActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_GlobalKeysActionsCallbackInterfaces.Add(instance);
+            @Settings.started += instance.OnSettings;
+            @Settings.performed += instance.OnSettings;
+            @Settings.canceled += instance.OnSettings;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="GlobalKeysActions" />
+        private void UnregisterCallbacks(IGlobalKeysActions instance)
+        {
+            @Settings.started -= instance.OnSettings;
+            @Settings.performed -= instance.OnSettings;
+            @Settings.canceled -= instance.OnSettings;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="GlobalKeysActions.UnregisterCallbacks(IGlobalKeysActions)" />.
+        /// </summary>
+        /// <seealso cref="GlobalKeysActions.UnregisterCallbacks(IGlobalKeysActions)" />
+        public void RemoveCallbacks(IGlobalKeysActions instance)
+        {
+            if (m_Wrapper.m_GlobalKeysActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="GlobalKeysActions.AddCallbacks(IGlobalKeysActions)" />
+        /// <seealso cref="GlobalKeysActions.RemoveCallbacks(IGlobalKeysActions)" />
+        /// <seealso cref="GlobalKeysActions.UnregisterCallbacks(IGlobalKeysActions)" />
+        public void SetCallbacks(IGlobalKeysActions instance)
+        {
+            foreach (var item in m_Wrapper.m_GlobalKeysActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_GlobalKeysActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="GlobalKeysActions" /> instance referencing this action map.
+    /// </summary>
+    public GlobalKeysActions @GlobalKeys => new GlobalKeysActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -984,19 +1112,19 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
     public interface IPlayerActions
     {
         /// <summary>
-        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMove(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMove(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Attack" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -1020,19 +1148,19 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         void OnCyberscan(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UserNavigation" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="UserNavigationActions.AddCallbacks(IUserNavigationActions)" />
-    /// <seealso cref="UserNavigationActions.RemoveCallbacks(IUserNavigationActions)" />
-    public interface IUserNavigationActions
+    /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
+    /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
+    public interface IUIActions
     {
         /// <summary>
-        /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Proceed" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnInteract(InputAction.CallbackContext context);
+        void OnProceed(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Cancel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -1047,5 +1175,20 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnNavigateUI(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "GlobalKeys" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="GlobalKeysActions.AddCallbacks(IGlobalKeysActions)" />
+    /// <seealso cref="GlobalKeysActions.RemoveCallbacks(IGlobalKeysActions)" />
+    public interface IGlobalKeysActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Settings" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSettings(InputAction.CallbackContext context);
     }
 }

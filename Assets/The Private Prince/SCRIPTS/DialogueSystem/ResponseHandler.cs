@@ -49,9 +49,9 @@ public class ResponseHandler : MonoBehaviour
         // Unsubscribe first to prevent double or multiple subscriptions 
         UnsubscribeFromInputEvents();
 
-        ppControls.UserNavigation.NavigateUI.performed += OnNavigatePerformed;
-        ppControls.UserNavigation.Interact.performed += OnSubmitPerformed;
-        ppControls.UserNavigation.Cancel.performed += OnCancelPerformed;
+        ppControls.UI.NavigateUI.performed += OnNavigatePerformed;
+        ppControls.UI.Proceed.performed += OnSubmitPerformed;
+        ppControls.UI.Cancel.performed += OnCancelPerformed;
 
         Debug.Log("ResponseHandler: Subscribed to input events");
     }
@@ -61,9 +61,9 @@ public class ResponseHandler : MonoBehaviour
     {
         if (ppControls == null) return;
 
-        ppControls.UserNavigation.NavigateUI.performed -= OnNavigatePerformed;
-        ppControls.UserNavigation.Interact.performed -= OnSubmitPerformed;
-        ppControls.UserNavigation.Cancel.performed -= OnCancelPerformed;
+        ppControls.UI.NavigateUI.performed -= OnNavigatePerformed;
+        ppControls.UI.Proceed.performed -= OnSubmitPerformed;
+        ppControls.UI.Cancel.performed -= OnCancelPerformed;
 
         Debug.Log("ResponseHandler: Unsbscribed to input events");
     }

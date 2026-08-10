@@ -92,7 +92,6 @@ public class PlayerInteraction3D : MonoBehaviour
 
         // Subscribes methods to the corresponding inputs set in New Input System
         ppControls.Player.Interact.performed += PerformInteractCast;
-        ppControls.UserNavigation.Interact.performed += PerformInteractCast;
     }
 
     // Method to unsubscribe from events 
@@ -100,7 +99,6 @@ public class PlayerInteraction3D : MonoBehaviour
     {
         // Unsubscribes methods to the corresponding inputs set in New Input System
         ppControls.Player.Interact.performed -= PerformInteractCast;
-        ppControls.UserNavigation.Interact.performed -= PerformInteractCast;
     }
 
     // ----------------------- INTERACTION METHODS -------------------------

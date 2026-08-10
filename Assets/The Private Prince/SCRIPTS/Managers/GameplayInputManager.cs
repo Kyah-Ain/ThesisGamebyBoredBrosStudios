@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public enum ActionMapType
 {
     Player,
-    UserNavigation
+    UI
 }
 
 // Required DebuggerNiAinPjls.cs for this to be able to monitor debugs, otherwise use the old one
@@ -28,7 +28,7 @@ public class GameplayInputManager : MonoBehaviour
 
     // SHORTCUTS for accessing specific action maps more easily from other scripts
     private PrivatePrinceControls.PlayerActions PlayerMap => ppControls.Player; // Shortcut to access Player action map
-    private PrivatePrinceControls.UserNavigationActions UserNavigationMap => ppControls.UserNavigation; // Shortcut to access UserNavigation action map
+    private PrivatePrinceControls.UIActions UIMap => ppControls.UI; // Shortcut to access UserNavigation action map
 
     [Header("REFERENCES")]
     [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
@@ -68,17 +68,13 @@ public class GameplayInputManager : MonoBehaviour
 
         // Prompt that the control has been successfull
         debuggerNiAin.Log($"Successfully persist InputManager through {this.transform.root.gameObject.name}");
-
-        // Enable the default action map when this object becomes active
-        EnableDefaultMap();
     }
 
-     // Update is called once per frame
-    void Update()
+    // OnEnable is called when the object becomes enabled and active
+    void OnEnable()
     {
-        // For TESTING PURPOSES ONLY:
-        // Switch input maps using enum dropdown in the Inspector during play mode to verify functionality
-        //SwitchMap(currentMapType);
+        // Enable the default action map when this object becomes active
+        EnableDefaultMap();
     }
 
     // OnDisable is called when the object becomes disabled
@@ -101,7 +97,15 @@ public class GameplayInputManager : MonoBehaviour
         }
     }
 
-    // ----------------------- HELPER METHODS -------------------------
+    // Update is called once per frame
+    void Update()
+    {
+        // For TESTING PURPOSES ONLY:
+        // Switch input maps using enum dropdown in the Inspector during play mode to verify functionality
+        //SwitchMap(currentMapType);
+    }
+
+    // ------------------------- MAP METHODS -------------------------
 
     // Enables the default input map when the game starts
     public void EnableDefaultMap()
@@ -126,7 +130,7 @@ public class GameplayInputManager : MonoBehaviour
         }
     }
 
-    // ------------------------- MAP METHODS -------------------------
+    // ----------------------- HELPER METHODS -------------------------
 
     // Converts enum values into actual InputActionMap references directly
     private InputActionMap GetMap(ActionMapType mapType)
@@ -136,8 +140,8 @@ public class GameplayInputManager : MonoBehaviour
             // case ActionMapType.GLOBALKEYS:
             //     return Controls.GlobalKeys;
 
-            case ActionMapType.UserNavigation:
-                return Controls.UserNavigation;
+            case ActionMapType.UI:
+                return Controls.UI;
 
             case ActionMapType.Player:
                 return Controls.Player;

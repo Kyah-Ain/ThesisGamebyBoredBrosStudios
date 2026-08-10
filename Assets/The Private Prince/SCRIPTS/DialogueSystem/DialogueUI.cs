@@ -35,8 +35,8 @@ public class DialogueUI : MonoBehaviour
             ppControls = GameplayInputManager.Instance.Controls;
 
             // Subscribe to the Interact and Cancel actions' performed events
-            ppControls.UserNavigation.Interact.performed += OnInteractPerformed;
-            ppControls.UserNavigation.Cancel.performed += OnCancelPerformed;
+            ppControls.UI.Proceed.performed += OnInteractPerformed;
+            ppControls.UI.Cancel.performed += OnCancelPerformed;
         }
         else
         {
@@ -247,8 +247,8 @@ public class DialogueUI : MonoBehaviour
         if (ppControls != null)
         {
             // Unsubscribe from the Interact and Cancel actions' performed events to prevent memory leaks and unintended behavior when this object is destroyed
-            ppControls.UserNavigation.Interact.performed -= OnInteractPerformed;
-            ppControls.UserNavigation.Cancel.performed -= OnCancelPerformed;
+            ppControls.UI.Proceed.performed -= OnInteractPerformed;
+            ppControls.UI.Cancel.performed -= OnCancelPerformed;
             Debug.Log("DialogueUI: Unsubscribed from input events");
         }
     }
