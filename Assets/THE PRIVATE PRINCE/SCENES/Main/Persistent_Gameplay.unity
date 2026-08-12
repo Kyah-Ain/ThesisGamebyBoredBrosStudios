@@ -2299,7 +2299,6 @@ GameObject:
   - component: {fileID: 780063483}
   - component: {fileID: 780063485}
   - component: {fileID: 780063484}
-  - component: {fileID: 780063486}
   m_Layer: 0
   m_Name: SUN
   m_TagString: Untagged
@@ -2407,19 +2406,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &780063486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 780063482}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd35b1aefdcd1c14ba1f172a8a346c0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliesTo: 1
 --- !u!1 &784767035
 GameObject:
   m_ObjectHideFlags: 0
@@ -2635,6 +2621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ad6adca4520a98489ec39f8fc9a9dcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debuggerNiAin: {fileID: 0}
   gameEvent: {fileID: 11400000, guid: 2569f59334739614786470ff967fb218, type: 2}
   onEventTriggered:
     m_PersistentCalls:
@@ -2651,6 +2638,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onStringEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onIntEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onFloatEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onBoolEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &903304274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2663,6 +2662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ad6adca4520a98489ec39f8fc9a9dcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debuggerNiAin: {fileID: 0}
   gameEvent: {fileID: 11400000, guid: 5e0bb47498790724d88bbebfa7eeb633, type: 2}
   onEventTriggered:
     m_PersistentCalls:
@@ -2679,6 +2679,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onStringEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onIntEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onFloatEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onBoolEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &903304275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4542,7 +4554,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2096116949}
-  - component: {fileID: 2096116950}
   m_Layer: 0
   m_Name: HUD
   m_TagString: Untagged
@@ -4568,19 +4579,6 @@ Transform:
   - {fileID: 430003381}
   m_Father: {fileID: 339983973}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2096116950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2096116948}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd35b1aefdcd1c14ba1f172a8a346c0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliesTo: 1
 --- !u!223 &45689573493206159
 Canvas:
   m_ObjectHideFlags: 0
@@ -4831,7 +4829,6 @@ GameObject:
   - component: {fileID: 5593201109947079111}
   - component: {fileID: 7526050633536724906}
   - component: {fileID: 9101944281942034071}
-  - component: {fileID: 9101944281942034072}
   m_Layer: 5
   m_Name: Kiroshi Optix's UI
   m_TagString: Untagged
@@ -4991,19 +4988,6 @@ MonoBehaviour:
   onCyberScan: {fileID: 11400000, guid: 2569f59334739614786470ff967fb218, type: 2}
   cyberScan: {fileID: 43101136}
   cyberStatus: 0
---- !u!114 &9101944281942034072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6895456453443858493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd35b1aefdcd1c14ba1f172a8a346c0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliesTo: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

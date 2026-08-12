@@ -28,12 +28,12 @@ public class SfxManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(this.transform.root);
+            DontDestroyOnLoad(this.transform.root.gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
 
         for (int i = 0; i < poolSize; i++)

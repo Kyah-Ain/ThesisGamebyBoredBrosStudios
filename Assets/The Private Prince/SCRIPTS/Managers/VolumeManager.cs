@@ -26,7 +26,7 @@ public class VolumeManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(this.transform.root);
+            DontDestroyOnLoad(this.transform.root.gameObject);
             Debug.Log("[VolumeManager] Instance created and marked DontDestroyOnLoad.");
         }
         else
@@ -40,7 +40,7 @@ public class VolumeManager : MonoBehaviour
     // Built-In Unity method that being called last (upon Quitting the Game)
     private void OnApplicationQuit()
     {
-        Debug.Log("[VolumeManager] OnApplicationQuit() — saving all volumes.");
+        Debug.Log("[VolumeManager] OnApplicationQuit() ï¿½ saving all volumes.");
         SaveMusicVolume();
         SaveSFXVolume();
     }

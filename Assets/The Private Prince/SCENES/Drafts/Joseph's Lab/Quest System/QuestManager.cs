@@ -16,15 +16,17 @@ public class QuestManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Instance == null)
+        {
+            Instance = this;
+            transform.SetParent(null);
+            DontDestroyOnLoad(this.transform.root.gameObject);
+        }
+        else
         {
             Destroy(this.gameObject);
             return;
         }
-
-        Instance = this;
-        transform.SetParent(null);
-        DontDestroyOnLoad(this.transform.root);
 
         //questMap = CreateQuestMap();
     }

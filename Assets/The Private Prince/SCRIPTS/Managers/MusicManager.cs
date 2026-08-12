@@ -24,17 +24,21 @@ public class MusicManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(this.transform.root);
 
-            if (audioSource == null)
-                audioSource = GetComponent<AudioSource>();
-
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            DontDestroyOnLoad(this.transform.root.gameObject);
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject); // Destroy duplicate instances
+
+            return;
         }
+        
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void Start()

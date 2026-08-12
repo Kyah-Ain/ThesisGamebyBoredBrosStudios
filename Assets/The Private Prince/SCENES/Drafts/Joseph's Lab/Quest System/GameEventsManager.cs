@@ -27,7 +27,7 @@ public class GameEventsManager : MonoBehaviour
         {
             Instance = this;
             transform.SetParent(null);
-            DontDestroyOnLoad(this.transform.root);
+            DontDestroyOnLoad(this.transform.root.gameObject);
             questEvents = new QuestEvents();
         }
         else

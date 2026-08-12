@@ -33,7 +33,7 @@ public class LevelManager : MonoBehaviour
             PlayerPrefs.Save();
             Debug.Log("Cleared all saved data for new game session");
 
-            DontDestroyOnLoad(this.transform.root);
+            DontDestroyOnLoad(this.transform.root.gameObject);
         }
         else
         {

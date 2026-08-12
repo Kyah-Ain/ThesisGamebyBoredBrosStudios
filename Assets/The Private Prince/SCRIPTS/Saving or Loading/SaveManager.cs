@@ -60,7 +60,7 @@ public class SaveManager : MonoBehaviour
             instance = this; // Set the singleton instance
 
             // Marks this GameObjects' root parent if there is one, and sets it to itself if there's none
-            DontDestroyOnLoad(this.transform.root);
+            DontDestroyOnLoad(this.transform.root.gameObject);
         }
         else
         {

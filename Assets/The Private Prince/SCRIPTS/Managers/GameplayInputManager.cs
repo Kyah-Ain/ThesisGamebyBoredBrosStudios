@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public enum ActionMapType
 {
+    GlobalKeys,
     Player,
     UI
 }
@@ -48,20 +49,20 @@ public class GameplayInputManager : MonoBehaviour
             debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
         
         // Ensure only one instance of InputManager exists (Singleton pattern)
-        if (Instance != null && Instance != this)
+        if (instance == null)
+        {
+            // Assign this instance as the global reference
+            instance = this;
+
+            // Keep this object alive across scene changes
+            DontDestroyOnLoad(this.transform.root.gameObject);
+        }
+        else
         {
             debuggerNiAin.Log($"A copy of GameplayInputManager has been deleted: {this.gameObject.name}");
             
             Destroy(this.gameObject); // Destroy duplicate InputManager instances
-
-            return;
         }
-        
-        // Assign this instance as the global reference
-        instance = this;
-
-        // Keep this object alive across scene changes
-        DontDestroyOnLoad(this.transform.root.gameObject);
 
         // Initialize the PrivatePrinceControls Instance for handling Action Maps 
         ppControls = new PrivatePrinceControls();
@@ -107,51 +108,6 @@ public class GameplayInputManager : MonoBehaviour
 
     // ------------------------- MAP METHODS -------------------------
 
-    // Enables the default input map when the game starts
-    public void EnableDefaultMap()
-    {
-        //// Set the default map type (Usually the "UI" Action Map)
-        //currentActionMap = GetMap(currentMapType);
-
-        //// Enable the default action map at first initialization
-        //currentActionMap.Enable();
-
-        // EnableMap("UserNavigation");  
-        EnableMap("Player"); 
-    }
-
-    // Disables all input maps 
-    public void DisableAllMaps()
-    {
-        // Disable all known action maps and clear the current action map reference
-        foreach (InputActionMap map in currentActiveMaps) 
-        {
-            map.Disable();
-        }
-    }
-
-    // ----------------------- HELPER METHODS -------------------------
-
-    // Converts enum values into actual InputActionMap references directly
-    private InputActionMap GetMap(ActionMapType mapType)
-    {
-        switch (mapType)
-        {
-            // case ActionMapType.GLOBALKEYS:
-            //     return Controls.GlobalKeys;
-
-            case ActionMapType.UI:
-                return Controls.UI;
-
-            case ActionMapType.Player:
-                return Controls.Player;
-
-            default:
-                debuggerNiAin.Log($"No mapping exists for InputMapType '{mapType}'.");
-                return null;
-        }
-    }
-
     // Method to enable a new input map using a string representation of the enum value
     public void EnableMap(string newMapTypeStr)
     {
@@ -166,6 +122,23 @@ public class GameplayInputManager : MonoBehaviour
         }
     }
 
+    #region ENABLE EXTENSION
+
+        // Enables the default input map when the game starts
+        public void EnableDefaultMap()
+        {
+            //// Set the default map type (Usually the "UI" Action Map)
+            //currentActionMap = GetMap(currentMapType);
+
+            //// Enable the default action map at first initialization
+            //currentActionMap.Enable();
+
+            EnableMap("UI");  
+            // EnableMap("Player"); 
+        }
+
+    #endregion
+    
     // Method to disable a new input map using a string representation of the enum value
     public void DisableMap(string newMapTypeStr)
     {
@@ -177,6 +150,42 @@ public class GameplayInputManager : MonoBehaviour
         else
         {
             debuggerNiAin.Log($"String '{newMapTypeStr}' could not be converted to ActionMapType.");
+        }
+    }
+
+    #region DISABLE EXTENSION
+
+        // Disables all input maps 
+        public void DisableAllMaps()
+        {
+            // Disable all known action maps and clear the current action map reference
+            foreach (InputActionMap map in currentActiveMaps) 
+            {
+                map.Disable();
+            }
+        }
+
+    #endregion
+
+    // ----------------------- HELPER METHODS -------------------------
+
+    // Converts enum values into actual InputActionMap references directly
+    private InputActionMap GetMap(ActionMapType mapType)
+    {
+        switch (mapType)
+        {
+            case ActionMapType.GlobalKeys:
+                return Controls.GlobalKeys;
+
+            case ActionMapType.UI:
+                return Controls.UI;
+
+            case ActionMapType.Player:
+                return Controls.Player;
+
+            default:
+                debuggerNiAin.Log($"No mapping exists for InputMapType '{mapType}'.");
+                return null;
         }
     }
 
