@@ -52,6 +52,11 @@ public class GameManager : MonoBehaviour
     // ...
     public void Awake()
     {
+        // Checks if our reference for the script was not set
+        if (debuggerNiAin == null)
+            // If it is not, then set it automatically by looking for the script class from this object
+            debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
+
         _loadingBarObject.SetActive(false);
 
         // Implement singleton pattern to ensure only one instance of PlayerInputManager exists
@@ -68,11 +73,6 @@ public class GameManager : MonoBehaviour
 
             Destroy(this.gameObject); // Destroy duplicate instances
         }
-
-        // Checks if our reference for the script was not set
-        if (debuggerNiAin == null)
-            // If it is not, then set it automatically by looking for the script class from this object
-            debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
 
         // Evaluates if an InputManager instance exists in the scene (for reference)
         if (GameplayInputManager.Instance == null)
@@ -152,14 +152,14 @@ public class GameManager : MonoBehaviour
         // ...
         _loadingBarObject.SetActive(true);
 
-        // Evaluate if the player has already played at least one level by checking the highest level reached
-        if (LevelManager.Instance.highestLevel > 1)
-        {
-            // Open the prompt panel to confirm starting a new game
-            activationManager.Activate();
+        // // Evaluate if the player has already played at least one level by checking the highest level reached
+        // if (LevelManager.Instance.highestLevel > 1)
+        // {
+        //     // Open the prompt panel to confirm starting a new game
+        //     activationManager.Activate();
 
-            return;
-        }
+        //     return;
+        // }
 
         // ...
         onFreshStart?.Invoke();

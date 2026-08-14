@@ -42,23 +42,35 @@ public class GameEventListener : MonoBehaviour
     // Extension Events
     #region EVENT EXTENSIONS
 
-    public StringEvent onStringEventTriggered;
-    public IntEvent onIntEventTriggered;
-    public FloatEvent onFloatEventTriggered;
-    public BoolEvent onBoolEventTriggered;
+        public StringEvent onStringEventTriggered;
+        public IntEvent onIntEventTriggered;
+        public FloatEvent onFloatEventTriggered;
+        public BoolEvent onBoolEventTriggered;
 
     #endregion
 
     // --------------------- PREPARATION METHODS -------------------------
 
-    // On Enable is called when the object becomes enabled and active
+    // Awake is called when this script first loaded (A Built-In Unity Method)
+    // - first one to be automatically called among all methods.
+    public void Awake()
+    {
+        // Checks if our reference for the script was not set
+        if (debuggerNiAin == null)
+            // If it is not, then set it automatically by looking for the script class from this object
+            debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
+    }
+
+    // OnEnable is called everytime this script were enabled or activated (A Built-In Unity Method)
+    // - second one to be automatically called among all methods.
     void OnEnable()
     {
         // Subscribes this script as a listener to the 'gameEvent' when enabled
         gameEvent.AddListener(this);
     }
 
-    // On Disable is called when the behaviour becomes disabled or inactive
+    // On Disable is called when the behaviour becomes disabled or inactive (A Built-In Unity Method)
+    // - second one to be automatically called among all methods.
     void OnDisable()
     {
         // Unsubscribes this script as a listener to the 'gameEvent' when disabled
@@ -67,11 +79,13 @@ public class GameEventListener : MonoBehaviour
 
     // --------------------- EXECUTABLE METHODS -------------------------
 
-    // Event Method that calls an execution to all methods under this event
+    // Event Method to call for an execution to all methods under this event
     public void OnEventTriggered()
     {
-        debuggerNiAin.Log($"Event call from {gameEvent} was received from {this.gameObject.name}. \n" +
-                          $"All assigned methods in 'onEventTriggered' were executed successfully!");
+        debuggerNiAin.Log(
+            $"Event call from {gameEvent} was received from {this.gameObject.name}. \n" +
+            $"All assigned methods in 'onEventTriggered' were executed successfully!"
+        );
 
         // Invokes the UnityEvent, which can be configured in the Inspector to call any public method on any script
         onEventTriggered.Invoke();
@@ -81,45 +95,49 @@ public class GameEventListener : MonoBehaviour
 
     #region EXTENSIONS METHODS
 
-    // Event Method that calls and pass on a string 
+    // Event Method to call and pass on string 
     public void OnStringEventTriggered(string parameter)
     {
-        debuggerNiAin.Log($"Event call from {gameEvent} and {parameter} was received from {this.gameObject.name}. \n" +
-                          $"All assigned methods in 'onStringEventTriggered' were executed successfully!");
-
+        debuggerNiAin.Log(
+            $"Event call from {gameEvent} and {parameter} was received from {this.gameObject.name}. \n" +
+            $"All assigned methods in 'onStringEventTriggered' were executed successfully!"
+        );
 
         // Invokes the UnityEvent, which can be configured in the Inspector to call any public method on any script
         onStringEventTriggered.Invoke(parameter);
     }
 
-    // Event Method that calls and pass on an int 
+    // Event Method to call and pass an int 
     public void OnIntEventTriggered(int parameter)
     {
-        debuggerNiAin.Log($"Event call from {gameEvent} and {parameter} was received from {this.gameObject.name}. \n" +
-                          $"All assigned methods in 'onIntEventTriggered' were executed successfully!");
-
+        debuggerNiAin.Log(
+            $"Event call from {gameEvent} and {parameter} was received from {this.gameObject.name}. \n" +
+            $"All assigned methods in 'onIntEventTriggered' were executed successfully!"
+        );
 
         // Invokes the UnityEvent, which can be configured in the Inspector to call any public method on any script
         onIntEventTriggered.Invoke(parameter);
     }
 
-    // Event Method that calls and pass on a float 
+    // Event Method to call and pass on float 
     public void OnFloatEventTriggered(float parameter)
     {
-        debuggerNiAin.Log($"Event call from {gameEvent} and {parameter} was received from {this.gameObject.name}. \n" +
-                          $"All assigned methods in 'onFloatEventTriggered' were executed successfully!");
-
+        debuggerNiAin.Log(
+            $"Event call from {gameEvent} and {parameter} was received from {this.gameObject.name}. \n" +
+            $"All assigned methods in 'onFloatEventTriggered' were executed successfully!"
+        );
 
         // Invokes the UnityEvent, which can be configured in the Inspector to call any public method on any script
         onFloatEventTriggered.Invoke(parameter);
     }
 
-    // Event Method that calls and pass on a bool 
+    // Event Method to call and pass a bool 
     public void OnBoolEventTriggered(bool parameter)
     {
-        debuggerNiAin.Log($"Event call from {gameEvent} and {parameter} was received from {this.gameObject.name}. \n" +
-                          $"All assigned methods in 'onBoolEventTriggered' were executed successfully!");
-
+        debuggerNiAin.Log(
+            $"Event call from {gameEvent} and {parameter} was received from {this.gameObject.name}. \n" +
+            $"All assigned methods in 'onBoolEventTriggered' were executed successfully!"
+        );
 
         // Invokes the UnityEvent, which can be configured in the Inspector to call any public method on any script
         onBoolEventTriggered.Invoke(parameter);

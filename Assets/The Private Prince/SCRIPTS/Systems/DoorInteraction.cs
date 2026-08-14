@@ -13,6 +13,11 @@ public class DoorInteraction : Portal
 {
     // ------------------------- EVENTS -------------------------
 
+    [Header("REFERENCES")]
+    [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
+
+    [SerializeField] GameObject passenger; // Refers to the teleport subject
+
     // ...
     public UnityEvent onEnterDoor;
 
@@ -36,10 +41,38 @@ public class DoorInteraction : Portal
 
     // ------------------------- UNITY METHODS -------------------------
 
+    // ...
+    public void Awake()
+    {
+        // Checks if our reference for the script was not set
+        if (debuggerNiAin == null)
+            // If it is not, then set it automatically by looking for the script class from this object
+            debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
+
+        // Evaluates if an InputManager instance exists in the scene (for reference)
+        if (GameplayInputManager.Instance == null)
+        {
+            debuggerNiAin.Log("GameplayInputManager Instance is NULL!");
+
+            return;
+        }
+
+        // Automatically sets the 'Initialized' input control maps from InputManager 
+        if (GameplayInputManager.Instance.Controls == null)
+        {
+            debuggerNiAin.Log("GameplayInputManager Controls is NULL!");
+
+            return;
+        }
+
+        // Prepared the controls to be ready for use  
+        ppControls = GameplayInputManager.Instance.Controls;
+    }
+
     // Built-In Unity method that called when this script's gameObject is first loaded
     private void OnEnable()
     {
-        SubscribeToInputEvents();
+        Subscribe();
 
         //// Subscribes to the Delegate Events
         //onEnterDoor.AddListener(OnEnterDoor);
@@ -52,7 +85,7 @@ public class DoorInteraction : Portal
     // Built-In Unity method that called when this script's gameObject is disabled
     private void OnDisable()
     {
-        UnsubscribeFromInputEvents();
+        Unsubscribe();
 
         //// Unsubscribes to the Delegate Events
         //onEnterDoor.RemoveListener(OnEnterDoor);
@@ -65,7 +98,7 @@ public class DoorInteraction : Portal
     // Built-In Unity method that called when this script's gameObject is destroyed
     private void OnDestroy()
     {
-        SubscribeToInputEvents();
+        Unsubscribe();
 
         // ...
         onTeleportStart = null;
@@ -73,68 +106,80 @@ public class DoorInteraction : Portal
         onEnterDoor.RemoveAllListeners();
     }
 
+    // ---------------------- PREPARATION METHODS -------------------------
+
+    // Method to subscribe to events as a listener
+    public void Subscribe()
+    {
+        // Proceeds only if the input control reference was successfully set
+        if (ppControls == null) return;
+
+        // SUBSCRIBE METHODS to the input action events
+        ppControls.Player.Interact.performed += OpenDoor;
+    }
+
+    // Method to unsubscribe from events 
+    public void Unsubscribe()
+    {
+        // Proceeds only if the input control reference was successfully set
+        if (ppControls == null) return;
+
+        // UNSUBSCRIBE METHODS to the input action events
+        ppControls.Player.Interact.performed -= OpenDoor;
+    }
+
+    // ------------------------- COLLISIONS -------------------------
+
     // Built-In Unity method that called when a gameObject with a Collider enters
     private void OnTriggerEnter(Collider actor)
     {
-        isInteractable = true;
-    }
-
-    // ...
-    private void OnTriggerStay(Collider actor)
-    {
+        // Filters the trigger to only responds to 'Player' tagged requests
         if (!actor.CompareTag("Player")) return;
 
-        // Check if ppControls is null and try to get it again
-        if (ppControls == null)
+        passenger = actor.gameObject;
+
+        if (doorType == DoorType.OpenDoor)
         {
-            SubscribeToInputEvents();
+            EnterDoor();
+
+            return;
         }
 
-        // ...
-        if (isInteractable && 
-           (ppControls.Player.Interact.WasPerformedThisFrame() || 
-            doorType == DoorType.OpenDoor))
-        {
-            onEnterDoor?.Invoke();
-
-            onTeleportStart?.Invoke(actor.gameObject, base.tpDestination);
-            doorVFX?.Invoke();
-            doorSFX?.Invoke();
-        }
+        isInteractable = true;
     }
 
     // ...
     private void OnTriggerExit(Collider actor)
     {
+        // Filters the trigger to only responds to 'Player' tagged requests
+        if (!actor.CompareTag("Player")) return;
+
         isInteractable = false;
+
+        passenger = null;
     }
-
-    // ------------------------- EVENT METHODS -------------------------
-
-    // ...
-    private void SubscribeToInputEvents()
-    {
-        // Get the reference to the PrivatePrinceControls script that handles the new input system controls
-        ppControls = GameplayInputManager.Instance?.Controls;
-
-        if (ppControls == null) return;
-
-        // Unsubscribe first to prevent double or multiple subscriptions 
-        UnsubscribeFromInputEvents();
-
-        Debug.Log("ResponseHandler: Subscribed to input events");
-    }
-
-    // ...
-    private void UnsubscribeFromInputEvents()
-    {
-        if (ppControls == null) return;
-
-        Debug.Log("ResponseHandler: Unsbscribed to input events");
-    }
-
 
     // ------------------------- CUSTOM METHODS -------------------------
+
+    // ...
+    void EnterDoor()
+    {
+        onEnterDoor?.Invoke();
+
+        onTeleportStart?.Invoke(passenger, base.tpDestination);
+        doorVFX?.Invoke();
+        doorSFX?.Invoke();
+    }
+
+    // ...
+    void OpenDoor(InputAction.CallbackContext context)
+    {
+        // ...
+        if (isInteractable && doorType == DoorType.InteractDoor)
+        {
+            EnterDoor();
+        }
+    }
 
     // ...
     protected override void Teleport(GameObject passenger, Transform destination)
