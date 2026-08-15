@@ -461,8 +461,6 @@ public class GameManager : MonoBehaviour
                 $"GameManager: Finished loading scene '{sceneName}'. " +
                 $"Queue progress: {completedScenes}/{totalScenes}"
             );
-
-            StartCoroutine(LoadScreenDelay());
         }
 
         // ---------------------------- FINISH ---------------------------
@@ -492,6 +490,8 @@ public class GameManager : MonoBehaviour
         // Clear any remaining AsyncOperations
         _scenesToLoad.Clear();
 
+        StartCoroutine(LoadScreenDelay());
+
         // ...
         // Keep this disabled if the loading bar should remain visible.
         // If you want it hidden after loading, uncomment this section.
@@ -505,18 +505,18 @@ public class GameManager : MonoBehaviour
     // Method to delay the loadscreen appearance
     IEnumerator LoadScreenDelay()
     {
+        if (!enableLoadScreenDelay)
+        {
+            // onFinishLoadingScenes?.Invoke();
+            yield break;
+        }
+
         debuggerNiAin.Log("Loading Screen Timer Started");
 
-        // ...
         yield return new WaitForSeconds(loadScreenDelay);
 
-        // ...
-        if (enableLoadScreenDelay)
-        {
-            debuggerNiAin.Log("Loading Screen Timer Fnished");
+        debuggerNiAin.Log("Loading Screen Timer Finished");
 
-            // ...
-            onFinishLoadingScenes?.Invoke();
-        }
+        onFinishLoadingScenes?.Invoke();
     }
 }

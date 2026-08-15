@@ -94,7 +94,6 @@ GameObject:
   - component: {fileID: 6539379124599391357}
   - component: {fileID: 5830784306012462699}
   - component: {fileID: 2810472816561114963}
-  - component: {fileID: 6228842172250585534}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -177,10 +176,10 @@ MonoBehaviour:
   onLoadingScenes:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 5677709060303559152}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -192,10 +191,10 @@ MonoBehaviour:
   onFinishLoadingScenes:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 6308169071447932942}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -208,26 +207,10 @@ MonoBehaviour:
   _sceneQueue: []
   _loadingBarObject: {fileID: 0}
   _loadingBar: {fileID: 0}
-  activationManager: {fileID: 6228842172250585534}
+  activationManager: {fileID: 0}
   mainMenu: Main Menu by Pajulas
   enableLoadScreenDelay: 1
   loadScreenDelay: 3
---- !u!114 &6228842172250585534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2376694432121091614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3aec58a1c4b28af4ca525cf0f1465094, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonsToEnable: []
-  buttonsToDisable: []
-  gameObjectsToActivate: []
-  gameObjectsToDisable: []
 --- !u!1 &2634674395061701095
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,7 +283,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: GameWorld by Padel
+          m_StringArgument: HIMIK
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 2810472816561114963}
@@ -312,7 +295,43 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Persistent_Gameplay
+          m_StringArgument: CORE
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2810472816561114963}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: QueueScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: APARTMENT
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2810472816561114963}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: QueueScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: GAWAD
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2810472816561114963}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: QueueScene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: H&K
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 2810472816561114963}
@@ -419,6 +438,8 @@ Transform:
   m_Children:
   - {fileID: 8588391558336742545}
   - {fileID: 5734362694890539876}
+  - {fileID: 8664307031353292319}
+  - {fileID: 5222311315676747294}
   m_Father: {fileID: 6539379124599391357}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4430944126215453876
@@ -592,7 +613,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Main Menu by Pajulas
+          m_StringArgument: MainMenu
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 2810472816561114963}
@@ -619,3 +640,101 @@ MonoBehaviour:
   onBoolEventTriggered:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &7757499245016687762
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5222311315676747294}
+  - component: {fileID: 6308169071447932942}
+  m_Layer: 0
+  m_Name: OnFinishLoadingScenes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5222311315676747294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7757499245016687762}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2788735736866844662}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6308169071447932942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7757499245016687762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcff0183194c60240aa5b3b62f002fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsToTrigger:
+  - {fileID: 11400000, guid: c2865866511a44f42b299697f992667b, type: 2}
+  triggerEventsOnAwake: 0
+  triggerEventsOnStart: 0
+  triggerEventsOnEnable: 0
+--- !u!1 &8893262611171788576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8664307031353292319}
+  - component: {fileID: 5677709060303559152}
+  m_Layer: 0
+  m_Name: OnLoadingScenes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8664307031353292319
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8893262611171788576}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2788735736866844662}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5677709060303559152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8893262611171788576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcff0183194c60240aa5b3b62f002fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsToTrigger:
+  - {fileID: 11400000, guid: 11c07d4c487814444a2de8db75d12287, type: 2}
+  triggerEventsOnAwake: 0
+  triggerEventsOnStart: 0
+  triggerEventsOnEnable: 0
