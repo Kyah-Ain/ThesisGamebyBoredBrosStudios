@@ -46,21 +46,6 @@ public class RegionData
 // ------------------------------ QUEST DATA -----------------------------
 
 [System.Serializable]
-public class QuestData
-{
-    public QuestState state;
-    public int questStepIndex;
-    public QuestStepState[] questStepStates;
-
-    public QuestData(QuestState state, int questStepIndex, QuestStepState[] questStepStates)
-    {
-        this.state = state;
-        this.questStepIndex = questStepIndex;
-        this.questStepStates = questStepStates;
-    }
-}
-
-[System.Serializable]
 public class QuestDataContainer
 {
     public List<SerializedQuest> quests = new List<SerializedQuest>();
@@ -85,6 +70,21 @@ public class SerializedQuest
     public QuestData ToQuestData()
     {
         return new QuestData(state, questStepIndex, questStepStates);
+    }
+}
+
+[System.Serializable]
+public class QuestData
+{
+    public QuestState state;
+    public int questStepIndex;
+    public QuestStepState[] questStepStates;
+
+    public QuestData(QuestState state, int questStepIndex, QuestStepState[] questStepStates)
+    {
+        this.state = state;
+        this.questStepIndex = questStepIndex;
+        this.questStepStates = questStepStates;
     }
 }
 

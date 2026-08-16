@@ -11,7 +11,7 @@ public class SaveManager : MonoBehaviour
 
     public static event Action OnSaveStateChanged;
 
-    [SerializeField] private GameEvent onLoadGame; // ...
+    // [SerializeField] private GameEvent onLoadGame; // ...
 
     public Action onEnteringNewRegion;
 
@@ -80,7 +80,7 @@ public class SaveManager : MonoBehaviour
         //LoadGameOnStart();
     }
 
-    // ------------------------ SAVE METHODS ---------------------------
+    // ------------------------ SAVE & LOAD METHODS ---------------------------
 
     // ...
     public void Save() 
@@ -89,21 +89,11 @@ public class SaveManager : MonoBehaviour
         ThingsToSave();
     }
 
-    // Accessible Method to process Save Game Data
-    public void SaveGame(SaveableData dataToSave)
+    // ...
+    public void Load()
     {
         // ...
-        OnSaveStateChanged?.Invoke();
-
-        // ...
-        FileStream file = File.Create(savingFilePath);
-        BinaryFormatter bf = new BinaryFormatter();
-
-        // ...
-        bf.Serialize(file, dataToSave);
-        file.Close();
-
-        Debug.Log($"Game saved to {savingFilePath}!");
+        LoadGame();
     }
 
     // Pre-Built Method to save Core Data/s (Dev's Custom Method)
@@ -129,13 +119,41 @@ public class SaveManager : MonoBehaviour
         SaveGame(dataBus);
     }
 
-    // ------------------------ LOAD METHODS ---------------------------
+    
+    // Pre-Built Method to load Core Data/s (Dev's Custom Method)
+    public void ThingsToLoad()
+    {
+        if (dataBus != null) 
+        {
+            // Calls Methods that 'Overwrites' data/s on the referenced objects
+            GetWorldData();
+            GetQuestData();
+            GetPlayerData();
+            GetInventoryData();
+            GetSettingsData();
+        }
 
-    // ...
-    public void Load()
+        // // ...
+        // onLoadGame.TriggerEvent();
+    }
+
+    // ------------------------ PROCESSORS ---------------------------
+
+    // Accessible Method to process Save Game Data
+    public void SaveGame(SaveableData dataToSave)
     {
         // ...
-        LoadGame();
+        OnSaveStateChanged?.Invoke();
+
+        // ...
+        FileStream file = File.Create(savingFilePath);
+        BinaryFormatter bf = new BinaryFormatter();
+
+        // ...
+        bf.Serialize(file, dataToSave);
+        file.Close();
+
+        Debug.Log($"Game saved to {savingFilePath}!");
     }
 
     // Method to process Load Game Data
@@ -189,23 +207,6 @@ public class SaveManager : MonoBehaviour
             Debug.LogWarning("Saved file not found!");
             return null;
         }
-    }
-
-    // Pre-Built Method to load Core Data/s (Dev's Custom Method)
-    public void ThingsToLoad()
-    {
-        if (dataBus != null) 
-        {
-            // Calls Methods that 'Overwrites' data/s on the referenced objects
-            GetWorldData();
-            GetQuestData();
-            GetPlayerData();
-            GetInventoryData();
-            GetSettingsData();
-        }
-
-        // ...
-        onLoadGame.TriggerEvent();
     }
 
     // ------------------------ SETTER METHODS ---------------------------
