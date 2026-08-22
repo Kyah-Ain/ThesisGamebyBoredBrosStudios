@@ -40,7 +40,7 @@ public class GameplayInputManager : MonoBehaviour
    
     // ------------------------- UNITY METHODS -------------------------
 
-    // Built-in Unity method called when this script was first loaded
+    // Awake is called when this script was first initialized & loaded
     private void Awake()
     {
         // Checks if our reference for the script was not set

@@ -63,7 +63,7 @@ public class QuestTrackerUI : MonoBehaviour
         Quest quest = QuestManager.Instance.GetQuestById(questId);
         if (quest != null)
         {
-            activeQuests[questId] = quest.info.displayName;
+            activeQuests[questId] = quest.info.questName;
             UpdateText();
         }
         else

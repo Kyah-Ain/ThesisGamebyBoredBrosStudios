@@ -10,18 +10,18 @@ public class GameEventsManager : MonoBehaviour
 
     private void Awake()
     {
-        // Check if another instance already exists in a persistent object
-        GameEventsManager[] existingManagers = FindObjectsOfType<GameEventsManager>();
+        // // Check if another instance already exists in a persistent object
+        // GameEventsManager[] existingManagers = FindObjectsOfType<GameEventsManager>();
 
-        foreach (GameEventsManager manager in existingManagers)
-        {
-            if (manager != this && manager.gameObject.scene.buildIndex == -1) // Persistent object
-            {
-                Debug.Log("Destroying duplicate GameEventsManager - one already exists");
-                Destroy(this.gameObject);
-                return;
-            }
-        }
+        // foreach (GameEventsManager manager in existingManagers)
+        // {
+        //     if (manager != this && manager.gameObject.scene.buildIndex == -1) // Persistent object
+        //     {
+        //         Debug.Log("Destroying duplicate GameEventsManager - one already exists");
+        //         Destroy(this.gameObject);
+        //         return;
+        //     }
+        // }
 
         if (Instance == null)
         {

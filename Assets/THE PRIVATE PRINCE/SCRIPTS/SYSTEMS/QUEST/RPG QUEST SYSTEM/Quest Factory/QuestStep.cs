@@ -12,7 +12,7 @@ public abstract class QuestStep : MonoBehaviour
 
     private int stepIndex; // The index of this step within the quest
 
-    // ------------------------- METHODS -------------------------
+    // --------------------------- SETTER -------------------------
 
     public void InitializeQuestStep(string questId, int stepIndex, string questStepState)
     {
@@ -24,18 +24,21 @@ public abstract class QuestStep : MonoBehaviour
         }
     }
 
+    // ---------------------- INHERITABLE METHODS -------------------------
+
     protected void FinishQuestStep()
     {
-        if(!isFinished)
-        {
-            isFinished = true;
-            GameEventsManager.Instance.questEvents.AdvanceQuest(questId);
-            Destroy(this.gameObject);
-        }
+        isFinished = true;
+
+        // Script Based Event call (Optional)
+        // GameEventsManager.Instance.questEvents.AdvanceQuest(questId);
+
+        Destroy(this.gameObject);
     }
 
     protected void ChangeState(string newState)
     {
+        // Script Based Event call (Optional)
         GameEventsManager.Instance.questEvents.QuestStepStateChange(questId, stepIndex, new QuestStepState(newState));
     }
 

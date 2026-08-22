@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Quest
 {
+    // ------------------------- VARIABLES -------------------------
+
     // static info
     public QuestInfoSO info;
 
@@ -14,6 +16,8 @@ public class Quest
     public int currentQuestStepIndex { get; private set; }
 
     private QuestStepState[] questStepStates;
+
+    // -------------------------- SETTERS -------------------------
 
     public Quest(QuestInfoSO questInfo)
     {
@@ -46,6 +50,48 @@ public class Quest
         }
     }
 
+    public void StoreQuestStepState(QuestStepState questStepState, int stepIndex)
+    {
+        if (stepIndex < questStepStates.Length)
+        {
+            questStepStates[stepIndex].state = questStepState.state;
+        }
+        else
+        {
+            Debug.LogWarning("Tried to access quest step data, but stepIndex was out of range: " +
+                "Quest Id = " + info.id + ", Step Index = " + stepIndex);
+        }
+    }
+
+    // -------------------------- GETTERS -------------------------
+
+    private GameObject GetCurrentQuestStepPrefab()
+    {
+        // TEMPORARY DEBUG
+        Debug.Log($"GetCurrentQuestStepPrefab: stepIndex={currentQuestStepIndex}, " +
+                  $"arrayLength={info.questStepPrefabs.Length}, " +
+                  $"CurrentStepExists()={CurrentStepExists()}");
+
+        GameObject questStepPrefab = null;
+        if (CurrentStepExists())
+        {
+            questStepPrefab = info.questStepPrefabs[currentQuestStepIndex];
+        }
+        else
+        {
+            Debug.LogWarning("Tried to get quest step prefab, but stepIndex was out of range: "
+                + "QuestId=" + info.id + ", stepIndex=" + currentQuestStepIndex);
+        }
+        return questStepPrefab;
+    }
+
+    public QuestData GetQuestData()
+    {
+        return new QuestData(state, currentQuestStepIndex, questStepStates);
+    }
+
+    // -------------------------- HELPERS -------------------------
+
     public void MoveToNextStep()
     {
         currentQuestStepIndex++;
@@ -76,48 +122,9 @@ public class Quest
         {
             QuestStep questStep = Object.Instantiate<GameObject>(questStepPrefab, parentTransform)
                 .GetComponent<QuestStep>();
-            questStep.InitializeQuestStep(info.id, currentQuestStepIndex, questStepStates[currentQuestStepIndex].state);
+            // questStep.InitializeQuestStep(info.id, currentQuestStepIndex, questStepStates[currentQuestStepIndex].state);
 
             // *consider doing it in object pooling if it results to performance issues
         }
-    }
-
-    private GameObject GetCurrentQuestStepPrefab()
-    {
-        // TEMPORARY DEBUG
-        bool stepExists = CurrentStepExists();
-        Debug.Log($"GetCurrentQuestStepPrefab: stepIndex={currentQuestStepIndex}, " +
-                  $"arrayLength={info.questStepPrefabs.Length}, " +
-                  $"CurrentStepExists()={stepExists}");
-
-        GameObject questStepPrefab = null;
-        if (CurrentStepExists())
-        {
-            questStepPrefab = info.questStepPrefabs[currentQuestStepIndex];
-        }
-        else
-        {
-            Debug.LogWarning("Tried to get quest step prefab, but stepIndex was out of range: "
-                + "QuestId=" + info.id + ", stepIndex=" + currentQuestStepIndex);
-        }
-        return questStepPrefab;
-    }
-
-    public void StoreQuestStepState(QuestStepState questStepState, int stepIndex)
-    {
-        if (stepIndex < questStepStates.Length)
-        {
-            questStepStates[stepIndex].state = questStepState.state;
-        }
-        else
-        {
-            Debug.LogWarning("Tried to access quest step data, but stepIndex was out of range: " +
-                "Quest Id = " + info.id + ", Step Index = " + stepIndex);
-        }
-    }
-
-    public QuestData GetQuestData()
-    {
-        return new QuestData(state, currentQuestStepIndex, questStepStates);
     }
 }
