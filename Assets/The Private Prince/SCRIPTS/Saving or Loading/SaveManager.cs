@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using TMPro;
-using UnityEngine;
+
+// Sets this script to execute before most other scripts (the lower = the earlier)
+[DefaultExecutionOrder(-100)]
 
 public class SaveManager : MonoBehaviour
 {
@@ -223,27 +226,27 @@ public class SaveManager : MonoBehaviour
     // ...
     public void SetQuestData()
     {
-        Debug.Log($"SaveManager: SetQuestData() - Starting quest data collection");
+        // Debug.Log($"SaveManager: SetQuestData() - Starting quest data collection");
 
-        if (QuestManager.Instance != null)
-        {
-            // Get ALL quest data from the QuestManager
-            var allQuestData = QuestManager.Instance.GetAllQuestData();
-            dataBus.questData.quests.Clear();
+        // if (QuestManager.Instance != null)
+        // {
+        //     // Get ALL quest data from the QuestManager
+        //     var allQuestData = QuestManager.Instance.GetAllQuestData();
+        //     dataBus.questData.quests.Clear();
 
-            Debug.Log($"SaveManager: Found {allQuestData.Count} quests to save");
+        //     Debug.Log($"SaveManager: Found {allQuestData.Count} quests to save");
 
-            // Convert each quest to SerializedQuest and add to container
-            foreach (var kvp in allQuestData)
-            {
-                dataBus.questData.quests.Add(new SerializedQuest(kvp.Key, kvp.Value));
-                Debug.Log($"SaveManager: Saved quest - ID: {kvp.Key}, State: {kvp.Value.state}, StepIndex: {kvp.Value.questStepIndex}");
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"SaveManager: QuestManager.Instance is null, cannot save quest data");
-        }
+        //     // Convert each quest to SerializedQuest and add to container
+        //     foreach (var kvp in allQuestData)
+        //     {
+        //         dataBus.questData.quests.Add(new SerializedQuest(kvp.Key, kvp.Value));
+        //         Debug.Log($"SaveManager: Saved quest - ID: {kvp.Key}, State: {kvp.Value.state}, StepIndex: {kvp.Value.questStepIndex}");
+        //     }
+        // }
+        // else
+        // {
+        //     Debug.LogWarning($"SaveManager: QuestManager.Instance is null, cannot save quest data");
+        // }
     }
 
     // ...
@@ -286,23 +289,23 @@ public class SaveManager : MonoBehaviour
     // NEW: Load quest data and initialize QuestManager
     public void GetQuestData()
     {
-        if (QuestManager.Instance != null && dataBus.questData != null)
-        {
-            Dictionary<string, QuestData> questDataMap = new Dictionary<string, QuestData>();
+        // if (QuestManager.Instance != null && dataBus.questData != null)
+        // {
+        //     Dictionary<string, QuestData> questDataMap = new Dictionary<string, QuestData>();
 
-            foreach (var serializedQuest in dataBus.questData.quests)
-            {
-                questDataMap.Add(serializedQuest.questId, serializedQuest.ToQuestData());
-            }
+        //     foreach (var serializedQuest in dataBus.questData.quests)
+        //     {
+        //         questDataMap.Add(serializedQuest.questId, serializedQuest.ToQuestData());
+        //     }
 
-            // Initialize QuestManager with saved data
-            QuestManager.Instance.InitializeQuests(questDataMap);
-        }
-        else if (QuestManager.Instance != null)
-        {
-            // Initialize with no saved data (fresh game)
-            QuestManager.Instance.InitializeQuests();
-        }
+        //     // Initialize QuestManager with saved data
+        //     QuestManager.Instance.InitializeQuests(questDataMap);
+        // }
+        // else if (QuestManager.Instance != null)
+        // {
+        //     // Initialize with no saved data (fresh game)
+        //     QuestManager.Instance.InitializeQuests();
+        // }
     }
 
     // ...

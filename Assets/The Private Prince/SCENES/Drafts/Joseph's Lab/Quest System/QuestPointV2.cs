@@ -84,15 +84,15 @@ public class QuestPointV2 : MonoBehaviour
     // Method to request Update from QuestManager to make sure every quest is ready
     private void RequestCurrentQuestState()
     {
-        if (QuestManager.Instance == null || string.IsNullOrEmpty(questId)) return;
+        // if (QuestManager.Instance == null || string.IsNullOrEmpty(questId)) return;
 
-        Quest quest = QuestManager.Instance.GetQuestById(questId);
-        if (quest != null)
-        {
-            UpdateCurrentQuestState(quest.state);
-            UpdateQuestIcon();
-            Debug.Log($"QuestPointV2: Caught up state on enable: {currentQuestState}");
-        }
+        // Quest quest = QuestManager.Instance.GetQuestById(questId);
+        // if (quest != null)
+        // {
+        //     UpdateCurrentQuestState(quest.state);
+        //     UpdateQuestIcon();
+        //     Debug.Log($"QuestPointV2: Caught up state on enable: {currentQuestState}");
+        // }
     }
 
     private void CacheQuestId()
@@ -154,7 +154,7 @@ public class QuestPointV2 : MonoBehaviour
 
     // ------------------------- QUEST STATE HANDLING -------------------------
 
-    private void QuestStateChange(Quest quest)
+    private void QuestStateChange(Ain.Quest quest)
     {
         Debug.Log($"QuestPointV2: QuestStateChange event received. Quest ID: {quest.info.id}, My Quest ID: {questId}");
 

@@ -44,7 +44,7 @@ public class QuestPoint : MonoBehaviour
         GameEventsManager.Instance.questEvents.onQuestStateChange -= QuestStateChange;
     }
 
-    private void QuestStateChange(Quest quest)
+    private void QuestStateChange(Ain.Quest quest)
     {
         // Only update the quest state if this point is linked to the same quest
         if (quest.info.id.Equals(questId))

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Ain
@@ -8,6 +9,9 @@ namespace Ain
     public class QuestManager : MonoBehaviour
     {
         // ------------------------- VARIABLES -------------------------
+
+        // Global Reference to this script (Read Only, cannot modify)
+        public static QuestManager Instance { get; private set; }
 
         [Header("REFERENCES")]
         [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
@@ -26,12 +30,101 @@ namespace Ain
                 debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
             }
 
+            // Checks if this instance is a duplicate
+            if (Instance != null)
+            {
+                // Prompts a message then deletes this instance immediately
+                debuggerNiAin.Log(
+                    $"Found a duplicate for this Manager, deleting this now."
+                );
+
+                Destroy(this.gameObject);
+            }
+            
+            // Set this script as the one and only instance in the game
+            Instance = this;
+
+            // Detach this gameobject to any parent object its attached to
+            transform.SetParent(null);
+
             InitializedQuestMap();
 
-            // THESE ARE FOR DEBUGGING PURPOSES ONLY
-            Quest quest = GetQuestById("Mission_1");
-            debuggerNiAin.Log(DebugQuestAttributes(quest));
-            debuggerNiAin.Log(DebugQuestStats(quest));
+            // Persist this object so it wont destroy between game loads
+            DontDestroyOnLoad(this.transform.root.gameObject);
+
+            // // THESE ARE FOR DEBUGGING PURPOSES ONLY
+            // Quest quest = GetQuestById("Mission_1");
+            // debuggerNiAin.Log(DebugQuestAttributes(quest));
+            // debuggerNiAin.Log(DebugQuestStats(quest));
+        }
+
+        // OnEnable is called when the object becomes enabled and active
+        void OnEnable()
+        {
+            Subscribe();
+        }
+
+        // OnDisable is called when the object becomes disabled
+        void OnDisable()
+        {
+            UnSubscribe();
+        }
+
+        // OnDisable is called when the object becomes disabled
+        void Start()
+        {
+            InitializedQuestStates();
+        }
+
+        #endregion
+
+        // ------------------------- SUBSCRIPTIONS -------------------------
+        #region UNITY METHODS
+
+        // Method to subscribe your local method to an event trigger
+        void Subscribe()
+        {
+            // Set subscriptions of these methods to an event
+            // Left (Event Listener) += Right (Method that would be called)
+            GameEventsManager.Instance.questEvents.onStartQuest += StartQuest;
+            GameEventsManager.Instance.questEvents.onAdvanceQuest += AdvanceQuest;
+            GameEventsManager.Instance.questEvents.onFinishQuest += FinishQuest;
+        }
+
+        // Method to UnSubscribe your local method to an event trigger
+        void UnSubscribe()
+        {
+            // UnSubscribe them methods to an event
+            // Left (Event Listener) -= Right (Method that would be removed)
+            GameEventsManager.Instance.questEvents.onStartQuest -= StartQuest;
+            GameEventsManager.Instance.questEvents.onAdvanceQuest -= AdvanceQuest;
+            GameEventsManager.Instance.questEvents.onFinishQuest -= FinishQuest;
+        }
+
+        // -------------------------- PROCESSORS -------------------------
+
+        // Method to Start a Quest
+        public void StartQuest(string id)
+        {
+            // TO DO - start the quest
+
+            debuggerNiAin.Log($"Started Quest: {id}");
+        }
+
+        // Method to Advance a Quest
+        public void AdvanceQuest(string id)
+        {
+            // TO DO - start the quest
+
+            debuggerNiAin.Log($"Advanced Quest: {id}");
+        }
+
+        // Method to Finish a Quest
+        public void FinishQuest(string id)
+        {
+            // TO DO - start the quest
+
+            debuggerNiAin.Log($"Finished Quest: {id}");
         }
 
         #endregion
@@ -44,6 +137,17 @@ namespace Ain
         {
             // Creates a fresh quest map 
             questMap = CreateQuestMap();
+        }
+
+        // Method to initialize a Quest States
+        public void InitializedQuestStates()
+        {
+            // Iterates through each Quest in the Quest Map
+            foreach (Quest quest in questMap.Values)
+            {
+                // Triggers the event (broadcasts the initial state of all quests)
+                GameEventsManager.Instance.questEvents.QuestStateChange(quest);
+            }
         }
 
         // Method to return a Quest Map
@@ -81,7 +185,7 @@ namespace Ain
         #region GETTERS
         
         // Method to retrieve a specific quest reference
-        private Quest GetQuestById(string id)
+        public Quest GetQuestById(string id)
         {
             // Stores a quest reference to a temporary variable
             Quest quest = questMap[id]; 
@@ -106,7 +210,7 @@ namespace Ain
         {
             string QuestAttributes =
             (
-                $"Initialized {quest.info.questName}: \n" +
+                $"Initialized \"{quest.info.questName}:\" \n" +
                 $"levelRequirement ({quest.info.levelRequirement}); " +
                 $"questPrerequisites ({quest.info.questPrerequisites.Length}); " +
                 $"questStepPrefabs ({quest.info.questStepPrefabs.Length}); " +

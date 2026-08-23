@@ -13,8 +13,10 @@ public enum ActionMapType
 
 // Required DebuggerNiAinPjls.cs for this to be able to monitor debugs, otherwise use the old one
 [RequireComponent(typeof(DebuggerNiAinPjls))]
-// Sets this script to execute before most other scripts
-[DefaultExecutionOrder(-100)]
+
+// Sets this script to execute before most other scripts (the lower = the earlier)
+[DefaultExecutionOrder(-50)]
+
 public class GameplayInputManager : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
@@ -34,10 +36,14 @@ public class GameplayInputManager : MonoBehaviour
     [Header("REFERENCES")]
     [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
 
-    [Header("MAP STATUS")]
+    [Header("MAP SETTINGS")]
+    [SerializeField] ActionMapType defaultMapToEnable = ActionMapType.UI;
+
+    [Header("MAP STATUS (THIS IS FOR DEBUG ONLY! DONT MODIFY UNLESS NECESSARY.)")]
     [SerializeField] List <ActionMapType> activatedMaps = new(); // Stores the currently active input map type (Player, UI, etc.)
     [SerializeField] List <InputActionMap> currentActiveMaps = new();// Stores the currently active InputActionMap reference (used for enabling/disabling maps)
-   
+
+
     // ------------------------- UNITY METHODS -------------------------
 
     // Awake is called when this script was first initialized & loaded
@@ -133,8 +139,7 @@ public class GameplayInputManager : MonoBehaviour
             //// Enable the default action map at first initialization
             //currentActionMap.Enable();
 
-            EnableMap("UI");  
-            // EnableMap("Player"); 
+            MapEnabler(defaultMapToEnable);  
         }
 
     #endregion

@@ -14,7 +14,7 @@ namespace Ain
         // state info
         public QuestState state; // Reference for QuestState.cs
 
-        private int currentQuestStepIndex; // Task's current progress
+        public int currentQuestStepIndex { get; private set; } // Task's current progress
 
         // ------------------------ CONSTRUCTOR -------------------------
 
