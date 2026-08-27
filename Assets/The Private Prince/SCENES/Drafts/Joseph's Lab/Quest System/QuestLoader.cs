@@ -15,6 +15,6 @@ public class QuestLoader : MonoBehaviour
     // Method to Load Quest Progress
     public void LoadQuests() 
     {
-        QuestManager.Instance.LoadQuests();
+        // QuestManager.Instance.LoadQuests();
     }
 }

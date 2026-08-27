@@ -49,14 +49,14 @@ public class TwoPoint5DCharacterController : MonoBehaviour
         // Evaluates if there is controls initialized in the "GameplayInputManager"
         if (GameplayInputManager.Instance.Controls == null)
         {
-            debuggerNiAin.Error("PlayerInputManager singleton not found! Make sure it exists in the scene.");
+            debuggerNiAin.Log("PlayerInputManager singleton not found! Make sure it exists in the scene.");
         }
         else 
         {
             // Accesses the controls from the PlayerInputManager singleton instance
             ppControls = GameplayInputManager.Instance.Controls;
 
-            debuggerNiAin.Error($"New Input System was set: {ppControls}");
+            debuggerNiAin.Log($"New Input System was set: {ppControls}");
         }
     }
     
@@ -87,21 +87,21 @@ public class TwoPoint5DCharacterController : MonoBehaviour
     // Method for spawning the player at the Spawn Point
     public virtual void ApplySpawn()
     {
-        if (SaveManager.Instance != null)
-        {
-            characController.enabled = false;
+        // if (SaveManager.Instance != null)
+        // {
+        //     characController.enabled = false;
  
-            Transform destination = SaveManager.Instance.spawnPoint;
+        //     Transform destination = SaveManager.Instance.spawnPoint;
  
-            // ...
-            Vector3 faceDirection = destination.TransformDirection(Vector3.forward);
-            this.transform.position = destination.position + faceDirection;
+        //     // ...
+        //     Vector3 faceDirection = destination.TransformDirection(Vector3.forward);
+        //     this.transform.position = destination.position + faceDirection;
  
-            // ...
-            Physics.SyncTransforms();
+        //     // ...
+        //     Physics.SyncTransforms();
  
-            characController.enabled = true;
-        }
+        //     characController.enabled = true;
+        // }
     }
 
     // Method for applying gravity to the character to simulate freefall and grounded movement

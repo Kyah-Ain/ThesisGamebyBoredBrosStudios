@@ -39,7 +39,7 @@ public abstract class QuestStep : MonoBehaviour
     protected void ChangeState(string newState)
     {
         // Script Based Event call (Optional)
-        GameEventsManager.Instance.questEvents.QuestStepStateChange(questId, stepIndex, new QuestStepState(newState));
+        // GameEventsManager.Instance.questEvents.QuestStepStateChange(questId, stepIndex, new QuestStepState(newState));
     }
 
     protected abstract void SetQuestStepState(string state);

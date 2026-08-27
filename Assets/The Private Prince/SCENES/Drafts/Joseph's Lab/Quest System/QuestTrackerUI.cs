@@ -52,24 +52,24 @@ public class QuestTrackerUI : MonoBehaviour
 
     private void OnQuestStarted(string questId)
     {
-        Debug.Log($"QuestTrackerUI: Quest started - {questId}");
+        // Debug.Log($"QuestTrackerUI: Quest started - {questId}");
 
-        if (QuestManager.Instance == null)
-        {
-            Debug.LogError("QuestTrackerUI: QuestManager.Instance is null");
-            return;
-        }
+        // if (QuestManager.Instance == null)
+        // {
+        //     Debug.LogError("QuestTrackerUI: QuestManager.Instance is null");
+        //     return;
+        // }
 
-        Quest quest = QuestManager.Instance.GetQuestById(questId);
-        if (quest != null)
-        {
-            activeQuests[questId] = quest.info.questName;
-            UpdateText();
-        }
-        else
-        {
-            Debug.LogError($"QuestTrackerUI: Could not find quest with id {questId}");
-        }
+        // Quest quest = QuestManager.Instance.GetQuestById(questId);
+        // if (quest != null)
+        // {
+        //     activeQuests[questId] = quest.info.questName;
+        //     UpdateText();
+        // }
+        // else
+        // {
+        //     Debug.LogError($"QuestTrackerUI: Could not find quest with id {questId}");
+        // }
     }
 
     private void OnQuestFinished(string questId)
