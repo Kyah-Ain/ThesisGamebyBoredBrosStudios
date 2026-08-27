@@ -17,6 +17,9 @@ namespace Ain
         [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
         Dictionary<string, Quest> questMap; // Dictionary list  of references for Quests
 
+        [Header("TEMPORARY VARIABLES")]
+        int currentPlayerLevel = 0; // Stores the current player level
+
         // ----------------------- UNITY METHODS -------------------------
         #region UNITY METHODS
 
@@ -52,7 +55,7 @@ namespace Ain
             // Persist this object so it wont destroy between game loads
             DontDestroyOnLoad(this.transform.root.gameObject);
 
-            // // THESE ARE FOR DEBUGGING PURPOSES ONLY
+            // THESE ARE FOR DEBUGGING PURPOSES ONLY
             // Quest quest = GetQuestById("Mission_1");
             // debuggerNiAin.Log(DebugQuestAttributes(quest));
             // debuggerNiAin.Log(DebugQuestStats(quest));
@@ -73,13 +76,19 @@ namespace Ain
         // OnDisable is called when the object becomes disabled
         void Start()
         {
-            InitializedQuestStates();
+            // InitializedQuestStates();
+        }
+
+        // Update is called once per frame after Start()
+        void Update()
+        {
+            UpdateUnlockedQuests();
         }
 
         #endregion
 
         // ------------------------- SUBSCRIPTIONS -------------------------
-        #region UNITY METHODS
+        #region SUBSCRIPTIONS METHODS
 
         // Method to subscribe your local method to an event trigger
         void Subscribe()
@@ -106,7 +115,14 @@ namespace Ain
         // Method to Start a Quest
         public void StartQuest(string id)
         {
-            // TO DO - start the quest
+            // Stores the retrieved Quest to a temporary variable
+            Quest quest = GetQuestById(id);
+            
+            // Spawns a Quest Step under this QuestManager's gameObject
+            quest.InstantiateCurrentQuestStep(this.transform);
+            
+            // Updates the Quest status also
+            ChangeQuestState(quest.info.id, QuestState.IN_PROGRESS);
 
             debuggerNiAin.Log($"Started Quest: {id}");
         }
@@ -125,6 +141,19 @@ namespace Ain
             // TO DO - start the quest
 
             debuggerNiAin.Log($"Finished Quest: {id}");
+        }
+
+        // Method to update a Quest Status
+        public void ChangeQuestState(string id, QuestState questState)
+        {
+            // Retrieves a quest from the dictionary and stores it to a temp variable
+            Quest quest = GetQuestById(id);
+            
+            // Set the state retrieved to the desired state passed from the parameter
+            quest.state = questState;
+            
+            // Broadcast the update to the listeners of the event 
+            GameEventsManager.Instance.questEvents.QuestStateChange(quest);
         }
 
         #endregion
@@ -181,16 +210,46 @@ namespace Ain
 
         #endregion
 
+        // -------------------------- QUEST UPDATE -------------------------
+        #region QUEST UPDATES
+        
+        // Method to unlock quests based on player's level and pre-requisite quests
+        void UpdateUnlockedQuests()
+        {
+            // Iterates through each quests stored inside questMap
+            foreach (Quest quest in questMap.Values)
+            {
+                // Checks if the quest haven't start yet and
+                // that the player's progress was enough to avail the quest
+                if (quest.state == QuestState.REQUIREMENTS_NOT_MET &&
+                    CheckRequirementsMet(quest))
+                {
+                    // Set a quest startable/progressable
+                    ChangeQuestState(quest.info.id, QuestState.CAN_START);
+                }
+            }
+        }
+        
+        // NOTE ~ optional here
+        // Method to update our level tracking to the latest player level
+        void UpdatePlayerLvl(int level)
+        {
+            // Overwrites the stored playerLevel from the parameter
+            currentPlayerLevel = level;
+        }
+        
+        #endregion
+
         // ---------------------------- GETTERS -------------------------
         #region GETTERS
         
-        // Method to retrieve a specific quest reference
+        // Method to retrieve a specific quest reference using its ID
         public Quest GetQuestById(string id)
         {
             // Stores a quest reference to a temporary variable
             Quest quest = questMap[id]; 
 
-            // Prompts a log if the id 
+            // Prompts a log if the Quest trying to retrieve was in the Quest Map
             if (quest == null)
             {
                 debuggerNiAin.Error($"A quest with the id ({id}) was not found in the Quest Map.");
@@ -202,8 +261,36 @@ namespace Ain
 
         #endregion
 
+        // ---------------------------- HELPERS -------------------------
+        #region HELPERS
+
+        // Method to check if the player reached a quest requirements
+        bool CheckRequirementsMet(Quest quest)
+        {
+            // Checks if the player's experience level is enough for the quest
+            if (currentPlayerLevel < quest.info.levelRequirement)
+            {
+                // Immediately skip this quest
+                return false;
+            }
+
+            // Iterates through all Pre-Requisite quests of this Quest
+            foreach (QuestInfoSO prerequisite in quest.info.questPrerequisites)
+            {
+                // Checks if the Pre-Requisites for this Quests are already finished 
+                if (GetQuestById(prerequisite.id).state != QuestState.FINISHED)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
+
         // ---------------------------- DEBUGGERS -------------------------
-        #region GETTERS
+        #region DEBUGGERS
 
         // Method to output the Quest's Attributes
         string DebugQuestAttributes(Quest quest)

@@ -18,6 +18,10 @@ namespace Ain
         string questId;
         QuestState currentQuestState;
 
+        [Header("SETTINGS")]
+        [SerializeField] bool questStartPoint;
+        [SerializeField] bool questFinishPoint;
+
         [Header("STATUS")]
         bool isPlayerNear; // Prompts for the system to know if the player is close enough to interact this
 
@@ -106,7 +110,7 @@ namespace Ain
             ppControls.Player.Interact.performed -= SubmitPressed;
         }
 
-        // ------------------------ EVENT LISTENERS -------------------------
+        // ------------------------- EVENT LISTENERS -------------------------
 
         // Method to update the Quest State for this point 
         void QuestStateChange(Quest quest)
@@ -135,11 +139,41 @@ namespace Ain
             // Checks if the player was inside the collider for this script
             if (isPlayerNear)
             {
-                // Triggers an event 
-                GameEventsManager.Instance.questEvents.StartQuest(questId);
-                GameEventsManager.Instance.questEvents.AdvanceQuest(questId);
-                GameEventsManager.Instance.questEvents.FinishQuest(questId);
+                // Triggers an event (FOR DEBUGGING PURPOSES)
+                // GameEventsManager.Instance.questEvents.StartQuest(questId);
+                // GameEventsManager.Instance.questEvents.AdvanceQuest(questId);
+                // GameEventsManager.Instance.questEvents.FinishQuest(questId);
+
+                // Evaluates if the quest can be start and was interacted at starting point
+                if (currentQuestState.Equals(QuestState.CAN_START) && 
+                    questStartPoint)
+                {
+                    StartQuest();
+                }
+                // Evaluates if the quest can be finished and was interacted at finishing point
+                else if (currentQuestState.Equals(QuestState.CAN_FINISH) &&  
+                    questFinishPoint)
+                {
+                    CompleteQuest();
+                }
             } 
+        }
+
+        #endregion
+
+        // ------------------------- MISSION METHODS -------------------------
+        #region MISSION METHODS
+
+        // Method to start a Quest
+        void StartQuest()
+        {
+            GameEventsManager.Instance.questEvents.StartQuest(questId);
+        }
+
+        // Method to finish a Quest
+        void CompleteQuest()
+        {
+            GameEventsManager.Instance.questEvents.FinishQuest(questId);
         }
 
         #endregion
