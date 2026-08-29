@@ -12,7 +12,7 @@ namespace Ain
         [Header("REFERENCES")]
         [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
         [SerializeField] QuestInfoSO questInfoForPoint; // Reference to the Quest Data Informations
-        private PrivatePrinceControls ppControls; // Reference to the PlayerInput component for handling new input system actions and controls
+        // private PrivatePrinceControls ppControls; // Note - Ain's old version input handles (Step 1)
 
         [Header("QUEST")]
         string questId;
@@ -37,19 +37,24 @@ namespace Ain
                 // If it is not, then set it automatically by looking for the script class from this object
                 debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
             }
-
-            // Evaluates if there is controls initialized in the "GameplayInputManager"
-            if (GameplayInputManager.Instance.Controls == null)
-            {
-                debuggerNiAin.Error("PlayerInputManager singleton not found! Make sure it exists in the scene.");
-            }
-            else 
-            {
-                // Accesses the controls from the PlayerInputManager singleton instance
-                ppControls = GameplayInputManager.Instance.Controls;
-
-                debuggerNiAin.Error($"New Input System was set: {ppControls}");
-            }
+            
+            #region Ain's old version input handles (Step 2)
+            
+                // Note - Ain's old version input handles (Step 2)
+                // // Evaluates if there is controls initialized in the "GameplayInputManager"
+                // if (GameplayInputManager.Instance.Controls == null)
+                // {
+                //     debuggerNiAin.Error("PlayerInputManager singleton not found! Make sure it exists in the scene.");
+                // }
+                // else 
+                // {
+                //     // Accesses the controls from the PlayerInputManager singleton instance
+                //     ppControls = GameplayInputManager.Instance.Controls;
+                //
+                //     debuggerNiAin.Error($"New Input System was set: {ppControls}");
+                // }
+            
+            #endregion
 
             // Assigns a quest id from the QuestInfoSO
             questId = questInfoForPoint.id;
@@ -96,18 +101,24 @@ namespace Ain
         void Subscribe()
         {
             // Set subscriptions of these methods to an event
-            // Left (Event Listener) += Right (Method that would be called)
+            // Left (Event Call) += Right (Method that would be called)
+            GameEventsManager.Instance.inputEvents.onSubmitPressed += SubmitPressed;
             GameEventsManager.Instance.questEvents.onQuestStateChange += QuestStateChange;
-            ppControls.Player.Interact.performed += SubmitPressed;
+            
+            // Note - Ain's old version input handles (Step 3)
+            // ppControls.Player.Interact.performed += SubmitPressed;
         }
 
         // Method to UnSubscribe your local method to an event trigger
         void UnSubscribe()
         {
             // UnSubscribe them methods to an event
-            // Left (Event Listener) -= Right (Method that would be removed)
+            // Left (Event Call) -= Right (Method that would be called)
+            GameEventsManager.Instance.inputEvents.onSubmitPressed -= SubmitPressed;
             GameEventsManager.Instance.questEvents.onQuestStateChange -= QuestStateChange;
-            ppControls.Player.Interact.performed -= SubmitPressed;
+            
+            // Note - Ain's old version input handles (Step 4)
+            // ppControls.Player.Interact.performed -= SubmitPressed;
         }
 
         // ------------------------- EVENT LISTENERS -------------------------
@@ -164,13 +175,13 @@ namespace Ain
         // ------------------------- MISSION METHODS -------------------------
         #region MISSION METHODS
 
-        // Method to start a Quest
+        // Method to call a request for starting a Quest
         void StartQuest()
         {
             GameEventsManager.Instance.questEvents.StartQuest(questId);
         }
 
-        // Method to finish a Quest
+        // Method to call a request for finishing a Quest
         void CompleteQuest()
         {
             GameEventsManager.Instance.questEvents.FinishQuest(questId);

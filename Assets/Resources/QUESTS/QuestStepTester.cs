@@ -4,7 +4,7 @@ using UnityEngine;
 
 using UnityEngine.InputSystem;
 
-public class FinishDialogueQuestStep : Ain.QuestStep
+public class QuestStepTester : Ain.QuestStep
 {
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS

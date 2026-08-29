@@ -38,8 +38,20 @@ namespace Ain
             // Checks if there's a prefab we can materialize or spawn 
             if (questStepPrefab != null)
             {
-                // Instantiate the object quest step prefab under a parentObject
-                Object.Instantiate<GameObject>(questStepPrefab, parentTransform);
+                // Instantiate the prefab under a parent gameObject, then hold a reference of it and stored in a temp variable
+                // Instantiation: Object.Instantiate<GameObject>(questStepPrefab, parentTransform)
+                // Reference Storing: Gamebject instantiatedPrefab = ...
+                GameObject instantiatedPrefab = Object.Instantiate<GameObject>(questStepPrefab, parentTransform);
+                
+                // Requests for the reference to the QuestStep.cs script attached in the instantiatedPrefab if there's any
+                QuestStep prefabsQuestStep = instantiatedPrefab.GetComponent<QuestStep>();
+                
+                // Checks if we successfully retrieved a reference 
+                if (prefabsQuestStep != null)
+                {
+                    // Sets the QuestStep inside the prefab tied to a quest 
+                    prefabsQuestStep.InitializeQuestStepID(info.id);
+                }
             }
         }
 
@@ -68,7 +80,7 @@ namespace Ain
         // Method to move up the Quest Step progress
         public void MoveToNextStep()
         {
-            // Progress the quest
+            // Increments the reference for the quest step 
             currentQuestStepIndex++;
         }
 

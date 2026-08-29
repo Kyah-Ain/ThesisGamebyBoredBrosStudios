@@ -15,7 +15,7 @@ public enum ActionMapType
 [RequireComponent(typeof(DebuggerNiAinPjls))]
 
 // Sets this script to execute before most other scripts (the lower = the earlier)
-[DefaultExecutionOrder(-50)]
+[DefaultExecutionOrder(-100)]
 
 public class GameplayInputManager : MonoBehaviour
 {

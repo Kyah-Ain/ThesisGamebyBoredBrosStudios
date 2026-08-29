@@ -121,26 +121,56 @@ namespace Ain
             // Spawns a Quest Step under this QuestManager's gameObject
             quest.InstantiateCurrentQuestStep(this.transform);
             
-            // Updates the Quest status also
+            // Declares the Quest progressable and up fr completion
             ChangeQuestState(quest.info.id, QuestState.IN_PROGRESS);
 
-            debuggerNiAin.Log($"Started Quest: {id}");
+            debuggerNiAin.Log(
+                $"Started Quest: \n " +
+                $"{quest.info.id} - {quest.info.questName}"
+            );
         }
 
         // Method to Advance a Quest
         public void AdvanceQuest(string id)
         {
-            // TO DO - start the quest
-
-            debuggerNiAin.Log($"Advanced Quest: {id}");
+            // Stores the retrieved Quest to a temporary variable
+            Quest quest = GetQuestById(id);
+            
+            // Increments the Quest Step of the Quest
+            quest.MoveToNextStep();
+            
+            // Checks if there's still Quest Step to fulfill after moving next earlier
+            if (quest.CurrentStepExists())
+            {
+                // Spawns a Quest Step under this QuestManager's gameObject
+                quest.InstantiateCurrentQuestStep(this.transform);
+            }
+            // Condition if any statement above hasn't met
+            else
+            {
+                // Declares the Quest finishable and claimable for rewards
+                ChangeQuestState(quest.info.id, QuestState.CAN_FINISH);
+            }
+            
+            debuggerNiAin.Log(
+                $"Advanced Quest: \n " +
+                $"{quest.info.id} - {quest.info.questName}"
+            );
         }
 
         // Method to Finish a Quest
         public void FinishQuest(string id)
         {
-            // TO DO - start the quest
+            // Stores the retrieved Quest to a temporary variable
+            Quest quest = GetQuestById(id);
+            
+            // Declares the Quest Completely Done
+            ChangeQuestState(quest.info.id, QuestState.FINISHED);
 
-            debuggerNiAin.Log($"Finished Quest: {id}");
+            debuggerNiAin.Log(
+                $"Finished Quest: \n " +
+                $"{quest.info.id} - {quest.info.questName}"
+            );
         }
 
         // Method to update a Quest Status

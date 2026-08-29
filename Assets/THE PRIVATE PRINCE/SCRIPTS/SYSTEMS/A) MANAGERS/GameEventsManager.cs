@@ -20,6 +20,8 @@ public class GameEventsManager : MonoBehaviour
 
     [Header("EVENTS")]
     public Ain.QuestEvents questEvents;
+
+    public InputEvents inputEvents;
     // public QuestEvents questEvents;
 
     // ----------------------- UNITY METHODS -------------------------
@@ -67,7 +69,9 @@ public class GameEventsManager : MonoBehaviour
     void InitializeEvents()
     {
         // Establish reference to the Events
-        // questEventsNiAin = new Ain.QuestEvents();
         questEvents = new Ain.QuestEvents();
+        inputEvents = new InputEvents(GameplayInputManager.Instance.Controls);
+
+        // questEventsNiAin = new Ain.QuestEvents();
     }
 }
