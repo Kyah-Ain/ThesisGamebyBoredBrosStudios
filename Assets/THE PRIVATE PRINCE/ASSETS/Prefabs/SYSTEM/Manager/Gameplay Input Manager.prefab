@@ -31,6 +31,8 @@ Transform:
   m_Children:
   - {fileID: 2013893481700479224}
   - {fileID: 7337327378749101105}
+  - {fileID: 8719540953272149425}
+  - {fileID: 8343943629253346904}
   m_Father: {fileID: 4669654880427588758}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3404895229995595338
@@ -93,6 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debuggerNiAin: {fileID: 6382802482634540340}
+  defaultMapToEnable: 2
   activatedMaps: 
   currentActiveMaps: []
 --- !u!1 &7902834333237051690
@@ -107,7 +110,7 @@ GameObject:
   - component: {fileID: 1229976562450088051}
   - component: {fileID: 4310013620737938847}
   m_Layer: 0
-  m_Name: OnStartNew
+  m_Name: onStartNew
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -218,7 +221,7 @@ GameObject:
   - component: {fileID: 3546090617226142107}
   - component: {fileID: 2545349854123149683}
   m_Layer: 0
-  m_Name: OnBackToMenu
+  m_Name: onBackToMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -296,6 +299,228 @@ MonoBehaviour:
       - m_Target: {fileID: 8582061525927289733}
         m_TargetAssemblyTypeName: GameplayInputManager, Assembly-CSharp
         m_MethodName: EnableMap
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: UI
+          m_BoolArgument: 0
+        m_CallState: 2
+  onStringEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onIntEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onFloatEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onBoolEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &8262947081165496161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8719540953272149425}
+  - component: {fileID: 3013771215953203704}
+  - component: {fileID: 6924628552411133221}
+  m_Layer: 0
+  m_Name: onDialogue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8719540953272149425
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8262947081165496161}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2492965289072523301}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3013771215953203704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8262947081165496161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86bf333f57207d43b6d865e1eedc15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogs: 1
+--- !u!114 &6924628552411133221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8262947081165496161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ad6adca4520a98489ec39f8fc9a9dcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debuggerNiAin: {fileID: 3013771215953203704}
+  gameEvent: {fileID: 11400000, guid: 3bbb201a6ef946545ace60cadf380266, type: 2}
+  onEventTriggered:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8582061525927289733}
+        m_TargetAssemblyTypeName: GameplayInputManager, Assembly-CSharp
+        m_MethodName: DisableMap
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: GLOBALKEYS
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8582061525927289733}
+        m_TargetAssemblyTypeName: GameplayInputManager, Assembly-CSharp
+        m_MethodName: DisableMap
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: PLAYER
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8582061525927289733}
+        m_TargetAssemblyTypeName: GameplayInputManager, Assembly-CSharp
+        m_MethodName: EnableMap
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: UI
+          m_BoolArgument: 0
+        m_CallState: 2
+  onStringEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onIntEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onFloatEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onBoolEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!1 &9156159718261187294
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8343943629253346904}
+  - component: {fileID: 4167534302998609832}
+  - component: {fileID: 1854878654031145575}
+  m_Layer: 0
+  m_Name: onDialogueFinish
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8343943629253346904
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9156159718261187294}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2492965289072523301}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4167534302998609832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9156159718261187294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86bf333f57207d43b6d865e1eedc15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogs: 1
+--- !u!114 &1854878654031145575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9156159718261187294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ad6adca4520a98489ec39f8fc9a9dcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debuggerNiAin: {fileID: 4167534302998609832}
+  gameEvent: {fileID: 11400000, guid: d7cfcf7c74a2432489590bf9815eecd5, type: 2}
+  onEventTriggered:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8582061525927289733}
+        m_TargetAssemblyTypeName: GameplayInputManager, Assembly-CSharp
+        m_MethodName: EnableMap
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: GLOBALKEYS
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8582061525927289733}
+        m_TargetAssemblyTypeName: GameplayInputManager, Assembly-CSharp
+        m_MethodName: EnableMap
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: PLAYER
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8582061525927289733}
+        m_TargetAssemblyTypeName: GameplayInputManager, Assembly-CSharp
+        m_MethodName: DisableMap
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

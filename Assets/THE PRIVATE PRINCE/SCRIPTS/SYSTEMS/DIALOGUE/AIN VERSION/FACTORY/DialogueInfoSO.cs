@@ -33,14 +33,20 @@ public class DialogueInfoSO : ScriptableObject
     }
 }
 
+#region EXTENSION CLASSES
+
+// Note - I might add 'Idles' Class
+
 // Makes this class serializable so it can be displayed in the Unity Inspector
 [System.Serializable]
 public class Dialogues
 {
     // Private Data
+    [SerializeField][TextArea] private string[] idleLines;
     [SerializeField][TextArea] private string[] dialogueLines;
     
     // Readable Only Copies
+    public string[] IdleLines => idleLines;
     public string[] DialogueLines => dialogueLines;
 }
 
@@ -51,3 +57,5 @@ public class Responses
     [SerializeField][TextArea] private string responseText; // The text that will appear on the response button
     // [SerializeField] private 
 }
+
+#endregion
