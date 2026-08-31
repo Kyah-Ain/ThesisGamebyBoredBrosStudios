@@ -35,13 +35,12 @@ public class DialogueInfoSO : ScriptableObject
 
 #region EXTENSION CLASSES
 
-// Note - I might add 'Idles' Class
-
 // Makes this class serializable so it can be displayed in the Unity Inspector
 [System.Serializable]
 public class Dialogues
 {
     // Private Data
+    // Note - I might add real idleLines when the NPC has no quest for us
     [SerializeField][TextArea] private string[] idleLines;
     [SerializeField][TextArea] private string[] dialogueLines;
     
