@@ -1,189 +1,155 @@
-using System.Collections.Generic;
-using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SudokuCell : MonoBehaviour
 {
+    [Header("Visual Root")]
+    [Tooltip("Assign the empty GameObject that contains all visual UI components.")]
+    public RectTransform visualRoot;
+
+    [Tooltip("The size the cell prefab was originally designed at.")]
+    public float referenceCellSize = 200f;
+
     [Header("UI")]
-    public Button button;
+    public Image normalImage;
+    public Image prefilledImage;
+    public Image selectionImage;
+    public TextMeshProUGUI numberText;
 
-    public TMP_Text numberText;
+    [Header("Text Colors")]
+    public Color editableTextColor = Color.white;
+    public Color prefilledTextColor = Color.white;
+    public Color wrongTextColor = Color.red;
 
-    public TMP_Text pencilText;
+    [HideInInspector] public int row;
+    [HideInInspector] public int column;
 
-    [Header("Optional Visuals")]
-    public GameObject selectedVisual;
+    private int value;
+    private bool prefilled;
+    private bool wrong;
 
-    public GameObject fixedVisual;
+    public int Value => value;
+    public bool IsPrefilled => prefilled;
 
-    private SudokuPuzzle puzzle;
-
-    private int row;
-    private int column;
-
-    private bool isFixed;
-
-    private readonly HashSet<int> pencilMarks =
-        new HashSet<int>();
-
-    private void Awake()
-    {
-        if (button == null)
-        {
-            button = GetComponent<Button>();
-        }
-    }
-
-    public void Initialize(
-        SudokuPuzzle puzzle,
+    public void Setup(
         int row,
-        int column)
+        int column,
+        float actualCellSize)
     {
-        this.puzzle = puzzle;
-
         this.row = row;
         this.column = column;
 
-        if (button != null)
-        {
-            button.onClick.RemoveAllListeners();
+        value = 0;
+        prefilled = false;
+        wrong = false;
 
-            button.onClick.AddListener(
-                OnClicked
-            );
-        }
+        ScaleVisuals(actualCellSize);
+        RefreshVisuals();
+
+        SetSelected(false);
     }
 
-    private void OnClicked()
+    // ---------------------------------------------------------
+    // SCALING
+    // ---------------------------------------------------------
+
+    private void ScaleVisuals(float actualCellSize)
     {
-        if (puzzle == null)
+        if (visualRoot == null)
             return;
-
-        puzzle.SelectCell(
-            row,
-            column
-        );
-    }
-
-    public void SetNumber(int number)
-    {
-        if (number <= 0)
-        {
-            numberText.text = "";
-
-            return;
-        }
-
-        numberText.text =
-            number.ToString();
 
         /*
-         * A final number replaces pencil marks.
+         * GridLayoutGroup changes the size of the SudokuCell root,
+         * but does not automatically scale its children.
+         *
+         * visualRoot remains at the prefab's reference size and we
+         * scale the entire visual hierarchy together.
          */
 
-        ClearPencilMarks();
+        visualRoot.anchorMin = new Vector2(0.5f, 0.5f);
+        visualRoot.anchorMax = new Vector2(0.5f, 0.5f);
+        visualRoot.pivot = new Vector2(0.5f, 0.5f);
+
+        visualRoot.anchoredPosition = Vector2.zero;
+
+        visualRoot.sizeDelta =
+            new Vector2(referenceCellSize, referenceCellSize);
+
+        float scale =
+            actualCellSize / referenceCellSize;
+
+        visualRoot.localScale =
+            Vector3.one * scale;
     }
 
-    public void SetFixed(bool fixedCell)
+    // ---------------------------------------------------------
+    // VALUE
+    // ---------------------------------------------------------
+
+    public void SetValue(int newValue)
     {
-        isFixed = fixedCell;
-
-        if (fixedVisual != null)
-        {
-            fixedVisual.SetActive(
-                fixedCell
-            );
-        }
+        value = newValue;
+        RefreshVisuals();
     }
+
+    public void SetPrefilled(bool isPrefilled)
+    {
+        prefilled = isPrefilled;
+        RefreshVisuals();
+    }
+
+    public void SetWrong(bool isWrong)
+    {
+        wrong = isWrong;
+        RefreshVisuals();
+    }
+
+    // ---------------------------------------------------------
+    // SELECTION
+    // ---------------------------------------------------------
 
     public void SetSelected(bool selected)
     {
-        if (selectedVisual != null)
+        if (selectionImage != null)
         {
-            selectedVisual.SetActive(
-                selected
-            );
+            selectionImage.gameObject.SetActive(selected);
         }
     }
 
-    public void TogglePencilMark(int number)
+    // ---------------------------------------------------------
+    // VISUALS
+    // ---------------------------------------------------------
+
+    private void RefreshVisuals()
     {
-        if (pencilMarks.Contains(number))
-        {
-            pencilMarks.Remove(number);
-        }
-        else
-        {
-            pencilMarks.Add(number);
-        }
-
-        UpdatePencilDisplay();
-    }
-
-    public void ClearPencilMarks()
-    {
-        pencilMarks.Clear();
-
-        UpdatePencilDisplay();
-    }
-
-    private void UpdatePencilDisplay()
-    {
-        if (pencilText == null)
-            return;
-
-        if (pencilMarks.Count == 0)
-        {
-            pencilText.text = "";
-
-            return;
-        }
-
-        List<int> sortedMarks =
-            new List<int>(pencilMarks);
-
-        sortedMarks.Sort();
-
-        StringBuilder builder =
-            new StringBuilder();
-
-        foreach (int mark in sortedMarks)
-        {
-            builder.Append(mark);
-            builder.Append(" ");
-        }
-
-        pencilText.text =
-            builder.ToString();
-    }
-
-    public void ShowError()
-    {
-        /*
-         * This method intentionally doesn't permanently
-         * change the cell's appearance.
-         *
-         * You can replace this with an Animator,
-         * Image color change, shake animation, etc.
-         */
-
         if (numberText != null)
         {
-            numberText.text = "X";
+            numberText.text =
+                value > 0 ? value.ToString() : "";
+
+            if (wrong)
+            {
+                numberText.color = wrongTextColor;
+            }
+            else if (prefilled)
+            {
+                numberText.color = prefilledTextColor;
+            }
+            else
+            {
+                numberText.color = editableTextColor;
+            }
         }
 
-        CancelInvoke(nameof(ClearError));
+        if (prefilledImage != null)
+        {
+            prefilledImage.gameObject.SetActive(prefilled);
+        }
 
-        Invoke(
-            nameof(ClearError),
-            0.25f
-        );
-    }
-
-    private void ClearError()
-    {
-        numberText.text = "";
+        if (normalImage != null)
+        {
+            normalImage.gameObject.SetActive(!prefilled);
+        }
     }
 }

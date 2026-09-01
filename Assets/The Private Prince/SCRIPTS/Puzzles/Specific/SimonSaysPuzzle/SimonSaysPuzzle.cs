@@ -59,7 +59,7 @@ public class SimonSaysPuzzle : PuzzleBase
     public SimonButton downButton;
     public SimonButton leftButton;
     public SimonButton rightButton;
-    public Button reviewButton;
+    public KeyCode reviewKey = KeyCode.Return;
     public TextMeshProUGUI mistakeText;
 
     [Header("Feedback Colors")]
@@ -75,17 +75,19 @@ public class SimonSaysPuzzle : PuzzleBase
 
     private Coroutine sequenceCoroutine;
 
-    protected override void OnUIVisibilityChanged(bool visible)
-    {
-        if (reviewButton != null)
-            reviewButton.gameObject.SetActive(visible);
-    }
-
     public override void HandleInput()
     {
         if (state != SimonState.Review &&
             state != SimonState.PlayerInput)
         {
+            return;
+        }
+
+        // Review the sequence using the configured keyboard key.
+        // Review is only valid before directional input has started.
+        if (Input.GetKeyDown(reviewKey))
+        {
+            ReviewSequence();
             return;
         }
 
@@ -107,6 +109,7 @@ public class SimonSaysPuzzle : PuzzleBase
         }
     }
 
+
     public override void StartPuzzle()
     {
         base.StartPuzzle();
@@ -119,14 +122,6 @@ public class SimonSaysPuzzle : PuzzleBase
 
         SetupButtons();
         UpdateMistakeUI();
-
-        if (reviewButton != null)
-        {
-            reviewButton.onClick.RemoveListener(ReviewSequence);
-            reviewButton.onClick.AddListener(ReviewSequence);
-            reviewButton.interactable = false;
-        }
-
         GenerateSequenceForLevel();
 
         sequenceCoroutine = StartCoroutine(ShowSequenceCoroutine());
@@ -196,7 +191,6 @@ public class SimonSaysPuzzle : PuzzleBase
     {
         state = SimonState.ShowingSequence;
 
-        SetReviewInteractable(false);
         SetDirectionButtonsInteractable(false);
 
         yield return new WaitForSecondsRealtime(0.5f);
@@ -235,11 +229,9 @@ public class SimonSaysPuzzle : PuzzleBase
 
         currentInputIndex = 0;
 
-        // Review is available because the player
-        // has not made any directional input yet.
         SetDirectionButtonsInteractable(true);
-        SetReviewInteractable(!hasMadeDirectionalInput);
     }
+
 
     public void ReviewSequence()
     {
@@ -268,8 +260,7 @@ public class SimonSaysPuzzle : PuzzleBase
     {
         state = SimonState.ShowingSequence;
 
-        // Disable both while the sequence is being displayed.
-        SetReviewInteractable(false);
+        // Disable directional input while reviewing.
         SetDirectionButtonsInteractable(false);
 
         yield return new WaitForSecondsRealtime(0.2f);
@@ -290,23 +281,21 @@ public class SimonSaysPuzzle : PuzzleBase
         );
 
         // If the player somehow made input while the coroutine
-        // was running, don't restore review.
+        // was running, don't return to Review.
         if (hasMadeDirectionalInput)
         {
             state = SimonState.PlayerInput;
-            SetReviewInteractable(false);
         }
         else
         {
             state = SimonState.Review;
-
-            SetReviewInteractable(true);
         }
 
         currentInputIndex = 0;
 
         SetDirectionButtonsInteractable(true);
     }
+
 
     public void PlayerPressed(Direction direction)
     {
@@ -326,11 +315,9 @@ public class SimonSaysPuzzle : PuzzleBase
         if (!hasMadeDirectionalInput)
         {
             hasMadeDirectionalInput = true;
-
-            SetReviewInteractable(false);
-
             state = SimonState.PlayerInput;
         }
+
 
         Direction expectedDirection =
             sequence[currentInputIndex];
@@ -431,7 +418,6 @@ public class SimonSaysPuzzle : PuzzleBase
     private void CompleteLevel()
     {
         SetDirectionButtonsInteractable(false);
-        SetReviewInteractable(false);
 
         if (currentLevel >= numberOfLevels)
         {
@@ -478,7 +464,6 @@ public class SimonSaysPuzzle : PuzzleBase
         state = SimonState.Failed;
 
         SetDirectionButtonsInteractable(false);
-        SetReviewInteractable(false);
 
         if (sequenceCoroutine != null)
         {
@@ -525,12 +510,6 @@ public class SimonSaysPuzzle : PuzzleBase
             rightButton.SetInteractable(value);
     }
 
-    private void SetReviewInteractable(bool value)
-    {
-        if (reviewButton != null)
-            reviewButton.interactable = value;
-    }
-
     protected override void OnPuzzleReset()
     {
         if (sequenceCoroutine != null)
@@ -548,7 +527,6 @@ public class SimonSaysPuzzle : PuzzleBase
         state = SimonState.None;
 
         SetDirectionButtonsInteractable(false);
-        SetReviewInteractable(false);
     }
 
     public int CurrentLevel => currentLevel;

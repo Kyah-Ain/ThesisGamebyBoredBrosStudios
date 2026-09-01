@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SudokuPuzzle : PuzzleBase
 {
@@ -13,848 +12,771 @@ public class SudokuPuzzle : PuzzleBase
         Hard
     }
 
-    [Serializable]
-    private class DifficultySettings
+    private enum InputMode
     {
-        public int size;
-        public int boxRows;
-        public int boxColumns;
+        SelectingCell,
+        SelectingNumber
     }
 
     [Header("Sudoku Settings")]
     public Difficulty difficulty = Difficulty.Easy;
 
-    /*
-     * Developer slider.
-     *
-     * This represents the number of cells that are already filled
-     * when the puzzle starts.
-     *
-     * Easy  = 4x4  = 16 cells
-     * Medium = 6x6 = 36 cells
-     * Hard   = 9x9 = 81 cells
-     */
-    [Range(1, 80)]
-    public int filledCells = 8;
-
-    [Tooltip("If true, an incorrect number is immediately rejected.")]
-    public bool rejectWrongAnswers = true;
-
-    [Tooltip("If true, pencil marks are cleared when a number is entered.")]
-    public bool clearPencilsWhenNumberEntered = true;
-
-    [Header("Grid References")]
-    public Transform gridParent;
+    [Header("Puzzle UI")]
+    public RectTransform gridRoot;
     public SudokuCell cellPrefab;
-    public SudokuGridLayout gridLayout;
 
-    [Header("Number Input")]
-    public Button[] numberButtons;
-    public Button clearButton;
+    [Header("Grid Lines")]
+    public Image thinLinePrefab;
+    public Image thickLinePrefab;
 
-    [Header("Pencil Mode")]
-    public Toggle pencilModeToggle;
-
-    [Header("UI")]
-    public TextMeshProUGUI statusText;
+    [Header("Selection UI")]
+    public TextMeshProUGUI modeText;
+    public TextMeshProUGUI selectedNumberText;
     public TextMeshProUGUI mistakeText;
+
+    [Header("Number Selection Arrows")]
+    public Image leftNumberArrow;
+    public Image rightNumberArrow;
+
+    [Header("Selected Number Colors")]
+    public Color selectedNumberCellModeColor = Color.gray;
+    public Color selectedNumberNumberModeColor = Color.white;
+
+    [Header("Arrow Colors")]
+    public Color arrowNormalColor = Color.gray;
+    public Color arrowPressedColor = Color.white;
+
+    [Header("Controls")]
+    public KeyCode selectKey = KeyCode.Return;
+    public KeyCode cancelKey = KeyCode.Escape;
+
+    [Header("Mistakes")]
+    public bool useMistakeLimit = false;
+    public int maxMistakes = 3;
+
+    private int gridSize;
+    private int subgridRows;
+    private int subgridColumns;
+    private int prefilledCount;
 
     private int[,] solution;
     private int[,] playerGrid;
-
-    private bool[,] fixedCells;
+    private bool[,] prefilled;
 
     private SudokuCell[,] cells;
 
-    private int gridSize;
-    private int boxRows;
-    private int boxColumns;
+    private int selectedRow = 0;
+    private int selectedColumn = 0;
+    private int selectedNumber = 1;
 
-    private int selectedRow = -1;
-    private int selectedColumn = -1;
+    private InputMode inputMode = InputMode.SelectingCell;
 
     private int mistakes = 0;
 
-    private System.Random random = new System.Random();
+    private RectTransform cellContainer;
 
-    private readonly Dictionary<Difficulty, DifficultySettings> settings =
-        new Dictionary<Difficulty, DifficultySettings>()
-        {
-            {
-                Difficulty.Easy,
-                new DifficultySettings
-                {
-                    size = 4,
-                    boxRows = 2,
-                    boxColumns = 2
-                }
-            },
+    // ---------------------------------------------------------
+    // DIFFICULTY
+    // ---------------------------------------------------------
 
-            {
-                Difficulty.Medium,
-                new DifficultySettings
-                {
-                    size = 6,
-                    boxRows = 2,
-                    boxColumns = 3
-                }
-            },
-
-            {
-                Difficulty.Hard,
-                new DifficultySettings
-                {
-                    size = 9,
-                    boxRows = 3,
-                    boxColumns = 3
-                }
-            }
-        };
-
-    private void Awake()
+    private void ConfigureDifficulty()
     {
-        ApplyDifficultySettings();
-
-        SetupNumberButtons();
-        SetupClearButton();
-
-        if (pencilModeToggle != null)
+        switch (difficulty)
         {
-            pencilModeToggle.isOn = false;
-            pencilModeToggle.onValueChanged.AddListener(OnPencilModeChanged);
+            case Difficulty.Easy:
+                gridSize = 3;
+                subgridRows = 1;
+                subgridColumns = 3;
+                prefilledCount = 4;
+                break;
+
+            case Difficulty.Medium:
+                gridSize = 4;
+                subgridRows = 2;
+                subgridColumns = 2;
+                prefilledCount = 8;
+                break;
+
+            case Difficulty.Hard:
+                gridSize = 6;
+                subgridRows = 2;
+                subgridColumns = 3;
+                prefilledCount = 20;
+                break;
         }
     }
 
-    private void ApplyDifficultySettings()
-    {
-        DifficultySettings current = settings[difficulty];
-
-        gridSize = current.size;
-        boxRows = current.boxRows;
-        boxColumns = current.boxColumns;
-
-        /*
-         * Prevent the developer from filling every cell.
-         * There needs to be at least one cell for the player to solve.
-         */
-        filledCells = Mathf.Clamp(
-            filledCells,
-            1,
-            gridSize * gridSize - 1
-        );
-    }
+    // ---------------------------------------------------------
+    // START
+    // ---------------------------------------------------------
 
     public override void StartPuzzle()
     {
-        ApplyDifficultySettings();
-
-        GeneratePuzzle();
-
         base.StartPuzzle();
 
-        SelectCell(0, 0);
-
-        UpdateMistakeUI();
-        SetStatus("Solve the Sudoku!");
-    }
-
-    public override void ResetPuzzle()
-    {
-        base.ResetPuzzle();
+        ConfigureDifficulty();
 
         GeneratePuzzle();
 
-        SelectCell(0, 0);
-
+        selectedRow = 0;
+        selectedColumn = 0;
+        selectedNumber = 1;
+        inputMode = InputMode.SelectingCell;
         mistakes = 0;
 
+        BuildGrid();
+
+        UpdateSelection();
+        UpdateInputUI();
         UpdateMistakeUI();
-        SetStatus("Puzzle reset.");
     }
 
-    public override void HandleInput()
-    {
-        /*
-         * Keyboard input.
-         *
-         * This allows the player to use the keyboard instead of
-         * clicking the number buttons.
-         */
-
-        for (int i = 1; i <= gridSize; i++)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha0 + i))
-            {
-                EnterNumber(i);
-                return;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Keypad0 + i))
-            {
-                EnterNumber(i);
-                return;
-            }
-        }
-
-        /*
-         * Delete / Backspace clears the selected cell.
-         */
-        if (Input.GetKeyDown(KeyCode.Delete) ||
-            Input.GetKeyDown(KeyCode.Backspace))
-        {
-            ClearSelectedCell();
-        }
-    }
-
-    // =========================================================
-    // PUZZLE GENERATION
-    // =========================================================
+    // ---------------------------------------------------------
+    // GENERATION
+    // ---------------------------------------------------------
 
     private void GeneratePuzzle()
     {
-        ApplyDifficultySettings();
+        solution = GenerateSolvedGrid();
 
-        solution = new int[gridSize, gridSize];
         playerGrid = new int[gridSize, gridSize];
-        fixedCells = new bool[gridSize, gridSize];
+        prefilled = new bool[gridSize, gridSize];
 
-        GenerateSolvedGrid();
-
-        CreatePuzzleFromSolution();
-
-        BuildUI();
-    }
-
-    private void GenerateSolvedGrid()
-    {
-        /*
-         * Creates a valid base Sudoku grid.
-         *
-         * The formula works for:
-         *
-         * 4x4  -> 2x2 boxes
-         * 6x6  -> 2x3 boxes
-         * 9x9  -> 3x3 boxes
-         */
-
+        // Copy solution first.
         for (int row = 0; row < gridSize; row++)
         {
-            for (int column = 0; column < gridSize; column++)
+            for (int col = 0; col < gridSize; col++)
             {
-                solution[row, column] =
-                    (row * boxColumns +
-                     row / boxRows +
-                     column) % gridSize + 1;
+                playerGrid[row, col] = solution[row, col];
             }
         }
 
-        /*
-         * Randomize the solved board while keeping it valid.
-         */
-        ShuffleDigits();
-        ShuffleRows();
-        ShuffleColumns();
+        // Remove all cells.
+        List<Vector2Int> positions = new List<Vector2Int>();
+
+        for (int row = 0; row < gridSize; row++)
+        {
+            for (int col = 0; col < gridSize; col++)
+            {
+                positions.Add(new Vector2Int(row, col));
+            }
+        }
+
+        Shuffle(positions);
+
+        int cellsToRemove = (gridSize * gridSize) - prefilledCount;
+
+        for (int i = 0; i < cellsToRemove; i++)
+        {
+            Vector2Int position = positions[i];
+
+            playerGrid[position.x, position.y] = 0;
+        }
+
+        // Mark remaining numbers as prefilled.
+        for (int row = 0; row < gridSize; row++)
+        {
+            for (int col = 0; col < gridSize; col++)
+            {
+                prefilled[row, col] = playerGrid[row, col] != 0;
+            }
+        }
     }
 
-    private void ShuffleDigits()
+    private int[,] GenerateSolvedGrid()
     {
-        List<int> digits = new List<int>();
+        int[,] grid = new int[gridSize, gridSize];
+
+        FillGrid(grid);
+
+        return grid;
+    }
+
+    private bool FillGrid(int[,] grid)
+    {
+        int row = -1;
+        int col = -1;
+
+        // Find empty cell.
+        for (int r = 0; r < gridSize; r++)
+        {
+            for (int c = 0; c < gridSize; c++)
+            {
+                if (grid[r, c] == 0)
+                {
+                    row = r;
+                    col = c;
+                    break;
+                }
+            }
+
+            if (row != -1)
+                break;
+        }
+
+        // No empty cells.
+        if (row == -1)
+            return true;
+
+        List<int> numbers = new List<int>();
 
         for (int i = 1; i <= gridSize; i++)
+            numbers.Add(i);
+
+        Shuffle(numbers);
+
+        foreach (int number in numbers)
         {
-            digits.Add(i);
+            if (!CanPlaceNumber(grid, row, col, number))
+                continue;
+
+            grid[row, col] = number;
+
+            if (FillGrid(grid))
+                return true;
+
+            grid[row, col] = 0;
         }
 
-        ShuffleList(digits);
-
-        for (int row = 0; row < gridSize; row++)
-        {
-            for (int column = 0; column < gridSize; column++)
-            {
-                solution[row, column] =
-                    digits[solution[row, column] - 1];
-            }
-        }
+        return false;
     }
 
-    private void ShuffleRows()
+    private bool CanPlaceNumber(
+        int[,] grid,
+        int row,
+        int col,
+        int number)
     {
-        /*
-         * Shuffle rows inside their respective regions.
-         */
-
-        for (int group = 0; group < gridSize / boxRows; group++)
+        // Row
+        for (int c = 0; c < gridSize; c++)
         {
-            List<int> rows = new List<int>();
-
-            for (int i = 0; i < boxRows; i++)
-            {
-                rows.Add(group * boxRows + i);
-            }
-
-            ShuffleList(rows);
-
-            int[,] temp = CopyArray(solution);
-
-            for (int i = 0; i < boxRows; i++)
-            {
-                int destinationRow = group * boxRows + i;
-                int sourceRow = rows[i];
-
-                for (int column = 0; column < gridSize; column++)
-                {
-                    solution[destinationRow, column] =
-                        temp[sourceRow, column];
-                }
-            }
+            if (grid[row, c] == number)
+                return false;
         }
 
-        /*
-         * Shuffle entire row groups.
-         */
-        List<int> groups = new List<int>();
-
-        for (int i = 0; i < gridSize / boxRows; i++)
+        // Column
+        for (int r = 0; r < gridSize; r++)
         {
-            groups.Add(i);
+            if (grid[r, col] == number)
+                return false;
         }
 
-        ShuffleList(groups);
+        // Sub-grid
+        int startRow = (row / subgridRows) * subgridRows;
+        int startColumn = (col / subgridColumns) * subgridColumns;
 
-        int[,] groupedCopy = CopyArray(solution);
-
-        for (int group = 0; group < groups.Count; group++)
+        for (int r = startRow;
+             r < startRow + subgridRows;
+             r++)
         {
-            int sourceGroup = groups[group];
-
-            for (int row = 0; row < boxRows; row++)
+            for (int c = startColumn;
+                 c < startColumn + subgridColumns;
+                 c++)
             {
-                int destinationRow =
-                    group * boxRows + row;
-
-                int sourceRow =
-                    sourceGroup * boxRows + row;
-
-                for (int column = 0; column < gridSize; column++)
-                {
-                    solution[destinationRow, column] =
-                        groupedCopy[sourceRow, column];
-                }
+                if (grid[r, c] == number)
+                    return false;
             }
         }
+
+        return true;
     }
 
-    private void ShuffleColumns()
+    // ---------------------------------------------------------
+    // GRID UI
+    // ---------------------------------------------------------
+
+    private void BuildGrid()
     {
-        /*
-         * Same concept as row shuffling,
-         * but applied to columns.
-         */
+        ClearGrid();
 
-        for (int group = 0; group < gridSize / boxColumns; group++)
-        {
-            List<int> columns = new List<int>();
+        cellContainer = new GameObject(
+            "Cells",
+            typeof(RectTransform)
+        ).GetComponent<RectTransform>();
 
-            for (int i = 0; i < boxColumns; i++)
-            {
-                columns.Add(group * boxColumns + i);
-            }
+        cellContainer.SetParent(gridRoot, false);
 
-            ShuffleList(columns);
+        cellContainer.anchorMin = Vector2.zero;
+        cellContainer.anchorMax = Vector2.one;
+        cellContainer.offsetMin = Vector2.zero;
+        cellContainer.offsetMax = Vector2.zero;
 
-            int[,] temp = CopyArray(solution);
+        GridLayoutGroup layout =
+            cellContainer.gameObject.AddComponent<GridLayoutGroup>();
 
-            for (int i = 0; i < boxColumns; i++)
-            {
-                int destinationColumn =
-                    group * boxColumns + i;
+        layout.constraint =
+            GridLayoutGroup.Constraint.FixedColumnCount;
 
-                int sourceColumn =
-                    columns[i];
+        layout.constraintCount = gridSize;
 
-                for (int row = 0; row < gridSize; row++)
-                {
-                    solution[row, destinationColumn] =
-                        temp[row, sourceColumn];
-                }
-            }
-        }
+        float cellSize = 600f / gridSize;
 
-        /*
-         * Shuffle entire column groups.
-         */
-
-        List<int> groups = new List<int>();
-
-        for (int i = 0; i < gridSize / boxColumns; i++)
-        {
-            groups.Add(i);
-        }
-
-        ShuffleList(groups);
-
-        int[,] groupedCopy = CopyArray(solution);
-
-        for (int group = 0; group < groups.Count; group++)
-        {
-            int sourceGroup = groups[group];
-
-            for (int column = 0; column < boxColumns; column++)
-            {
-                int destinationColumn =
-                    group * boxColumns + column;
-
-                int sourceColumn =
-                    sourceGroup * boxColumns + column;
-
-                for (int row = 0; row < gridSize; row++)
-                {
-                    solution[row, destinationColumn] =
-                        groupedCopy[row, sourceColumn];
-                }
-            }
-        }
-    }
-
-    private void CreatePuzzleFromSolution()
-    {
-        /*
-         * Start with an empty player board.
-         */
-
-        for (int row = 0; row < gridSize; row++)
-        {
-            for (int column = 0; column < gridSize; column++)
-            {
-                playerGrid[row, column] = 0;
-                fixedCells[row, column] = false;
-            }
-        }
-
-        /*
-         * Randomly choose which cells are initially filled.
-         */
-
-        List<int> positions = new List<int>();
-
-        for (int i = 0; i < gridSize * gridSize; i++)
-        {
-            positions.Add(i);
-        }
-
-        ShuffleList(positions);
-
-        for (int i = 0; i < filledCells; i++)
-        {
-            int position = positions[i];
-
-            int row = position / gridSize;
-            int column = position % gridSize;
-
-            playerGrid[row, column] =
-                solution[row, column];
-
-            fixedCells[row, column] = true;
-        }
-    }
-
-    // =========================================================
-    // UI
-    // =========================================================
-
-    private void BuildUI()
-    {
-        if (gridParent == null || cellPrefab == null)
-        {
-            Debug.LogError(
-                "SudokuPuzzle: Grid Parent or Cell Prefab is missing."
-            );
-
-            return;
-        }
-
-        // Remove previous cells.
-        for (int i = gridParent.childCount - 1; i >= 0; i--)
-        {
-            Destroy(gridParent.GetChild(i).gameObject);
-        }
+        layout.cellSize = new Vector2(cellSize, cellSize);
+        layout.spacing = Vector2.zero;
+        layout.padding = new RectOffset(0, 0, 0, 0);
 
         cells = new SudokuCell[gridSize, gridSize];
 
-        // Generate cells.
         for (int row = 0; row < gridSize; row++)
         {
-            for (int column = 0; column < gridSize; column++)
+            for (int col = 0; col < gridSize; col++)
             {
                 SudokuCell cell =
-                    Instantiate(cellPrefab, gridParent);
+                    Instantiate(cellPrefab, cellContainer);
 
-                cells[row, column] = cell;
-
-                int capturedRow = row;
-                int capturedColumn = column;
-
-                cell.Initialize(
-                    this,
-                    capturedRow,
-                    capturedColumn
+                cell.Setup(
+                    row,
+                    col,
+                    cellSize
                 );
 
-                cell.SetNumber(
-                    playerGrid[row, column]
-                );
+                cell.SetValue(playerGrid[row, col]);
+                cell.SetPrefilled(prefilled[row, col]);
 
-                cell.SetFixed(
-                    fixedCells[row, column]
-                );
+                cells[row, col] = cell;
             }
         }
 
-        // Configure the grid AFTER creating the cells.
-        if (gridLayout != null)
-        {
-            gridLayout.SetGridSize(gridSize);
-        }
-
-        SetupNumberButtonVisibility();
+        GenerateGridLines();
     }
 
-    private void SetupNumberButtons()
+    private void ClearGrid()
     {
-        if (numberButtons == null)
-            return;
-
-        for (int i = 0; i < numberButtons.Length; i++)
+        if (cellContainer != null)
         {
-            int value = i + 1;
+            Destroy(cellContainer.gameObject);
+            cellContainer = null;
+        }
 
-            if (numberButtons[i] == null)
-                continue;
+        // Remove old lines.
+        for (int i = gridRoot.childCount - 1; i >= 0; i--)
+        {
+            Destroy(gridRoot.GetChild(i).gameObject);
+        }
+    }
 
-            numberButtons[i].onClick.RemoveAllListeners();
+    // ---------------------------------------------------------
+    // GRID LINES
+    // ---------------------------------------------------------
 
-            numberButtons[i].onClick.AddListener(
-                () => EnterNumber(value)
+    private void GenerateGridLines()
+    {
+        float cellSize = 600f / gridSize;
+
+        // Vertical lines
+        for (int column = 0; column <= gridSize; column++)
+        {
+            bool thick =
+                column % subgridColumns == 0;
+
+            CreateVerticalLine(
+                column * cellSize,
+                thick,
+                cellSize
             );
-
-            TMP_Text text =
-                numberButtons[i].GetComponentInChildren<TMP_Text>();
-
-            if (text != null)
-            {
-                text.text = value.ToString();
-            }
         }
-    }
 
-    private void SetupNumberButtonVisibility()
-    {
-        if (numberButtons == null)
-            return;
-
-        for (int i = 0; i < numberButtons.Length; i++)
+        // Horizontal lines
+        for (int row = 0; row <= gridSize; row++)
         {
-            if (numberButtons[i] == null)
-                continue;
+            bool thick =
+                row % subgridRows == 0;
 
-            numberButtons[i].gameObject.SetActive(
-                i < gridSize
+            CreateHorizontalLine(
+                row * cellSize,
+                thick,
+                cellSize
             );
         }
     }
 
-    private void SetupClearButton()
+    private void CreateVerticalLine(
+        float x,
+        bool thick,
+        float cellSize)
     {
-        if (clearButton == null)
+        Image prefab =
+            thick ? thickLinePrefab : thinLinePrefab;
+
+        if (prefab == null)
             return;
 
-        clearButton.onClick.RemoveAllListeners();
+        Image line = Instantiate(prefab, gridRoot);
 
-        clearButton.onClick.AddListener(
-            ClearSelectedCell
-        );
+        RectTransform rect = line.rectTransform;
+
+        rect.anchorMin = new Vector2(0, 1);
+        rect.anchorMax = new Vector2(0, 1);
+
+        rect.pivot = new Vector2(0.5f, 1);
+
+        float width =
+            thick ? 5f : 1.5f;
+
+        rect.sizeDelta =
+            new Vector2(width, 600f);
+
+        rect.anchoredPosition =
+            new Vector2(x, 0);
     }
 
-    // =========================================================
-    // CELL SELECTION
-    // =========================================================
-
-    public void SelectCell(int row, int column)
+    private void CreateHorizontalLine(
+        float y,
+        bool thick,
+        float cellSize)
     {
-        if (row < 0 ||
-            row >= gridSize ||
-            column < 0 ||
-            column >= gridSize)
-        {
+        Image prefab =
+            thick ? thickLinePrefab : thinLinePrefab;
+
+        if (prefab == null)
             return;
+
+        Image line = Instantiate(prefab, gridRoot);
+
+        RectTransform rect = line.rectTransform;
+
+        rect.anchorMin = new Vector2(0, 1);
+        rect.anchorMax = new Vector2(0, 1);
+
+        rect.pivot = new Vector2(0, 0.5f);
+
+        float height =
+            thick ? 5f : 1.5f;
+
+        rect.sizeDelta =
+            new Vector2(600f, height);
+
+        rect.anchoredPosition =
+            new Vector2(0, -y);
+    }
+
+    // ---------------------------------------------------------
+    // INPUT
+    // ---------------------------------------------------------
+
+    public override void HandleInput()
+    {
+        if (!IsActive())
+            return;
+
+        if (inputMode == InputMode.SelectingCell)
+        {
+            HandleCellSelection();
+        }
+        else
+        {
+            HandleNumberSelection();
         }
 
-        selectedRow = row;
-        selectedColumn = column;
-
-        UpdateCellSelection();
+        UpdateArrowVisuals();
     }
 
-    private void UpdateCellSelection()
+    private void HandleCellSelection()
+    {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            MoveCell(-1, 0);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            MoveCell(1, 0);
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            MoveCell(0, -1);
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            MoveCell(0, 1);
+        }
+
+        if (Input.GetKeyDown(selectKey))
+        {
+            if (prefilled[selectedRow, selectedColumn])
+                return;
+
+            inputMode = InputMode.SelectingNumber;
+
+            UpdateInputUI();
+        }
+    }
+
+    private void HandleNumberSelection()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftArrow) ||
+            Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            selectedNumber--;
+
+            if (selectedNumber < 1)
+                selectedNumber = gridSize;
+
+            UpdateInputUI();
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow) ||
+            Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            selectedNumber++;
+
+            if (selectedNumber > gridSize)
+                selectedNumber = 1;
+
+            UpdateInputUI();
+        }
+
+        if (Input.GetKeyDown(selectKey))
+        {
+            PlaceNumber(selectedNumber);
+        }
+
+        if (Input.GetKeyDown(cancelKey))
+        {
+            inputMode = InputMode.SelectingCell;
+
+            UpdateInputUI();
+        }
+    }
+
+    // ---------------------------------------------------------
+    // CELL MOVEMENT
+    // ---------------------------------------------------------
+
+    private void MoveCell(int rowDirection, int columnDirection)
+    {
+        selectedRow += rowDirection;
+        selectedColumn += columnDirection;
+
+        selectedRow =
+            Mathf.Clamp(selectedRow, 0, gridSize - 1);
+
+        selectedColumn =
+            Mathf.Clamp(selectedColumn, 0, gridSize - 1);
+
+        UpdateSelection();
+    }
+
+    private void UpdateSelection()
     {
         if (cells == null)
             return;
 
         for (int row = 0; row < gridSize; row++)
         {
-            for (int column = 0; column < gridSize; column++)
+            for (int col = 0; col < gridSize; col++)
             {
                 bool selected =
                     row == selectedRow &&
-                    column == selectedColumn;
+                    col == selectedColumn;
 
-                cells[row, column].SetSelected(
-                    selected
-                );
+                cells[row, col].SetSelected(selected);
             }
         }
     }
 
-    // =========================================================
-    // NUMBER INPUT
-    // =========================================================
+    // ---------------------------------------------------------
+    // NUMBER PLACEMENT
+    // ---------------------------------------------------------
 
-    public void EnterNumber(int number)
+    private void PlaceNumber(int number)
     {
-        if (!IsActive())
+        if (prefilled[selectedRow, selectedColumn])
             return;
 
-        if (selectedRow < 0 ||
-            selectedColumn < 0)
-        {
-            return;
-        }
+        playerGrid[selectedRow, selectedColumn] = number;
 
-        if (number < 1 || number > gridSize)
-            return;
+        SudokuCell cell =
+            cells[selectedRow, selectedColumn];
 
-        /*
-         * The player cannot modify a starting cell.
-         */
-
-        if (fixedCells[selectedRow, selectedColumn])
-        {
-            SetStatus("That cell is already filled.");
-            return;
-        }
-
-        bool pencilMode =
-            pencilModeToggle != null &&
-            pencilModeToggle.isOn;
-
-        if (pencilMode)
-        {
-            TogglePencilMark(number);
-            return;
-        }
-
-        /*
-         * Check whether the answer is correct.
-         */
+        cell.SetValue(number);
 
         if (number != solution[selectedRow, selectedColumn])
         {
+            cell.SetWrong(true);
+
             mistakes++;
 
             UpdateMistakeUI();
 
-            cells[selectedRow, selectedColumn]
-                .ShowError();
-
-            SetStatus(
-                "Wrong number!"
-            );
-
-            if (rejectWrongAnswers)
+            if (useMistakeLimit &&
+                mistakes >= maxMistakes)
             {
-                cells[selectedRow, selectedColumn]
-                    .SetNumber(0);
+                PuzzleManager.Instance.EndPuzzle(
+                    PuzzleResult.Failed
+                );
 
-                playerGrid[selectedRow, selectedColumn] = 0;
+                return;
             }
-            else
-            {
-                playerGrid[selectedRow, selectedColumn] =
-                    number;
-
-                cells[selectedRow, selectedColumn]
-                    .SetNumber(number);
-            }
-
-            return;
-        }
-
-        /*
-         * Correct answer.
-         */
-
-        playerGrid[selectedRow, selectedColumn] =
-            number;
-
-        cells[selectedRow, selectedColumn]
-            .SetNumber(number);
-
-        if (clearPencilsWhenNumberEntered)
-        {
-            cells[selectedRow, selectedColumn]
-                .ClearPencilMarks();
-        }
-
-        SetStatus("Correct!");
-
-        CheckPuzzleComplete();
-    }
-
-    public void ClearSelectedCell()
-    {
-        if (!IsActive())
-            return;
-
-        if (selectedRow < 0 ||
-            selectedColumn < 0)
-        {
-            return;
-        }
-
-        if (fixedCells[selectedRow, selectedColumn])
-        {
-            return;
-        }
-
-        playerGrid[selectedRow, selectedColumn] = 0;
-
-        cells[selectedRow, selectedColumn]
-            .SetNumber(0);
-
-        cells[selectedRow, selectedColumn]
-            .ClearPencilMarks();
-
-        SetStatus("");
-    }
-
-    // =========================================================
-    // PENCIL MODE
-    // =========================================================
-
-    private void OnPencilModeChanged(bool enabled)
-    {
-        if (enabled)
-        {
-            SetStatus("Pencil mode ON");
         }
         else
         {
-            SetStatus("Pencil mode OFF");
-        }
-    }
+            cell.SetWrong(false);
 
-    private void TogglePencilMark(int number)
-    {
-        if (cells[selectedRow, selectedColumn] == null)
-            return;
+            if (CheckSolved())
+            {
+                PuzzleManager.Instance.EndPuzzle(
+                    PuzzleResult.Solved
+                );
 
-        /*
-         * Pencil marks are only useful when the cell
-         * doesn't already contain a final answer.
-         */
-
-        if (playerGrid[selectedRow, selectedColumn] != 0)
-        {
-            SetStatus(
-                "Clear the cell before using pencil marks."
-            );
-
-            return;
+                return;
+            }
         }
 
-        cells[selectedRow, selectedColumn]
-            .TogglePencilMark(number);
+        inputMode = InputMode.SelectingCell;
+
+        UpdateInputUI();
     }
 
-    // =========================================================
-    // COMPLETION
-    // =========================================================
-
-    private void CheckPuzzleComplete()
+    private bool CheckSolved()
     {
         for (int row = 0; row < gridSize; row++)
         {
-            for (int column = 0; column < gridSize; column++)
+            for (int col = 0; col < gridSize; col++)
             {
-                if (playerGrid[row, column] == 0)
-                    return;
-
-                if (playerGrid[row, column] !=
-                    solution[row, column])
+                if (playerGrid[row, col] !=
+                    solution[row, col])
                 {
-                    return;
+                    return false;
                 }
             }
         }
 
-        SetStatus("Sudoku solved!");
-
-        PuzzleManager.Instance.EndPuzzle(
-            PuzzleResult.Solved
-        );
+        return true;
     }
 
-    // =========================================================
-    // UTILITY
-    // =========================================================
+    // ---------------------------------------------------------
+    // UI
+    // ---------------------------------------------------------
 
-    private void UpdateMistakeUI()
+    private void UpdateInputUI()
     {
-        if (mistakeText != null)
+        bool numberMode =
+            inputMode == InputMode.SelectingNumber;
+
+        // ---------------------------------------------------------
+        // MODE TEXT
+        // ---------------------------------------------------------
+
+        if (modeText != null)
         {
-            mistakeText.text =
-                $"Mistakes: {mistakes}";
-        }
-    }
-
-    private void SetStatus(string message)
-    {
-        if (statusText != null)
-        {
-            statusText.text = message;
-        }
-    }
-
-    private void ShuffleList<T>(List<T> list)
-    {
-        for (int i = list.Count - 1; i > 0; i--)
-        {
-            int j = random.Next(i + 1);
-
-            T temp = list[i];
-
-            list[i] = list[j];
-            list[j] = temp;
-        }
-    }
-
-    private int[,] CopyArray(int[,] source)
-    {
-        int rows = source.GetLength(0);
-        int columns = source.GetLength(1);
-
-        int[,] copy =
-            new int[rows, columns];
-
-        for (int row = 0; row < rows; row++)
-        {
-            for (int column = 0; column < columns; column++)
+            if (numberMode)
             {
-                copy[row, column] =
-                    source[row, column];
+                modeText.text =
+                    "Select Number\nArrows + Enter";
+            }
+            else
+            {
+                modeText.text =
+                    "Select Cell\nArrow Keys + Enter";
             }
         }
 
-        return copy;
+        // ---------------------------------------------------------
+        // SELECTED NUMBER
+        // ---------------------------------------------------------
+
+        if (selectedNumberText != null)
+        {
+            selectedNumberText.text =
+                selectedNumber.ToString();
+
+            selectedNumberText.color =
+                numberMode
+                    ? selectedNumberNumberModeColor
+                    : selectedNumberCellModeColor;
+        }
+
+        // ---------------------------------------------------------
+        // ARROWS
+        // ---------------------------------------------------------
+
+        if (leftNumberArrow != null)
+            leftNumberArrow.gameObject.SetActive(numberMode);
+
+        if (rightNumberArrow != null)
+            rightNumberArrow.gameObject.SetActive(numberMode);
+
+        UpdateArrowVisuals();
+    }
+
+    private void UpdateMistakeUI()
+    {
+        if (mistakeText == null || !useMistakeLimit)
+            return;
+
+        mistakeText.text = $"Mistakes: {mistakes}/{maxMistakes}";
+    }
+
+    private void UpdateArrowVisuals()
+    {
+        if (inputMode != InputMode.SelectingNumber)
+            return;
+
+        bool leftPressed =
+            Input.GetKey(KeyCode.LeftArrow) ||
+            Input.GetKey(KeyCode.DownArrow);
+
+        bool rightPressed =
+            Input.GetKey(KeyCode.RightArrow) ||
+            Input.GetKey(KeyCode.UpArrow);
+
+        if (leftNumberArrow != null)
+        {
+            leftNumberArrow.color =
+                leftPressed
+                    ? arrowPressedColor
+                    : arrowNormalColor;
+        }
+
+        if (rightNumberArrow != null)
+        {
+            rightNumberArrow.color =
+                rightPressed
+                    ? arrowPressedColor
+                    : arrowNormalColor;
+        }
+    }
+
+    // ---------------------------------------------------------
+    // RESET
+    // ---------------------------------------------------------
+
+    protected override void OnPuzzleReset()
+    {
+        ConfigureDifficulty();
+
+        GeneratePuzzle();
+
+        selectedRow = 0;
+        selectedColumn = 0;
+        selectedNumber = 1;
+
+        inputMode = InputMode.SelectingCell;
+
+        mistakes = 0;
+
+        BuildGrid();
+
+        UpdateSelection();
+        UpdateInputUI();
+        UpdateMistakeUI();
+    }
+
+    // ---------------------------------------------------------
+    // UTILITY
+    // ---------------------------------------------------------
+
+    private void Shuffle<T>(List<T> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int randomIndex =
+                Random.Range(0, i + 1);
+
+            T temp = list[i];
+
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
     }
 }
