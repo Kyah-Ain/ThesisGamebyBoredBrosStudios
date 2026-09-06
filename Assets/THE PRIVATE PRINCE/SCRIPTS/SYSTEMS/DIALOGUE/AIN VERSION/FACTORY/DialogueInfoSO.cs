@@ -10,11 +10,15 @@ public class DialogueInfoSO : ScriptableObject
     [field: SerializeField] public string id { get; private set; }
     
     [Header("Info")]
-    public string actorName;
+    public string dialogueName;
 
     [Header("Dialogue")]
-    public int dialogueWeek;
-    public Dialogues[] Dialogues;
+    // [TextArea] public string[] IdleLines;
+    // [TextArea] public string[] HasRequestLines;
+    // [TextArea] public string[] WaitingForCompletionLines;
+    // [TextArea] public string[] CanFinishRequestLines;
+    
+    public Dialogue DialogueLines;
     // public Responses[] Responses;
     // ------------------------- METHODS -------------------------
     
@@ -37,16 +41,19 @@ public class DialogueInfoSO : ScriptableObject
 
 // Makes this class serializable so it can be displayed in the Unity Inspector
 [System.Serializable]
-public class Dialogues
+public class Dialogue
 {
     // Private Data
-    // Note - I might add real idleLines when the NPC has no quest for us
     [SerializeField][TextArea] private string[] idleLines;
-    [SerializeField][TextArea] private string[] dialogueLines;
+    [SerializeField][TextArea] private string[] hasRequestLines;
+    [SerializeField][TextArea] private string[] waitingForCompletionLines;
+    [SerializeField][TextArea] private string[] canFinishRequestLines;
     
     // Readable Only Copies
     public string[] IdleLines => idleLines;
-    public string[] DialogueLines => dialogueLines;
+    public string[] HasRequestLines => hasRequestLines;
+    public string[] WaitingForCompletionLines => waitingForCompletionLines;
+    public string[] CanFinishRequestLines => canFinishRequestLines;
 }
 
 // Makes this class serializable so it can be displayed in the Unity Inspector

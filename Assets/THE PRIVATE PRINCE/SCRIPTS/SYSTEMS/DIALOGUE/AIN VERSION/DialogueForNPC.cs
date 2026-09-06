@@ -114,12 +114,24 @@ public class DialogueForNPC : MonoBehaviour
     void DebugDialogue()
     {
         // Prints all the dialogues in the console
-        foreach (var dialogueClass in dialogueInfo.Dialogues)
+        foreach (string dialogueLines in dialogueInfo.DialogueLines.HasRequestLines)
         {
-            foreach (string dialogueLines in dialogueClass.DialogueLines)
-            {
-                debuggerNiAin.Log(dialogueLines);
-            }
+            debuggerNiAin.Log(dialogueLines);
+        }
+            
+        foreach (string dialogueLines in dialogueInfo.DialogueLines.IdleLines)
+        {
+            debuggerNiAin.Log(dialogueLines);
+        }
+            
+        foreach (string dialogueLines in dialogueInfo.DialogueLines.WaitingForCompletionLines)
+        {
+            debuggerNiAin.Log(dialogueLines);
+        }
+            
+        foreach (string dialogueLines in dialogueInfo.DialogueLines.CanFinishRequestLines)
+        {
+            debuggerNiAin.Log(dialogueLines);
         }
     }
 

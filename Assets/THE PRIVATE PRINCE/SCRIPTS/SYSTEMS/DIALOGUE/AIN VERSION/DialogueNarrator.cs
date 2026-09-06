@@ -6,10 +6,12 @@ using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using TMPro;
 
-public enum NpcState
+public enum DialogueState
 {
-    BeforeQuest,
-    OnQuest
+    Idle,
+    HasRequest,
+    WaitingForCompletion,
+    CanFinishRequest
 }
 
 // Required DebuggerNiAinPjls.cs for this to be able to monitor debugs, otherwise use the old one
@@ -22,24 +24,25 @@ public class DialogueNarrator : MonoBehaviour
     
     [Header("REFERENCES")]
     [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
-    [SerializeField] DialogueInfoSO dialogueInfo; // Container for the Scriptable Dialogue's data
     
     [Header("QUEST")]
-    [SerializeField] QuestInfoSO[] questInfosForDialogue; // Container for the Scriptable Quest's Data
-    private string questId; // Container for the questId we want this script to correlates to
-    private QuestState currentQuestState; // Container for the quest State we want this script to correlates to
+    [SerializeField] QuestInfoSO[] QuestInfo; // Container for the Scriptable Quest's Data
+    private string _questId; // Container for the questId we want this script to correlates to
+    private QuestState _currentQuestState; // Container for the quest State we want this script to correlates to
+    private int _targetQuest = 0; // Basis for what questId in Quest the lines corresponds to
+    
+    [Header("DIALOGUE")]
+    [SerializeField] DialogueInfoSO[] DialogueInfo; // Container for the Scriptable Dialogue's data
+    private string[] _currentLines; // Tracks the current dialogue lines the NPC is using
+    private int currentDialogueWeek; // Basis for what library of dialogue lines the NPC should use
+    private int _currentDialogueStep = 0; // Basis for what line in the dialogue lines the NPC should use
     
     [Header("UI")]
     [SerializeField] TextMeshProUGUI dialogueField; // Reference to the UI Text that would output the dialogue
 
     [Header("STATUS")] 
-    [SerializeField] NpcState currentNpcState = NpcState.BeforeQuest; // Basis for what dialogue lines the NPC should use
-    [SerializeField] Dialogues currentDialogueClass; // Tracks the current dialogue library the NPC is using
-    [SerializeField] int currentDialogueWeek; // Basis for what library of dialogue lines the NPC should use
-    [SerializeField] string[] currentLines; // Tracks the current dialogue lines the NPC is using
-    [SerializeField] int currentDialogueStep; // Basis for what line in the dialogue lines the NPC should use
-    [SerializeField] int currentQuestReference; // Basis for what questId in Quest the lines corresponds to
-    [SerializeField] bool hasNarratedRandomly; // Flag for knowing if the next interaction should close or re-open the dialogue
+    [SerializeField] DialogueState dialogueState = DialogueState.Idle; // Basis for what dialogue lines the NPC should use
+    private bool _hasNarratedRandomly; // Flag for knowing if the next interaction should close or re-open the dialogue
     
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -54,8 +57,8 @@ public class DialogueNarrator : MonoBehaviour
             debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
         }
         
-        // Assigns a quest id from the QuestInfoSO
-        questId = questInfosForDialogue[currentQuestReference].id;
+        // Initialized the starting Quest to track with dialogue
+        UpdateQuestAssign(_targetQuest); // _targetQuest = 0
     }
     
     // OnEnable is called when the object becomes enabled and active
@@ -73,8 +76,8 @@ public class DialogueNarrator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Initialized the starting dialogue
-        UpdateCurrentDialogue(currentNpcState, currentDialogueWeek);
+        // // Initialized the starting dialogue
+        // SwitchLines(DialogueState.Idle);
     }
 
     // Update is called once per frame
@@ -113,49 +116,40 @@ public class DialogueNarrator : MonoBehaviour
     void QuestStateChange(Ain.Quest quest)
     {
         // Checks if the update receiving is meant for this quest
-        if (quest.info.id.Equals(questId))
+        if (quest.info.id.Equals(_questId))
         {
             // Update the state of this from the passed state value from the caller
-            currentQuestState = quest.state;
-            
-            // Evaluates if the quest can be start 
-            if (currentQuestState.Equals(QuestState.CAN_START))
+            _currentQuestState = quest.state;
+
+            // Chooses the suitable case base on the parameter passed
+            switch (_currentQuestState)
             {
-                ChangeNpcState(NpcState.BeforeQuest);
-            }
-            // Evaluates if the quest is in progress
-            else if (currentQuestState.Equals(QuestState.IN_PROGRESS))
-            {
-                ChangeNpcState(NpcState.OnQuest);
-            }
-            // Evaluates if the quest is finished
-            else if (currentQuestState.Equals(QuestState.FINISHED))
-            {
-                // Progress the Dialogue
-                UpdateDialogueWeek();
+                // Dialogue logic for No Quest given
+                case QuestState.REQUIREMENTS_NOT_MET:
+                    SwitchLines(DialogueState.Idle);
+                    break;
                 
-                // Update the state flag
-                ChangeNpcState(NpcState.BeforeQuest);
+                // Dialogue logic for when there's a Quest wants to be given
+                case QuestState.CAN_START:
+                    SwitchLines(DialogueState.HasRequest);
+                    break;
                 
-                // Attach this Dialogue to another Quest 
-                UpdateQuestAssign();
+                // Dialogue logic for when there's a Quest waiting to be fulfilled
+                case QuestState.IN_PROGRESS:
+                    SwitchLines(DialogueState.WaitingForCompletion);
+                    break;
+                
+                // Dialogue logic for when there's a Quest waiting to be finished
+                case QuestState.CAN_FINISH:
+                    SwitchLines(DialogueState.CanFinishRequest);
+                    break;
+                
+                // Dialogue logic for when finished a Quest
+                case QuestState.FINISHED:
+                    UpdateQuestAssign(++_targetQuest);
+                    break;
             }
         }
-    }
-    
-    #endregion
-    
-    // ---------------------- NPC METHODS -------------------------
-    #region NPC METHODS
-    
-    // Method to switch the State of the NPC's dialogue set
-    public void ChangeNpcState(NpcState newNpcState)
-    {
-        // Overwrites the stored npc state with the updated one
-        currentNpcState = newNpcState;
-        
-        // Overwrites the stored npc state with the updated one
-        UpdateCurrentDialogue(newNpcState, currentDialogueWeek);
     }
     
     #endregion
@@ -167,9 +161,6 @@ public class DialogueNarrator : MonoBehaviour
     public void StartDialogue()
     {
         NarrateDialogue();
-        
-        // Iterates through all Dialogues assign to this script (for Debugging Purposes)
-        // StartCoroutine(DialoguesShowcase());
     }
     
     // Overload Method to call Dialogue Narration from the Unity New Input System
@@ -181,29 +172,35 @@ public class DialogueNarrator : MonoBehaviour
     // Method to call for executing the dialogue one by one
     void NarrateDialogue()
     {
-        // Proceeds only if this NPC was talked before acquiring its Quest
-        if (currentNpcState == NpcState.BeforeQuest)
-        {
-            NarrateByLines();
-        }
-        // Proceeds only if this NPC was talked after acquiring its Quest
-        else if (currentNpcState == NpcState.OnQuest)
+        // Proceeds only if the dialogue state was in Idle
+        if (dialogueState == DialogueState.Idle)
         {
             NarrateRandomly();
+        }
+        // Proceeds only if the ifs above hasn't fulfilled
+        else
+        {
+            NarrateByLines();
         }
     }
 
     // Method to call for Narrating Dialogues by line
     void NarrateByLines()
     {
+        // Don't narrate if there's nothing to narrate
+        if (_currentLines == null || _currentLines.Length <= 0)
+        {
+            return;
+        }
+        
         // Calls the dialogue lines checker
-        if (IsThereMoreLine(currentLines))
+        if (_currentDialogueStep < _currentLines.Length)
         {
             // Updates the dialogue UI with the line retrieved from the Scriptable Dialogue
-            dialogueField.text = currentLines[currentDialogueStep];
+            dialogueField.text = _currentLines[_currentDialogueStep];
             
             // Increments the dialogue to the next line 
-            currentDialogueStep++;
+            _currentDialogueStep++;
         }
         else
         {
@@ -214,9 +211,9 @@ public class DialogueNarrator : MonoBehaviour
             // currentDialogueStep--;
             
             // Resets the conversation from the beginning
-            currentDialogueStep = 0;
+            _currentDialogueStep = 0;
             
-            debuggerNiAin.Log("Trying to End Convo...");
+            // debuggerNiAin.Log("Trying to End Convo...");
         }
     }
     
@@ -224,16 +221,16 @@ public class DialogueNarrator : MonoBehaviour
     void NarrateRandomly()
     {
         // Don't narrate if there's nothing to narrate
-        if (currentLines == null || currentLines.Length == 0)
+        if (_currentLines == null || _currentLines.Length <= 0)
         {
             return;
         }
     
         // Proceeds only if we're already in dialogue
-        if (hasNarratedRandomly)
+        if (_hasNarratedRandomly)
         {
             // Flips the dialogue to be re-opened on the next Interaction
-            hasNarratedRandomly = false;
+            _hasNarratedRandomly = false;
             
             // Triggers all triggerable included under this Event Array in the Inspector
             onDialogueDone?.Invoke();
@@ -242,168 +239,83 @@ public class DialogueNarrator : MonoBehaviour
         else
         {
             // Generates a random number but still bounds to the length of the current dialogue lines
-            int randomNum = Random.Range(0, currentLines.Length);
+            int randomNum = Random.Range(0, _currentLines.Length);
         
             // Updates the dialogue UI with the line retrieved from the Scriptable Dialogue
-            dialogueField.text = currentLines[randomNum];
+            dialogueField.text = _currentLines[randomNum];
             
             // Flips the dialogue to be closed on the next Interaction
-            hasNarratedRandomly = true;
+            _hasNarratedRandomly = true;
         }
     }
-
-    #endregion
-    
-    // ----------------------- COROUTINES -------------------------
-    #region COROUTINES
-
-    
 
     #endregion
     
     // ----------------------- HELPERS -------------------------
     #region HELPERS
     
-    // Method to ask if there are lines left to iterate
-    bool IsThereMoreLine(string[] arrayOfLinesToCheck)
+    // Method to switch dialogue lines
+    void SwitchLines(DialogueState state)
     {
-        // Checks if we still have lines to iterate
-        return arrayOfLinesToCheck != null &&
-               currentDialogueStep < arrayOfLinesToCheck.Length;
-    }
-    
-    // Method to ask if there are dialogues left to iterate
-    bool IsThereMoreWeek(int weekToCheck)
-    {
-        // Checks if we still have dialogues to iterate
-        return weekToCheck >= 0 &&
-               weekToCheck < dialogueInfo.Dialogues.Length;
-    }
-    
-    // Method to call for Updating NPC's dialogue lines
-    public void UpdateDialogueWeek()
-    {
-        // Increments the dialogue to the next class
-        int nextDialogueWeek = currentDialogueWeek + 1;
+        // Updates the dialogue state
+        dialogueState = state;
         
-        // Checks if there's still another dialogue week to iterate
-        if (!IsThereMoreWeek(nextDialogueWeek))
-        {
-            return;
-        }
-
-        // Resets the conversation from the beginning
-        currentDialogueStep = 0;
-
-        // Increments the dialogue to the next class
-        UpdateCurrentDialogue(currentNpcState, nextDialogueWeek);
-    }
-    
-    // Method to call for Updating NPC's dialogue lines specifically
-    public void JumpDialogueWeek(int weekToJump)
-    {
-        // Checks if the requested dialogue week exists
-        if (!IsThereMoreWeek(weekToJump))
-        {
-            return;
-        }
-
-        // Resets the conversation from the beginning
-        currentDialogueStep = 0;
+        // Resets the dialogue lines from the start
+        _currentDialogueStep = 0;
         
-        // Increments the dialogue to the next class
-        UpdateCurrentDialogue(currentNpcState, weekToJump);
-    }
-        
-    // Method to make the NPCs dialogue up to date
-    void UpdateCurrentDialogue(NpcState newNpcState, int newDialogueWeek)
-    {
-        // Updates the current Dialogue week
-        currentDialogueWeek = newDialogueWeek;
-
-        // Overwrites the stored dialogue library in used to the newly update one 
-        currentDialogueClass = dialogueInfo.Dialogues[currentDialogueWeek];
-    
-        // Also updates the NPC state flag
-        currentNpcState = newNpcState;
-
-        // Switch the current lines in used to a new one
-        currentLines = SwitchLines(currentNpcState);
-
-        // Resets the random narration status
-        hasNarratedRandomly = false;
-    
-        // // Resets dialogue steps 
-        // currentDialogueStep = 0;
-    }
-    
-    // Method to switch from one NPC state to another
-    string[] SwitchLines(NpcState dialogueType)
-    {
-        // Evaluates the value passed and corresponds it to the matched case
-        switch (dialogueType)
+        // Evaluates the value passed and assigns the current lines the dialogue gonna use
+        switch (state)
         {
-            // Case to match if the NPC state was BeforeQuest
-            case NpcState.BeforeQuest:
-                return currentDialogueClass.DialogueLines;
+            // Dialogue for Idle State
+            case DialogueState.Idle:
+                _currentLines = DialogueInfo[currentDialogueWeek].DialogueLines.IdleLines;
+                break;
             
-            // Case to match if the NPC state was OnQuest
-            case NpcState.OnQuest:
-                return currentDialogueClass.IdleLines;
+            // Dialogue for HasRequest State
+            case DialogueState.HasRequest:
+                _currentLines = DialogueInfo[currentDialogueWeek].DialogueLines.HasRequestLines; 
+                break;
             
-            // Default Case if there's no match
-            default:
-                return currentDialogueClass.DialogueLines;
+            // Dialogue for WaitingForCompletion State
+            case DialogueState.WaitingForCompletion:
+                _currentLines = DialogueInfo[currentDialogueWeek].DialogueLines.WaitingForCompletionLines; 
+                break;
+            
+            // Dialogue for CanFinishRequest State
+            case DialogueState.CanFinishRequest:
+                _currentLines = DialogueInfo[currentDialogueWeek].DialogueLines.CanFinishRequestLines; 
+                break;
         }
     }
     
     // Method to update the Dialogue's Quest reference
-    void UpdateQuestAssign()
+    void UpdateQuestAssign(int questNumber)
     {
-        // Increments the quest reference
-        currentQuestReference++;
-        
-        // Evaluates first if the quest we want was in
-        if (questInfosForDialogue != null &&
-            currentQuestReference < questInfosForDialogue.Length)
+        // Checks if there are more quest to progress the dialogue with
+        if (questNumber < QuestInfo.Length)
         {
-            // Assigns a quest id from the QuestInfoSO
-            questId = questInfosForDialogue[currentQuestReference].id;
-        
-            // Refresh Quests States to update this script with its new Quest assigned
+            // Sets the quest ID to track in this script
+            _questId = QuestInfo[questNumber].id;
+
+            // Updates the quest counter tracker
+            _targetQuest = questNumber;
+
+            // Checks if there are more dialogue to progress with
+            if (questNumber < DialogueInfo.Length)
+            {
+                // Updates the dialogue reference along with the quest
+                currentDialogueWeek = questNumber;
+            }
+
+            // Refresh Quest Updates
             Ain.QuestManager.Instance.InitializedQuestStates();
         }
+        // Defaults back to the last Dialogue's Idle if there are no progress to initiate
         else
         {
-            // Decrements the quest reference
-            currentQuestReference--;
+            SwitchLines(DialogueState.Idle);
         }
     }
 
-    #endregion
-    
-    // ------------------------ DEBUGGERS -------------------------
-    #region DEBUGGERS
-    
-    // Coroutine Method to call for executing the dialogues
-    IEnumerator DialoguesShowcase()
-    {
-        // Prints all the dialogues in the console
-        foreach (var dialogueClass in dialogueInfo.Dialogues)
-        {
-            foreach (string dialogueLines in dialogueClass.DialogueLines)
-            {
-                dialogueField.text = dialogueLines;
-                
-                yield return new WaitForSeconds(3f);
-                
-                debuggerNiAin.Log(dialogueLines);
-            }
-        }
-        
-        // Triggers all triggerable included under this Event Array in the Inspector
-        onDialogueDone?.Invoke();
-    }
-    
     #endregion
 }

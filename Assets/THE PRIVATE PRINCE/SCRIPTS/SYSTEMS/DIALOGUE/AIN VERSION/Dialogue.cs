@@ -4,7 +4,7 @@ using UnityEngine;
 
 // Makes this class serializable so it can be displayed in the Unity Inspector
 [System.Serializable]
-public class Dialogue
+public class DialogueNiAin
 {
     // ------------------------- VARIABLES -------------------------
     
