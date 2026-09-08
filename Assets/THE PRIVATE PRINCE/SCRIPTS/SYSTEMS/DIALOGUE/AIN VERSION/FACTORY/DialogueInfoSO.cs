@@ -46,12 +46,16 @@ public class Dialogue
     // Private Data
     [SerializeField][TextArea] private string[] idleLines;
     [SerializeField][TextArea] private string[] hasRequestLines;
+    [SerializeField][TextArea] private string[] acceptRequestLines;
+    [SerializeField][TextArea] private string[] declineRequestLines;
     [SerializeField][TextArea] private string[] waitingForCompletionLines;
     [SerializeField][TextArea] private string[] canFinishRequestLines;
     
     // Readable Only Copies
     public string[] IdleLines => idleLines;
     public string[] HasRequestLines => hasRequestLines;
+    public string[] AcceptRequestLines => acceptRequestLines;
+    public string[] DeclineRequestLines => declineRequestLines;
     public string[] WaitingForCompletionLines => waitingForCompletionLines;
     public string[] CanFinishRequestLines => canFinishRequestLines;
 }

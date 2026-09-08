@@ -16,7 +16,7 @@ namespace Ain
 
         [Header("QUEST")]
         string questId;
-        QuestState currentQuestState;
+        protected QuestState currentQuestState;
 
         [Header("SETTINGS")]
         [SerializeField] bool questStartPoint;
@@ -29,7 +29,7 @@ namespace Ain
         #region UNITY METHODS
 
         // Awake is called when this script was first initialized & loaded
-        private void Awake()
+        protected virtual void Awake()
         {
             // Checks if our reference for the script was not set
             if (debuggerNiAin == null)
@@ -61,19 +61,19 @@ namespace Ain
         }
 
         // OnEnable is called when the object becomes enabled and active
-        void OnEnable()
+        protected virtual void OnEnable()
         {
             Subscribe();
         }
 
         // OnDisable is called when the object becomes disabled
-        void OnDisable()
+        protected virtual void OnDisable()
         {
             UnSubscribe();
         }
 
         // OnTriggerEnter is called when this script's object collide with another object
-        void OnTriggerEnter(Collider actor)
+        protected virtual void OnTriggerEnter(Collider actor)
         {
             if (actor.gameObject.CompareTag("Player"))
             {    
@@ -83,7 +83,7 @@ namespace Ain
         }
 
         // OnTriggerExit is called when this script's object un-collide with another object
-        void OnTriggerExit(Collider actor)
+        protected virtual void OnTriggerExit(Collider actor)
         {
             if (actor.gameObject.CompareTag("Player"))
             {    
@@ -98,7 +98,7 @@ namespace Ain
         #region SUBSCRIPTIONS
 
         // Method to subscribe your local method to an event trigger
-        void Subscribe()
+        protected virtual void Subscribe()
         {
             // Set subscriptions of these methods to an event
             // Left (Event Call) += Right (Method that would be called)
@@ -110,7 +110,7 @@ namespace Ain
         }
 
         // Method to UnSubscribe your local method to an event trigger
-        void UnSubscribe()
+        protected virtual void UnSubscribe()
         {
             // UnSubscribe them methods to an event
             // Left (Event Call) -= Right (Method that would be called)
@@ -124,7 +124,7 @@ namespace Ain
         // ------------------------- EVENT LISTENERS -------------------------
 
         // Method to update the Quest State for this point 
-        void QuestStateChange(Quest quest)
+        protected void QuestStateChange(Quest quest)
         {
             // Checks if the update receiving is meant for this quest
             if(quest.info.id.Equals(questId))
@@ -176,13 +176,13 @@ namespace Ain
         #region MISSION METHODS
 
         // Method to call a request for starting a Quest
-        void StartQuest()
+        protected virtual void StartQuest()
         {
             GameEventsManager.Instance.questEvents.StartQuest(questId);
         }
 
         // Method to call a request for finishing a Quest
-        void CompleteQuest()
+        protected virtual void CompleteQuest()
         {
             GameEventsManager.Instance.questEvents.FinishQuest(questId);
         }

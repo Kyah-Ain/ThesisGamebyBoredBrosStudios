@@ -21,6 +21,9 @@ public class DialogueNarrator : MonoBehaviour
     // ------------------------- VARIABLES -------------------------
     [Header("EVENTS")]
     public UnityEvent onDialogueDone;
+    public UnityEvent onQuestionRaised;
+    public UnityEvent onAcceptingRequest;
+    public UnityEvent onFinishingRequest;
     
     [Header("REFERENCES")]
     [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
@@ -43,6 +46,8 @@ public class DialogueNarrator : MonoBehaviour
     [Header("STATUS")] 
     [SerializeField] DialogueState dialogueState = DialogueState.Idle; // Basis for what dialogue lines the NPC should use
     private bool _hasNarratedRandomly; // Flag for knowing if the next interaction should close or re-open the dialogue
+    private bool _hasQuestionRaised; // Flag for stopping proceed input of a dialogue when there's a question
+    private bool _isResponseDialogue;
     
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -136,7 +141,8 @@ public class DialogueNarrator : MonoBehaviour
                 
                 // Dialogue logic for when there's a Quest waiting to be fulfilled
                 case QuestState.IN_PROGRESS:
-                    SwitchLines(DialogueState.WaitingForCompletion);
+                    // SwitchLines(DialogueState.WaitingForCompletion);
+                    dialogueState = DialogueState.WaitingForCompletion;
                     break;
                 
                 // Dialogue logic for when there's a Quest waiting to be finished
@@ -172,12 +178,20 @@ public class DialogueNarrator : MonoBehaviour
     // Method to call for executing the dialogue one by one
     void NarrateDialogue()
     {
-        // Proceeds only if the dialogue state was in Idle
-        if (dialogueState == DialogueState.Idle)
+        // Don't proceed while there's a question
+        if (_hasQuestionRaised) return;
+
+        // Finish temporary responses before using the normal dialogue state
+        if (_isResponseDialogue)
+        {
+            NarrateByLines();
+        }
+        // Proceeds only if the dialogue state is Idle or WaitingForCompletion
+        else if (dialogueState == DialogueState.Idle ||
+                 dialogueState == DialogueState.WaitingForCompletion)
         {
             NarrateRandomly();
         }
-        // Proceeds only if the ifs above hasn't fulfilled
         else
         {
             NarrateByLines();
@@ -196,6 +210,15 @@ public class DialogueNarrator : MonoBehaviour
         // Calls the dialogue lines checker
         if (_currentDialogueStep < _currentLines.Length)
         {
+            // Raises the question only for the normal request dialogue
+            if (!_isResponseDialogue &&
+                dialogueState == DialogueState.HasRequest &&
+                _currentDialogueStep == _currentLines.Length - 1)
+            {
+                onQuestionRaised?.Invoke();
+                _hasQuestionRaised = true;
+            }
+
             // Updates the dialogue UI with the line retrieved from the Scriptable Dialogue
             dialogueField.text = _currentLines[_currentDialogueStep];
             
@@ -207,13 +230,17 @@ public class DialogueNarrator : MonoBehaviour
             // Triggers all triggerable included under this Event Array in the Inspector
             onDialogueDone?.Invoke();
             
-            // Decrements the dialogue back to the last line 
-            // currentDialogueStep--;
+            // Triggers quest completion when applicable
+            if (_currentQuestState == QuestState.CAN_FINISH)
+            {
+                onFinishingRequest?.Invoke();
+            }
             
-            // Resets the conversation from the beginning
-            _currentDialogueStep = 0;
-            
-            // debuggerNiAin.Log("Trying to End Convo...");
+            // The temporary response has finished
+            _isResponseDialogue = false;
+
+            // Restores the appropriate dialogue lines for the current state
+            SwitchLines(dialogueState);
         }
     }
     
@@ -247,6 +274,26 @@ public class DialogueNarrator : MonoBehaviour
             // Flips the dialogue to be closed on the next Interaction
             _hasNarratedRandomly = true;
         }
+    }
+    
+    // EXPERIMENTAL - Just me trying to create a dialogue response system
+    public void Accept()
+    {
+        // Accept the quest first, so the dialogue state can update
+        onAcceptingRequest?.Invoke();
+
+        // Start the acceptance response, or skip it if empty
+        ThrowResponse(
+            DialogueInfo[currentDialogueWeek].DialogueLines.AcceptRequestLines
+        );
+    }
+    
+    public void Decline()
+    {
+        // Start the decline response, or skip it if empty
+        ThrowResponse(
+            DialogueInfo[currentDialogueWeek].DialogueLines.DeclineRequestLines
+        );
     }
 
     #endregion
@@ -288,12 +335,47 @@ public class DialogueNarrator : MonoBehaviour
         }
     }
     
+    // Method to start a temporary response dialogue
+    void ThrowResponse(string[] responseLines)
+    {
+        // Reset the previous conversation's temporary status
+        _hasQuestionRaised = false;
+        _hasNarratedRandomly = false;
+        _currentDialogueStep = 0;
+
+        // If the response has no lines, skip it
+        if (responseLines == null || responseLines.Length == 0)
+        {
+            _isResponseDialogue = false;
+
+            // Restore the normal dialogue for the current quest state
+            SwitchLines(dialogueState);
+
+            // Close the dialogue UI through your existing event
+            onDialogueDone?.Invoke();
+
+            return;
+        }
+
+        // Otherwise, start narrating the temporary response
+        _isResponseDialogue = true;
+        _currentLines = responseLines;
+
+        NarrateByLines();
+    }
+    
     // Method to update the Dialogue's Quest reference
     void UpdateQuestAssign(int questNumber)
     {
         // Checks if there are more quest to progress the dialogue with
         if (questNumber < QuestInfo.Length)
         {
+            // Reset the previous conversation
+            _hasQuestionRaised = false;
+            _hasNarratedRandomly = false;
+            _isResponseDialogue = false;
+            _currentDialogueStep = 0;
+            
             // Sets the quest ID to track in this script
             _questId = QuestInfo[questNumber].id;
 
