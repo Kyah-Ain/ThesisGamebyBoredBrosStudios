@@ -53,9 +53,6 @@ public class SimonButton : MonoBehaviour
         if (puzzle == null)
             return;
 
-        // Flash immediately when the player presses the button.
-        FlashPressed();
-
         puzzle.PlayerPressed(direction);
     }
 
