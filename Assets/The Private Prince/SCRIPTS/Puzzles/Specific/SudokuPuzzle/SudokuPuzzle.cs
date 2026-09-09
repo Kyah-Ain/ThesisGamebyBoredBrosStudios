@@ -473,19 +473,19 @@ public class SudokuPuzzle : PuzzleBase
 
     private void HandleCellSelection()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             MoveCell(-1, 0);
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.S))
         {
             MoveCell(1, 0);
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetKeyDown(KeyCode.A))
         {
             MoveCell(0, -1);
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.D))
         {
             MoveCell(0, 1);
         }
@@ -503,8 +503,8 @@ public class SudokuPuzzle : PuzzleBase
 
     private void HandleNumberSelection()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow) ||
-            Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.A) ||
+            Input.GetKeyDown(KeyCode.S))
         {
             selectedNumber--;
 
@@ -514,8 +514,8 @@ public class SudokuPuzzle : PuzzleBase
             UpdateInputUI();
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow) ||
-            Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.D) ||
+            Input.GetKeyDown(KeyCode.W))
         {
             selectedNumber++;
 
@@ -662,12 +662,12 @@ public class SudokuPuzzle : PuzzleBase
             if (numberMode)
             {
                 modeText.text =
-                    "Select Number\nArrows + Enter";
+                    "Select Number\nWASD + Enter";
             }
             else
             {
                 modeText.text =
-                    "Select Cell\nArrow Keys + Enter";
+                    "Select Cell\nWASD + Enter";
             }
         }
 
@@ -713,12 +713,12 @@ public class SudokuPuzzle : PuzzleBase
             return;
 
         bool leftPressed =
-            Input.GetKey(KeyCode.LeftArrow) ||
-            Input.GetKey(KeyCode.DownArrow);
+            Input.GetKey(KeyCode.A) ||
+            Input.GetKey(KeyCode.S);
 
         bool rightPressed =
-            Input.GetKey(KeyCode.RightArrow) ||
-            Input.GetKey(KeyCode.UpArrow);
+            Input.GetKey(KeyCode.D) ||
+            Input.GetKey(KeyCode.W);
 
         if (leftNumberArrow != null)
         {

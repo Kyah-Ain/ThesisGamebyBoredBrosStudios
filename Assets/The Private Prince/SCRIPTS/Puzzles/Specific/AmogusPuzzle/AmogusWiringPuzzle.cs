@@ -113,12 +113,12 @@ public class AmogusWiringPuzzle : PuzzleBase
 
     private void HandleSelectionInput()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             MoveSelection(-1);
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.S))
         {
             MoveSelection(1);
         }
@@ -126,7 +126,7 @@ public class AmogusWiringPuzzle : PuzzleBase
         /*
          * RIGHT selects the current wire.
          */
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.D))
         {
             BeginMovingSelectedWire();
         }
@@ -140,16 +140,16 @@ public class AmogusWiringPuzzle : PuzzleBase
 
         Vector2 movement = Vector2.zero;
 
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.W))
             movement += Vector2.up;
 
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.S))
             movement += Vector2.down;
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.A))
             movement += Vector2.left;
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.D))
             movement += Vector2.right;
 
         if (movement != Vector2.zero)
