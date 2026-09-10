@@ -1,0 +1,130 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class Quest
+{
+    // ------------------------- VARIABLES -------------------------
+
+    // static info
+    public QuestInfoSO info;
+
+    // state info
+    public QuestState state;
+
+    public int currentQuestStepIndex { get; private set; }
+
+    private QuestStepState[] questStepStates;
+
+    // -------------------------- SETTERS -------------------------
+
+    public Quest(QuestInfoSO questInfo)
+    {
+        this.info = questInfo;
+        this.state = QuestState.REQUIREMENTS_NOT_MET;
+        this.currentQuestStepIndex = 0;
+        this.questStepStates = new QuestStepState[info.questStepPrefabs.Length];
+
+        for (int i = 0; i < questStepStates.Length; i++)
+        {
+            questStepStates[i] = new QuestStepState();
+        }
+    }
+
+    public Quest(QuestInfoSO questInfoSO, QuestState questState, int currentQuestStepIndex, QuestStepState[] questStepStates)
+    {
+        this.info = questInfoSO;
+        this.state = questState;
+        this.currentQuestStepIndex = currentQuestStepIndex;
+        this.questStepStates = questStepStates;
+
+        // if the quests step states and prefabs are different lengths,
+        // something has changed during development and the saved data is out of sync
+        if (this.questStepStates.Length != this.info.questStepPrefabs.Length)
+        {
+            Debug.LogWarning("Quest step Prefabs and Quest step state are "
+                + "of different lenghts. This indicates something changed "
+                + " with the QuestInfo and the saved data is now out of sync."
+                + "Reset your data - as this might cause issues. QuestId: " + this.info.id);
+        }
+    }
+
+    public void StoreQuestStepState(QuestStepState questStepState, int stepIndex)
+    {
+        if (stepIndex < questStepStates.Length)
+        {
+            questStepStates[stepIndex].state = questStepState.state;
+        }
+        else
+        {
+            Debug.LogWarning("Tried to access quest step data, but stepIndex was out of range: " +
+                "Quest Id = " + info.id + ", Step Index = " + stepIndex);
+        }
+    }
+
+    // -------------------------- GETTERS -------------------------
+
+    private GameObject GetCurrentQuestStepPrefab()
+    {
+        // TEMPORARY DEBUG
+        Debug.Log($"GetCurrentQuestStepPrefab: stepIndex={currentQuestStepIndex}, " +
+                  $"arrayLength={info.questStepPrefabs.Length}, " +
+                  $"CurrentStepExists()={CurrentStepExists()}");
+
+        GameObject questStepPrefab = null;
+        if (CurrentStepExists())
+        {
+            questStepPrefab = info.questStepPrefabs[currentQuestStepIndex];
+        }
+        else
+        {
+            Debug.LogWarning("Tried to get quest step prefab, but stepIndex was out of range: "
+                + "QuestId=" + info.id + ", stepIndex=" + currentQuestStepIndex);
+        }
+        return questStepPrefab;
+    }
+
+    public QuestData GetQuestData()
+    {
+        return new QuestData(state, currentQuestStepIndex, questStepStates);
+    }
+
+    // -------------------------- HELPERS -------------------------
+
+    public void MoveToNextStep()
+    {
+        currentQuestStepIndex++;
+    }
+
+    public bool CurrentStepExists()
+    {
+        return currentQuestStepIndex < info.questStepPrefabs.Length;
+    }
+
+    public void InstantiateCurrentQuestStep(Transform parentTransform)
+    {
+        //GameObject questStepPrefab = GetCurrentQuestStepPrefab();
+        //if (questStepPrefab != null)
+        //{
+        //    // Instantiate without a parent to preserve the prefab's world transform
+        //    GameObject instance = Object.Instantiate(questStepPrefab);
+
+        //    // Then parent it while keeping its world position/rotation/scale intact
+        //    instance.transform.SetParent(parentTransform, worldPositionStays: true);
+
+        //    QuestStep questStep = instance.GetComponent<QuestStep>();
+        //    questStep.InitializeQuestStep(info.id, currentQuestStepIndex, questStepStates[currentQuestStepIndex].state);
+        //}
+
+        GameObject questStepPrefab = GetCurrentQuestStepPrefab();
+        if (questStepPrefab != null)
+        {
+            QuestStep questStep = Object.Instantiate<GameObject>(questStepPrefab, parentTransform)
+                .GetComponent<QuestStep>();
+            // questStep.InitializeQuestStep(info.id, currentQuestStepIndex, questStepStates[currentQuestStepIndex].state);
+
+            // *consider doing it in object pooling if it results to performance issues
+        }
+    }
+}

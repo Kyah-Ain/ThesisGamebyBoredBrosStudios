@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using TMPro;
-using UnityEngine;
+
+// Sets this script to execute before most other scripts (the lower = the earlier)
+[DefaultExecutionOrder(-100)]
 
 public class SaveManager : MonoBehaviour
 {
@@ -11,7 +14,7 @@ public class SaveManager : MonoBehaviour
 
     public static event Action OnSaveStateChanged;
 
-    [SerializeField] private GameEvent onLoadGame; // ...
+    // [SerializeField] private GameEvent onLoadGame; // ...
 
     public Action onEnteringNewRegion;
 
@@ -60,7 +63,7 @@ public class SaveManager : MonoBehaviour
             instance = this; // Set the singleton instance
 
             // Marks this GameObjects' root parent if there is one, and sets it to itself if there's none
-            DontDestroyOnLoad(this.transform.root);
+            DontDestroyOnLoad(this.transform.root.gameObject);
         }
         else
         {
@@ -80,7 +83,7 @@ public class SaveManager : MonoBehaviour
         //LoadGameOnStart();
     }
 
-    // ------------------------ SAVE METHODS ---------------------------
+    // ------------------------ SAVE & LOAD METHODS ---------------------------
 
     // ...
     public void Save() 
@@ -89,21 +92,11 @@ public class SaveManager : MonoBehaviour
         ThingsToSave();
     }
 
-    // Accessible Method to process Save Game Data
-    public void SaveGame(SaveableData dataToSave)
+    // ...
+    public void Load()
     {
         // ...
-        OnSaveStateChanged?.Invoke();
-
-        // ...
-        FileStream file = File.Create(savingFilePath);
-        BinaryFormatter bf = new BinaryFormatter();
-
-        // ...
-        bf.Serialize(file, dataToSave);
-        file.Close();
-
-        Debug.Log($"Game saved to {savingFilePath}!");
+        LoadGame();
     }
 
     // Pre-Built Method to save Core Data/s (Dev's Custom Method)
@@ -129,13 +122,41 @@ public class SaveManager : MonoBehaviour
         SaveGame(dataBus);
     }
 
-    // ------------------------ LOAD METHODS ---------------------------
+    
+    // Pre-Built Method to load Core Data/s (Dev's Custom Method)
+    public void ThingsToLoad()
+    {
+        if (dataBus != null) 
+        {
+            // Calls Methods that 'Overwrites' data/s on the referenced objects
+            GetWorldData();
+            GetQuestData();
+            GetPlayerData();
+            GetInventoryData();
+            GetSettingsData();
+        }
 
-    // ...
-    public void Load()
+        // // ...
+        // onLoadGame.TriggerEvent();
+    }
+
+    // ------------------------ PROCESSORS ---------------------------
+
+    // Accessible Method to process Save Game Data
+    public void SaveGame(SaveableData dataToSave)
     {
         // ...
-        LoadGame();
+        OnSaveStateChanged?.Invoke();
+
+        // ...
+        FileStream file = File.Create(savingFilePath);
+        BinaryFormatter bf = new BinaryFormatter();
+
+        // ...
+        bf.Serialize(file, dataToSave);
+        file.Close();
+
+        Debug.Log($"Game saved to {savingFilePath}!");
     }
 
     // Method to process Load Game Data
@@ -191,23 +212,6 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    // Pre-Built Method to load Core Data/s (Dev's Custom Method)
-    public void ThingsToLoad()
-    {
-        if (dataBus != null) 
-        {
-            // Calls Methods that 'Overwrites' data/s on the referenced objects
-            GetWorldData();
-            GetQuestData();
-            GetPlayerData();
-            GetInventoryData();
-            GetSettingsData();
-        }
-
-        // ...
-        onLoadGame.TriggerEvent();
-    }
-
     // ------------------------ SETTER METHODS ---------------------------
 
     // ...
@@ -222,27 +226,27 @@ public class SaveManager : MonoBehaviour
     // ...
     public void SetQuestData()
     {
-        Debug.Log($"SaveManager: SetQuestData() - Starting quest data collection");
+        // Debug.Log($"SaveManager: SetQuestData() - Starting quest data collection");
 
-        if (QuestManager.Instance != null)
-        {
-            // Get ALL quest data from the QuestManager
-            var allQuestData = QuestManager.Instance.GetAllQuestData();
-            dataBus.questData.quests.Clear();
+        // if (QuestManager.Instance != null)
+        // {
+        //     // Get ALL quest data from the QuestManager
+        //     var allQuestData = QuestManager.Instance.GetAllQuestData();
+        //     dataBus.questData.quests.Clear();
 
-            Debug.Log($"SaveManager: Found {allQuestData.Count} quests to save");
+        //     Debug.Log($"SaveManager: Found {allQuestData.Count} quests to save");
 
-            // Convert each quest to SerializedQuest and add to container
-            foreach (var kvp in allQuestData)
-            {
-                dataBus.questData.quests.Add(new SerializedQuest(kvp.Key, kvp.Value));
-                Debug.Log($"SaveManager: Saved quest - ID: {kvp.Key}, State: {kvp.Value.state}, StepIndex: {kvp.Value.questStepIndex}");
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"SaveManager: QuestManager.Instance is null, cannot save quest data");
-        }
+        //     // Convert each quest to SerializedQuest and add to container
+        //     foreach (var kvp in allQuestData)
+        //     {
+        //         dataBus.questData.quests.Add(new SerializedQuest(kvp.Key, kvp.Value));
+        //         Debug.Log($"SaveManager: Saved quest - ID: {kvp.Key}, State: {kvp.Value.state}, StepIndex: {kvp.Value.questStepIndex}");
+        //     }
+        // }
+        // else
+        // {
+        //     Debug.LogWarning($"SaveManager: QuestManager.Instance is null, cannot save quest data");
+        // }
     }
 
     // ...
@@ -285,23 +289,23 @@ public class SaveManager : MonoBehaviour
     // NEW: Load quest data and initialize QuestManager
     public void GetQuestData()
     {
-        if (QuestManager.Instance != null && dataBus.questData != null)
-        {
-            Dictionary<string, QuestData> questDataMap = new Dictionary<string, QuestData>();
+        // if (QuestManager.Instance != null && dataBus.questData != null)
+        // {
+        //     Dictionary<string, QuestData> questDataMap = new Dictionary<string, QuestData>();
 
-            foreach (var serializedQuest in dataBus.questData.quests)
-            {
-                questDataMap.Add(serializedQuest.questId, serializedQuest.ToQuestData());
-            }
+        //     foreach (var serializedQuest in dataBus.questData.quests)
+        //     {
+        //         questDataMap.Add(serializedQuest.questId, serializedQuest.ToQuestData());
+        //     }
 
-            // Initialize QuestManager with saved data
-            QuestManager.Instance.InitializeQuests(questDataMap);
-        }
-        else if (QuestManager.Instance != null)
-        {
-            // Initialize with no saved data (fresh game)
-            QuestManager.Instance.InitializeQuests();
-        }
+        //     // Initialize QuestManager with saved data
+        //     QuestManager.Instance.InitializeQuests(questDataMap);
+        // }
+        // else if (QuestManager.Instance != null)
+        // {
+        //     // Initialize with no saved data (fresh game)
+        //     QuestManager.Instance.InitializeQuests();
+        // }
     }
 
     // ...

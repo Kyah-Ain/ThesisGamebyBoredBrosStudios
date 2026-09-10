@@ -5,7 +5,7 @@ using UnityEngine.Events;
 /// <summary>
 /// Auto-triggering dialogue that doesn't require trigger colliders
 /// </summary>
-public class AutoDialogueTrigger : DialogueInteraction, IInteractable
+public class AutoDialogueTrigger : DialogueInteraction, ITalkable
 {
     [Header("AUTO DIALOGUE SETTINGS")]
     [SerializeField] private DialogueObject dialogueObject;
@@ -78,7 +78,7 @@ public class AutoDialogueTrigger : DialogueInteraction, IInteractable
             // Switch action map
             if (GameplayInputManager.Instance != null)
             {
-                GameplayInputManager.Instance.SwitchActionMap("UserNavigation");
+                GameplayInputManager.Instance.EnableMap("UserNavigation");
             }
 
             // Show dialogue

@@ -8,7 +8,7 @@ public class SpawnPoint : MonoBehaviour
 
     [SerializeField] protected float moveOffset = 0f; // Offset to prevent teleporting into the destination portal's collider
 
-    // --------------------------- TP METHODS -------------------------
+    // -------------------------- TP METHODS -------------------------
 
     // Protected helper method that derived classes can use
     public void MoveSpawnPoint(Transform objToAttachedTo)

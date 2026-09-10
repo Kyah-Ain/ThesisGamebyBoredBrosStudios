@@ -4,7 +4,7 @@ using UnityEngine;
 
 using UnityEngine.Events;
 
-public class EventDialogueInteraction : MonoBehaviour, IInteractable
+public class EventDialogueInteraction : MonoBehaviour, ITalkable
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -104,7 +104,7 @@ public class EventDialogueInteraction : MonoBehaviour, IInteractable
         // Switch to navigation action map
         if (GameplayInputManager.Instance != null)
         {
-            GameplayInputManager.Instance.SwitchActionMap("UserNavigation");
+            GameplayInputManager.Instance.EnableMap("UserNavigation");
         }
 
         // Show the dialogue on THIS object's canvas, not the player's

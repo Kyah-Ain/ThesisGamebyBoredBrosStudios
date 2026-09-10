@@ -31,7 +31,7 @@ public class NPCDialogueController : MonoBehaviour
         UpdateDialogue();
     }
 
-    private void OnQuestStateChange(Quest quest)
+    private void OnQuestStateChange(Ain.Quest quest)
     {
         if (quest.info.id == questId)
         {
@@ -41,13 +41,13 @@ public class NPCDialogueController : MonoBehaviour
 
     private void UpdateDialogue()
     {
-        if (QuestManager.Instance == null || string.IsNullOrEmpty(questId))
+        if (Ain.QuestManager.Instance == null || string.IsNullOrEmpty(questId))
         {
             SetDialogue(defaultDialogue);
             return;
         }
 
-        Quest quest = QuestManager.Instance.GetQuestById(questId);
+        Ain.Quest quest = Ain.QuestManager.Instance.GetQuestById(questId);
         if (quest == null)
         {
             SetDialogue(defaultDialogue);
@@ -58,7 +58,7 @@ public class NPCDialogueController : MonoBehaviour
         SetDialogue(bestMatch != null ? bestMatch : defaultDialogue);
     }
 
-    private DialogueObject FindBestDialogueForState(Quest quest)
+    private DialogueObject FindBestDialogueForState(Ain.Quest quest)
     {
         DialogueObject bestMatch = null;
         int bestPriority = -1;
@@ -79,7 +79,7 @@ public class NPCDialogueController : MonoBehaviour
         return bestMatch;
     }
 
-    private int CalculatePriority(DialogueState state, Quest quest)
+    private int CalculatePriority(DialogueState state, Ain.Quest quest)
     {
         // Check step index constraints
         bool stepValid = true;
@@ -111,13 +111,13 @@ public class NPCDialogueController : MonoBehaviour
     {
         Debug.Log($"NPCDialogueController: Resetting to default dialogue for {questId}");
 
-        if (QuestManager.Instance == null || string.IsNullOrEmpty(questId))
+        if (Ain.QuestManager.Instance == null || string.IsNullOrEmpty(questId))
         {
             SetDialogue(defaultDialogue);
             return;
         }
 
-        Quest quest = QuestManager.Instance.GetQuestById(questId);
+        Ain.Quest quest = Ain.QuestManager.Instance.GetQuestById(questId);
         if (quest == null)
         {
             SetDialogue(defaultDialogue);

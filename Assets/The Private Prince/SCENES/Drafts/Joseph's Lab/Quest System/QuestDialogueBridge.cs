@@ -7,7 +7,7 @@ public class QuestDialogueBridge : MonoBehaviour
     public void StartQuestByString(string questId)
     {
         Debug.Log($"QuestDialogueBridge: Starting quest {questId}");
-        Debug.Log($"QuestManager.Instance = {QuestManager.Instance}");
+        // Debug.Log($"QuestManager.Instance = {QuestManager.Instance}");
         Debug.Log($"GameEventsManager.Instance = {GameEventsManager.Instance}");
 
         if (GameEventsManager.Instance != null)
@@ -59,7 +59,7 @@ public class QuestDialogueBridge : MonoBehaviour
     public void StartQuestByIdSO(QuestInfoSO questId)
     {
         Debug.Log($"QuestDialogueBridge: Starting quest {questId}");
-        Debug.Log($"QuestManager.Instance = {QuestManager.Instance}");
+        // Debug.Log($"QuestManager.Instance = {QuestManager.Instance}");
         Debug.Log($"GameEventsManager.Instance = {GameEventsManager.Instance}");
 
         if (GameEventsManager.Instance != null)

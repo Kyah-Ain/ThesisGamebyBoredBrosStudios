@@ -88,9 +88,9 @@ public class MenuManager : MonoBehaviour
             // Unsubscribe first to prevent double or multiple subscriptions 
             UnSubscribeToControls();
 
-            ppControls.UserNavigation.NavigateUI.performed += OnNavigatePerformed;
-            ppControls.UserNavigation.Interact.performed += OnSubmitPerformed;
-            ppControls.UserNavigation.Interact.performed += TriggerSkip;
+            ppControls.UI.NavigateUI.performed += OnNavigatePerformed;
+            ppControls.UI.Proceed.performed += OnSubmitPerformed;
+            ppControls.UI.Proceed.performed += TriggerSkip;
             //ppControls.UserNavigation.Cancel.performed += OnCancelPerformed;
         }
         else
@@ -104,9 +104,9 @@ public class MenuManager : MonoBehaviour
     {
         if (ppControls != null)
         {
-            ppControls.UserNavigation.NavigateUI.performed -= OnNavigatePerformed;
-            ppControls.UserNavigation.Interact.performed -= OnSubmitPerformed;
-            ppControls.UserNavigation.Interact.performed -= TriggerSkip;
+            ppControls.UI.NavigateUI.performed -= OnNavigatePerformed;
+            ppControls.UI.Proceed.performed -= OnSubmitPerformed;
+            ppControls.UI.Proceed.performed -= TriggerSkip;
             //ppControls.UserNavigation.Cancel.performed -= OnCancelPerformed;
         }
     }

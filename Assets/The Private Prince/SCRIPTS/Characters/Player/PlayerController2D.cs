@@ -39,7 +39,7 @@ public class PlayerController2D : BaseCharacterController
 
     // Getter for dialogue UI
     public DialogueUI DialogueUI => dialogueUI;
-    public IInteractable Interactable { get; set; }
+    public ITalkable Interactable { get; set; }
 
     // Start is called before the first frame update
     private void Start()

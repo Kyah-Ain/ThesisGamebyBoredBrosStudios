@@ -88,7 +88,7 @@ public abstract class PuzzleBase : MonoBehaviour
 
         if (timeLimit > 0f)
         {
-            timer -= Time.deltaTime;
+            timer -= Time.unscaledDeltaTime;
             if (timer <= 0f)
             {
                 PuzzleManager.Instance.EndPuzzle(PuzzleResult.Failed);

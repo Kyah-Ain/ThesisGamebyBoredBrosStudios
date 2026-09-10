@@ -41,7 +41,9 @@ public class QuestAutoFinisher : MonoBehaviour
     {
         // Makes the OnQuestStateChange method to listens for the Quest State changes (for Auto Trigger Purposes)
         if (GameEventsManager.Instance != null)
+        {
             GameEventsManager.Instance.questEvents.onQuestStateChange += OnQuestStateChange;
+        }
     }
 
     // Built-In Unity method that automatically called 2nd (when Inactive) 
@@ -49,13 +51,15 @@ public class QuestAutoFinisher : MonoBehaviour
     {
         // Makes the OnQuestStateChange method to unlistens for the Quest State changes (for Saving Memory Pusposes)
         if (GameEventsManager.Instance != null)
+        {
             GameEventsManager.Instance.questEvents.onQuestStateChange -= OnQuestStateChange;
+        }
     }
 
     // -------------------------- QUEST METHODS -------------------------
 
     // Method that lets this script change a state of a Quest
-    private void OnQuestStateChange(Quest quest) 
+    private void OnQuestStateChange(Ain.Quest quest) 
     {
         // Only proceeds if the Quest Update was meant for this Quest Id
         if (!quest.info.id.Equals(questId)) return;
@@ -63,7 +67,7 @@ public class QuestAutoFinisher : MonoBehaviour
         // Only proceeds if the Quest State was up to be Finished (All Quest Steps were fulfilled)
         if (quest.state == QuestState.CAN_FINISH) 
         {
-            Debug.Log($"QuestAutoFinisher: Quest '{questId}' is CAN_FINISH — auto-finishing.");
+            Debug.Log($"QuestAutoFinisher: Quest '{questId}' is CAN_FINISH ï¿½ auto-finishing.");
             GameEventsManager.Instance.questEvents.FinishQuest(questId);
 
             // Invokes/Trigger an event for anyone who want to subscribe for when this quest ends

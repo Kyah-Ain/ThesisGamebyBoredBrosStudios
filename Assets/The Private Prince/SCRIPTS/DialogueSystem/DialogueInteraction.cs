@@ -10,7 +10,7 @@ public class DialogueInteraction : MonoBehaviour
     [SerializeField] protected DialogueUI dialogueUI;
 
     public DialogueUI DialogueUI => dialogueUI;
-    public IInteractable Interactable { get; set; }
+    public ITalkable Interactable { get; set; }
 
     public int dialogueIterationLimit;
 

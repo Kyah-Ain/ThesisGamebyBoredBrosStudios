@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Creates a menu option in Unity's Create menu for making DialogueObject assets
-[CreateAssetMenu(menuName = "Dialogue/DialogueObject")]
+[CreateAssetMenu(menuName = "Dialogue/DialogueObject", order = 2)]
 public class DialogueObject : ScriptableObject
 {
     [SerializeField][TextArea] private string[] dialogue; // Array of dialogue text with text area attribute for easier editing
