@@ -13,13 +13,8 @@ public class DialogueInfoSO : ScriptableObject
     public string dialogueName;
 
     [Header("Dialogue")]
-    // [TextArea] public string[] IdleLines;
-    // [TextArea] public string[] HasRequestLines;
-    // [TextArea] public string[] WaitingForCompletionLines;
-    // [TextArea] public string[] CanFinishRequestLines;
+    public Dialogue dialogue;
     
-    public Dialogue DialogueLines;
-    // public Responses[] Responses;
     // ------------------------- METHODS -------------------------
     
     // Built-In Uity Method to ensure the 'id' field is always set to the name of the ScriptableObject asset
@@ -43,29 +38,21 @@ public class DialogueInfoSO : ScriptableObject
 [System.Serializable]
 public class Dialogue
 {
-    // Private Data
-    [SerializeField][TextArea] private string[] idleLines;
-    [SerializeField][TextArea] private string[] hasRequestLines;
-    [SerializeField][TextArea] private string[] acceptRequestLines;
-    [SerializeField][TextArea] private string[] declineRequestLines;
-    [SerializeField][TextArea] private string[] waitingForCompletionLines;
-    [SerializeField][TextArea] private string[] canFinishRequestLines;
+    // Private Data (can only be seen & set in the Inspector of this Instance)
+    [SerializeField] private DialogueLines idleLines;
+    [SerializeField] private DialogueLines hasRequestLines;
+    [SerializeField] private DialogueLines acceptRequestLines;
+    [SerializeField] private DialogueLines declineRequestLines;
+    [SerializeField] private DialogueLines waitingForCompletionLines;
+    [SerializeField] private DialogueLines canFinishRequestLines;
     
-    // Readable Only Copies
-    public string[] IdleLines => idleLines;
-    public string[] HasRequestLines => hasRequestLines;
-    public string[] AcceptRequestLines => acceptRequestLines;
-    public string[] DeclineRequestLines => declineRequestLines;
-    public string[] WaitingForCompletionLines => waitingForCompletionLines;
-    public string[] CanFinishRequestLines => canFinishRequestLines;
-}
-
-// Makes this class serializable so it can be displayed in the Unity Inspector
-[System.Serializable]
-public class Responses
-{
-    [SerializeField][TextArea] private string responseText; // The text that will appear on the response button
-    // [SerializeField] private 
+    // Readable Copies of "Private Data" (accessible Xerox for other scripts)
+    public string[] IdleLines => idleLines.speechLines;
+    public string[] HasRequestLines => hasRequestLines.speechLines;
+    public string[] AcceptRequestLines => acceptRequestLines.speechLines;
+    public string[] DeclineRequestLines => declineRequestLines.speechLines;
+    public string[] WaitingForCompletionLines => waitingForCompletionLines.speechLines;
+    public string[] CanFinishRequestLines => canFinishRequestLines.speechLines;
 }
 
 #endregion

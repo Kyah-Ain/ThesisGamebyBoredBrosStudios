@@ -284,7 +284,7 @@ public class DialogueNarrator : MonoBehaviour
 
         // Start the acceptance response, or skip it if empty
         ThrowResponse(
-            DialogueInfo[currentDialogueWeek].DialogueLines.AcceptRequestLines
+            DialogueInfo[currentDialogueWeek].dialogue.AcceptRequestLines
         );
     }
     
@@ -292,7 +292,7 @@ public class DialogueNarrator : MonoBehaviour
     {
         // Start the decline response, or skip it if empty
         ThrowResponse(
-            DialogueInfo[currentDialogueWeek].DialogueLines.DeclineRequestLines
+            DialogueInfo[currentDialogueWeek].dialogue.DeclineRequestLines
         );
     }
 
@@ -315,22 +315,22 @@ public class DialogueNarrator : MonoBehaviour
         {
             // Dialogue for Idle State
             case DialogueState.Idle:
-                _currentLines = DialogueInfo[currentDialogueWeek].DialogueLines.IdleLines;
+                _currentLines = DialogueInfo[currentDialogueWeek].dialogue.IdleLines;
                 break;
             
             // Dialogue for HasRequest State
             case DialogueState.HasRequest:
-                _currentLines = DialogueInfo[currentDialogueWeek].DialogueLines.HasRequestLines; 
+                _currentLines = DialogueInfo[currentDialogueWeek].dialogue.HasRequestLines; 
                 break;
             
             // Dialogue for WaitingForCompletion State
             case DialogueState.WaitingForCompletion:
-                _currentLines = DialogueInfo[currentDialogueWeek].DialogueLines.WaitingForCompletionLines; 
+                _currentLines = DialogueInfo[currentDialogueWeek].dialogue.WaitingForCompletionLines; 
                 break;
             
             // Dialogue for CanFinishRequest State
             case DialogueState.CanFinishRequest:
-                _currentLines = DialogueInfo[currentDialogueWeek].DialogueLines.CanFinishRequestLines; 
+                _currentLines = DialogueInfo[currentDialogueWeek].dialogue.CanFinishRequestLines; 
                 break;
         }
     }
