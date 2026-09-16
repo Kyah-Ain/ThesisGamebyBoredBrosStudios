@@ -334,7 +334,7 @@ public class MenuManager : MonoBehaviour
     public void SkipAnimation()
     {
         animatorUI.SetTrigger("isInteracted");
-        SfxManager.Instance.PlayUISFX(SfxManager.Instance.audioStart);
+        // SfxManager.Instance.PlayUISFX(SfxManager.Instance.audioStart);
     }
 
     // ...

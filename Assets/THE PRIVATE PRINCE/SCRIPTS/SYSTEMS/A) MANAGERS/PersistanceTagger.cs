@@ -9,8 +9,7 @@ public class PersistanceTagger : MonoBehaviour
     // * should also set the option to "PARENTS_AND_ROOT_ONLY" if this is the case 
 
     // ------------------------- VARIABLES -------------------------
-
-    // ADD VARIABLES HERE IF NEEDED...
+    
     public enum PersistenceScope
     {
         THIS_ONLY,        // Only this GameObject

@@ -11,8 +11,10 @@ using UnityEngine.Events; // Grants access to Unity's event system classes and f
 [RequireComponent(typeof(DebuggerNiAinPjls))]
 public class GameManager : MonoBehaviour
 {
-    // ---------------------------- VARIABLES -------------------------
+    // ---------------------------- VARIABLES --------------------------
 
+    [Header("REFERENCES")]
+    [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
     private static GameManager instance; // Singleton value, changeabl only here on this script
     public static GameManager Instance => instance; // Singleton instance for global access (On Reading Onleh)
     private PrivatePrinceControls ppControls; // In-Game Control Map
@@ -22,30 +24,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] UnityEvent onBackToMenu;
     [SerializeField] UnityEvent onLoadingScenes;
     [SerializeField] UnityEvent onFinishLoadingScenes;
-
-    [Header("REFERENCES")]
-    [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
-
-    // Scene names waiting to be loaded
-    [SerializeField] List<string> _sceneQueue = new List<string>();
-
-    // AsyncOperations currently being processed
-    [SerializeField] List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
-
-    [SerializeField] GameObject _loadingBarObject;
+    
+    [Header("VISUALS")]
     [SerializeField] Image _loadingBar;
 
-    public ActivationManager activationManager; // Reference to the PanelManager.cs that handles UI panels and prompts
-
     [Header("DATA")]
-    [SerializeField] string mainMenu = "Replace This With Your Main Menu's Scene Name";
+    // Scene names waiting to be loaded
+    [SerializeField] List<string> _sceneQueue = new List<string>();
+    
+    // AsyncOperations currently being processed
+    [SerializeField] List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
     
     [Header("STATUS")]
     [SerializeField] bool enableLoadScreenDelay;
     [SerializeField] float loadScreenDelay = 3f;
-
-    // [SerializeField] string startingScene;
-    //public string _loadingScreenScene = "Type Here Your Scene Name!";
 
     // ---------------------------- UNITY METHODS ---------------------------
 
@@ -56,8 +48,6 @@ public class GameManager : MonoBehaviour
         if (debuggerNiAin == null)
             // If it is not, then set it automatically by looking for the script class from this object
             debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
-
-        _loadingBarObject.SetActive(false);
 
         // Implement singleton pattern to ensure only one instance of PlayerInputManager exists
         if (instance == null)
@@ -149,18 +139,6 @@ public class GameManager : MonoBehaviour
     // ...
     public void TryStart()
     {
-        // ...
-        _loadingBarObject.SetActive(true);
-
-        // // Evaluate if the player has already played at least one level by checking the highest level reached
-        // if (LevelManager.Instance.highestLevel > 1)
-        // {
-        //     // Open the prompt panel to confirm starting a new game
-        //     activationManager.Activate();
-
-        //     return;
-        // }
-
         // ...
         onFreshStart?.Invoke();
     }
@@ -310,12 +288,6 @@ public class GameManager : MonoBehaviour
             _loadingBar.fillAmount = 0.0f;
         }
 
-        // Make sure the loading bar is visible
-        if (_loadingBarObject != null)
-        {
-            _loadingBarObject.SetActive(true);
-        }
-
         // Start processing the queue
         StartCoroutine(ProcessSceneQueue());
     }
@@ -385,7 +357,7 @@ public class GameManager : MonoBehaviour
             while (!sceneLoad.isDone)
             {
                 // Check if references are valid before using them
-                if (_loadingBar == null || _loadingBarObject == null)
+                if (_loadingBar == null)
                 {
                     debuggerNiAin.Warn(
                         "Loading bar references were destroyed - exiting coroutine."
@@ -436,7 +408,7 @@ public class GameManager : MonoBehaviour
             while (_loadingBar.fillAmount < completedTargetProgress)
             {
                 // Check if references are valid before using them
-                if (_loadingBar == null || _loadingBarObject == null)
+                if (_loadingBar == null)
                 {
                     debuggerNiAin.Warn(
                         "Loading bar references were destroyed - exiting coroutine."
@@ -491,15 +463,6 @@ public class GameManager : MonoBehaviour
         _scenesToLoad.Clear();
 
         StartCoroutine(LoadScreenDelay());
-
-        // ...
-        // Keep this disabled if the loading bar should remain visible.
-        // If you want it hidden after loading, uncomment this section.
-
-        // if (_loadingBarObject != null)
-        // {
-        //     _loadingBarObject.SetActive(false);
-        // }
     }
 
     // Method to delay the loadscreen appearance
