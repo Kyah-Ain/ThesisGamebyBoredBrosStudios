@@ -17,7 +17,7 @@ public class DialogueForNPC : MonoBehaviour
     
     [Header("REFERENCES")]
     [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
-    [SerializeField] private DialogueInfoSO dialogueInfo;
+    private DialogueInfoSO dialogueInfo;
     
     [Header("STATUS")]
     [SerializeField] private bool isPlayerNear;
@@ -93,15 +93,21 @@ public class DialogueForNPC : MonoBehaviour
     
     // ----------------------- NPC METHODS -------------------------
     #region NPC METHODS
-
+    
     // Method to call for making the NPC talk
+    public void Talk()
+    {
+        // Triggers all triggerable included under this Event Array in the Inspector
+        onNPCTalk?.Invoke();
+    }
+
+    // Overload Method to call for making the NPC talk only if the player interacted it
     void Talk(InputAction.CallbackContext context)
     {
         // Proceeds only if the player is in the interaction zone 
         if (isPlayerNear)
         {
-            // Triggers all triggerable included under this Event Array in the Inspector
-            onNPCTalk?.Invoke();
+            Talk();
         }
     }
 

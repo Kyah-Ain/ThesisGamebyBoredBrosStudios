@@ -197,7 +197,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8791747864508165366}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
         m_MethodName: Decline
         m_Mode: 1
@@ -234,7 +234,7 @@ GameObject:
   - component: {fileID: 4881411901549338884}
   - component: {fileID: 1158269563340758007}
   - component: {fileID: 968097853914387638}
-  - component: {fileID: 8791747864508165366}
+  - component: {fileID: 6492846269517809203}
   m_Layer: 0
   m_Name: Canvas _ NPC Dummy
   m_TagString: Untagged
@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableLogs: 1
---- !u!114 &8791747864508165366
+--- !u!114 &6492846269517809203
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -347,101 +347,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 692294159657084541}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d64bf0bca1dc883488e1547a0f15fdbb, type: 3}
+  m_Script: {fileID: 11500000, guid: a200bce00a692f84ab7d6d8d80e53c1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onDialogueStarted:
+    m_PersistentCalls:
+      m_Calls: []
   onDialogueDone:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
-        m_MethodName: ExecuteEvents
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
+  debuggerNiAin: {fileID: 0}
+  dialogueLines: {fileID: 0}
+  dialogueField: {fileID: 0}
   onQuestionRaised:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 208414765526250536}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
   onAcceptingRequest:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
-        m_MethodName: StartQuest
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
-        m_MethodName: StartQuest
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onFinishingRequest:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
-        m_MethodName: CompleteQuest
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
-        m_MethodName: CompleteQuest
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  debuggerNiAin: {fileID: 968097853914387638}
-  QuestInfo:
-  - {fileID: 11400000, guid: 0d7961ff918d14d43b913060cb3064bc, type: 2}
-  - {fileID: 11400000, guid: 48b06bd5ff632374b9345cce4c83029a, type: 2}
-  DialogueInfo:
-  - {fileID: 11400000, guid: 63552fe2b2a39a4429ea86663cb5d10d, type: 2}
-  - {fileID: 11400000, guid: 7127dae54b5f78248b414847b5942428, type: 2}
-  dialogueField: {fileID: 7118298345427201896}
+      m_Calls: []
+  QuestInfo: []
+  DialogueInfo: []
   dialogueState: 0
 --- !u!1 &2376079129520170126
 GameObject:
@@ -1028,7 +956,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8791747864508165366}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
         m_MethodName: Accept
         m_Mode: 1

@@ -73,7 +73,7 @@ namespace Ain
             UnSubscribe();
         }
 
-        // OnDisable is called when the object becomes disabled
+        // OnStart is called once before the first frame update
         void Start()
         {
             // InitializedQuestStates();

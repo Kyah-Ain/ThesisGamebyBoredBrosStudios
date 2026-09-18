@@ -5746,12 +5746,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0945274a7e1c74e40926006eecbc4403, type: 3}
---- !u!4 &1066226876 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6539379124599391357, guid: 0945274a7e1c74e40926006eecbc4403,
-    type: 3}
-  m_PrefabInstance: {fileID: 1066226875}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1070645485
 GameObject:
   m_ObjectHideFlags: 0
@@ -6195,7 +6189,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1066226876}
   - {fileID: 2115694472}
   - {fileID: 1577656270}
   - {fileID: 1074758922}
@@ -6204,6 +6197,7 @@ Transform:
   - {fileID: 1510792188}
   - {fileID: 9178438}
   - {fileID: 1345467335}
+  - {fileID: 1644156256}
   m_Father: {fileID: 117150756}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1154350067
@@ -8885,6 +8879,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1914180096}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1644156256 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2699431810494694305, guid: 0945274a7e1c74e40926006eecbc4403,
+    type: 3}
+  m_PrefabInstance: {fileID: 1066226875}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1650789290
 GameObject:
   m_ObjectHideFlags: 0
@@ -13085,6 +13085,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 547498377}
     m_Modifications:
+    - target: {fileID: 2051466530146241229, guid: 73003b7ab5b3804488d8c10da2b1120f,
+        type: 3}
+      propertyPath: onNPCTalk.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExecuteEvents
+      objectReference: {fileID: 0}
     - target: {fileID: 5632190882012917104, guid: 73003b7ab5b3804488d8c10da2b1120f,
         type: 3}
       propertyPath: m_LocalPosition.x
