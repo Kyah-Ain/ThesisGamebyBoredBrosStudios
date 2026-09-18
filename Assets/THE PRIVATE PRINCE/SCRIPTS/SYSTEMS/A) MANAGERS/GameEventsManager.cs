@@ -54,11 +54,11 @@ public class GameEventsManager : MonoBehaviour
         // Detach this gameobject to any parent object its attached to
         transform.SetParent(null);
 
+        // Persist this object so it wont destroy between game loads
+        DontDestroyOnLoad(this.gameObject);
+        
         // Calls the Initialization
         InitializeEvents();
-
-        // Persist this object so it wont destroy between game loads
-        DontDestroyOnLoad(this.transform.root.gameObject);
     }
 
     #endregion

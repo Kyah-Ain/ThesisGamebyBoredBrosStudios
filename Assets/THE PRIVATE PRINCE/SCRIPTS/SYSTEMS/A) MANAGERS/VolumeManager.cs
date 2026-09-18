@@ -58,7 +58,7 @@ public class VolumeManager : MonoBehaviour
 
         if (MusicManager.Instance != null && MusicManager.Instance.audioSource != null)
             MusicManager.Instance.audioSource.volume = music;
-        SfxManager.Instance?.SetVolume(sfx);
+        // SfxManager.Instance?.SetVolume(sfx);
     }
 
     // Method that applies the Slider Values to set the loudness of the BGM
@@ -73,7 +73,7 @@ public class VolumeManager : MonoBehaviour
     // Method that applies the Slider Values to set the loudness of the SFX
     public void SetSFXVolume(float value)
     {
-        SfxManager.Instance?.SetVolume(value);
+        // SfxManager.Instance?.SetVolume(value);
         PlayerPrefs.SetFloat(SFX_VOL_KEY, value);
         PlayerPrefs.Save();
     }

@@ -10,7 +10,7 @@ namespace Ain
         // ------------------------- VARIABLES -------------------------
 
         [Header("REFERENCES")]
-        [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
+        [SerializeField] protected DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
         [SerializeField] QuestInfoSO questInfoForPoint; // Reference to the Quest Data Informations
         // private PrivatePrinceControls ppControls; // Note - Ain's old version input handles (Step 1)
 
@@ -64,6 +64,8 @@ namespace Ain
         protected virtual void OnEnable()
         {
             Subscribe();
+            
+            RefreshQuestState();
         }
 
         // OnDisable is called when the object becomes disabled
@@ -75,6 +77,7 @@ namespace Ain
         // OnTriggerEnter is called when this script's object collide with another object
         protected virtual void OnTriggerEnter(Collider actor)
         {
+            // Only let collision with objects tagged as "Player"
             if (actor.gameObject.CompareTag("Player"))
             {    
                 // Logs the collision
@@ -85,6 +88,7 @@ namespace Ain
         // OnTriggerExit is called when this script's object un-collide with another object
         protected virtual void OnTriggerExit(Collider actor)
         {
+            // Only let collision with objects tagged as "Player"
             if (actor.gameObject.CompareTag("Player"))
             {    
                 // Un-logs the collision
@@ -119,6 +123,16 @@ namespace Ain
             
             // Note - Ain's old version input handles (Step 4)
             // ppControls.Player.Interact.performed -= SubmitPressed;
+        }
+        
+        // Method to receive the latest Quest Update
+        protected void RefreshQuestState()
+        {
+            // Retrieve the Quest's CURRENT state
+            Quest quest = QuestManager.Instance.GetQuestById(questId);
+
+            // Feed it through the same listener normally used by the event
+            QuestStateChange(quest);
         }
 
         // ------------------------- EVENT LISTENERS -------------------------
@@ -176,13 +190,19 @@ namespace Ain
         #region MISSION METHODS
 
         // Method to call a request for starting a Quest
-        protected virtual void StartQuest()
+        public virtual void StartQuest()
         {
             GameEventsManager.Instance.questEvents.StartQuest(questId);
         }
+        
+        // Method to call for advancing a Quest
+        public virtual void AdvanceQuest()
+        {
+            GameEventsManager.Instance.questEvents.AdvanceQuest(questId);
+        }
 
         // Method to call a request for finishing a Quest
-        protected virtual void CompleteQuest()
+        public virtual void CompleteQuest()
         {
             GameEventsManager.Instance.questEvents.FinishQuest(questId);
         }

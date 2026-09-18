@@ -16,7 +16,7 @@ public class DialogueNarrator : MonoBehaviour
     public UnityEvent onDialogueDone;
     
     [Header("REFERENCES")]
-    [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
+    [SerializeField] protected DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
     
     [Header("DIALOGUE")]
     [SerializeField] DialogueLines dialogueLines; // Dialogue data to narrate by lines
@@ -40,6 +40,9 @@ public class DialogueNarrator : MonoBehaviour
             // If it is not, then set it automatically by looking for the script class from this object
             debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
         }
+        
+        // Uses the simple dialogue assigned from the Inspector
+        SetDialogueLines(dialogueLines.speechLines);
     }
     
     // OnEnable is called when the object becomes enabled and active
@@ -54,12 +57,12 @@ public class DialogueNarrator : MonoBehaviour
         UnSubscribe();
     }
 
-    // OnStart is called once before the first frame update
-    protected virtual void Start()
-    {
-        // Uses the simple dialogue assigned from the Inspector
-        SetDialogueLines(dialogueLines.speechLines);
-    }
+    // // OnStart is called once before the first frame update
+    // protected virtual void Start()
+    // {
+    //     // Uses the simple dialogue assigned from the Inspector
+    //     SetDialogueLines(dialogueLines.speechLines);
+    // }
 
     #endregion
     
@@ -102,6 +105,8 @@ public class DialogueNarrator : MonoBehaviour
     // Method to call for Narrating Dialogues by line
     protected void NarrateByLines()
     {
+        debuggerNiAin.Warn("NarrateByLines has been pressed!");
+        
         // Don't narrate if there's nothing to narrate
         if (currentLines == null || currentLines.Length <= 0)
         {

@@ -20,7 +20,7 @@ public class PauseManager : ActivationManager
     {
         Time.timeScale = 0f; // Pauses the game
         PauseAudio(); // Pauses the audio sources
-        base.Switch(); // Switches visual
+        // base.Switch(); // Switches visual
     }
 
     // Method that resumes the game when the settings menu is closed
@@ -28,7 +28,7 @@ public class PauseManager : ActivationManager
     {
         Time.timeScale = 1f; // Continues the game 
         ResumeAudio(); // Resumes the audio sources
-        base.Switch(); // Switches visual
+        // base.Switch(); // Switches visual
     }
 
     // Method that pauses the audio when the settings menu is closed

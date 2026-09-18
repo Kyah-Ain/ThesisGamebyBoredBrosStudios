@@ -48,21 +48,26 @@ public class GameManager : MonoBehaviour
         if (debuggerNiAin == null)
             // If it is not, then set it automatically by looking for the script class from this object
             debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
-
-        // Implement singleton pattern to ensure only one instance of PlayerInputManager exists
-        if (instance == null)
+        
+        // Ensure only one instance of InputManager exists (Singleton pattern)
+        if (instance != null && instance != this)
         {
-            instance = this; // Set the singleton instance
-
-            // Marks this GameObjects' root parent if there is one, and sets it to itself if there's none
-            DontDestroyOnLoad(this.transform.root.gameObject);
+            debuggerNiAin.Log($"A copy of GameplayInputManager has been deleted: {this.gameObject.name}");
+            
+            Destroy(this.gameObject); // Destroy duplicate InputManager instances
+            
+            // Exits early and skips executing logics further after this
+            return;
         }
-        else
-        {
-            Debug.Log($"Instance of this PlayerInputManager already exists, destroying this duplicate instance to enforce singleton pattern.");
 
-            Destroy(this.gameObject); // Destroy duplicate instances
-        }
+        // Assign this instance as the global reference
+        instance = this;
+        
+        // Detach this gameObject as a child of any gameObject
+        this.transform.SetParent(null);
+        
+        // Keep this object alive across scene changes
+        DontDestroyOnLoad(this.gameObject);
 
         // Evaluates if an InputManager instance exists in the scene (for reference)
         if (GameplayInputManager.Instance == null)

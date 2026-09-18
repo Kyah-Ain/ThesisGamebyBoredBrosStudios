@@ -19,6 +19,8 @@ public class DialogueBaseQuestPoint : Ain.QuestPoint
     protected override void OnEnable()
     {
         Subscribe();
+        
+        RefreshQuestState();
     }
 
     // OnDisable is called when the object becomes disabled
@@ -66,17 +68,27 @@ public class DialogueBaseQuestPoint : Ain.QuestPoint
     #region MISSION METHODS
 
     // Method to call a request for starting a Quest
-    public new void StartQuest()
-    {
+    public override void StartQuest()
+    {                                   
         // Evaluates if the quest can be started
         if (base.currentQuestState.Equals(QuestState.CAN_START))
         {
             base.StartQuest();
         }
     }
+    
+    // Method to call for advancing a Quest
+    public override void AdvanceQuest()
+    {
+        // Evaluates if there's a quest to modify
+        if (base.currentQuestState.Equals(QuestState.IN_PROGRESS))
+        {
+            base.AdvanceQuest();
+        }
+    }
 
     // Method to call a request for finishing a Quest
-    public new void CompleteQuest()
+    public override void CompleteQuest()
     {
         // Evaluates if the quest can be finished
         if (base.currentQuestState.Equals(QuestState.CAN_FINISH))

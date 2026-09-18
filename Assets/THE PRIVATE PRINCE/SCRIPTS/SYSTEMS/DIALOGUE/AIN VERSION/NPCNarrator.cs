@@ -46,8 +46,15 @@ public class NPCNarrator : DialogueNarrator
     // Awake is called when this script was first initialized & loaded
     protected override void Awake()
     {
-        // Runs the same logic running in the Parent for this same method
-        base.Awake();
+        // Checks if our reference for the script was not set
+        if (debuggerNiAin == null)
+        {
+            // If it is not, then set it automatically by looking for the script class from this object
+            debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
+        }
+        
+        // Initialized the starting Quest to track with dialogue
+        UpdateQuestAssign(_targetQuest); // _targetQuest = 0
     }
     
     // OnEnable is called when the object becomes enabled and active
@@ -62,16 +69,16 @@ public class NPCNarrator : DialogueNarrator
         UnSubscribe();
     }
     
-    // OnStart is called once before the first frame update
-    protected override void Start()
-    {
-        // Initialized the starting Quest to track with dialogue
-        UpdateQuestAssign(_targetQuest); // _targetQuest = 0
-    }
+    // // OnStart is called once before the first frame update
+    // protected override void Start()
+    // {
+    //     // Initialized the starting Quest to track with dialogue
+    //     UpdateQuestAssign(_targetQuest); // _targetQuest = 0
+    // }
     
     #endregion
     
-    // ------------------------- SUBSCRIPTIONS -------------------------
+    // ------------------------- SUBSCRIPTIONS ------------------------
     #region SUBSCRIPTIONS
 
     // Method to subscribe your local method to an event trigger

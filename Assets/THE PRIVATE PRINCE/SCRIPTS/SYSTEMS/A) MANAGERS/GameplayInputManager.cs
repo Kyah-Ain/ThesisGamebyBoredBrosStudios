@@ -55,24 +55,28 @@ public class GameplayInputManager : MonoBehaviour
             debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
         
         // Ensure only one instance of InputManager exists (Singleton pattern)
-        if (instance == null)
-        {
-            // Assign this instance as the global reference
-            instance = this;
-
-            // Keep this object alive across scene changes
-            DontDestroyOnLoad(this.transform.root.gameObject);
-        }
-        else
+        if (instance != null && instance != this)
         {
             debuggerNiAin.Log($"A copy of GameplayInputManager has been deleted: {this.gameObject.name}");
             
             Destroy(this.gameObject); // Destroy duplicate InputManager instances
+            
+            // Exits early and skips executing logics further after this
+            return;
         }
 
+        // Assign this instance as the global reference
+        instance = this;
+        
+        // Detach this gameObject as a child of any gameObject
+        this.transform.SetParent(null);
+        
+        // Keep this object alive across scene changes
+        DontDestroyOnLoad(this.gameObject);
+        
         // Initialize the PrivatePrinceControls Instance for handling Action Maps 
         ppControls = new PrivatePrinceControls();
-
+        
         // Prompt that the control has been successfull
         debuggerNiAin.Log($"Successfully persist InputManager through {this.transform.root.gameObject.name}");
     }

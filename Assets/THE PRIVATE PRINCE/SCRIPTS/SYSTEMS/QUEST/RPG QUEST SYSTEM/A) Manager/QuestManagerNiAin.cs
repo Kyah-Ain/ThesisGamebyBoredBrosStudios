@@ -33,27 +33,28 @@ namespace Ain
                 debuggerNiAin = this.GetComponent<DebuggerNiAinPjls>();
             }
 
-            // Checks if this instance is a duplicate
-            if (Instance != null)
+            // Ensure only one instance of InputManager exists (Singleton pattern)
+            if (Instance != null && Instance != this)
             {
-                // Prompts a message then deletes this instance immediately
-                debuggerNiAin.Log(
-                    $"Found a duplicate for this Manager, deleting this now."
-                );
-
-                Destroy(this.gameObject);
-            }
+                debuggerNiAin.Log($"A copy of GameplayInputManager has been deleted: {this.gameObject.name}");
             
-            // Set this script as the one and only instance in the game
+                Destroy(this.gameObject); // Destroy duplicate InputManager instances
+            
+                // Exits early and skips executing logics further after this
+                return;
+            }
+
+            // Assign this instance as the global reference
             Instance = this;
-
-            // Detach this gameobject to any parent object its attached to
-            transform.SetParent(null);
-
+        
+            // Detach this gameObject as a child of any gameObject
+            this.transform.SetParent(null);
+        
+            // Keep this object alive across scene changes
+            DontDestroyOnLoad(this.gameObject);
+            
+            // Initialize the Quest Dictionary
             InitializedQuestMap();
-
-            // Persist this object so it wont destroy between game loads
-            DontDestroyOnLoad(this.transform.root.gameObject);
 
             // THESE ARE FOR DEBUGGING PURPOSES ONLY
             // Quest quest = GetQuestById("Mission_1");
@@ -93,6 +94,11 @@ namespace Ain
         // Method to subscribe your local method to an event trigger
         void Subscribe()
         {
+            debuggerNiAin.Error(
+                $"QUEST MANAGER SUBSCRIBED TO GameEventsManager: " +
+                $"{GameEventsManager.Instance.GetInstanceID()}"
+            );
+            
             // Set subscriptions of these methods to an event
             // Left (Event Listener) += Right (Method that would be called)
             GameEventsManager.Instance.questEvents.onStartQuest += StartQuest;

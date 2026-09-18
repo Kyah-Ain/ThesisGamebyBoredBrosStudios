@@ -29,13 +29,13 @@ public class ContinueFlag : MonoBehaviour
 
         if (hasSave)
         {
-            activator.BTNActivate();
+            // activator.BTNActivate();
             ColorUtility.TryParseHtmlString("#938989", out Color newColor);
             buttonImage.color = newColor;
         }
         else
         {
-            activator.BTNDisable();
+            // activator.BTNDisable();
             buttonImage.color = Color.white;
         }
     }
