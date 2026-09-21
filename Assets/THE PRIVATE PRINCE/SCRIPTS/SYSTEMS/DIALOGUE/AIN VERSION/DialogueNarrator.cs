@@ -13,6 +13,7 @@ public class DialogueNarrator : MonoBehaviour
     // ------------------------- VARIABLES -------------------------
     [Header("DIALOGUE GATE EVENTS")]
     public UnityEvent onDialogueStarted; 
+    public UnityEvent onNarrationDone;
     public UnityEvent onDialogueDone;
     
     [Header("REFERENCES")]
@@ -131,11 +132,14 @@ public class DialogueNarrator : MonoBehaviour
         // Continue narrating the dialogue
         if (currentDialogueStep < currentLines.Length)
         {
-            // Outputs the current dialogue line 
-            DisplayLine(currentLines[currentDialogueStep]);
+            // Stores the current line before advancing
+            string lineToNarrate = currentLines[currentDialogueStep];
 
-            // Advances to the next dialogue line
+            // Advances first so completion callbacks have consistent data
             currentDialogueStep++;
+
+            // Outputs the current dialogue line    
+            DisplayLine(lineToNarrate);
         }
         // Dialogue has reached the end
         else
@@ -150,14 +154,23 @@ public class DialogueNarrator : MonoBehaviour
         // Reset's the dialogue run to the first line
         currentDialogueStep = 0;
 
-        // Parent's main responsibility when dialogue ends
-        onDialogueDone?.Invoke();
-
         // Gives inheritors an opportunity to react afterward
         OnDialogueFinished();
+        
+        // Parent's main responsibility when dialogue ends
+        onDialogueDone?.Invoke();
     }
 
-    // Optional hook for child classes
+    // -------------------- CHILD HOOKS -------------------------
+    // Optional Methods for child scripts to receive updates from its parents
+    
+    // Method that called when a line was finished iterating
+    protected virtual void OnNarratingDone()
+    {
+        
+    }
+    
+    // Method that called when the dialogue were to be finished
     protected virtual void OnDialogueFinished()
     {
     }
@@ -189,6 +202,19 @@ public class DialogueNarrator : MonoBehaviour
 
         // Otherwise output the dialogue immediately
         dialogueField.text = line;
+
+        // Without an effect, the line is already completely displayed
+        NarrationDone();
+    }
+    
+    // Called whenever a narration line has completely finished displaying
+    public void NarrationDone()
+    {
+        // Broadcasts to external listeners
+        onNarrationDone?.Invoke();
+
+        // Gives inheritors an opportunity to react
+        OnNarratingDone();
     }
     
     // Checks if an effect is currently narrating and skips it

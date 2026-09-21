@@ -9325,6 +9325,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  onNarrationDone:
+    m_PersistentCalls:
+      m_Calls: []
   onDialogueDone:
     m_PersistentCalls:
       m_Calls:
@@ -9377,6 +9380,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   debuggerNiAin: {fileID: 1206543813}
+  dialogueEffect: {fileID: 0}
   dialogueLines: {fileID: 11400000, guid: aae9d0dab3f8c0e4fa63f90f35d8c8ec, type: 2}
   dialogueField: {fileID: 864293453}
 --- !u!114 &1200843900
@@ -9465,6 +9469,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  onNarrationDone:
+    m_PersistentCalls:
+      m_Calls: []
   onDialogueDone:
     m_PersistentCalls:
       m_Calls:
@@ -9529,6 +9536,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   debuggerNiAin: {fileID: 1206543813}
+  dialogueEffect: {fileID: 0}
   dialogueLines: {fileID: 11400000, guid: b669b975f24ae4e42988b1e0fce925f6, type: 2}
   dialogueField: {fileID: 864293453}
 --- !u!4 &1206543815
@@ -12942,6 +12950,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  onNarrationDone:
+    m_PersistentCalls:
+      m_Calls: []
   onDialogueDone:
     m_PersistentCalls:
       m_Calls:
@@ -12970,6 +12981,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   debuggerNiAin: {fileID: 1206543813}
+  dialogueEffect: {fileID: 0}
   dialogueLines: {fileID: 11400000, guid: 1b4819f85be56994c9088c55d6a7e0ba, type: 2}
   dialogueField: {fileID: 864293453}
 --- !u!114 &1548627241
@@ -20274,6 +20286,17 @@ PrefabInstance:
       propertyPath: onNPCTalk.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ExecuteEvents
       objectReference: {fileID: 0}
+    - target: {fileID: 3169418699800131042, guid: 73003b7ab5b3804488d8c10da2b1120f,
+        type: 3}
+      propertyPath: dialogueLines
+      value: 
+      objectReference: {fileID: 11400000, guid: a12722ee409e3af4e97c687516ce29ec,
+        type: 2}
+    - target: {fileID: 3169418699800131042, guid: 73003b7ab5b3804488d8c10da2b1120f,
+        type: 3}
+      propertyPath: dialogueEffect
+      value: 
+      objectReference: {fileID: 3642621703266644949}
     - target: {fileID: 5632190882012917104, guid: 73003b7ab5b3804488d8c10da2b1120f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -20337,8 +20360,72 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8682013284464154028, guid: 73003b7ab5b3804488d8c10da2b1120f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3642621703266644949}
   m_SourcePrefab: {fileID: 100100000, guid: 73003b7ab5b3804488d8c10da2b1120f, type: 3}
+--- !u!114 &3642621703266644947 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1382172335665388729, guid: 73003b7ab5b3804488d8c10da2b1120f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3642621703266644946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &3642621703266644948 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8682013284464154028, guid: 73003b7ab5b3804488d8c10da2b1120f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3642621703266644946}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3642621703266644949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3642621703266644948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44c703c2926a0a74ea98af1c0b66c552, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onEffectDone:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3642621703266644955}
+        m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
+        m_MethodName: NarrationDone
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  <EnableNarrationEffect>k__BackingField: 1
+  outputField: {fileID: 3642621703266644947}
+  effectSpeed: 50
+--- !u!114 &3642621703266644955 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3169418699800131042, guid: 73003b7ab5b3804488d8c10da2b1120f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3642621703266644946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3642621703266644948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a200bce00a692f84ab7d6d8d80e53c1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3647540587593809616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23901,6 +23988,9 @@ MonoBehaviour:
   onDialogueStarted:
     m_PersistentCalls:
       m_Calls: []
+  onNarrationDone:
+    m_PersistentCalls:
+      m_Calls: []
   onDialogueDone:
     m_PersistentCalls:
       m_Calls:
@@ -23917,6 +24007,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   debuggerNiAin: {fileID: 6646487771376102619}
+  dialogueEffect: {fileID: 0}
   dialogueLines: {fileID: 11400000, guid: b669b975f24ae4e42988b1e0fce925f6, type: 2}
   dialogueField: {fileID: 3718574811510429445}
 --- !u!1 &8166763561561480805

@@ -128,8 +128,8 @@ public class NPCNarrator : DialogueNarrator
                 
             // Dialogue logic for when there's a Quest waiting to be fulfilled
             case QuestState.IN_PROGRESS:
-                // SwitchLines(DialogueState.WaitingForCompletion);
-                dialogueState = DialogueState.WaitingForCompletion;
+                SwitchLines(DialogueState.WaitingForCompletion);
+                // dialogueState = DialogueState.WaitingForCompletion;
                 break;
                 
             // Dialogue logic for when there's a Quest waiting to be finished
@@ -177,16 +177,6 @@ public class NPCNarrator : DialogueNarrator
         {
             NarrateRandomly();
             return;
-        }
-
-        // Detect the final line of the Quest offer
-        if (dialogueState == DialogueState.HasRequest &&
-            currentLines != null &&
-            currentDialogueStep == currentLines.Length - 1)
-        {
-            onQuestionRaised?.Invoke();
-
-            _hasQuestionRaised = true;
         }
 
         // Let the parent perform the actual narration
@@ -308,13 +298,14 @@ public class NPCNarrator : DialogueNarrator
         // If the response has no lines, skip it
         if (responseLines == null || responseLines.Length == 0)
         {
+            // Reset the response flag for next usage
             _isResponseDialogue = false;
 
             // Restore the normal dialogue for the current quest state
             SwitchLines(dialogueState);
-
-            // Close the dialogue UI through your existing event
-            onDialogueDone?.Invoke();
+            
+            // Calls for ending a dialogue 
+            FinishDialogue();
 
             return;
         }
@@ -325,6 +316,29 @@ public class NPCNarrator : DialogueNarrator
         base.SetDialogueLines(responseLines);
         
         base.NarrateByLines();
+    }
+    
+    // Method that called when a line was finished iterating
+    protected override void OnNarratingDone()
+    {
+        // Detect the final line of the Quest offer
+        if (dialogueState == DialogueState.HasRequest &&
+            !_isResponseDialogue &&
+            currentLines != null &&
+            currentDialogueStep == currentLines.Length &&
+            !_hasQuestionRaised)
+        {
+            /*
+                NOTE:
+                Question Raised best called after the iteration of the dialogue,
+                not while it was still being narrated.
+            */
+            // Lock progression first
+            _hasQuestionRaised = true;
+
+            // Then raise the question
+            onQuestionRaised?.Invoke();
+        }
     }
     
     // Called by the parent whenever narration finishes
