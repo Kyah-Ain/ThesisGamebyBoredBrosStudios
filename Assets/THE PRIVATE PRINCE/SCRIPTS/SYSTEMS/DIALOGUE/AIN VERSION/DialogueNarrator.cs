@@ -17,6 +17,8 @@ public class DialogueNarrator : MonoBehaviour
     
     [Header("REFERENCES")]
     [SerializeField] protected DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
+
+    [SerializeField] DialogueEffect dialogueEffect; // Custom script for adding effect to the Narration
     
     [Header("DIALOGUE")]
     [SerializeField] DialogueLines dialogueLines; // Dialogue data to narrate by lines
@@ -106,25 +108,31 @@ public class DialogueNarrator : MonoBehaviour
     protected void NarrateByLines()
     {
         debuggerNiAin.Warn("NarrateByLines has been pressed!");
-        
+
         // Don't narrate if there's nothing to narrate
         if (currentLines == null || currentLines.Length <= 0)
         {
             return;
         }
+        
+        // If a line is currently being narrated, skip its effect (if there's any)
+        if (TrySkipDialogueEffect())
+        {
+            return;
+        }
 
-        // Only broadcast the event at the initiation of the dialogue (not on every dialogue)
+        // Only broadcast at the initiation of the dialogue
         if (currentDialogueStep == 0)
         {
             // Broadcasts to the listeners that a dialogue has been triggered
             onDialogueStarted?.Invoke();
         }
-
+        
         // Continue narrating the dialogue
         if (currentDialogueStep < currentLines.Length)
         {
-            // Outputs the current dialogue line
-            dialogueField.text = currentLines[currentDialogueStep];
+            // Outputs the current dialogue line 
+            DisplayLine(currentLines[currentDialogueStep]);
 
             // Advances to the next dialogue line
             currentDialogueStep++;
@@ -172,8 +180,32 @@ public class DialogueNarrator : MonoBehaviour
     // Allows children to directly display a specific line
     protected void DisplayLine(string line)
     {
-        // Outputs a dialogue line immediately
+        // Uses the narration effect if one is available and enabled
+        if (dialogueEffect != null && dialogueEffect.EnableNarrationEffect)
+        {
+            dialogueEffect.StartDialogueEffect(line);
+            return;
+        }
+
+        // Otherwise output the dialogue immediately
         dialogueField.text = line;
+    }
+    
+    // Checks if an effect is currently narrating and skips it
+    protected bool TrySkipDialogueEffect()
+    {
+        // No usable narration effect
+        if (dialogueEffect == null ||
+            !dialogueEffect.EnableNarrationEffect ||
+            !dialogueEffect.IsNarrating)
+        {
+            return false;
+        }
+
+        // Complete the currently narrating line
+        dialogueEffect.SkipDialogue();
+
+        return true;
     }
 
     #endregion

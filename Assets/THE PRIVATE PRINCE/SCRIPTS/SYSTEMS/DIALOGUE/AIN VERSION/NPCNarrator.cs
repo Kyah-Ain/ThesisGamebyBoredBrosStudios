@@ -152,6 +152,12 @@ public class NPCNarrator : DialogueNarrator
     // Method to call Dialogue Narration from anywhere
     public override void StartDialogue()
     {
+        // Let the player finish the currently typing line first
+        if (TrySkipDialogueEffect())
+        {
+            return;
+        }
+
         // Don't proceed while waiting for player's response
         if (_hasQuestionRaised)
         {
@@ -190,34 +196,37 @@ public class NPCNarrator : DialogueNarrator
     // Method to call for Narrating Dialogues Randomly
     void NarrateRandomly()
     {
-        // Holds a reference to the current random responses and store it temporarily
-        string[] randomResponses = DialogueInfo[currentDialogueWeek].dialogue.WaitingForCompletionLines;
-        
         // Don't narrate if there's nothing to narrate
-        if (randomResponses == null || randomResponses.Length <= 0)
+        if (currentLines == null || currentLines.Length <= 0)
         {
             return;
         }
-    
+
+        // If the current random dialogue is still typing,
+        // this interaction only completes the effect
+        if (TrySkipDialogueEffect())
+        {
+            return;
+        }
+
         // Proceeds only if we're not in dialogue yet
         if (!_hasNarratedRandomly)
         {
-            // Generates a random number but still bounds to the length of the current dialogue lines
-            int randomNum = Random.Range(0, randomResponses.Length);
-        
-            // Updates the dialogue UI with the line retrieved from the Scriptable Dialogue
-            base.DisplayLine(randomResponses[randomNum]);
-            
-            // Flips the dialogue to be closed on the next Interaction
+            // Picks a random line from the currently assigned dialogue
+            int randomNum = Random.Range(0, currentLines.Length);
+
+            // Parent decides how the dialogue gets displayed
+            DisplayLine(currentLines[randomNum]);
+
+            // Next interaction closes the random dialogue
             _hasNarratedRandomly = true;
         }
-        // Proceeds if we're not any of the condition above
         else
         {
-            // Flips the dialogue to be re-opened on the next Interaction
+            // Allows another random dialogue next interaction
             _hasNarratedRandomly = false;
-            
-            base.FinishDialogue();
+
+            FinishDialogue();
         }
     }
     
