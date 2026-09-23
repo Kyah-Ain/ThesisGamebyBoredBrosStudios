@@ -106,7 +106,7 @@ namespace Ain
         {
             // Set subscriptions of these methods to an event
             // Left (Event Call) += Right (Method that would be called)
-            GameEventsManager.Instance.inputEvents.onSubmitPressed += SubmitPressed;
+            GameEventsManager.Instance.inputEvents.onInteract += OnInteract;
             GameEventsManager.Instance.questEvents.onQuestStateChange += QuestStateChange;
             
             // Note - Ain's old version input handles (Step 3)
@@ -118,7 +118,7 @@ namespace Ain
         {
             // UnSubscribe them methods to an event
             // Left (Event Call) -= Right (Method that would be called)
-            GameEventsManager.Instance.inputEvents.onSubmitPressed -= SubmitPressed;
+            GameEventsManager.Instance.inputEvents.onInteract -= OnInteract;
             GameEventsManager.Instance.questEvents.onQuestStateChange -= QuestStateChange;
             
             // Note - Ain's old version input handles (Step 4)
@@ -159,7 +159,7 @@ namespace Ain
         // ------------------------- EVENT TRIGGERS -------------------------
 
         // Method to Start/Finished a Quest
-        void SubmitPressed(InputAction.CallbackContext context)
+        void OnInteract(InputAction.CallbackContext context)
         {
             // Checks if the player was inside the collider for this script
             if (isPlayerNear)

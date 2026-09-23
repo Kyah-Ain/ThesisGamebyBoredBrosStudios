@@ -77,7 +77,7 @@ public class DialogueNarrator : MonoBehaviour
     {
         // Set subscriptions of these methods to an event
         // Left (Event Call) += Right (Method that would be called)
-        GameEventsManager.Instance.inputEvents.onProceed += StartDialogue;
+        GameEventsManager.Instance.inputEvents.onSubmit += StartDialogue;
     }
 
     // Method to UnSubscribe your local method to an event trigger
@@ -85,7 +85,7 @@ public class DialogueNarrator : MonoBehaviour
     {
         // UnSubscribe them methods from an event
         // Left (Event Call) -= Right (Method that would be called)
-        GameEventsManager.Instance.inputEvents.onProceed -= StartDialogue;
+        GameEventsManager.Instance.inputEvents.onSubmit -= StartDialogue;
     }
     
     #endregion

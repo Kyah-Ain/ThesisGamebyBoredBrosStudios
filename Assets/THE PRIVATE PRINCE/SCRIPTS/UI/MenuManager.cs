@@ -89,8 +89,8 @@ public class MenuManager : MonoBehaviour
             UnSubscribeToControls();
 
             ppControls.UI.NavigateUI.performed += OnNavigatePerformed;
-            ppControls.UI.Proceed.performed += OnSubmitPerformed;
-            ppControls.UI.Proceed.performed += TriggerSkip;
+            ppControls.UI.Submit.performed += OnSubmitPerformed;
+            ppControls.UI.Submit.performed += TriggerSkip;
             //ppControls.UserNavigation.Cancel.performed += OnCancelPerformed;
         }
         else
@@ -105,8 +105,8 @@ public class MenuManager : MonoBehaviour
         if (ppControls != null)
         {
             ppControls.UI.NavigateUI.performed -= OnNavigatePerformed;
-            ppControls.UI.Proceed.performed -= OnSubmitPerformed;
-            ppControls.UI.Proceed.performed -= TriggerSkip;
+            ppControls.UI.Submit.performed -= OnSubmitPerformed;
+            ppControls.UI.Submit.performed -= TriggerSkip;
             //ppControls.UserNavigation.Cancel.performed -= OnCancelPerformed;
         }
     }

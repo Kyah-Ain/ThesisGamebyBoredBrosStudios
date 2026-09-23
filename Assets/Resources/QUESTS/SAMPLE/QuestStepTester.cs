@@ -31,7 +31,7 @@ public class QuestStepTester : Ain.QuestStep
     {
         // Set subscriptions of these methods to an event
         // Left (Event Call) += Right (Method that would be called)
-        GameEventsManager.Instance.inputEvents.onSubmitPressed += MissionComplete;
+        GameEventsManager.Instance.inputEvents.onSubmit += MissionComplete;
     }
 
     // Method to UnSubscribe your local method to an event trigger
@@ -39,7 +39,7 @@ public class QuestStepTester : Ain.QuestStep
     {
         // UnSubscribe them methods to an event
         // Left (Event Call) -= Right (Method that would be called)
-        GameEventsManager.Instance.inputEvents.onSubmitPressed -= MissionComplete;
+        GameEventsManager.Instance.inputEvents.onSubmit -= MissionComplete;
     }
     
     #endregion

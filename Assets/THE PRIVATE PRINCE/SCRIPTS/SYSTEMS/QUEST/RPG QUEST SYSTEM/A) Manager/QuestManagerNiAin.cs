@@ -94,7 +94,7 @@ namespace Ain
         // Method to subscribe your local method to an event trigger
         void Subscribe()
         {
-            debuggerNiAin.Error(
+            debuggerNiAin.Log(
                 $"QUEST MANAGER SUBSCRIBED TO GameEventsManager: " +
                 $"{GameEventsManager.Instance.GetInstanceID()}"
             );

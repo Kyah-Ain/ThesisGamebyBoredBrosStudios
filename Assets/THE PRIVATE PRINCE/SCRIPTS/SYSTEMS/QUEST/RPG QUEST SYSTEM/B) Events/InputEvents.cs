@@ -6,15 +6,19 @@ public class InputEvents
 {
     // ------------------------- VARIABLES -------------------------
     
-    [Header("INPUT ACTIONS")]
+    [Header("PLAYER ACTIONS")]
+    private readonly InputAction interactAction;
+    
+    [Header("UI ACTIONS")]
     private readonly InputAction submitAction;
-    private readonly InputAction proceedAction;
+    private readonly InputAction navigateAction;
     private readonly InputAction cancelAction;
     
     // ------------------------- EVENTS -------------------------
+    public event Action<InputAction.CallbackContext> onInteract;
 
-    public event Action<InputAction.CallbackContext> onSubmitPressed;
-    public event Action<InputAction.CallbackContext> onProceed;
+    public event Action<InputAction.CallbackContext> onSubmit;
+    public event Action<InputAction.CallbackContext> onNavigate;
     public event Action<InputAction.CallbackContext> onCancel;
     
     // ----------------------- CONSTRUCTOR -------------------------
@@ -24,35 +28,42 @@ public class InputEvents
         // INPUT ACTIONS
         // Store the specific Input Action we want to monitor
         // ------------------- PLAYER ACTIONS -------------------
-        submitAction = ppControls.Player.Interact;
+        interactAction = ppControls.Player.Interact;
         
         // -------------------- UI ACTIONS --------------------
-        proceedAction = ppControls.UI.Proceed;
+        submitAction = ppControls.UI.Submit;
+        navigateAction = ppControls.UI.NavigateUI;
         cancelAction = ppControls.UI.Cancel;
         
         // CALLER += LISTENERS
         // Subscribes methods to the corresponding inputs set in New Input System
         // ------------------- PLAYER ACTIONS -------------------
-        submitAction.performed += SubmitPress;
+        interactAction.performed += OnInteract;
         
         // -------------------- UI ACTIONS --------------------
-        proceedAction.performed += OnProceed;
+        submitAction.performed += SubmitPress;
+        navigateAction.performed += OnNavigate;
         cancelAction.performed += OnCancel;
     }
 
     // ------------------------ TRIGGERS -------------------------
     // Methods that are automatically called by Unity's Input System
+    void OnInteract(InputAction.CallbackContext context)
+    {
+        // Broadcast the input to every subscribed script
+        onInteract?.Invoke(context);
+    }
     
     void SubmitPress(InputAction.CallbackContext context)
     {
         // Broadcast the input to every subscribed script
-        onSubmitPressed?.Invoke(context);
+        onSubmit?.Invoke(context);
     }
     
-    void OnProceed(InputAction.CallbackContext context)
+    void OnNavigate(InputAction.CallbackContext context)
     {
         // Broadcast the input to every subscribed script
-        onProceed?.Invoke(context);
+        onNavigate?.Invoke(context);
     }
     
     void OnCancel(InputAction.CallbackContext context)
@@ -68,8 +79,9 @@ public class InputEvents
     public void Dispose()
     {
         // Stop listening to the Input System
+        interactAction.performed -= OnInteract;
         submitAction.performed -= SubmitPress;
-        proceedAction.performed -= OnProceed;
+        navigateAction.performed -= OnNavigate;
         cancelAction.performed -= OnCancel;
     }
 

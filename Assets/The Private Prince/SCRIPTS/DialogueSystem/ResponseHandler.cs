@@ -50,7 +50,7 @@ public class ResponseHandler : MonoBehaviour
         UnsubscribeFromInputEvents();
 
         ppControls.UI.NavigateUI.performed += OnNavigatePerformed;
-        ppControls.UI.Proceed.performed += OnSubmitPerformed;
+        ppControls.UI.Submit.performed += OnSubmitPerformed;
         ppControls.UI.Cancel.performed += OnCancelPerformed;
 
         Debug.Log("ResponseHandler: Subscribed to input events");
@@ -62,7 +62,7 @@ public class ResponseHandler : MonoBehaviour
         if (ppControls == null) return;
 
         ppControls.UI.NavigateUI.performed -= OnNavigatePerformed;
-        ppControls.UI.Proceed.performed -= OnSubmitPerformed;
+        ppControls.UI.Submit.performed -= OnSubmitPerformed;
         ppControls.UI.Cancel.performed -= OnCancelPerformed;
 
         Debug.Log("ResponseHandler: Unsbscribed to input events");
