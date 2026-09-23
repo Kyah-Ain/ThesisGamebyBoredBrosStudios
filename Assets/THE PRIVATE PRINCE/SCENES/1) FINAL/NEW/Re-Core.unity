@@ -2176,6 +2176,7 @@ GameObject:
   - component: {fileID: 585258246426105593}
   - component: {fileID: 7622115196075012661}
   - component: {fileID: 7622115196075012660}
+  - component: {fileID: 7622115196075012662}
   - component: {fileID: 7622115196075012659}
   m_Layer: 7
   m_Name: Body Collider | Tandang
@@ -3181,7 +3182,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3625896637996402288}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7677f53733665bc41923390f0e364d42, type: 3}
   m_Name: 
@@ -3252,6 +3253,27 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7622115196075012662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3625896637996402288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98da85a0e3f1fcf459ff3beccecd925c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debuggerNiAin: {fileID: 0}
+  controller: {fileID: 0}
+  animator: {fileID: 0}
+  spriteRoot: {fileID: 0}
+  movementSpeed: 1
+  gravityMultiplier: 0
+  gravity: -9.81
+  freefallVelocity: 0
+  inputVector: {x: 0, y: 0}
 --- !u!212 &7659377208972620338
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -3904,8 +3904,8 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2114210675}
+        m_CallState: 0
+      - m_Target: {fileID: 2114210682}
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
         m_MethodName: set_enabled
         m_Mode: 6
@@ -3916,6 +3916,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 0
+      - m_Target: {fileID: 2114210682}
+        m_TargetAssemblyTypeName: TwoPoint5DController, Assembly-CSharp
+        m_MethodName: StopCharacter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   onStringEventTriggered:
     m_PersistentCalls:
@@ -8688,6 +8700,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1105926560 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4053401085764760653, guid: 73003b7ab5b3804488d8c10da2b1120f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3642621703266644946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1123670457 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5632190882012917104, guid: 73003b7ab5b3804488d8c10da2b1120f,
@@ -8756,6 +8780,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 475091701}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1127905765 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7622251214977778123, guid: 73003b7ab5b3804488d8c10da2b1120f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3642621703266644946}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1140649008
 GameObject:
   m_ObjectHideFlags: 0
@@ -11794,7 +11830,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 2114210675}
+      - m_Target: {fileID: 2114210682}
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
         m_MethodName: set_enabled
         m_Mode: 6
@@ -11805,6 +11841,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2114210682}
+        m_TargetAssemblyTypeName: TwoPoint5DController, Assembly-CSharp
+        m_MethodName: ToggleFreeze
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
   onStringEventTriggered:
     m_PersistentCalls:
@@ -12508,6 +12556,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20560d80253e1a443b11426fe808f28f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1518649331 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5196865331005324909, guid: 73003b7ab5b3804488d8c10da2b1120f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3642621703266644946}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1518649336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518649331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee4cfc1408bf5204390e6d311b42b8af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onSelect:
+    m_PersistentCalls:
+      m_Calls: []
+  debuggerNiAin: {fileID: 1518649337}
+  Selectables:
+  - {fileID: 1127905765}
+  - {fileID: 1105926560}
+  _firstSelected: {fileID: 1127905765}
+  _animationExclusions: []
+  _selectedAnimationScale: 1.1
+  _scaleDuration: 0.25
+--- !u!114 &1518649337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518649331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86bf333f57207d43b6d865e1eedc15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogs: 1
 --- !u!1 &1522605023
 GameObject:
   m_ObjectHideFlags: 0
@@ -16927,6 +17017,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  enableUseOnceAndDestroy: 0
+  addDelay: 1
+  delayTime: 0
 --- !u!65 &2020192980
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17709,6 +17802,7 @@ GameObject:
   - component: {fileID: 2114210677}
   - component: {fileID: 2114210676}
   - component: {fileID: 2114210675}
+  - component: {fileID: 2114210682}
   - component: {fileID: 2114210674}
   - component: {fileID: 2114210673}
   - component: {fileID: 2114210672}
@@ -17939,7 +18033,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2114210666}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6eee3188970482479f4081393914e5b, type: 3}
   m_Name: 
@@ -18070,6 +18164,28 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2114210666}
   m_Enabled: 1
+--- !u!114 &2114210682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114210666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98da85a0e3f1fcf459ff3beccecd925c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debuggerNiAin: {fileID: 2114210676}
+  controller: {fileID: 2114210677}
+  animator: {fileID: 2114210678}
+  spriteRoot: {fileID: 1849783709}
+  movementSpeed: 3
+  gravityMultiplier: 4.5
+  isCharacterFrozen: 0
+  gravity: -9.81
+  freefallVelocity: -1
+  inputVector: {x: 0, y: 0}
 --- !u!1001 &2115694471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20365,6 +20481,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3642621703266644949}
+    - targetCorrespondingSourceObject: {fileID: 5196865331005324909, guid: 73003b7ab5b3804488d8c10da2b1120f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1518649337}
+    - targetCorrespondingSourceObject: {fileID: 5196865331005324909, guid: 73003b7ab5b3804488d8c10da2b1120f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1518649336}
   m_SourcePrefab: {fileID: 100100000, guid: 73003b7ab5b3804488d8c10da2b1120f, type: 3}
 --- !u!114 &3642621703266644947 stripped
 MonoBehaviour:
