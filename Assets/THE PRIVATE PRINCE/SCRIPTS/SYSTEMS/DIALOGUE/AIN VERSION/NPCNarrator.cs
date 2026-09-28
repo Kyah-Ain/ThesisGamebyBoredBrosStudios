@@ -152,6 +152,14 @@ public class NPCNarrator : DialogueNarrator
     // Method to call Dialogue Narration from anywhere
     public override void StartDialogue()
     {
+        // // Checks if the Start was meant to be for this Dialogue Instance
+        // if (!string.Equals(
+        //         id,
+        //         dialogueID.speechLines[0],
+        //         System.StringComparison.OrdinalIgnoreCase
+        //     )
+        // ) return;
+        
         // Let the player finish the currently typing line first
         if (TrySkipDialogueEffect())
         {

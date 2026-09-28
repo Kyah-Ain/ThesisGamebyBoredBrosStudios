@@ -4,7 +4,7 @@ public interface IInteractable
 {
     // ------------------------- CONTRACTS -------------------------
 
-    public void Interact();
+    public void Interacted();
 
-    public void UnInteract();
+    public void UnInteracted();
 }

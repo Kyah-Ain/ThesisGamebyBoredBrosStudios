@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 // Required DebuggerNiAinPjls.cs for this to be able to monitor debugs, otherwise use the old one
 [RequireComponent(typeof(DebuggerNiAinPjls))]
-public class DialogueForNPC : MonoBehaviour
+public class DialogueForNPC : MonoBehaviour, IInteractable
 {
     // ------------------------- VARIABLES -------------------------
     
@@ -20,7 +20,7 @@ public class DialogueForNPC : MonoBehaviour
     private DialogueInfoSO dialogueInfo;
     
     [Header("STATUS")]
-    [SerializeField] private bool isPlayerNear;
+    [SerializeField][ReadOnly] bool isPlayerNear;
     
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -70,8 +70,8 @@ public class DialogueForNPC : MonoBehaviour
 
     #endregion
     
-    // ------------------------- SUBSCRIPTIONS -------------------------
-    #region SUBSCRIPTIONS
+    // ------------------------- EVENTS -------------------------
+    #region EVENTS
 
     // Method to subscribe your local method to an event trigger
     void Subscribe()
@@ -89,19 +89,7 @@ public class DialogueForNPC : MonoBehaviour
         GameEventsManager.Instance.inputEvents.onInteract -= Talk;
     }
     
-    #endregion
-    
-    // ----------------------- NPC METHODS -------------------------
-    #region NPC METHODS
-    
-    // Method to call for making the NPC talk
-    public void Talk()
-    {
-        // Triggers all triggerable included under this Event Array in the Inspector
-        onNPCTalk?.Invoke();
-    }
-
-    // Overload Method to call for making the NPC talk only if the player interacted it
+    // Overload Method to call for making the NPC talk using Unity's New Input System
     void Talk(InputAction.CallbackContext context)
     {
         // Proceeds only if the player is in the interaction zone 
@@ -109,6 +97,37 @@ public class DialogueForNPC : MonoBehaviour
         {
             Talk();
         }
+    }
+    
+    #endregion
+    
+    // ----------------------- NPC METHODS -------------------------
+    #region NPC METHODS
+    
+    // Method to call for making the NPC talk
+    void Talk()
+    {
+        // Triggers all triggerable included under this Event Array in the Inspector
+        onNPCTalk?.Invoke();
+    }
+
+    #endregion
+    
+    // ------------------ INTERFACE APPLICATIONS --------------------
+    #region INTERFACE METHODS
+
+    // Overload Method to call for Interacting an object through Interface
+    public void Interacted()
+    {
+        Talk();
+    }
+    
+    // Overload Method to call for Un-Interacting an object using Interface
+    public void UnInteracted()
+    {
+        // Necessary to Implement due to Interface rule,
+        // but since I have no use to it yet,
+        // I could just implement it and leave it blank.
     }
 
     #endregion

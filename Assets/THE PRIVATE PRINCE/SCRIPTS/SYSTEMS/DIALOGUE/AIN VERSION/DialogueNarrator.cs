@@ -8,28 +8,30 @@ using TMPro;
 
 // Required DebuggerNiAinPjls.cs for this to be able to monitor debugs, otherwise use the old one
 [RequireComponent(typeof(DebuggerNiAinPjls))]
-public class DialogueNarrator : MonoBehaviour
+public class DialogueNarrator : MonoBehaviour, IInteractable
 {
     // ------------------------- VARIABLES -------------------------
     [Header("DIALOGUE GATE EVENTS")]
     public UnityEvent onDialogueStarted; 
+    public UnityEvent onProceedDialogue;
     public UnityEvent onNarrationDone;
     public UnityEvent onDialogueDone;
     
     [Header("REFERENCES")]
     [SerializeField] protected DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
-
     [SerializeField] DialogueEffect dialogueEffect; // Custom script for adding effect to the Narration
     
     [Header("DIALOGUE")]
+    [SerializeField] protected DialogueLines dialogueID; // Holds the UniqueID for the uniqueness of the Dialogue
     [SerializeField] DialogueLines dialogueLines; // Dialogue data to narrate by lines
     
     [Header("UI")]
     [SerializeField] TextMeshProUGUI dialogueField; // Reference to the UI Text that would output the dialogue
 
     [Header("STATUS")] 
-    protected string[] currentLines; // The temporary holder of the current active dialogue lines
-    protected int currentDialogueStep; // Tracker for what line we currently are in the dialogue lines
+    public static string currentDialogueIdActive; // ...
+    [SerializeField][ReadOnly] protected string[] currentLines; // The temporary holder of the current active dialogue lines
+    [SerializeField][ReadOnly] protected int currentDialogueStep; // Tracker for what line we currently are in the dialogue lines
     
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -77,7 +79,7 @@ public class DialogueNarrator : MonoBehaviour
     {
         // Set subscriptions of these methods to an event
         // Left (Event Call) += Right (Method that would be called)
-        GameEventsManager.Instance.inputEvents.onSubmit += StartDialogue;
+        GameEventsManager.Instance.inputEvents.onSubmit += OnSubmitPressed;
     }
 
     // Method to UnSubscribe your local method to an event trigger
@@ -85,7 +87,7 @@ public class DialogueNarrator : MonoBehaviour
     {
         // UnSubscribe them methods from an event
         // Left (Event Call) -= Right (Method that would be called)
-        GameEventsManager.Instance.inputEvents.onSubmit -= StartDialogue;
+        GameEventsManager.Instance.inputEvents.onSubmit -= OnSubmitPressed;
     }
     
     #endregion
@@ -96,13 +98,58 @@ public class DialogueNarrator : MonoBehaviour
     // Method to call Dialogue Narration from anywhere
     public virtual void StartDialogue()
     {
-        NarrateByLines();
+        // ...
+        if (currentDialogueIdActive == null)
+        {
+            // ...
+            currentDialogueIdActive = dialogueID.speechLines[0];
+            
+            debuggerNiAin.Warn(
+                $"Active ID was null. Set to: {currentDialogueIdActive}"
+            );
+        }
+
+        // ...
+        if (string.Equals(
+            currentDialogueIdActive,
+            dialogueID.speechLines[0], 
+            System.StringComparison.OrdinalIgnoreCase
+        ))
+        {
+            NarrateByLines();
+ 
+            debuggerNiAin.Warn("ID MATCHED! Calling NarrateByLines.");
+        }
+        else
+        {
+            debuggerNiAin.Warn($"[{name}] BLOCKED. '{currentDialogueIdActive}' owns the dialogue.");
+        }
+    }
+    
+    // Overload Method to call Dialogue Narration through an event
+    public virtual void StartDialogue(string id)
+    {
+        // Checks if the Start was meant to be for this Dialogue Instance
+        if (string.Equals(
+                id,
+                dialogueID.speechLines[0], 
+                System.StringComparison.OrdinalIgnoreCase
+            )
+        )
+        {
+            NarrateByLines();
+        }
     }
     
     // Overload Method to call Dialogue Narration from the Unity New Input System
-    public void StartDialogue(InputAction.CallbackContext context)
+    public void OnSubmitPressed(InputAction.CallbackContext context)
     {
-        StartDialogue(); 
+        // Only continue if this NPC already owns the active dialogue
+        if (!IsMine(currentDialogueIdActive)) return;
+
+        NarrateByLines();
+        // StartDialogue(dialogueID.speechLines[0]); 
+        // onProceedDialogue?.Invoke();
     }
     
     // Method to call for Narrating Dialogues by line
@@ -113,6 +160,8 @@ public class DialogueNarrator : MonoBehaviour
         // Don't narrate if there's nothing to narrate
         if (currentLines == null || currentLines.Length <= 0)
         {
+            debuggerNiAin.Warn("Current Lines has been null or below 1");
+            
             return;
         }
         
@@ -154,12 +203,34 @@ public class DialogueNarrator : MonoBehaviour
         // Reset's the dialogue run to the first line
         currentDialogueStep = 0;
 
+        // ...
+        currentDialogueIdActive = null;
+
         // Gives inheritors an opportunity to react afterward
         OnDialogueFinished();
         
         // Parent's main responsibility when dialogue ends
         onDialogueDone?.Invoke();
     }
+    
+    // ------------------ INTERFACE APPLICATIONS --------------------
+    #region INTERFACE METHODS
+
+    // Overload Method to call for Interacting an object through Interface
+    public void Interacted()
+    {
+        // StartDialogue();
+    }
+    
+    // Overload Method to call for Un-Interacting an object using Interface
+    public void UnInteracted()
+    {
+        // Necessary to Implement due to Interface rule,
+        // but since I have no use to it yet,
+        // I could just implement it and leave it blank.
+    }
+    
+    #endregion  
 
     // -------------------- CHILD HOOKS -------------------------
     // Optional Methods for child scripts to receive updates from its parents
@@ -179,6 +250,10 @@ public class DialogueNarrator : MonoBehaviour
     
     // ----------------------- HELPERS -------------------------
     #region HELPERS
+    
+    bool IsMine(string id) =>
+        string.Equals(id, dialogueID.speechLines[0], System.StringComparison.OrdinalIgnoreCase);
+
     
     // Changes what lines the narrator should currently narrate
     protected void SetDialogueLines(string[] lines)
