@@ -168,7 +168,7 @@ public class PlayerInteraction3D : MonoBehaviour
             if (isInteracting == false)
             {
                 // Un-Interact the object
-                interactable.UnInteract();
+                interactable.UnInteracted();
 
                 // Brodcast the un-interaction
                 onUnInteracting?.Invoke();
@@ -177,7 +177,7 @@ public class PlayerInteraction3D : MonoBehaviour
             }
 
             // Interact the object
-            interactable.Interact();
+            interactable.Interacted();
 
             // Brodcast the interaction
             onInteracting?.Invoke();

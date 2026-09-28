@@ -54,14 +54,14 @@ public class InteractableObject : MonoBehaviour, IInteractable
     // ------------------------- INTERFACE -------------------------
 
     // Method to execute logics when being interacting
-    public void Interact()
+    public void Interacted()
     {
         // Executes the event if it's not null (broadcasts the event to the listener/s or subscriber/s)
         onInteract?.Invoke();
     }
 
     // Method to execute logics when un-interacting
-    public void UnInteract()
+    public void UnInteracted()
     {
         // Executes the event if it's not null (broadcasts the event to the listener/s or subscriber/s)
         onUnInteract?.Invoke();

@@ -111,7 +111,7 @@ public class CharacterInteractor : MonoBehaviour
         if (interacted.TryGetComponent(out IInteractable interactableObj))
         {
             // Interact the object
-            interactableObj.Interact();
+            interactableObj.Interacted();
         }
     }
 
