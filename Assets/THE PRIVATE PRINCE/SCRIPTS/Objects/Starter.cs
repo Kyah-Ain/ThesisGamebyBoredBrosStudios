@@ -8,6 +8,8 @@ public class Starter : MonoBehaviour
     // ------------------------- VARIABLES -------------------------
     [Header("COLLIDER EVENTS")]
     public UnityEvent onStart;
+    public UnityEvent onTriggerEnter;
+    public UnityEvent onTriggerExit;
     
     [Header("SETTINGS")]
     [SerializeField] bool enableTriggerOnAwake;
@@ -34,7 +36,6 @@ public class Starter : MonoBehaviour
     // Awake is called when this script was first initialized & loaded
     private void Awake()
     {
-        // ...
         // NOTE: Other scripts may not have run their own Awake/Start yet at this point,
         // so listeners that depend on their own initialization may hit null references.
         // If that happens, use Start instead (or add a one-frame delay).
@@ -48,7 +49,6 @@ public class Starter : MonoBehaviour
     // Start is called once before the first frame update
     void Start()
     {
-        // ...
         // Skipped if Awake already triggered, to avoid firing twice when both options are enabled
         if (enableTriggerOnStart && !_isToggledAlready && !_hasTriggeredOnAwake)
         {
@@ -62,12 +62,25 @@ public class Starter : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // Ignore if this option is disabled or the Starter is still busy (not yet reset)
-        if (!enableTriggerOnTriggerEnter || _isToggledAlready) return;
+        if (!enableTriggerOnTriggerEnter) return;
 
         // If a tag is required, ignore any object that doesn't have it
         if (!string.IsNullOrEmpty(requiredTag) && !other.CompareTag(requiredTag)) return;
 
         TriggerStart();
+        onTriggerEnter?.Invoke();
+    }
+    
+    // OnTriggerEnter is called when another collider exits this object's trigger collider
+    private void OnTriggerExit(Collider other)
+    {
+        // Ignore if this option is disabled or the Starter is still busy (not yet reset)
+        if (!enableTriggerOnTriggerEnter) return;
+
+        // If a tag is required, ignore any object that doesn't have it
+        if (!string.IsNullOrEmpty(requiredTag) && !other.CompareTag(requiredTag)) return;
+
+        onTriggerExit?.Invoke();
     }
 
     // Method to call for starting the Starter

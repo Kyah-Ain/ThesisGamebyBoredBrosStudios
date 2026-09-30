@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(RectTransform))]
 public class OffScreenIndicator : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
-
+    public UnityEvent onIndicatorOnScreen;
+    public UnityEvent onIndicatorOffScreen;
+    
     [Header("References")]
     [SerializeField] private Camera targetCamera;
     [SerializeField] private Transform target;
@@ -56,11 +58,13 @@ public class OffScreenIndicator : MonoBehaviour
 
         if (hideWhenVisible && onScreen)
         {
-            gameObject.SetActive(false);
+            // gameObject.SetActive(false);
+            onIndicatorOnScreen?.Invoke();
             return;
         }
 
-        gameObject.SetActive(true);
+        // gameObject.SetActive(true);
+        onIndicatorOffScreen?.Invoke();
 
         screenPos.x = Mathf.Clamp(
             screenPos.x,
