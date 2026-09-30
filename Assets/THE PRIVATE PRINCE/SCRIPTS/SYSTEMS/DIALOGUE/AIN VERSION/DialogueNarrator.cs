@@ -13,7 +13,7 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
     // ------------------------- VARIABLES -------------------------
     [Header("DIALOGUE GATE EVENTS")]
     public UnityEvent onDialogueStarted; 
-    public UnityEvent onProceedDialogue;
+    // public UnityEvent onProceedDialogue;
     public UnityEvent onNarrationDone;
     public UnityEvent onDialogueDone;
     
@@ -62,7 +62,7 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
         UnSubscribe();
     }
 
-    // // OnStart is called once before the first frame update
+    // OnStart is called once before the first frame update
     // protected virtual void Start()
     // {
     //     // Uses the simple dialogue assigned from the Inspector
@@ -219,7 +219,7 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
     // Overload Method to call for Interacting an object through Interface
     public void Interacted()
     {
-        // StartDialogue();
+        StartDialogue();
     }
     
     // Overload Method to call for Un-Interacting an object using Interface

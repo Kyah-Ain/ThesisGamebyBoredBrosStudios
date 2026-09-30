@@ -3,7 +3,7 @@ using UnityEngine;
 
 using UnityEngine.Events;
 
-public class Starter : MonoBehaviour
+public class Starter : MonoBehaviour, IInteractable
 {
     // ------------------------- VARIABLES -------------------------
     [Header("COLLIDER EVENTS")]
@@ -15,6 +15,7 @@ public class Starter : MonoBehaviour
     [SerializeField] bool enableTriggerOnAwake;
     [SerializeField] bool enableTriggerOnStart;
     [SerializeField] bool enableTriggerOnTriggerEnter;
+    [SerializeField] bool enableTriggerOnInteract;
     [SerializeField] bool enableUseOnceAndDestroy;
     [Space]
     [SerializeField] bool addDelay = true;
@@ -96,6 +97,28 @@ public class Starter : MonoBehaviour
     }
 
     #endregion
+    
+    // ------------------ INTERFACE APPLICATIONS --------------------
+    #region INTERFACE METHODS
+
+    // Overload Method to call for Interacting an object through Interface
+    public void Interacted()
+    {
+        // Ignore if this option is disabled or the Starter is still busy (not yet reset)
+        if (!enableTriggerOnInteract) return;
+
+        TriggerStart();
+    }
+    
+    // Overload Method to call for Un-Interacting an object using Interface
+    public void UnInteracted()
+    {
+        // Necessary to Implement due to Interface rule,
+        // but since I have no use to it yet,
+        // I could just implement it and leave it blank.
+    }
+    
+    #endregion  
     
     // ----------------------- CUSTOM METHODS -------------------------
 

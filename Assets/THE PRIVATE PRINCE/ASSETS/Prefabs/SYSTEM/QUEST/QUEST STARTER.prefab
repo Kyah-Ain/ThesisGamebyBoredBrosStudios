@@ -133,10 +133,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerExit:
+    m_PersistentCalls:
+      m_Calls: []
   enableTriggerOnAwake: 0
   enableTriggerOnStart: 0
   enableTriggerOnTriggerEnter: 1
-  enableUseOnceAndDestroy: 0
+  enableUseOnceAndDestroy: 1
   addDelay: 1
   delayTime: 0
   requiredTag: Player
@@ -1177,7 +1183,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -50}
+  m_AnchoredPosition: {x: 0, y: -25}
   m_SizeDelta: {x: 0, y: 130}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &6521110981576234131
@@ -1195,7 +1201,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2096324343270878283}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1976,7 +1982,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 0
   debuggerNiAin: {fileID: 8461206275727957454}
   QuestInfo: {fileID: 11400000, guid: 3426629707a4f104989ab8a566f82528, type: 2}
   _questId: 
@@ -2327,7 +2333,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4814637282995041851
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2524,6 +2530,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerExit:
+    m_PersistentCalls:
+      m_Calls: []
   enableTriggerOnAwake: 0
   enableTriggerOnStart: 1
   enableTriggerOnTriggerEnter: 0
@@ -3877,7 +3889,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4989298732542714201
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4323,7 +4335,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7071058, z: -0, w: 0.7071078}
   m_LocalPosition: {x: 179.25, y: 4.75, z: -6.75}
-  m_LocalScale: {x: 15.468097, y: 6.4879403, z: 21.23369}
+  m_LocalScale: {x: 10, y: 6.4879403, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5288033792936557572}
@@ -4413,6 +4425,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onStart:
     m_PersistentCalls:
+      m_Calls: []
+  onTriggerEnter:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6899243611370224657}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -4425,6 +4440,21 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+  onTriggerExit:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6899243611370224657}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
   enableTriggerOnAwake: 0
   enableTriggerOnStart: 0
@@ -4665,10 +4695,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerExit:
+    m_PersistentCalls:
+      m_Calls: []
   enableTriggerOnAwake: 0
   enableTriggerOnStart: 0
   enableTriggerOnTriggerEnter: 1
-  enableUseOnceAndDestroy: 0
+  enableUseOnceAndDestroy: 1
   addDelay: 1
   delayTime: 0
   requiredTag: Player

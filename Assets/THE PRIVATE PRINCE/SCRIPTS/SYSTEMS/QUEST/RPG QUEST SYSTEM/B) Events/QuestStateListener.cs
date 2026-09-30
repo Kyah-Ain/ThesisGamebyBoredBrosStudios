@@ -10,6 +10,7 @@ public class QuestStateListener : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
     [Header("EVENTS")]
+    public UnityEvent onQuestCanStart;
     public UnityEvent onQuestStarted;
     public UnityEvent onQuestEnded;
     
@@ -103,7 +104,7 @@ public class QuestStateListener : MonoBehaviour
                 
             // Dialogue logic for when there's a Quest wants to be given
             case QuestState.CAN_START:
-                
+                onQuestCanStart?.Invoke();
                 break;
                 
             // Dialogue logic for when there's a Quest waiting to be fulfilled
