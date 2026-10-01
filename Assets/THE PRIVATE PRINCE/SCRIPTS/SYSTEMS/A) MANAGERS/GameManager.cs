@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
     
     [Header("STATUS")]
+    [SerializeField][ReadOnly] bool isProcessingScenes;
     [SerializeField] bool enableLoadScreenDelay;
     [SerializeField] float loadScreenDelay = 3f;
 
@@ -171,21 +172,17 @@ public class GameManager : MonoBehaviour
     // that call LoadScene() do not need to be completely replaced.
     public void LoadScene(string levelSceneName)
     {
-        // Evaluates if the scene name is null or empty
         if (string.IsNullOrEmpty(levelSceneName))
         {
             debuggerNiAin.Error("Scene to load is not specified!");
-
             return;
         }
 
-        // Clear anything previously waiting
+        // Must come BEFORE ClearSceneQueue()
+        if (isProcessingScenes) return;
+
         ClearSceneQueue();
-
-        // Queue the requested scene
         QueueScene(levelSceneName);
-
-        // Begin loading
         StartQueuedSceneLoading();
     }
 
@@ -235,26 +232,32 @@ public class GameManager : MonoBehaviour
         Application.Quit(); // Quit the application
     }
 
-
     // -------------------------------- SCENE QUEUE ---------------------------
 
     // Method to add a scene to the loading queue
     public void QueueScene(string levelSceneName)
     {
-        // Evaluates if the scene name is null or empty
         if (string.IsNullOrEmpty(levelSceneName))
         {
             debuggerNiAin.Error("Scene to queue is not specified!");
-
             return;
         }
 
-        // Adds the scene name to the queue
-        _sceneQueue.Add(levelSceneName);
+        // Ignore queue requests while a load is in progress
+        if (isProcessingScenes)
+        {
+            debuggerNiAin.Warn($"GameManager: Ignored '{levelSceneName}', scenes are already loading!");
+            return;
+        }
 
-        debuggerNiAin.Log(
-            $"GameManager: Queued scene '{levelSceneName}'. Queue count: {_sceneQueue.Count}"
-        );
+        // Ignore duplicates already waiting in the queue
+        if (_sceneQueue.Contains(levelSceneName))
+        {
+            debuggerNiAin.Warn($"GameManager: '{levelSceneName}' is already queued.");
+            return;
+        }
+
+        _sceneQueue.Add(levelSceneName);
     }
 
     // Method to clear every scene currently waiting in the queue
@@ -269,13 +272,13 @@ public class GameManager : MonoBehaviour
     // Method to start loading all scenes currently in the queue
     public void StartQueuedSceneLoading()
     {
-        onLoadingScenes?.Invoke();
-
+        // Evaluates if the Scene Process has been already running
+        if (isProcessingScenes) return;
+        
         // Evaluates if there are no scenes waiting in the queue
         if (_sceneQueue.Count <= 0)
         {
             debuggerNiAin.Warn("GameManager: Cannot start loading because the scene queue is empty!");
-
             return;
         }
 
@@ -283,16 +286,19 @@ public class GameManager : MonoBehaviour
         if (_scenesToLoad.Count > 0)
         {
             debuggerNiAin.Warn("GameManager: A scene loading process is already active!");
-
             return;
         }
+        
+        // Stops future calls for scene processing if already processing
+        isProcessingScenes = true;
+        onLoadingScenes?.Invoke();
 
         // Reset the loading bar
         if (_loadingBar != null)
         {
             _loadingBar.fillAmount = 0.0f;
         }
-
+        
         // Start processing the queue
         StartCoroutine(ProcessSceneQueue());
     }
@@ -473,18 +479,15 @@ public class GameManager : MonoBehaviour
     // Method to delay the loadscreen appearance
     IEnumerator LoadScreenDelay()
     {
-        if (!enableLoadScreenDelay)
+        if (enableLoadScreenDelay)
         {
-            // onFinishLoadingScenes?.Invoke();
-            yield break;
+            debuggerNiAin.Log("Loading Screen Timer Started");
+            yield return new WaitForSeconds(loadScreenDelay);
+            debuggerNiAin.Log("Loading Screen Timer Finished");
+            onFinishLoadingScenes?.Invoke();
         }
 
-        debuggerNiAin.Log("Loading Screen Timer Started");
-
-        yield return new WaitForSeconds(loadScreenDelay);
-
-        debuggerNiAin.Log("Loading Screen Timer Finished");
-
-        onFinishLoadingScenes?.Invoke();
+        // Only now is it safe to accept new load requests
+        isProcessingScenes = false;
     }
 }
