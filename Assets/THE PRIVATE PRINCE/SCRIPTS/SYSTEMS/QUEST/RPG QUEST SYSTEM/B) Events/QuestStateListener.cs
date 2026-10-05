@@ -12,6 +12,7 @@ public class QuestStateListener : MonoBehaviour
     [Header("EVENTS")]
     public UnityEvent onQuestCanStart;
     public UnityEvent onQuestStarted;
+    public UnityEvent onQuestCanFinish;
     public UnityEvent onQuestEnded;
     
     [Header("REFERENCES")]
@@ -114,7 +115,7 @@ public class QuestStateListener : MonoBehaviour
                 
             // Dialogue logic for when there's a Quest waiting to be finished
             case QuestState.CAN_FINISH:
-                
+                onQuestCanFinish?.Invoke();
                 break;
                 
             // Dialogue logic for when finished a Quest

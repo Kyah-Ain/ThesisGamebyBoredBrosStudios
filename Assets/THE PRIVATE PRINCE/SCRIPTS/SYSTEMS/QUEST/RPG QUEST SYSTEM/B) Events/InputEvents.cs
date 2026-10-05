@@ -6,8 +6,9 @@ public class InputEvents
 {
     // ------------------------- EVENTS -------------------------
     [field: Header("PLAYER EVENTS")]
-    public event Action<InputAction.CallbackContext> onInteract;
     public event Action<InputAction.CallbackContext> onMovement;
+    public event Action<InputAction.CallbackContext> onInteract;
+    public event Action<InputAction.CallbackContext> onCyberScan;
 
     [field: Header("UI EVENTS")]
     public event Action<InputAction.CallbackContext> onSubmit;
@@ -17,8 +18,9 @@ public class InputEvents
     // ------------------------- VARIABLES -------------------------
     
     [Header("PLAYER ACTIONS")]
-    private readonly InputAction interactAction;
     private readonly InputAction movementAction;
+    private readonly InputAction interactAction;
+    private readonly InputAction cyberScanAction;
     
     [Header("UI ACTIONS")]
     private readonly InputAction submitAction;
@@ -33,8 +35,9 @@ public class InputEvents
             // INPUT ACTIONS - stores the specific Input Action we want to monitor
         
             // ------------------- PLAYER ACTIONS -------------------
-            interactAction = ppControls.Player.Interact;
             movementAction = ppControls.Player.Move;
+            interactAction = ppControls.Player.Interact;
+            cyberScanAction = ppControls.Player.Cyberscan;
             
             // -------------------- UI ACTIONS --------------------
             submitAction = ppControls.UI.Submit;
@@ -51,6 +54,7 @@ public class InputEvents
             interactAction.performed += OnInteract;
             movementAction.performed += OnMovement;
             movementAction.canceled += OnMovement;
+            cyberScanAction.canceled += OnCyberScan;
             
             // ----------------- UI EVENT TRIGGER ------------------
             submitAction.performed += SubmitPress;
@@ -65,16 +69,22 @@ public class InputEvents
     
     #region for PLAYER
     
+        void OnMovement(InputAction.CallbackContext context)
+        {
+            // Broadcast the input to every subscribed script
+            onMovement?.Invoke(context);
+        }
+    
         void OnInteract(InputAction.CallbackContext context)
         {
             // Broadcast the input to every subscribed script
             onInteract?.Invoke(context);
         }
         
-        void OnMovement(InputAction.CallbackContext context)
+        void OnCyberScan(InputAction.CallbackContext context)
         {
             // Broadcast the input to every subscribed script
-            onMovement?.Invoke(context);
+            onCyberScan?.Invoke(context);
         }
 
     #endregion
@@ -112,6 +122,7 @@ public class InputEvents
         interactAction.performed -= OnInteract;
         movementAction.performed -= OnMovement;
         movementAction.canceled -= OnMovement;
+        cyberScanAction.canceled -= OnCyberScan;
         
         submitAction.performed -= SubmitPress;
         navigateAction.performed -= OnNavigate;
