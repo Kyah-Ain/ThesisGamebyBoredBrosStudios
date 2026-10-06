@@ -39,5 +39,21 @@ namespace Ain
         }
         
         #endregion
+        
+        // ---------------------- PROGRESS CONTRACT -------------------------
+        #region PROGRESS
+
+        // Overrideable Counters
+        public virtual bool HasProgress => false;
+        public virtual int CurrentCount => 0;
+        public virtual int TargetCount => 0;
+
+        // Call from a subclass whenever its count changes
+        protected void ReportProgress()
+        {
+            GameEventsManager.Instance.questEvents.QuestStepProgress(questId);
+        }
+
+        #endregion
     }
 }

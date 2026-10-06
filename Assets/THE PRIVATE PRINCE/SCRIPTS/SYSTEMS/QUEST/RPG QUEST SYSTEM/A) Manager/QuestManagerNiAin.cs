@@ -130,6 +130,8 @@ namespace Ain
             // Declares the Quest progressable and up fr completion
             ChangeQuestState(quest.info.id, QuestState.IN_PROGRESS);
 
+            GameEventsManager.Instance.questEvents.QuestStepProgress(id);
+            
             debuggerNiAin.Log(
                 $"Started Quest: \n " +
                 $"{quest.info.id} - {quest.info.questName}"
@@ -157,6 +159,8 @@ namespace Ain
                 // Declares the Quest finishable and claimable for rewards
                 ChangeQuestState(quest.info.id, QuestState.CAN_FINISH);
             }
+            
+            GameEventsManager.Instance.questEvents.QuestStepProgress(id);
             
             debuggerNiAin.Log(
                 $"Advanced Quest: \n " +
@@ -282,16 +286,11 @@ namespace Ain
         // Method to retrieve a specific quest reference using its ID
         public Quest GetQuestById(string id)
         {
-            // Stores a quest reference to a temporary variable
-            Quest quest = questMap[id]; 
-
-            // Prompts a log if the Quest trying to retrieve was in the Quest Map
-            if (quest == null)
+            if (!questMap.TryGetValue(id, out Quest quest))
             {
                 debuggerNiAin.Error($"A quest with the id ({id}) was not found in the Quest Map.");
+                return null;
             }
-
-            // Returns the search result for the quest reference
             return quest;
         }
 

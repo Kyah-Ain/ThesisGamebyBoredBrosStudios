@@ -9,6 +9,7 @@ namespace Ain
         public event Action<string> onStartQuest;
         public event Action<string> onAdvanceQuest;
         public event Action<string> onFinishQuest;
+        public event Action<string> onQuestStepProgress;
         public event Action<Quest> onQuestStateChange;
         
         // ------------------------ TRIGGERS -------------------------
@@ -29,6 +30,12 @@ namespace Ain
         public void FinishQuest(string id)
         {
             onFinishQuest?.Invoke(id);
+        }
+        
+        // Method to broadcast the Step Progress of a Quest
+        public void QuestStepProgress(string id)
+        {
+            onQuestStepProgress?.Invoke(id);
         }
 
         // --------------------- CUSTOM TRIGGERS ------------------------

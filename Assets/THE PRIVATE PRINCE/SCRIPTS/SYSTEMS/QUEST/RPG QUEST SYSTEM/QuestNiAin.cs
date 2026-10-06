@@ -16,6 +16,8 @@ namespace Ain
 
         public int currentQuestStepIndex { get; private set; } // Task's current progress
 
+        public QuestStep CurrentStep { get; private set; } // The live instance of the current step
+        
         // ------------------------ CONSTRUCTOR -------------------------
 
         // Method to set internal values when initializing a Quest
@@ -49,6 +51,9 @@ namespace Ain
                 // Checks if we successfully retrieved a reference 
                 if (prefabsQuestStep != null)
                 {
+                    // Holds the QuestStep reference from the Quest
+                    CurrentStep = prefabsQuestStep;
+                    
                     // Sets the QuestStep inside the prefab tied to a quest 
                     prefabsQuestStep.InitializeQuestStepID(info.id);
                 }
@@ -80,6 +85,9 @@ namespace Ain
         // Method to move up the Quest Step progress
         public void MoveToNextStep()
         {
+            // Reset's the current step reference
+            CurrentStep = null;
+            
             // Increments the reference for the quest step 
             currentQuestStepIndex++;
         }

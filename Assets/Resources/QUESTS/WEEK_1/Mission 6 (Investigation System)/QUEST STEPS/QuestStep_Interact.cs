@@ -12,6 +12,12 @@ public class QuestStepInteract : Ain.QuestStep
     [Header("STATUS")]
     [SerializeField] [ReadOnly] private int interactedCount; // Tracks the number of interactables already found
     
+    // ------------------------ OVERRIDES -------------------------
+    
+    public override bool HasProgress => true;
+    public override int CurrentCount => interactedCount;
+    public override int TargetCount => interactionGoal;
+    
     // ----------------------- TASK METHODS -------------------------
     
     // Method to process interacted objects
@@ -19,6 +25,8 @@ public class QuestStepInteract : Ain.QuestStep
     {
         // Increments the interacted objects count
         interactedCount++;
+        
+        base.ReportProgress();
         
         // Checks if the interacted goal has been met
         if (interactedCount >= interactionGoal)
