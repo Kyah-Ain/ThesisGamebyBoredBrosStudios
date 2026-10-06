@@ -18,4 +18,11 @@ public class MissionLogger : MonoBehaviour
         // Broadcaster
         eventTrigger.ExecuteEvents(questInfoSO.questName);
     }
+    
+    // Method to broadcast the reset of the QuestLog
+    public void ResetQuestLog()
+    {
+        // Broadcaster
+        eventTrigger.ExecuteEvents("");
+    }
 }
