@@ -19,6 +19,8 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
     
     [Header("REFERENCES")]
     [SerializeField] protected DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
+    [SerializeField] GameEventTrigger profileTrigger;
+    [SerializeField] GameEventTrigger dialogueTrigger;
     [SerializeField] DialogueEffect dialogueEffect; // Custom script for adding effect to the Narration
     
     [Header("DIALOGUE")]
@@ -60,6 +62,13 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
     protected virtual void OnDisable()
     {
         UnSubscribe();
+        
+        // Release ownership if we were mid-dialogue
+        if (IsMine(currentDialogueIdActive))
+        {
+            currentDialogueIdActive = null;
+            currentDialogueStep = 0;
+        }
     }
 
     // OnStart is called once before the first frame update
@@ -98,47 +107,26 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
     // Method to call Dialogue Narration from anywhere
     public virtual void StartDialogue()
     {
-        // ...
-        if (currentDialogueIdActive == null)
-        {
-            // ...
-            currentDialogueIdActive = dialogueID.speechLines[0];
-            
-            debuggerNiAin.Warn(
-                $"Active ID was null. Set to: {currentDialogueIdActive}"
-            );
-        }
-
-        // ...
-        if (string.Equals(
-            currentDialogueIdActive,
-            dialogueID.speechLines[0], 
-            System.StringComparison.OrdinalIgnoreCase
-        ))
-        {
-            NarrateByLines();
- 
-            debuggerNiAin.Warn("ID MATCHED! Calling NarrateByLines.");
-        }
-        else
-        {
-            debuggerNiAin.Warn($"[{name}] BLOCKED. '{currentDialogueIdActive}' owns the dialogue.");
-        }
+        StartDialogue(dialogueID.speechLines[0]);
     }
     
     // Overload Method to call Dialogue Narration through an event
     public virtual void StartDialogue(string id)
     {
-        // Checks if the Start was meant to be for this Dialogue Instance
-        if (string.Equals(
-                id,
-                dialogueID.speechLines[0], 
-                System.StringComparison.OrdinalIgnoreCase
-            )
-        )
+        // Not meant for this dialogue instance
+        if (!IsMine(id)) return;
+
+        // Another NPC already owns the dialogue, so block
+        if (currentDialogueIdActive != null && !IsMine(currentDialogueIdActive))
         {
-            NarrateByLines();
+            debuggerNiAin.Warn($"[{name}] BLOCKED. '{currentDialogueIdActive}' owns the dialogue.");
+            return;
         }
+
+        // Claim ownership so OnSubmitPressed lets us continue
+        currentDialogueIdActive = dialogueID.speechLines[0];
+
+        NarrateByLines();
     }
     
     // Overload Method to call Dialogue Narration from the Unity New Input System
@@ -188,7 +176,7 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
             currentDialogueStep++;
 
             // Outputs the current dialogue line    
-            DisplayLine(lineToNarrate);
+            DisplayLine(lineToNarrate, dialogueLines.speakerName);
         }
         // Dialogue has reached the end
         else
@@ -266,17 +254,19 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
     }
 
     // Allows children to directly display a specific line
-    protected void DisplayLine(string line)
+    protected void DisplayLine(string line, string speaker = "")
     {
         // Uses the narration effect if one is available and enabled
         if (dialogueEffect != null && dialogueEffect.EnableNarrationEffect)
         {
-            dialogueEffect.StartDialogueEffect(line);
+            dialogueEffect.StartDialogueEffect(line, speaker);
             return;
         }
 
         // Otherwise output the dialogue immediately
         dialogueField.text = line;
+        dialogueTrigger.ExecuteEvents(dialogueField.text);
+        profileTrigger.ExecuteEvents(speaker);
 
         // Without an effect, the line is already completely displayed
         NarrationDone();

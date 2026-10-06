@@ -10,7 +10,7 @@ public class DialogueInfoSO : ScriptableObject
     [field: SerializeField] public string id { get; private set; }
     
     [Header("Info")]
-    public string dialogueName;
+    public string speakerName;
 
     [Header("Dialogue")]
     public Dialogue dialogue;

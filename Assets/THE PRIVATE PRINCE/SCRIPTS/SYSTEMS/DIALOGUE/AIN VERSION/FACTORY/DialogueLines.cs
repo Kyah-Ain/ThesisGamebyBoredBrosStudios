@@ -6,6 +6,8 @@ using UnityEngine;
 public class DialogueLines : ScriptableObject
 {
     // ------------------------- VARIABLES -------------------------
+    [Header("Info")]
+    public string speakerName;
     
     [Header("DialogueLines")]
     [TextArea] public string[] speechLines;

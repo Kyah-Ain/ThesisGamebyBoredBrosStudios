@@ -9,11 +9,16 @@ public class DialogueEffect : MonoBehaviour
 {
     // ------------------------- VARIABLES -------------------------
 
+    [Header("REFERENCES")]
+    [SerializeField] GameEventTrigger profileTrigger;
+    [SerializeField] GameEventTrigger dialogueTrigger;
+    
     [Header("EFFECT EVENTS")] 
     public UnityEvent onEffectDone;
 
     [field: Header("SETTINGS")] 
     [field: SerializeField] public bool EnableNarrationEffect { get; private set; } = true; // Toggles if the Dialogue should have Narration effect or not
+    // [SerializeField] TextMeshProUGUI profileField;
     [SerializeField] TextMeshProUGUI outputField; // Reference to the TextMesh that gonna display the effect
     [SerializeField, Range(0.01f, 100f)] float effectSpeed = 1f; // Speed for characters displayed per second
     
@@ -25,10 +30,14 @@ public class DialogueEffect : MonoBehaviour
     // ------------------------ ACCESSIBLE METHODS ------------------------
 
     // Method to start a Narration Effect
-    public void StartDialogueEffect(string dialogue)
+    public void StartDialogueEffect(string dialogue, string speaker = "")
     {
         // Tracks the current dialogue passed unto this script
         _currentDialogueToIterate = dialogue;
+        
+        // ...
+        // profileField.text = speaker;
+        profileTrigger.ExecuteEvents(speaker);
         
         // Checks if Narration Effect was toggled off
         if (!EnableNarrationEffect)
@@ -64,7 +73,8 @@ public class DialogueEffect : MonoBehaviour
 
         // Overwrites the whole dialogue immediately, skipping the TypeWriting effect
         outputField.text = _currentDialogueToIterate;
-
+        dialogueTrigger.ExecuteEvents(outputField.text);
+        
         // Updates the effect status
         IsNarrating = false;
 
@@ -82,12 +92,14 @@ public class DialogueEffect : MonoBehaviour
 
         // Clears the previous dialogue before starting a new one
         outputField.text = "";
-
+        dialogueTrigger.ExecuteEvents(outputField.text);
+        
         // Iterates through each letter in a set of word/s or sentence/s
         foreach (char letter in dialogue)
         {
             // Displays each character individually
             outputField.text += letter;
+            dialogueTrigger.ExecuteEvents(outputField.text);
 
             // Pauses the iteration before displaying the next character
             yield return new WaitForSeconds(1f / effectSpeed);
