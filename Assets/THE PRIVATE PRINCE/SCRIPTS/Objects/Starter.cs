@@ -13,6 +13,7 @@ public class Starter : MonoBehaviour, IInteractable
     
     [Header("SETTINGS")]
     [SerializeField] bool enableTriggerOnAwake;
+    [SerializeField] bool enableTriggerOnEnable;
     [SerializeField] bool enableTriggerOnStart;
     [SerializeField] bool enableTriggerOnTriggerEnter;
     [SerializeField] bool enableTriggerOnInteract;
@@ -41,6 +42,16 @@ public class Starter : MonoBehaviour, IInteractable
         // so listeners that depend on their own initialization may hit null references.
         // If that happens, use Start instead (or add a one-frame delay).
         if (enableTriggerOnAwake && !_isToggledAlready)
+        {
+            _hasTriggeredOnAwake = true;
+            TriggerStart();
+        }
+    }
+    
+    // OnEnable is called when the object becomes enabled and active
+    protected virtual void OnEnable()
+    {
+        if (enableTriggerOnEnable && !_isToggledAlready)
         {
             _hasTriggeredOnAwake = true;
             TriggerStart();
