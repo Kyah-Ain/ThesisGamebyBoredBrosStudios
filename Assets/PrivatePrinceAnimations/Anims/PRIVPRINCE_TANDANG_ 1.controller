@@ -1,31 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1102 &-4122685316755986514
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: BLINK_TANDANG_BACK
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 14cbd38380e34154ab82ad04e96cb61a, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
@@ -74,14 +48,14 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
---- !u!1102 &6116842743774365941
+--- !u!1102 &7077955733395929110
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BLINK_TANDANG_FRONT
+  m_Name: WALK_TANDANG
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -94,7 +68,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 7c1f41e1fc4f0514287e0f6819b97c1d, type: 2}
+  m_Motion: {fileID: 7400000, guid: 69819e672227bbd40a00a6f4c536cfc3, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -113,11 +87,8 @@ AnimatorStateMachine:
     m_State: {fileID: 1759736770292600975}
     m_Position: {x: -270, y: 220, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: -4122685316755986514}
-    m_Position: {x: -270, y: 340, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: 6116842743774365941}
-    m_Position: {x: -270, y: 280, z: 0}
+    m_State: {fileID: 7077955733395929110}
+    m_Position: {x: 120, y: 220, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
