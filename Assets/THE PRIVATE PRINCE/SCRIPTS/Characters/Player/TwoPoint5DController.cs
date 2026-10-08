@@ -1,8 +1,11 @@
 using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
-using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
+using System.Collections.Generic;
+using System.Numerics; // Grants access to collections structures like Lists and Dictionaries
 using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject
 
 using UnityEngine.InputSystem;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 // Required DebuggerNiAinPjls.cs for this to be able to monitor debugs, otherwise you can use the old one
 [RequireComponent(typeof(DebuggerNiAinPjls))]
@@ -189,36 +192,37 @@ public class TwoPoint5DController : MonoBehaviour
     void ApplyAnimation()
     {
         // Evaluates if there is a movement
-        if (inputVector.x != 0 || inputVector.y != 0f)
+        // if (inputVector.x != 0 || inputVector.y != 0f)
+        if (inputVector != Vector2.zero)
         {
             #region OBJECTS BASED FLIP LOGIC
             
-                // Flip sprite based on direction if spriteRoot exists
-                if (spriteRoot != null)
-                {
-                    // Gets a reference to the current scale of the sprite root
-                    Vector3 currentScale = spriteRoot.transform.localScale;
-     
-                    // Determines the direction the character is facing
-                    if (inputVector.x < 0f)
-                    {
-                        // Flips the sprite root to face left by negating the x scale
-                        spriteRoot.transform.localScale = new Vector3(
-                            Mathf.Abs(currentScale.x),
-                            currentScale.y,
-                            currentScale.z
-                        );
-                    }
-                    else if (inputVector.x > 0f)
-                    {
-                        // Flips the sprite root to face right
-                        spriteRoot.transform.localScale = new Vector3(
-                            -Mathf.Abs(currentScale.x),
-                            currentScale.y,
-                            currentScale.z
-                        );
-                    }
-                }
+                // // Flip sprite based on direction if spriteRoot exists
+                // if (spriteRoot != null)
+                // {
+                //     // Gets a reference to the current scale of the sprite root
+                //     Vector3 currentScale = spriteRoot.transform.localScale;
+                //
+                //     // Determines the direction the character is facing
+                //     if (inputVector.x < 0f)
+                //     {
+                //         // Flips the sprite root to face left by negating the x scale
+                //         spriteRoot.transform.localScale = new Vector3(
+                //             Mathf.Abs(currentScale.x),
+                //             currentScale.y,
+                //             currentScale.z
+                //         );
+                //     }
+                //     else if (inputVector.x > 0f)
+                //     {
+                //         // Flips the sprite root to face right
+                //         spriteRoot.transform.localScale = new Vector3(
+                //             -Mathf.Abs(currentScale.x),
+                //             currentScale.y,
+                //             currentScale.z
+                //         );
+                //     }
+                // }
             
             #endregion
 
@@ -247,6 +251,23 @@ public class TwoPoint5DController : MonoBehaviour
                 // }
 
             #endregion
+
+            // Local copy for the animator only, so inputVector (used for movement) stays untouched
+            Vector2 animInput = inputVector;
+
+            // Keep only the dominant axis (horizontal wins on an exact diagonal)
+            if (Mathf.Abs(animInput.x) >= Mathf.Abs(animInput.y))
+            {
+                animInput = new Vector2(Mathf.Sign(animInput.x), 0f); // exactly -1 or 1
+            }
+            else
+            {
+                animInput = new Vector2(0f, Mathf.Sign(animInput.y)); // exactly -1 or 1
+            }
+            
+            // Fetches the Player Inputs to the Blend Tree
+            animator.SetFloat("Xinput", animInput.x);
+            animator.SetFloat("Yinput", animInput.y);
  
             // Animates the character when moving
             animator.SetBool("isMoving", true);
