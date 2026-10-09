@@ -38,21 +38,28 @@ public class MissionLogger : MonoBehaviour
         // ...
         if (quest == null) return;
         
+        // Prevents a finished quest on repopulating the log
+        if (quest.state == QuestState.FINISHED) return;
+        
         // ...
         string text = questInfoSO.questName;
+
+        #region QUEST STEPS LOGGER
         
-        // // Retrieves the total questSteps to fulfill for a Quest
-        // int totalSteps = questInfoSO.questStepPrefabs.Length;
-        //
-        // // Only proceeds if we atleast have 1 steps for a Quest
-        // if (totalSteps > 0)
-        // {
-        //     // ...
-        //     int displayStep = Mathf.Min(quest.currentQuestStepIndex + 1, totalSteps);
-        //     
-        //     // ...
-        //     text += $"\nStep {displayStep}/{totalSteps}";
-        // }
+            // // Retrieves the total questSteps to fulfill for a Quest
+            // int totalSteps = questInfoSO.questStepPrefabs.Length;
+            //
+            // // Only proceeds if we atleast have 1 steps for a Quest
+            // if (totalSteps > 0)
+            // {
+            //     // ...
+            //     int displayStep = Mathf.Min(quest.currentQuestStepIndex + 1, totalSteps);
+            //     
+            //     // ...
+            //     text += $"\nStep {displayStep}/{totalSteps}";
+            // }
+
+        #endregion
         
         // ...
         Ain.QuestStep step = quest.CurrentStep;

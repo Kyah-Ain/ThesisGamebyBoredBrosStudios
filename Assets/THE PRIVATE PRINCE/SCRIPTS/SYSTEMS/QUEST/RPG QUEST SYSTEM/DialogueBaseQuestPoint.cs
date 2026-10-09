@@ -69,7 +69,10 @@ public class DialogueBaseQuestPoint : Ain.QuestPoint
 
     // Method to call a request for starting a Quest
     public override void StartQuest()
-    {                                   
+    {                
+        // Gets the latest Quest State before applying starting a Quest
+        base.RefreshQuestState();
+        
         // Evaluates if the quest can be started
         if (base.currentQuestState.Equals(QuestState.CAN_START))
         {
@@ -80,6 +83,9 @@ public class DialogueBaseQuestPoint : Ain.QuestPoint
     // Method to call for advancing a Quest
     public override void AdvanceQuest()
     {
+        // Gets the latest Quest State before applying advancing a Quest
+        base.RefreshQuestState();
+        
         // Evaluates if there's a quest to modify
         if (base.currentQuestState.Equals(QuestState.IN_PROGRESS))
         {
@@ -90,6 +96,9 @@ public class DialogueBaseQuestPoint : Ain.QuestPoint
     // Method to call a request for finishing a Quest
     public override void CompleteQuest()
     {
+        // Gets the latest Quest State before applying completion of Quest
+        base.RefreshQuestState();
+        
         // Evaluates if the quest can be finished
         if (base.currentQuestState.Equals(QuestState.CAN_FINISH))
         {
