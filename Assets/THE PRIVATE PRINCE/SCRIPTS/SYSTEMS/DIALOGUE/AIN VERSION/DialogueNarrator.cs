@@ -263,9 +263,14 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
             return;
         }
 
+        // Temporary: Might be removed later
+        if (dialogueField != null)
+        {
+            dialogueField.text = line;  
+        }
+        
         // Otherwise output the dialogue immediately
-        dialogueField.text = line;
-        dialogueTrigger.ExecuteEvents(dialogueField.text);
+        dialogueTrigger.ExecuteEvents(line);
         profileTrigger.ExecuteEvents(speaker);
 
         // Without an effect, the line is already completely displayed
