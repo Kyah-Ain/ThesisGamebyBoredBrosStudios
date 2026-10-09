@@ -71,9 +71,14 @@ public class DialogueEffect : MonoBehaviour
         // Makes the coroutine placeholder available again
         _currentEffectRunning = null;
 
+        // Temporary: Might be removed
+        if (outputField != null)
+        {
+            outputField.text = _currentDialogueToIterate;
+        }
+
         // Overwrites the whole dialogue immediately, skipping the TypeWriting effect
-        outputField.text = _currentDialogueToIterate;
-        dialogueTrigger.ExecuteEvents(outputField.text);
+        dialogueTrigger.ExecuteEvents(_currentDialogueToIterate);
         
         // Updates the effect status
         IsNarrating = false;
@@ -90,16 +95,32 @@ public class DialogueEffect : MonoBehaviour
         // Updates the effect status
         IsNarrating = true;
 
+        // Temporary: Might be removed
+        if (outputField != null)
+        {
+            outputField.text = "";
+        }
+        
         // Clears the previous dialogue before starting a new one
-        outputField.text = "";
-        dialogueTrigger.ExecuteEvents(outputField.text);
+        dialogueTrigger.ExecuteEvents("");
+        
+        // Placeholder for dialogues that gonna be constructed
+        string constructedDialogue = "";
         
         // Iterates through each letter in a set of word/s or sentence/s
         foreach (char letter in dialogue)
         {
+            // Temporary: Might be removed
+            if (outputField != null)
+            {
+                outputField.text += letter;
+            }
+            
+            // Constructs the dialogue letter by letter
+            constructedDialogue += letter;
+            
             // Displays each character individually
-            outputField.text += letter;
-            dialogueTrigger.ExecuteEvents(outputField.text);
+            dialogueTrigger.ExecuteEvents(constructedDialogue);
 
             // Pauses the iteration before displaying the next character
             yield return new WaitForSeconds(1f / effectSpeed);
