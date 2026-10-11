@@ -139,9 +139,12 @@ MonoBehaviour:
   onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
+  starterType: 3
   enableTriggerOnAwake: 0
+  enableTriggerOnEnable: 0
   enableTriggerOnStart: 0
   enableTriggerOnTriggerEnter: 1
+  enableTriggerOnInteract: 0
   enableUseOnceAndDestroy: 1
   addDelay: 1
   delayTime: 0
@@ -324,21 +327,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 0
-  onProceedDialogue:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2074011694113129360}
-        m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
-        m_MethodName: StartDialogue
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   onNarrationDone:
     m_PersistentCalls:
       m_Calls: []
@@ -358,6 +346,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   debuggerNiAin: {fileID: 5493053434514744997}
+  profileTrigger: {fileID: 0}
+  dialogueTrigger: {fileID: 0}
   dialogueEffect: {fileID: 2922727895332793053}
   dialogueID: {fileID: 11400000, guid: 3d6c953834ce1b444924ec50f68e98c5, type: 2}
   dialogueLines: {fileID: 11400000, guid: 1b4819f85be56994c9088c55d6a7e0ba, type: 2}
@@ -376,6 +366,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c703c2926a0a74ea98af1c0b66c552, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  profileTrigger: {fileID: 0}
+  dialogueTrigger: {fileID: 0}
   onEffectDone:
     m_PersistentCalls:
       m_Calls: []
@@ -601,21 +593,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 0
-  onProceedDialogue:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4871973940893704592}
-        m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
-        m_MethodName: StartDialogue
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   onNarrationDone:
     m_PersistentCalls:
       m_Calls: []
@@ -671,6 +648,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   debuggerNiAin: {fileID: 1967685483486151809}
+  profileTrigger: {fileID: 0}
+  dialogueTrigger: {fileID: 0}
   dialogueEffect: {fileID: 7687912981639902020}
   dialogueID: {fileID: 11400000, guid: f43a54b5bf590b442af468c85a3a9286, type: 2}
   dialogueLines: {fileID: 11400000, guid: 4d0590b5b2ec1ef48bc56de7d1486b78, type: 2}
@@ -689,6 +668,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c703c2926a0a74ea98af1c0b66c552, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  profileTrigger: {fileID: 0}
+  dialogueTrigger: {fileID: 0}
   onEffectDone:
     m_PersistentCalls:
       m_Calls: []
@@ -1929,6 +1910,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2ff0d63876b484f9fa418aed561489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onQuestCanStart:
+    m_PersistentCalls:
+      m_Calls: []
   onQuestStarted:
     m_PersistentCalls:
       m_Calls:
@@ -1956,6 +1940,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  onQuestCanFinish:
+    m_PersistentCalls:
+      m_Calls: []
   onQuestEnded:
     m_PersistentCalls:
       m_Calls:
@@ -2536,9 +2523,12 @@ MonoBehaviour:
   onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
+  starterType: 2
   enableTriggerOnAwake: 0
+  enableTriggerOnEnable: 0
   enableTriggerOnStart: 1
   enableTriggerOnTriggerEnter: 0
+  enableTriggerOnInteract: 0
   enableUseOnceAndDestroy: 1
   addDelay: 1
   delayTime: 4
@@ -2885,21 +2875,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  onProceedDialogue:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1450814861258852663}
-        m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
-        m_MethodName: StartDialogue
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   onNarrationDone:
     m_PersistentCalls:
       m_Calls: []
@@ -2943,6 +2918,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   debuggerNiAin: {fileID: 5493053434514744997}
+  profileTrigger: {fileID: 0}
+  dialogueTrigger: {fileID: 0}
   dialogueEffect: {fileID: 7919601942622752663}
   dialogueID: {fileID: 11400000, guid: aa97b38f5d8e6cd498e8ab9d359e6292, type: 2}
   dialogueLines: {fileID: 11400000, guid: b669b975f24ae4e42988b1e0fce925f6, type: 2}
@@ -2961,6 +2938,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c703c2926a0a74ea98af1c0b66c552, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  profileTrigger: {fileID: 0}
+  dialogueTrigger: {fileID: 0}
   onEffectDone:
     m_PersistentCalls:
       m_Calls: []
@@ -3656,21 +3635,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 0
-  onProceedDialogue:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2323367606557263932}
-        m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
-        m_MethodName: StartDialogue
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   onNarrationDone:
     m_PersistentCalls:
       m_Calls: []
@@ -3702,6 +3666,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   debuggerNiAin: {fileID: 5493053434514744997}
+  profileTrigger: {fileID: 0}
+  dialogueTrigger: {fileID: 0}
   dialogueEffect: {fileID: 4255746854520594331}
   dialogueID: {fileID: 11400000, guid: 20d483912c2018a479df07d3f9921751, type: 2}
   dialogueLines: {fileID: 11400000, guid: aae9d0dab3f8c0e4fa63f90f35d8c8ec, type: 2}
@@ -3720,6 +3686,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c703c2926a0a74ea98af1c0b66c552, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  profileTrigger: {fileID: 0}
+  dialogueTrigger: {fileID: 0}
   onEffectDone:
     m_PersistentCalls:
       m_Calls:
@@ -4456,9 +4424,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  starterType: 3
   enableTriggerOnAwake: 0
+  enableTriggerOnEnable: 0
   enableTriggerOnStart: 0
   enableTriggerOnTriggerEnter: 1
+  enableTriggerOnInteract: 0
   enableUseOnceAndDestroy: 0
   addDelay: 1
   delayTime: 0
@@ -4701,9 +4672,12 @@ MonoBehaviour:
   onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
+  starterType: 3
   enableTriggerOnAwake: 0
+  enableTriggerOnEnable: 0
   enableTriggerOnStart: 0
   enableTriggerOnTriggerEnter: 1
+  enableTriggerOnInteract: 0
   enableUseOnceAndDestroy: 1
   addDelay: 1
   delayTime: 0

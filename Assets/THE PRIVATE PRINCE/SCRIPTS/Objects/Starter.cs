@@ -2,33 +2,51 @@ using System.Collections;
 using UnityEngine;
 
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class Starter : MonoBehaviour, IInteractable
 {
+    // ------------------------- LOCAL ENUM -------------------------
+
+    enum StarterType
+    {
+        TriggerManually,
+        TriggerOnAwake,
+        TriggerOnEnable,
+        TriggerOnStart,
+        TriggerOnEnterCollider,
+        TriggerOnInteract
+    }
+    
+    enum UseType
+    {
+        UseOnceAndDisable,
+        UseOnceAndDestroy
+    }
+
     // ------------------------- VARIABLES -------------------------
     [Header("COLLIDER EVENTS")]
+    [Space]
+    [SerializeField] bool requiresInteractInput;
     public UnityEvent onStart;
+    [Space]
     public UnityEvent onTriggerEnter;
+    [Space]
     public UnityEvent onTriggerExit;
     
     [Header("SETTINGS")]
-    [SerializeField] bool enableTriggerOnAwake;
-    [SerializeField] bool enableTriggerOnEnable;
-    [SerializeField] bool enableTriggerOnStart;
-    [SerializeField] bool enableTriggerOnTriggerEnter;
-    [SerializeField] bool enableTriggerOnInteract;
-    [SerializeField] bool enableUseOnceAndDestroy;
-    [Space]
+    [SerializeField] StarterType starterType = StarterType.TriggerManually;
+    [SerializeField] UseType useType = UseType.UseOnceAndDisable;
     [SerializeField] bool addDelay = true;
     [SerializeField][Range(0f,10f)] float delayTime; 
 
     [Header("TRIGGER ENTER SETTINGS")]
-    // Only objects with this tag can trigger the Starter (leave empty to accept any object)
-    [SerializeField] string requiredTag = "Player";
+    [SerializeField] string requiredTag = "Player"; // Only objects with this tag can trigger this (leave empty to accept any object)
     
     [Header("STATUS")]
     [SerializeField][ReadOnly] bool _isToggledAlready;
-
+    [SerializeField][ReadOnly] bool _isPlayerInRange;
+    
     // Remembers that Awake already triggered, so Start doesn't fire a second time
     private bool _hasTriggeredOnAwake;
     
@@ -38,10 +56,8 @@ public class Starter : MonoBehaviour, IInteractable
     // Awake is called when this script was first initialized & loaded
     private void Awake()
     {
-        // NOTE: Other scripts may not have run their own Awake/Start yet at this point,
-        // so listeners that depend on their own initialization may hit null references.
-        // If that happens, use Start instead (or add a one-frame delay).
-        if (enableTriggerOnAwake && !_isToggledAlready)
+        // Proceeds only if the Trigger type was set to Awake and hasn't been toggled yet
+        if (starterType == StarterType.TriggerOnAwake && !_isToggledAlready)
         {
             _hasTriggeredOnAwake = true;
             TriggerStart();
@@ -51,60 +67,105 @@ public class Starter : MonoBehaviour, IInteractable
     // OnEnable is called when the object becomes enabled and active
     protected virtual void OnEnable()
     {
-        if (enableTriggerOnEnable && !_isToggledAlready)
+        // Proceeds only if the Trigger type was set to OnEnable and hasn't been toggled yet
+        if (starterType == StarterType.TriggerOnEnable && !_isToggledAlready)
         {
             _hasTriggeredOnAwake = true;
             TriggerStart();
         }
+        
+        // Subscribes the method to an Input Event
+        GameEventsManager.Instance.inputEvents.onInteract += OnInteractInput;
     }
     
+    // OnDisable is called when the object becomes disabled
+    protected virtual void OnDisable()
+    {
+        // UnSubscribes the method to an Input Event
+        GameEventsManager.Instance.inputEvents.onInteract -= OnInteractInput;
+        
+        // Reset's the Player status when this was disabled while it was set to true
+        _isPlayerInRange = false;
+        
+        // Reset to the state before Entering this gameObject
+        onTriggerExit?.Invoke();
+    }
+
     // Start is called once before the first frame update
     void Start()
     {
-        // Skipped if Awake already triggered, to avoid firing twice when both options are enabled
-        if (enableTriggerOnStart && !_isToggledAlready && !_hasTriggeredOnAwake)
+        // Proceeds only if the Trigger type was set to OnStart and hasn't been toggled yet
+        if (starterType == StarterType.TriggerOnStart && !_isToggledAlready)
         {
             TriggerStart();
         }
     }
 
     // OnTriggerEnter is called when another collider enters this object's trigger collider
-    // NOTE: This object needs a Collider with 'Is Trigger' checked, and either this object
-    // or the object entering needs a Rigidbody, otherwise this will never be called.
     private void OnTriggerEnter(Collider other)
     {
-        // Ignore if this option is disabled or the Starter is still busy (not yet reset)
-        if (!enableTriggerOnTriggerEnter) return;
+        /* NOTE:
+            This object needs a Collider with 'Is Trigger' checked, and either this object
+            or the object entering needs a Rigidbody, otherwise this will never be called.
+        */
+        
+        // Proceeds only if the Trigger type was set to OnEnterCollider
+        if (starterType != StarterType.TriggerOnEnterCollider) return;
 
         // If a tag is required, ignore any object that doesn't have it
         if (!string.IsNullOrEmpty(requiredTag) && !other.CompareTag(requiredTag)) return;
 
-        TriggerStart();
+        // Prompts that the player entered the Collider
+        _isPlayerInRange = true;
+        
+        // Executes OnTrigger event
         onTriggerEnter?.Invoke();
+        
+        // Prevents the Trigger to start the Starter immediately to wait for Input instead
+        if (requiresInteractInput) return;
+
+        // Executes the event
+        TriggerStart();
     }
     
     // OnTriggerEnter is called when another collider exits this object's trigger collider
     private void OnTriggerExit(Collider other)
     {
-        // Ignore if this option is disabled or the Starter is still busy (not yet reset)
-        if (!enableTriggerOnTriggerEnter) return;
+        // Proceeds only if the Trigger type was set to OnEnterCollider
+        if (starterType != StarterType.TriggerOnEnterCollider) return;
 
         // If a tag is required, ignore any object that doesn't have it
         if (!string.IsNullOrEmpty(requiredTag) && !other.CompareTag(requiredTag)) return;
 
+        // Prompts that the player entered the Collider
+        _isPlayerInRange = false;
+        
         onTriggerExit?.Invoke();
     }
 
     // Method to call for starting the Starter
     public void TriggerStart()
     {
-        /*
-            Flips the flag to indicate that it has been used &
-            that it needs to be reset to be able to be re-used
-        */ 
+        // Flags that this script has been toggled already
         _isToggledAlready = true;
         
         StartCoroutine(StartWithDelay());
+    }
+
+    #endregion
+    
+    // ------------------- EVENT SUBSCRIPTIONS --------------------
+    #region EVENT SUBSCRIPTIONS
+    
+    // New Input System Method that are called when subscribed to an Input Event
+    void OnInteractInput(InputAction.CallbackContext context)
+    {
+        // Only register Input when the Player was in the object's Interactable Range
+        if (_isPlayerInRange)
+        {
+            TriggerStart();
+            onTriggerEnter?.Invoke();
+        }
     }
 
     #endregion
@@ -115,8 +176,8 @@ public class Starter : MonoBehaviour, IInteractable
     // Overload Method to call for Interacting an object through Interface
     public void Interacted()
     {
-        // Ignore if this option is disabled or the Starter is still busy (not yet reset)
-        if (!enableTriggerOnInteract) return;
+        // Proceeds only if the Trigger type was set to OnInteract
+        if (starterType != StarterType.TriggerOnInteract) return;
 
         TriggerStart();
     }
@@ -148,8 +209,18 @@ public class Starter : MonoBehaviour, IInteractable
         // Broadcast the event to anyone subscribing or listening
         onStart.Invoke();
         
-        // Proceed only if single used was toggled true or was enabled
-        if (enableUseOnceAndDestroy)
+        // Proceed only if single used & disable was chosen
+        if (useType == UseType.UseOnceAndDisable)
+        {
+            // Reset the flag only when the object is kept, so it can be re-used.
+            // When destroying, the flag stays true so it can't be re-triggered during the extra wait.
+            _isToggledAlready = false;
+            
+            // Disable this object after using
+            this.gameObject.SetActive(false);
+        }
+        // Proceed only if single used & destroy was chosen
+        else if (useType == UseType.UseOnceAndDestroy)
         {
             // Additional pause to wait for every logic to be executed before destroying this object
             yield return new WaitForSeconds(1f);
@@ -157,6 +228,7 @@ public class Starter : MonoBehaviour, IInteractable
             // Destroy or wipe the instance of this script's gameObject entirely
             Destroy(gameObject);
         }
+        // Default fallback if conditions above haven't met
         else
         {
             // Reset the flag only when the object is kept, so it can be re-used.
