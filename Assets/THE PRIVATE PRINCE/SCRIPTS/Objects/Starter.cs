@@ -20,6 +20,7 @@ public class Starter : MonoBehaviour, IInteractable
     
     enum UseType
     {
+        UseAndDontDisable,
         UseOnceAndDisable,
         UseOnceAndDestroy
     }
@@ -36,7 +37,7 @@ public class Starter : MonoBehaviour, IInteractable
     
     [Header("SETTINGS")]
     [SerializeField] StarterType starterType = StarterType.TriggerManually;
-    [SerializeField] UseType useType = UseType.UseOnceAndDisable;
+    [SerializeField] UseType useType = UseType.UseAndDontDisable;
     [SerializeField] bool addDelay = true;
     [SerializeField][Range(0f,10f)] float delayTime; 
 
@@ -229,7 +230,7 @@ public class Starter : MonoBehaviour, IInteractable
             Destroy(gameObject);
         }
         // Default fallback if conditions above haven't met
-        else
+        else if (useType == UseType.UseAndDontDisable)
         {
             // Reset the flag only when the object is kept, so it can be re-used.
             // When destroying, the flag stays true so it can't be re-triggered during the extra wait.
