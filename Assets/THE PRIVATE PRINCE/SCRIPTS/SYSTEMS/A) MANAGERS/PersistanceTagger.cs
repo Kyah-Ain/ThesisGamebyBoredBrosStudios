@@ -1,50 +1,78 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Runs before almost everything else, so a duplicate is flagged before the
+// other scripts on the same object do their own Awake/OnEnable work
+[DefaultExecutionOrder(-1000)]
 public class PersistanceTagger : MonoBehaviour
 {
-    // NOTE: INTHERIT FROM THIS FOR A MUCH MORE SAFEST APPROACH WITH NO CONFLICT TO TIMING
-    // * only if you have your own DoNotDestroy logic on other script attached to the same object
-    // * should also set the option to "PARENTS_AND_ROOT_ONLY" if this is the case 
-
     // ------------------------- VARIABLES -------------------------
-    
+
     public enum PersistenceScope
     {
-        THIS_ONLY,        // Only this GameObject
-        ALL     // This object, all parents, AND all children!
+        THIS_ONLY, // Detaches this object from its parent, then persists only it
+        ALL        // Persists this object's root, which carries every child with it
     }
 
-    // Default Setting for Enum
-    // * this ensures not to have a conflict with Destroy logics on other scripts
+    [Header("SETTINGS")]
     public PersistenceScope appliesTo = PersistenceScope.ALL;
+    [SerializeField] string persistentId; // Same ID on every copy of the "same" object
+
+    // Registry of surviving copies: ID -> the one that is persisted
+    static readonly Dictionary<string, PersistanceTagger> registry =
+        new Dictionary<string, PersistanceTagger>();
+
+    string key;
+
+    // Other scripts on this object can check this and skip their setup
+    public bool IsDuplicate { get; private set; }
+
+    // Clears the registry on Play (matters if Domain Reload is disabled in Enter Play Mode Options)
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetRegistry() => registry.Clear();
 
     // ------------------------- UNITY METHODS -------------------------
 
-    // Built-in Unity method called when this script was first loaded
     protected virtual void Awake()
     {
-        // Check the selected persistence scope and apply DontDestroyOnLoad accordingly
-        if (appliesTo == PersistenceScope.THIS_ONLY) 
+        // Falls back to the object's name if no ID was typed in
+        key = string.IsNullOrWhiteSpace(persistentId) ? gameObject.name : persistentId;
+
+        // Is there already a living copy with this ID?
+        if (registry.TryGetValue(key, out PersistanceTagger existing) &&
+            existing != null && existing != this)
         {
-            // Sets this GameObject to not be destroyed on scene loads (persitent across scenes)
-            DontDestroyOnLoad(this.gameObject);
+            IsDuplicate = true;
 
-            Debug.Log($"Successfully set {this.gameObject} to become DontDestroyOnLoad!");
+            GameObject target = appliesTo == PersistenceScope.ALL
+                ? transform.root.gameObject
+                : gameObject;
 
-            return; // Exit early since we only want to make this specific GameObject persistent
+            target.SetActive(false); // keeps most of the duplicate's OnEnable/Update from running
+            Destroy(target);
+            return;
         }
 
-        // Sets this GameObject's root up to this GameObject to not be destroyed on scene loads (persitent across scenes)
-        DontDestroyOnLoad(this.gameObject.transform.root);
+        registry[key] = this;
 
-        Debug.Log($"Successfully set {this.gameObject.transform.root.name} to become DontDestroyOnLoad!");
+        if (appliesTo == PersistenceScope.THIS_ONLY)
+        {
+            transform.SetParent(null); // DontDestroyOnLoad needs a root object
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            DontDestroyOnLoad(transform.root.gameObject);
+        }
     }
 
-    // Automated Unity Built-In method being called when this object is destroyed
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
-        Destroy(this.gameObject); // Destroy this gameObject when this script is destroyed (if it hasn't been marked as DontDestroyOnLoad)
+        // Only the surviving copy owns the registry entry
+        if (!IsDuplicate && key != null &&
+            registry.TryGetValue(key, out PersistanceTagger existing) && existing == this)
+        {
+            registry.Remove(key);
+        }
     }
 }

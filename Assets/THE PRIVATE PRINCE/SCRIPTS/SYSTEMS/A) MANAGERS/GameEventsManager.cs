@@ -46,6 +46,7 @@ public class GameEventsManager : MonoBehaviour
             );
 
             Destroy(this.gameObject);
+            return;
         }
         
         // Set this script as the one and only instance in the game

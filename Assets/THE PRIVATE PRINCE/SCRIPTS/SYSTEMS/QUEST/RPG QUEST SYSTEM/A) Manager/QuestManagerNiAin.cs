@@ -16,6 +16,7 @@ namespace Ain
         [Header("REFERENCES")]
         [SerializeField] DebuggerNiAinPjls debuggerNiAin; // Custom debugging script from your dev Ain
         Dictionary<string, Quest> questMap; // Dictionary list  of references for Quests
+        [SerializeField] Transform questHolder;
 
         [Header("TEMPORARY VARIABLES")]
         int currentPlayerLevel = 0; // Stores the current player level
@@ -89,7 +90,7 @@ namespace Ain
         #endregion
 
         // ------------------------- SUBSCRIPTIONS -------------------------
-        #region SUBSCRIPTIONS METHODS
+        #region SUBSCRIPTION METHODS
 
         // Method to subscribe your local method to an event trigger
         void Subscribe()
@@ -115,17 +116,23 @@ namespace Ain
             GameEventsManager.Instance.questEvents.onAdvanceQuest -= AdvanceQuest;
             GameEventsManager.Instance.questEvents.onFinishQuest -= FinishQuest;
         }
+        
+        #endregion
 
-        // -------------------------- PROCESSORS -------------------------
-
+        // -------------------------- QUEST METHODS -------------------------
+        #region QUEST METHODS
+        
         // Method to Start a Quest
         public void StartQuest(string id)
         {
             // Stores the retrieved Quest to a temporary variable
             Quest quest = GetQuestById(id);
-            
+
+            // Only proceeds if there's Quest Holder set in the Inspector
+            if (questHolder == null) { DebugMissing(); return; }
+
             // Spawns a Quest Step under this QuestManager's gameObject
-            quest.InstantiateCurrentQuestStep(this.transform);
+            quest.InstantiateCurrentQuestStep(questHolder.transform);
             
             // Declares the Quest progressable and up fr completion
             ChangeQuestState(quest.info.id, QuestState.IN_PROGRESS);
@@ -150,8 +157,11 @@ namespace Ain
             // Checks if there's still Quest Step to fulfill after moving next earlier
             if (quest.CurrentStepExists())
             {
+                // Only proceeds if there's Quest Holder set in the Inspector
+                if (questHolder == null) { DebugMissing(); return; }
+                
                 // Spawns a Quest Step under this QuestManager's gameObject
-                quest.InstantiateCurrentQuestStep(this.transform);
+                quest.InstantiateCurrentQuestStep(questHolder.transform);
             }
             // Condition if any statement above hasn't met
             else
@@ -181,6 +191,22 @@ namespace Ain
                 $"Finished Quest: \n " +
                 $"{quest.info.id} - {quest.info.questName}"
             );
+        }
+        
+        // Method to Reset the Quests from the Beginning
+        public void ResetQuests()
+        {
+            // Only proceeds if there's Quest Holder set in the Inspector
+            if (questHolder == null) { DebugMissing(); return; }
+            
+            // Clears any Instantiated quests under this Manager's object
+            foreach (Transform quests in questHolder)
+            {
+                Destroy(quests.gameObject);
+            }
+            
+            // Re-creates a new fresh Quest Map
+            InitializedQuestMap();
         }
 
         // Method to update a Quest Status
@@ -326,6 +352,17 @@ namespace Ain
 
         // ---------------------------- DEBUGGERS -------------------------
         #region DEBUGGERS
+
+        // Method to output the Quest missing components
+        void DebugMissing()
+        {
+            // Debugs the specific missing component
+            if (questHolder == null)
+            {
+                debuggerNiAin.Error("Quest Manager can't instantiate your request " +
+                                    $"due to having questHolder set to {questHolder}");
+            }
+        }
 
         // Method to output the Quest's Attributes
         string DebugQuestAttributes(Quest quest)

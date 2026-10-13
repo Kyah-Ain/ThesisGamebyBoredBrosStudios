@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 public class ClickToStart : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class ClickToStart : MonoBehaviour
     
     // ------------------------- VARIABLES -------------------------
     #region VARIABLES
+
+    [SerializeField] UnityEvent onClick;
     
     [SerializeField] Animator animator;
     
@@ -65,6 +68,9 @@ public class ClickToStart : MonoBehaviour
     void SkipAnimation(InputAction.CallbackContext context)
     {
         SkipAnimation();
+        
+        // Trigger the Event
+        onClick?.Invoke();
     }
     
     #endregion
