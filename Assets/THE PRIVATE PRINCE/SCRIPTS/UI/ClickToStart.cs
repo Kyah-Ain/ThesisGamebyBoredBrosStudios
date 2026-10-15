@@ -22,6 +22,8 @@ public class ClickToStart : MonoBehaviour
     
     [SerializeField] Animator animator;
     
+    [SerializeField][ReadOnly] bool isInteracted;
+    
     #endregion
     
     // ----------------------- UNITY METHODS ------------------------
@@ -67,11 +69,25 @@ public class ClickToStart : MonoBehaviour
     // Overload Method for skipping the animation
     void SkipAnimation(InputAction.CallbackContext context)
     {
-        SkipAnimation();
-        
-        // Trigger the Event
-        onClick?.Invoke();
+        // Proceed only if skip hasn't been interacted yet
+        if (!isInteracted)
+        {
+            // Flags that the interaction for this animation has already been used
+            isInteracted = true;
+            
+            SkipAnimation();
+            
+            // Trigger the Event
+            onClick?.Invoke();
+        }
     }
-    
+
+    // Method for triggering the Interactable to an animation
+    public void SetThisInteractable()
+    {
+        // Resets the flag for other animations to use
+        isInteracted = false;
+    }
+
     #endregion
 }
