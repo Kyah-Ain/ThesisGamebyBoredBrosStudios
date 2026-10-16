@@ -22,7 +22,7 @@ public class TwoPoint5DController : MonoBehaviour
     [SerializeField] CharacterController controller; // Reference to the component that controls character movement
     [SerializeField] Animator animator; // Reference to the component that animates 
     // [SerializeField] SpriteRenderer spriteRoot; // Reference to the component that provides 2D-Visuals
-    [SerializeField] GameObject spriteRoot; // Reference to the component that holds the visuals
+    // [SerializeField] GameObject spriteRoot; // Reference to the component that holds the visuals
     
     [Header("SETTINGS")]
     [SerializeField] float movementSpeed = 1f; // Speed at which the character moves
@@ -52,16 +52,16 @@ public class TwoPoint5DController : MonoBehaviour
                 if (debuggerNiAin == null) MissingComponentLog("debuggerNiAin");
             }
             
-            // Checks if our reference was null or not been set
-            if (spriteRoot == null)
-            {
-                // If it is not, then set it automatically by looking for the script class from this object
-                // spriteRoot = this.GetComponent<SpriteRenderer>();
-                spriteRoot = this.gameObject; 
-                
-                // Logs a missing component if still not found
-                if (spriteRoot == null) MissingComponentLog("spriteRoot");
-            }
+            // // Checks if our reference was null or not been set
+            // if (spriteRoot == null)
+            // {
+            //     // If it is not, then set it automatically by looking for the script class from this object
+            //     // spriteRoot = this.GetComponent<SpriteRenderer>();
+            //     spriteRoot = this.gameObject; 
+            //     
+            //     // Logs a missing component if still not found
+            //     if (spriteRoot == null) MissingComponentLog("spriteRoot");
+            // }
 
         #endregion
     }
