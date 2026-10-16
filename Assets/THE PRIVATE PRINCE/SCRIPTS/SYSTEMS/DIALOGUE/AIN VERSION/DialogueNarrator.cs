@@ -25,7 +25,7 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
     
     [Header("DIALOGUE")]
     [SerializeField] protected DialogueLines dialogueID; // Holds the UniqueID for the uniqueness of the Dialogue
-    [SerializeField] DialogueLines dialogueLines; // Dialogue data to narrate by lines
+    [SerializeField] DialogueLines[] dialogueLines; // Dialogue data to narrate by lines
     
     [Header("UI")]
     [SerializeField] TextMeshProUGUI dialogueField; // Reference to the UI Text that would output the dialogue
@@ -34,6 +34,7 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
     public static string currentDialogueIdActive; // ...
     [SerializeField][ReadOnly] protected string[] currentLines; // The temporary holder of the current active dialogue lines
     [SerializeField][ReadOnly] protected int currentDialogueStep; // Tracker for what line we currently are in the dialogue lines
+    [SerializeField][ReadOnly] protected int currentDialogueSet;
     
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -49,7 +50,7 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
         }
         
         // Uses the simple dialogue assigned from the Inspector
-        SetDialogueLines(dialogueLines.speechLines);
+        SetDialogueLines(dialogueLines[0].speechLines);
     }
     
     // OnEnable is called when the object becomes enabled and active
@@ -166,23 +167,32 @@ public class DialogueNarrator : MonoBehaviour, IInteractable
             onDialogueStarted?.Invoke();
         }
         
-        // Continue narrating the dialogue
-        if (currentDialogueStep < currentLines.Length)
+        // Proceeds only if reached the last line in a dialogue set
+        if (currentDialogueStep >= currentLines.Length)
         {
-            // Stores the current line before advancing
-            string lineToNarrate = currentLines[currentDialogueStep];
-
-            // Advances first so completion callbacks have consistent data
-            currentDialogueStep++;
-
-            // Outputs the current dialogue line    
-            DisplayLine(lineToNarrate, dialogueLines.speakerName);
+            // Proceeds only if it's the last set
+            if (currentDialogueSet >= dialogueLines.Length - 1)
+            {
+                // Completes the dialogue and return back
+                FinishDialogue();
+                return;
+            }
+            
+            // Updates the tracker to a new dialogue set to be narrated
+            currentDialogueSet++;
+            
+            // Set the dialogue to a new dialogue set
+            SetDialogueLines(dialogueLines[currentDialogueSet].speechLines);
         }
-        // Dialogue has reached the end
-        else
-        {
-            FinishDialogue();
-        }
+        
+        // Retrieves the current line based on the tracker
+        string lineToNarrate = currentLines[currentDialogueStep];
+
+        // Updates the tracker to a new dialogue line to be displayed
+        currentDialogueStep++;
+
+        // Outputs the current dialogue line    
+        DisplayLine(lineToNarrate, dialogueLines[currentDialogueSet].speakerName);
     }
     
     // Finishes the current dialogue

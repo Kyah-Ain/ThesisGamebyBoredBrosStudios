@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -38,6 +39,7 @@ public class Starter : MonoBehaviour, IInteractable
     [Header("SETTINGS")]
     [SerializeField] StarterType starterType = StarterType.TriggerManually;
     [SerializeField] UseType useType = UseType.UseAndDontDisable;
+    [SerializeField] bool isResettable = true;
     [SerializeField] bool addDelay = true;
     [SerializeField][Range(0f,10f)] float delayTime; 
 
@@ -55,7 +57,7 @@ public class Starter : MonoBehaviour, IInteractable
     #region UNITY METHODS
     
     // Awake is called when this script was first initialized & loaded
-    private void Awake()
+    void Awake()
     {
         // Proceeds only if the Trigger type was set to Awake and hasn't been toggled yet
         if (starterType == StarterType.TriggerOnAwake && !_isToggledAlready)
@@ -66,7 +68,7 @@ public class Starter : MonoBehaviour, IInteractable
     }
     
     // OnEnable is called when the object becomes enabled and active
-    protected virtual void OnEnable()
+    void OnEnable()
     {
         // Proceeds only if the Trigger type was set to OnEnable and hasn't been toggled yet
         if (starterType == StarterType.TriggerOnEnable && !_isToggledAlready)
@@ -80,16 +82,16 @@ public class Starter : MonoBehaviour, IInteractable
     }
     
     // OnDisable is called when the object becomes disabled
-    protected virtual void OnDisable()
+    void OnDisable()
     {
         // UnSubscribes the method to an Input Event
         GameEventsManager.Instance.inputEvents.onInteract -= OnInteractInput;
         
-        // Reset's the Player status when this was disabled while it was set to true
-        _isPlayerInRange = false;
-        
-        // Reset to the state before Entering this gameObject
-        onTriggerExit?.Invoke();
+        // Only proceed if it's resettable
+        if (isResettable)
+        {
+            Reset();
+        }
     }
 
     // Start is called once before the first frame update
@@ -103,7 +105,7 @@ public class Starter : MonoBehaviour, IInteractable
     }
 
     // OnTriggerEnter is called when another collider enters this object's trigger collider
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         /* NOTE:
             This object needs a Collider with 'Is Trigger' checked, and either this object
@@ -130,7 +132,7 @@ public class Starter : MonoBehaviour, IInteractable
     }
     
     // OnTriggerEnter is called when another collider exits this object's trigger collider
-    private void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         // Proceeds only if the Trigger type was set to OnEnterCollider
         if (starterType != StarterType.TriggerOnEnterCollider) return;
@@ -144,6 +146,11 @@ public class Starter : MonoBehaviour, IInteractable
         onTriggerExit?.Invoke();
     }
 
+    #endregion
+    
+    // --------------------- STARTER METHODS ---------------------
+    #region STARTER METHODS
+    
     // Method to call for starting the Starter
     public void TriggerStart()
     {
@@ -151,6 +158,16 @@ public class Starter : MonoBehaviour, IInteractable
         _isToggledAlready = true;
         
         StartCoroutine(StartWithDelay());
+    }
+    
+    // Method to reset the Starter
+    public void Reset()
+    {
+        // Reset's the Player status when this was disabled while it was set to true
+        _isPlayerInRange = false;
+        
+        // Reset to the state before Entering this gameObject
+        onTriggerExit?.Invoke();
     }
 
     #endregion

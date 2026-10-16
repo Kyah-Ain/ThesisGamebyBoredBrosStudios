@@ -10,6 +10,7 @@ namespace Ain
 
         [Header("REFERENCE")]
         private string questId; // Reference to the quest this script's instance belongs to
+        [SerializeField] protected GameObject objectToDestroy;
         
         [Header("STATUS")]
         private bool isFinished = false; // Indicates if the quest step is finished/completed
@@ -35,7 +36,18 @@ namespace Ain
 
             GameEventsManager.Instance.questEvents.AdvanceQuest(questId);
 
-            Destroy(this.gameObject);
+            // Only proceed if there's no specified object to destroy
+            if (objectToDestroy == null)
+            {
+                // Destroy's the object this script was attached to
+                Destroy(this.gameObject); 
+                
+                // Return back
+                return;
+            }
+
+            // Destroys the specified object
+            Destroy(objectToDestroy.gameObject);
         }
         
         #endregion
