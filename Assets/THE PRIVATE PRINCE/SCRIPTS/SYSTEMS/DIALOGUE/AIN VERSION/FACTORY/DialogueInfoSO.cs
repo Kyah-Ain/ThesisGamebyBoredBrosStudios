@@ -47,12 +47,13 @@ public class Dialogue
     [SerializeField] private DialogueLines canFinishRequestLines;
     
     // Readable Copies of "Private Data" (accessible Xerox for other scripts)
-    public string[] IdleLines => idleLines.speechLines;
-    public string[] HasRequestLines => hasRequestLines.speechLines;
-    public string[] AcceptRequestLines => acceptRequestLines.speechLines;
-    public string[] DeclineRequestLines => declineRequestLines.speechLines;
-    public string[] WaitingForCompletionLines => waitingForCompletionLines.speechLines;
-    public string[] CanFinishRequestLines => canFinishRequestLines.speechLines;
+    // An unassigned slot returns null, which the narrators treat as "no lines"
+    public string[] IdleLines => idleLines != null ? idleLines.speechLines : null;
+    public string[] HasRequestLines => hasRequestLines != null ? hasRequestLines.speechLines : null;
+    public string[] AcceptRequestLines => acceptRequestLines != null ? acceptRequestLines.speechLines : null;
+    public string[] DeclineRequestLines => declineRequestLines != null ? declineRequestLines.speechLines : null;
+    public string[] WaitingForCompletionLines => waitingForCompletionLines != null ? waitingForCompletionLines.speechLines : null;
+    public string[] CanFinishRequestLines => canFinishRequestLines != null ? canFinishRequestLines.speechLines : null;
 }
 
 #endregion

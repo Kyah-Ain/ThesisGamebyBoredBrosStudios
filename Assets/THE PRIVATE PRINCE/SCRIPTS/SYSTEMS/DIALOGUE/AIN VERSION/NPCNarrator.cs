@@ -46,6 +46,13 @@ public class NPCNarrator : DialogueNarrator
     // Awake is called when this script was first initialized & loaded
     protected override void Awake()
     {
+        /*
+            NOTE:
+            Intentionally NOT calling base.Awake() here.
+            The parent would assign the first Inspector dialogue set as the current lines,
+            but this NPC gets its lines from the DialogueInfo through the quest states.
+        */
+
         // Checks if our reference for the script was not set
         if (debuggerNiAin == null)
         {
@@ -56,17 +63,33 @@ public class NPCNarrator : DialogueNarrator
         // Initialized the starting Quest to track with dialogue
         UpdateQuestAssign(_targetQuest); // _targetQuest = 0
     }
-    
-    // OnEnable is called when the object becomes enabled and active
-    protected override void OnEnable()
-    {
-        Subscribe();
-    }
 
     // OnDisable is called when the object becomes disabled
     protected override void OnDisable()
     {
-        UnSubscribe();
+        // Remembers if we were mid-dialogue before the parent releases the ownership
+        bool wasInDialogue = IsMine(currentDialogueIdActive);
+
+        // Unsubscribes, releases ownership, and resets the step
+        base.OnDisable();
+
+        // Nothing else to clean up if we weren't talking
+        if (!wasInDialogue)
+        {
+            return;
+        }
+
+        // Start clean the next time the player talks to this NPC
+        _hasQuestionRaised = false;
+        _hasNarratedRandomly = false;
+
+        // Restore normal dialogue if we were disabled in the middle of a temporary response
+        if (_isResponseDialogue)
+        {
+            _isResponseDialogue = false;
+
+            SwitchLines(dialogueState);
+        }
     }
     
     // // OnStart is called once before the first frame update
@@ -152,6 +175,24 @@ public class NPCNarrator : DialogueNarrator
     // Method to call Dialogue Narration from anywhere
     public override void StartDialogue()
     {
+        // Claims the shared dialogue first, so this NPC never skips another NPC's currently typing line
+        if (!TryClaimDialogue())
+        {
+            return;
+        }
+
+        ProgressNPCDialogue();
+    }
+    
+    // Method to proceed the dialogue from the parent's inputs (Submit / event-based start)
+    protected override void AdvanceDialogue()
+    {
+        ProgressNPCDialogue();
+    }
+    
+    // Method that decides how this NPC proceeds its dialogue based on its current status
+    void ProgressNPCDialogue()
+    {
         // // Checks if the Start was meant to be for this Dialogue Instance
         // if (!string.Equals(
         //         id,
@@ -197,6 +238,9 @@ public class NPCNarrator : DialogueNarrator
         // Don't narrate if there's nothing to narrate
         if (currentLines == null || currentLines.Length <= 0)
         {
+            // Nothing to narrate, so don't leave the dialogue locked
+            ReleaseDialogue();
+            
             return;
         }
 
@@ -214,7 +258,7 @@ public class NPCNarrator : DialogueNarrator
             int randomNum = Random.Range(0, currentLines.Length);
 
             // Parent decides how the dialogue gets displayed
-            DisplayLine(currentLines[randomNum]);
+            DisplayLine(currentLines[randomNum], GetSpeakerName());
 
             // Next interaction closes the random dialogue
             _hasNarratedRandomly = true;
@@ -252,6 +296,24 @@ public class NPCNarrator : DialogueNarrator
     
     // ----------------------- HELPERS -------------------------
     #region HELPERS
+    
+    // This NPC gets its lines from DialogueInfo, so it must not move through the parent's Inspector dialogue sets
+    protected override bool UsesDialogueSets => false;
+    
+    // Uses the speaker name from this week's DialogueInfo, instead of the parent's Inspector dialogue sets
+    protected override string GetSpeakerName()
+    {
+        // No DialogueInfo assigned, so there's no name to show
+        if (DialogueInfo == null || DialogueInfo.Length == 0)
+        {
+            return "";
+        }
+
+        // Keeps the week within range, in case the quests outgrow the dialogue data
+        int index = Mathf.Clamp(currentDialogueWeek, 0, DialogueInfo.Length - 1);
+
+        return DialogueInfo[index] != null ? DialogueInfo[index].speakerName : "";
+    }
     
     // Method to switch dialogue lines
     void SwitchLines(DialogueState state)
