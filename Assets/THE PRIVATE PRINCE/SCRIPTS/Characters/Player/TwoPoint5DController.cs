@@ -1,11 +1,8 @@
 using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
-using System.Collections.Generic;
-using System.Numerics; // Grants access to collections structures like Lists and Dictionaries
+using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
 using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject
 
 using UnityEngine.InputSystem;
-using Vector2 = UnityEngine.Vector2;
-using Vector3 = UnityEngine.Vector3;
 
 // Required DebuggerNiAinPjls.cs for this to be able to monitor debugs, otherwise you can use the old one
 [RequireComponent(typeof(DebuggerNiAinPjls))]
