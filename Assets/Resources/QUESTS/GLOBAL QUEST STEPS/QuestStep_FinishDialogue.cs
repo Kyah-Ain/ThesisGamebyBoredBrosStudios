@@ -4,7 +4,7 @@ using UnityEngine;
 
 using UnityEngine.InputSystem;
 
-public class FinishDialogueQuestStep : Ain.QuestStep
+public class QuestStep_FinishDialogue : Ain.QuestStep
 {
     // // ----------------------- UNITY METHODS -------------------------
     // #region UNITY METHODS
@@ -46,14 +46,14 @@ public class FinishDialogueQuestStep : Ain.QuestStep
     
     // ----------------------- PARENT CONTACTS -------------------------
 
-    // // Method to call for completing a Quest
-    // void MissionComplete(InputAction.CallbackContext context)
-    // {
-    //     base.FinishQuestStep();
-    // }
+    // Method to call for completing a Step using Input System
+    protected virtual void StepComplete(InputAction.CallbackContext context)
+    {
+        StepComplete();
+    }
     
-    // Method to call for completing a Quest
-    public void MissionComplete()
+    // Method to call for completing a Step
+    public void StepComplete()
     {
         base.FinishQuestStep();
     }

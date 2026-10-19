@@ -122,12 +122,6 @@ public class AIMovement : MonoBehaviour
         navAgent.updateRotation = false;
     }
     
-    // Update is called once per frame
-    private void Update()
-    {
-        Animate();
-    }
-    
     // OnEnable is called when the object becomes enabled and active
     void OnEnable()
     {
@@ -141,6 +135,12 @@ public class AIMovement : MonoBehaviour
     void OnDisable()
     {
         StopMovementLoop();
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        Animate();
     }
     
     #endregion

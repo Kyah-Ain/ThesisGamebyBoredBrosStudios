@@ -4,7 +4,7 @@ using UnityEngine;
 
 using UnityEngine.InputSystem;
 
-public class QuestStepTestCollect : Ain.QuestStep
+public class QuestStep_TestCollect : Ain.QuestStep
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -23,7 +23,7 @@ public class QuestStepTestCollect : Ain.QuestStep
         // ...
         if (collectedCount >= collectablesNeeded)
         {
-            MissionComplete();
+            StepComplete();
         }
     }
 
@@ -31,8 +31,8 @@ public class QuestStepTestCollect : Ain.QuestStep
     
     // ----------------------- PARENT CONTACTS -------------------------
 
-    // Method to call for completing a Quest
-    public void MissionComplete()
+    // Method to call for completing a Step
+    protected virtual void StepComplete()
     {
         base.FinishQuestStep();
     }

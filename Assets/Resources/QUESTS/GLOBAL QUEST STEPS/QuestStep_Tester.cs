@@ -4,7 +4,7 @@ using UnityEngine;
 
 using UnityEngine.InputSystem;
 
-public class QuestStepTester : Ain.QuestStep
+public class QuestStep_Tester : Ain.QuestStep
 {
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -31,7 +31,7 @@ public class QuestStepTester : Ain.QuestStep
     {
         // Set subscriptions of these methods to an event
         // Left (Event Call) += Right (Method that would be called)
-        GameEventsManager.Instance.inputEvents.onSubmit += MissionComplete;
+        GameEventsManager.Instance.inputEvents.onSubmit += StepComplete;
     }
 
     // Method to UnSubscribe your local method to an event trigger
@@ -39,15 +39,15 @@ public class QuestStepTester : Ain.QuestStep
     {
         // UnSubscribe them methods to an event
         // Left (Event Call) -= Right (Method that would be called)
-        GameEventsManager.Instance.inputEvents.onSubmit -= MissionComplete;
+        GameEventsManager.Instance.inputEvents.onSubmit -= StepComplete;
     }
     
     #endregion
     
     // ----------------------- PARENT CONTACTS -------------------------
 
-    // Method to call for completing a Quest
-    public void MissionComplete(InputAction.CallbackContext context)
+    // Method to call for completing a Step
+    protected virtual void StepComplete(InputAction.CallbackContext context)
     {
         base.FinishQuestStep();
     }

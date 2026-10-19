@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QuestStepInteract : Ain.QuestStep
+public class QuestStep_InteractAll : QuestStep_Interact
 {
     // ------------------------- VARIABLES -------------------------
 
@@ -31,15 +31,15 @@ public class QuestStepInteract : Ain.QuestStep
         // Checks if the interacted goal has been met
         if (interactedCount >= interactionGoal)
         {
-            MissionComplete();
+            StepComplete();
         }
     }
 
     // ----------------------- PARENT CONTACTS -------------------------
 
-    // Method to call for completing a Quest
-    void MissionComplete()
+    // Method to call for completing a Step
+    protected override void StepComplete()
     {
-        base.FinishQuestStep();
+        base.StepComplete();
     }
 }
