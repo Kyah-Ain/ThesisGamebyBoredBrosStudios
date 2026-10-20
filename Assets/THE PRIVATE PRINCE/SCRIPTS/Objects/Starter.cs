@@ -105,7 +105,7 @@ public class Starter : MonoBehaviour, IInteractable
     }
 
     // OnTriggerEnter is called when another collider enters this object's trigger collider
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider actor)
     {
         /* NOTE:
             This object needs a Collider with 'Is Trigger' checked, and either this object
@@ -116,7 +116,7 @@ public class Starter : MonoBehaviour, IInteractable
         if (starterType != StarterType.TriggerOnEnterCollider) return;
 
         // If a tag is required, ignore any object that doesn't have it
-        if (!string.IsNullOrEmpty(requiredTag) && !other.CompareTag(requiredTag)) return;
+        if (!string.IsNullOrEmpty(requiredTag) && !actor.CompareTag(requiredTag)) return;
 
         // Prompts that the player entered the Collider
         _isPlayerInRange = true;
@@ -132,13 +132,13 @@ public class Starter : MonoBehaviour, IInteractable
     }
     
     // OnTriggerEnter is called when another collider exits this object's trigger collider
-    void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider actor)
     {
         // Proceeds only if the Trigger type was set to OnEnterCollider
         if (starterType != StarterType.TriggerOnEnterCollider) return;
 
         // If a tag is required, ignore any object that doesn't have it
-        if (!string.IsNullOrEmpty(requiredTag) && !other.CompareTag(requiredTag)) return;
+        if (!string.IsNullOrEmpty(requiredTag) && !actor.CompareTag(requiredTag)) return;
 
         // Prompts that the player entered the Collider
         _isPlayerInRange = false;
