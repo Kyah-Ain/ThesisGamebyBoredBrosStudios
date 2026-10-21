@@ -8,7 +8,7 @@ public class PuzzleTrigger : MonoBehaviour
 {
     [Header("Puzzle Trigger Settings")]
     public PuzzleWall puzzleWall;
-    public TextMeshProUGUI triggerText;
+    // public TextMeshProUGUI triggerText;
 
     private bool playerInside = false;
 
@@ -20,25 +20,25 @@ public class PuzzleTrigger : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            triggerText.gameObject.SetActive(true);
-            playerInside = true;
-        }
-    }
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         // triggerText.gameObject.SetActive(true);
+    //         playerInside = true;
+    //     }
+    // }
+    //
+    // private void OnTriggerExit(Collider other)
+    // {
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         // triggerText.gameObject.SetActive(false);
+    //         playerInside = false;
+    //     }
+    // }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            triggerText.gameObject.SetActive(false);
-            playerInside = false;
-        }
-    }
-
-    private void HandlePuzzleTab()
+    public void HandlePuzzleTab()
     {
         if (puzzleWall == null || puzzleWall.puzzle == null) return;
         if (puzzleWall.HasActiveEnemies) return;
