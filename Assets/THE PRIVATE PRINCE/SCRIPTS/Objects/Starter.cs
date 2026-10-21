@@ -230,12 +230,7 @@ public class Starter : MonoBehaviour, IInteractable
         // Proceed only if single used & disable was chosen
         if (useType == UseType.UseOnceAndDisable)
         {
-            // Reset the flag only when the object is kept, so it can be re-used.
-            // When destroying, the flag stays true so it can't be re-triggered during the extra wait.
-            _isToggledAlready = false;
-            
-            // Disable this object after using
-            this.gameObject.SetActive(false);
+            Reset();
         }
         // Proceed only if single used & destroy was chosen
         else if (useType == UseType.UseOnceAndDestroy)
