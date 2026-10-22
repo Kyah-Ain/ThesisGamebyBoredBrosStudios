@@ -80,6 +80,8 @@ public class DialogueNarrator : MonoBehaviour
     // OnEnable is called when the object becomes enabled and active
     protected virtual void OnEnable()
     {
+        debuggerNiAin.Warn($"[{this.name}] enabled. OwnerId = {this.OwnerId}");
+        
         Subscribe();
     }
 
@@ -138,6 +140,11 @@ public class DialogueNarrator : MonoBehaviour
     // Overload Method to call Dialogue Narration through an event
     public virtual void StartDialogue(string id)
     {
+#if UNITY_EDITOR
+        debuggerNiAin.Warn(
+            $"[{name}] StartDialogue('{id}') called.\n{System.Environment.StackTrace}");
+#endif
+        
         // Not meant for this dialogue instance
         if (!IsMine(id)) return;
 
