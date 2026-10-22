@@ -168,6 +168,9 @@ public class Starter : MonoBehaviour, IInteractable
         
         // Reset to the state before Entering this gameObject
         onTriggerExit?.Invoke();
+        
+        // Disables the gameObject
+        this.gameObject.SetActive(false);
     }
 
     #endregion

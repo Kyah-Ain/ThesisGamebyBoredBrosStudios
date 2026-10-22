@@ -1576,19 +1576,7 @@ MonoBehaviour:
       m_Calls: []
   onQuestEnded:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7966950122436867718}
-        m_TargetAssemblyTypeName: MissionLogger, Assembly-CSharp
-        m_MethodName: ResetQuestLog
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   debuggerNiAin: {fileID: 6692286336837028638}
   QuestInfo: {fileID: 11400000, guid: e68328235545c604a860881ce3c0a6b4, type: 2}
   _questId: 
@@ -2723,7 +2711,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5080366973148266304}
   - {fileID: 2362722227369889350}
   - {fileID: 1825192364211239144}
   m_Father: {fileID: 9182634127773555867}
@@ -2951,18 +2938,6 @@ MonoBehaviour:
   onDialogueDone:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 974953508975209555}
-        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
-        m_MethodName: StartQuest
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 437798523306590308}
         m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
         m_MethodName: ExecuteEvents
@@ -2974,7 +2949,19 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: Tutorial2
           m_BoolArgument: 0
-        m_CallState: 0
+        m_CallState: 2
+      - m_Target: {fileID: 974953508975209555}
+        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
+        m_MethodName: CompleteQuest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial2
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 7628259069008182547}
         m_TargetAssemblyTypeName: PuzzleTrigger, Assembly-CSharp
         m_MethodName: HandlePuzzleTab
@@ -2986,7 +2973,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: Tutorial2
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 0
   debuggerNiAin: {fileID: 6793217748465183189}
   profileTrigger: {fileID: 4074690042889901842}
   dialogueTrigger: {fileID: 6593189689677581053}
@@ -3494,7 +3481,7 @@ MonoBehaviour:
   onDialogueStarted:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6691912044737041927}
+      - m_Target: {fileID: 6019591875515017071}
         m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
         m_MethodName: ExecuteEvents
         m_Mode: 1
@@ -3512,9 +3499,9 @@ MonoBehaviour:
   onDialogueDone:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 974953508975209555}
+      - m_Target: {fileID: 8826187064577669697}
         m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
-        m_MethodName: StartQuest
+        m_MethodName: CompleteQuest
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3524,7 +3511,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 756624946302266762}
+      - m_Target: {fileID: 4470068492269548290}
         m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
         m_MethodName: ExecuteEvents
         m_Mode: 1
@@ -3537,8 +3524,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   debuggerNiAin: {fileID: 5611754627020321599}
-  profileTrigger: {fileID: 4074690042889901842}
-  dialogueTrigger: {fileID: 6593189689677581053}
+  profileTrigger: {fileID: 933429168093176747}
+  dialogueTrigger: {fileID: 8266120947993018314}
   dialogueEffect: {fileID: 748719573779668100}
   dialogueID: {fileID: 11400000, guid: c081686dd02805f428696bec049b85ee, type: 2}
   dialogueLines:
@@ -3567,8 +3554,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c703c2926a0a74ea98af1c0b66c552, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileTrigger: {fileID: 3125669941317922207}
-  dialogueTrigger: {fileID: 3435218192474439875}
+  profileTrigger: {fileID: 933429168093176747}
+  dialogueTrigger: {fileID: 8266120947993018314}
   onEffectDone:
     m_PersistentCalls:
       m_Calls: []
@@ -3937,7 +3924,7 @@ Transform:
   - {fileID: 8520092451273666404}
   m_Father: {fileID: 5690723165974478101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6197286130839709978
+--- !u!1 &6139358260163051304
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3945,9 +3932,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5080366973148266304}
-  - component: {fileID: 290936123870005886}
-  - component: {fileID: 3882160070198691584}
+  - component: {fileID: 5961628906792983345}
+  - component: {fileID: 6227261007239057598}
+  - component: {fileID: 700829881203952133}
   m_Layer: 0
   m_Name: 'onQuestStateChange - WK1: M8'
   m_TagString: Untagged
@@ -3955,41 +3942,41 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5080366973148266304
+--- !u!4 &5961628906792983345
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6197286130839709978}
+  m_GameObject: {fileID: 6139358260163051304}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.999811, y: -5.2078524, z: 36.50006}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000025928018}
+  m_LocalPosition: {x: 147.0433, y: 3.2, z: -20.141068}
   m_LocalScale: {x: 1.2033, y: 1.2033, z: 1.2033}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4636683422701778197}
+  m_Father: {fileID: 1684953860325355075}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &290936123870005886
+--- !u!114 &6227261007239057598
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6197286130839709978}
+  m_GameObject: {fileID: 6139358260163051304}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d86bf333f57207d43b6d865e1eedc15b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enableLogs: 1
---- !u!114 &3882160070198691584
+--- !u!114 &700829881203952133
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6197286130839709978}
+  m_GameObject: {fileID: 6139358260163051304}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b2ff0d63876b484f9fa418aed561489, type: 3}
@@ -3997,41 +3984,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onQuestCanStart:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4434270534513863327}
-        m_TargetAssemblyTypeName: Starter, Assembly-CSharp
-        m_MethodName: TriggerStart
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onQuestStarted:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7966950122436867718}
-        m_TargetAssemblyTypeName: MissionLogger, Assembly-CSharp
-        m_MethodName: UpdateQuestLog
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onQuestCanFinish:
     m_PersistentCalls:
       m_Calls: []
   onQuestEnded:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7966950122436867718}
+      - m_Target: {fileID: 6286451373261113842}
         m_TargetAssemblyTypeName: MissionLogger, Assembly-CSharp
         m_MethodName: ResetQuestLog
         m_Mode: 1
@@ -4043,7 +4006,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  debuggerNiAin: {fileID: 290936123870005886}
+  debuggerNiAin: {fileID: 6227261007239057598}
   QuestInfo: {fileID: 11400000, guid: e68328235545c604a860881ce3c0a6b4, type: 2}
   _questId: 
   _currentQuestState: 0
@@ -5243,6 +5206,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5961628906792983345}
   - {fileID: 6125668455314530011}
   m_Father: {fileID: 4068706586422671131}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5525,34 +5489,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onQuestCanStart:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8555752441312457476}
-        m_TargetAssemblyTypeName: Starter, Assembly-CSharp
-        m_MethodName: TriggerStart
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onQuestStarted:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6286451373261113842}
-        m_TargetAssemblyTypeName: MissionLogger, Assembly-CSharp
-        m_MethodName: UpdateQuestLog
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1377373744040584866}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -5570,21 +5510,9 @@ MonoBehaviour:
       m_Calls: []
   onQuestEnded:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6286451373261113842}
-        m_TargetAssemblyTypeName: MissionLogger, Assembly-CSharp
-        m_MethodName: ResetQuestLog
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   debuggerNiAin: {fileID: 4663748266438031064}
-  QuestInfo: {fileID: 0}
+  QuestInfo: {fileID: 11400000, guid: 28d6d997263bc994398df8becfe43374, type: 2}
   _questId: 
   _currentQuestState: 0
 --- !u!1 &8173686306956974863

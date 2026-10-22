@@ -645,11 +645,11 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 0
   onQuestEnded:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1621989051888369696}
+      - m_Target: {fileID: 337926543989340697}
         m_TargetAssemblyTypeName: MissionLogger, Assembly-CSharp
         m_MethodName: ResetQuestLog
         m_Mode: 1
@@ -1044,7 +1044,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3744650840445482335}
   - component: {fileID: 2949763404408625472}
-  - component: {fileID: 2098932900045243052}
   m_Layer: 0
   m_Name: 'WK1: M7 - Citizens (NPC) '
   m_TagString: Untagged
@@ -1096,19 +1095,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &2098932900045243052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1362717139088501558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99eefd14120be1641ae4c98dac7b8586, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectToDestroy: {fileID: 0}
 --- !u!1 &1370654639786288582
 GameObject:
   m_ObjectHideFlags: 0
@@ -1782,7 +1768,7 @@ GameObject:
   - component: {fileID: 1075289658890879364}
   - component: {fileID: 4309135005608455259}
   m_Layer: 14
-  m_Name: Week1_Mission7_StartingDialogue
+  m_Name: Week1_Mission7_EndingDialogue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1878,9 +1864,9 @@ MonoBehaviour:
   profileTrigger: {fileID: 6148959573995147048}
   dialogueTrigger: {fileID: 8154592279312946563}
   dialogueEffect: {fileID: 4309135005608455259}
-  dialogueID: {fileID: 11400000, guid: 962c3253da579114ba615c9d73261f07, type: 2}
+  dialogueID: {fileID: 11400000, guid: 02a53224f253a0848a129db388b25f2f, type: 2}
   dialogueLines:
-  - {fileID: 11400000, guid: 739fcfa7132e33844b019640a25aa8fc, type: 2}
+  - {fileID: 11400000, guid: 4ec92625ed360dd4c9c7e782b48297a6, type: 2}
   playRandomSet: 0
   conversations: []
   dialogueField: {fileID: 0}
@@ -1978,7 +1964,7 @@ MonoBehaviour:
   useType: 0
   isResettable: 1
   addDelay: 1
-  delayTime: 1
+  delayTime: 0
   requiredTag: Player
   _isToggledAlready: 0
   _isPlayerInRange: 0
@@ -3129,7 +3115,7 @@ MonoBehaviour:
   useType: 0
   isResettable: 1
   addDelay: 1
-  delayTime: 0
+  delayTime: 1
   requiredTag: Player
   _isToggledAlready: 0
   _isPlayerInRange: 0
@@ -4741,7 +4727,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   debuggerNiAin: {fileID: 4025472975781737201}
-  QuestInfo: {fileID: 0}
+  QuestInfo: {fileID: 11400000, guid: 28d6d997263bc994398df8becfe43374, type: 2}
   _questId: 
   _currentQuestState: 0
 --- !u!1 &5898573597347254237
@@ -7221,7 +7207,15 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 2fccbf312774ffc48adc9c33789a53b8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 177716118690019908}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 2fccbf312774ffc48adc9c33789a53b8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4918844791282756578}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: 2fccbf312774ffc48adc9c33789a53b8,
     type: 3}
 --- !u!4 &33002042245119714 stripped
@@ -7230,3 +7224,42 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1682913758633264956}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1206163132140660353 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8653719598885068355, guid: 2fccbf312774ffc48adc9c33789a53b8,
+    type: 3}
+  m_PrefabInstance: {fileID: 1682913758633264956}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &177716118690019908
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206163132140660353}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+--- !u!95 &4918844791282756578
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206163132140660353}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

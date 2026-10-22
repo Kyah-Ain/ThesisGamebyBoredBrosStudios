@@ -551,7 +551,7 @@ GameObject:
   - component: {fileID: 3507591155320705647}
   - component: {fileID: 5305632187337038583}
   m_Layer: 14
-  m_Name: Week1_Mission7_EndingDialogue
+  m_Name: Week1_Mission7_InteractionDialogue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1280,10 +1280,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1861311749199826912}
-  - component: {fileID: 5783448108921092073}
   - component: {fileID: 100425769584032119}
   m_Layer: 0
-  m_Name: Citizens Dialogue - Quest Step
+  m_Name: Citizens Dialogue - QuestStep
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1308,33 +1307,6 @@ Transform:
   - {fileID: 6617164152395196857}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!54 &5783448108921092073
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6630120296874149888}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!114 &100425769584032119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1693,9 +1665,9 @@ MonoBehaviour:
   onStart:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 100425769584032119}
-        m_TargetAssemblyTypeName: QuestStep_Interact, Assembly-CSharp
-        m_MethodName: FulfillInteraction
+      - m_Target: {fileID: 7690242198796219310}
+        m_TargetAssemblyTypeName: Starter, Assembly-CSharp
+        m_MethodName: TriggerStart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1760,7 +1732,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   starterType: 4
-  useType: 1
+  useType: 0
   isResettable: 1
   addDelay: 1
   delayTime: 0
