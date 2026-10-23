@@ -17,7 +17,7 @@ public class CyberScan : MonoBehaviour
     [SerializeField] private UnityEvent onUnCyberScanning;
     
     [Header("STATUS")]
-    [SerializeField][ReadOnly] bool cyberStatus; // Status to track for the state of the CyberScan
+    [SerializeField][ReadOnly] bool isCyberScanOn; // Status to track for the state of the CyberScan
 
     // ------------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -47,7 +47,7 @@ public class CyberScan : MonoBehaviour
     
     #endregion
     
-    // ----------------------- EVENT METHODS -------------------------
+    // ------------------------- EVENT METHODS -------------------------
     #region EVENT METHODS
 
     // Method to subscribe your local method to an event trigger
@@ -66,18 +66,21 @@ public class CyberScan : MonoBehaviour
         GameEventsManager.Instance.inputEvents.onCyberScan -= PerformCyberScan;
     }
     
-    #endregion
-
-    // ------------------------- CYBERSCAN METHODS -------------------------
-    
-    // Method to perform CyberScanning
+    // Overload Method to perform CyberScanning using Unity's New Input System
     void PerformCyberScan(InputAction.CallbackContext context)
     {
-        // Toggles CyberScan's status per each call
-        cyberStatus = !cyberStatus;
-        
+        PerformCyberScan();
+    } 
+    
+    #endregion
+
+    // ----------------------- CYBERSCAN METHODS -------------------------
+    
+    // Method to perform CyberScanning 
+    public void PerformCyberScan()
+    {
         // Only register when CyberStatus set to true
-        if (cyberStatus)
+        if (!isCyberScanOn)
         {
             // Invoke the Event if it's not null (at least have one Subscriber/Listener)
             onCyberScanning?.Invoke();
@@ -88,5 +91,18 @@ public class CyberScan : MonoBehaviour
             // Invoke the Event if it's not null (at least have one Subscriber/Listener)
             onUnCyberScanning?.Invoke();
         }
-    } 
+        
+        // Toggles CyberScan's status per each call
+        isCyberScanOn = !isCyberScanOn;
+    }
+    
+    // Method to Reset the CyberScan
+    public void ResetCyberScan()
+    {
+        // Toggles CyberScan's status to true (for it to be turned off)
+        isCyberScanOn = true;
+
+        // Re-Performs the CyberScan
+        PerformCyberScan();
+    }
 }
