@@ -50,9 +50,6 @@ public class Starter : MonoBehaviour, IInteractable
     [SerializeField][ReadOnly] bool _isToggledAlready;
     [SerializeField][ReadOnly] bool _isPlayerInRange;
     
-    // Remembers that Awake already triggered, so Start doesn't fire a second time
-    private bool _hasTriggeredOnAwake;
-    
     // ----------------------- UNITY METHODS ------------------------
     #region UNITY METHODS
     
@@ -62,7 +59,6 @@ public class Starter : MonoBehaviour, IInteractable
         // Proceeds only if the Trigger type was set to Awake and hasn't been toggled yet
         if (starterType == StarterType.TriggerOnAwake && !_isToggledAlready)
         {
-            _hasTriggeredOnAwake = true;
             TriggerStart();
         }
     }
@@ -73,7 +69,6 @@ public class Starter : MonoBehaviour, IInteractable
         // Proceeds only if the Trigger type was set to OnEnable and hasn't been toggled yet
         if (starterType == StarterType.TriggerOnEnable && !_isToggledAlready)
         {
-            _hasTriggeredOnAwake = true;
             TriggerStart();
         }
         
@@ -168,6 +163,9 @@ public class Starter : MonoBehaviour, IInteractable
         
         // Reset to the state before Entering this gameObject
         onTriggerExit?.Invoke();
+        
+        // Disables the gameObject
+        this.gameObject.SetActive(false);
     }
 
     #endregion
