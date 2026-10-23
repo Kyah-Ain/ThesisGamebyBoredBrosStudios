@@ -46,7 +46,8 @@ public class AIMovement : MonoBehaviour
     [SerializeField] Animator animator; // Component that handles the animation
     
     [Header("AI SETTINGS")]
-    [SerializeField] Transform[] stations; // Areas for the AI to go to
+    // [SerializeField] Transform priorityTarget; // Reference to the target to prioritize 
+    [SerializeField] Transform[] stations; // Areas for the AI to roam
     [SerializeField] float navPathingTickRate = 1f; // Seconds to wait between each call to Move (higher = slower)
     [SerializeField] MoveStartingType moveStartingType = MoveStartingType.ExecuteOnEnable; // Execute type for starting the AI
     [SerializeField] NPCType npcType = NPCType.Default; // Behavior of the AI when reaching a station
@@ -148,6 +149,13 @@ public class AIMovement : MonoBehaviour
     // ------------------------- AI METHODS -------------------------
     #region AI METHODS
 
+    // // Method to the set the AI's target
+    // public void SetTarget(Transform newTarget)
+    // {
+    //     // Overwrite the target with a new target
+    //     priorityTarget = newTarget;
+    // }
+    
     // Method to move the AI
     public void Move()
     {
@@ -293,7 +301,6 @@ public class AIMovement : MonoBehaviour
     
     #endregion
     
-    
     // --------------------- COROUTINE METHODS -------------------------
     #region COROUTINE METHODS
 
@@ -431,5 +438,4 @@ public class AIMovement : MonoBehaviour
     }
 
     #endregion
-    
 }
