@@ -139,9 +139,29 @@ public class AIMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    void Update()
     {
         Animate();
+    }
+    
+    // OnTriggerEnter is called when something collides with this GameObject
+    void OnTriggerEnter(Collider actor)
+    {
+        // Only process objects tagged as Player
+        if(actor.CompareTag("Player"))
+        {
+            PauseMovement();
+        }
+    }
+
+    // OnTriggerExit is called when something un-collides with this GameObject
+    void OnTriggerExit(Collider actor)
+    {
+        // Only process objects tagged as Player
+        if(actor.CompareTag("Player"))
+        {
+            ResumeMovement();
+        }
     }
     
     #endregion
