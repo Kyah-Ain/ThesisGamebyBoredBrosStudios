@@ -20,6 +20,7 @@ public class AIDetection : MonoBehaviour
     
     [Header("DETECTION SETTINGS")]
     [SerializeField, ReadOnly] Transform player; // Now holds the CURRENT nearest visible player (auto-set by LookForPlayer), null if none
+    [SerializeField] Transform visualEmmitter; // The visual emitter that will be used to show the detection range
     public float viewDistance = 10f; // ...
     [Range(0f, 360f)] public float viewAngle = 90f; // ...
     public LayerMask obstacleMask; // ...
@@ -40,6 +41,9 @@ public class AIDetection : MonoBehaviour
 
     // Remembers who we were locked onto last check, so the event only fires when the target changes
     [SerializeField, ReadOnly] Transform currentTarget;
+
+    // The transform that defines where the cone starts and which way it faces
+    Transform ViewOrigin => visualEmmitter != null ? visualEmmitter : transform;
 
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -160,15 +164,16 @@ public class AIDetection : MonoBehaviour
     // Method to check if ONE specific target is inside the cone view and not blocked by an obstacle
     bool CanSeePlayer(Transform target)
     {
-        Vector3 dirToPlayer = (target.position - transform.position).normalized;
-        float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+        Vector3 origin = ViewOrigin.position;
+        Vector3 dirToPlayer = (target.position - origin).normalized;
+        float distanceToPlayer = Vector3.Distance(origin, target.position);
 
         if (distanceToPlayer > viewDistance) return false;
 
-        float angleToPlayer = Vector3.Angle(transform.forward, dirToPlayer);
+        float angleToPlayer = Vector3.Angle(ViewOrigin.forward, dirToPlayer);
         if (angleToPlayer > viewAngle / 2f) return false;
 
-        if (Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, obstacleMask))
+        if (Physics.Raycast(origin, dirToPlayer, distanceToPlayer, obstacleMask))
         {
             return false;
         }
@@ -192,40 +197,19 @@ public class AIDetection : MonoBehaviour
         // Loop through all players currently inside detection range
         foreach(Transform target in playersInRange)
         {
-            // Skips players that got destroyed while still being inside the list
             if (target == null) continue;
 
-            /* Computes for the direction from the enemy to the target (player)
-                1st Parameter (target.position, ...) is the WORLD POSITION of the target (player)
-                2nd Parameter (..., this.transform.position) is the WORLD POSITION of the enemy
-                Subtraction gives a VECTOR pointing from enemy to target
-            */
-            Vector3 direction = (target.position - this.transform.position).normalized;
+            // Distance, angle, and obstacle checks all happen inside CanSeePlayer
+            if (!CanSeePlayer(target)) continue;
 
-            /* Computes the angle between where the enemy is facing and the direction to the target
-                1st Parameter (this.transform.forward, ...) is the direction the enemy is currently facing
-                2nd Parameter (..., direction) is the direction from enemy to target (computed above)
-            */
-            float angle = Vector3.Angle(this.transform.forward, direction);
+            playersDetected.Add(target);
 
-            // Check if target is within half of the viewing angle (left/right spread)
-            if (angle <= viewAngle / 2f)
+            float sqrDistance = (target.position - ViewOrigin.position).sqrMagnitude;
+
+            if (sqrDistance < nearestSqrDistance)
             {
-                // Also checks the distance limit and if an obstacle is blocking the view
-                if (!CanSeePlayer(target)) continue;
-
-                // This player is really seen, so it is listed as detected (visible in the inspector)
-                playersDetected.Add(target);
-
-                // Squared distance is cheaper than Distance() and gives the same ordering
-                float sqrDistance = (target.position - this.transform.position).sqrMagnitude;
-
-                // Keeps this target only if it is closer than the best one so far
-                if (sqrDistance < nearestSqrDistance)
-                {
-                    nearestSqrDistance = sqrDistance;
-                    nearest = target;
-                }
+                nearestSqrDistance = sqrDistance;
+                nearest = target;
             }
         }
 
@@ -247,37 +231,36 @@ public class AIDetection : MonoBehaviour
     // Method to visualize the detection in the Game Scene
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, viewDistance);
+        Transform origin = ViewOrigin;
 
-        Vector3 rightLimit = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward;
-        Vector3 leftLimit = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(origin.position, viewDistance);
+
+        Vector3 rightLimit = Quaternion.Euler(0, viewAngle / 2, 0) * origin.forward;
+        Vector3 leftLimit  = Quaternion.Euler(0, -viewAngle / 2, 0) * origin.forward;
 
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, transform.position + rightLimit * viewDistance);
-        Gizmos.DrawLine(transform.position, transform.position + leftLimit * viewDistance);
+        Gizmos.DrawLine(origin.position, origin.position + rightLimit * viewDistance);
+        Gizmos.DrawLine(origin.position, origin.position + leftLimit * viewDistance);
 
-        // Draws a red line to every player that is in range but NOT seen (outside the cone or blocked)
         Gizmos.color = Color.red;
         foreach (Transform inRange in playersInRange)
         {
             if (inRange == null || playersDetected.Contains(inRange)) continue;
-            Gizmos.DrawLine(transform.position, inRange.position);
+            Gizmos.DrawLine(origin.position, inRange.position);
         }
 
-        // Draws a cyan line to every player that is really seen (only while playing)
         Gizmos.color = Color.cyan;
         foreach (Transform detected in playersDetected)
         {
             if (detected == null) continue;
-            Gizmos.DrawLine(transform.position, detected.position);
+            Gizmos.DrawLine(origin.position, detected.position);
         }
 
-        // Draws a green line to the player currently being targeted (only while playing)
         if (currentTarget != null)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, currentTarget.position);
+            Gizmos.DrawLine(origin.position, currentTarget.position);
         }
     }
     
