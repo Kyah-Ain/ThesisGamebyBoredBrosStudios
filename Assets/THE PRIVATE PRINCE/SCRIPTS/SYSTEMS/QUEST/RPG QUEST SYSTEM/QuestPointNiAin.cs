@@ -206,6 +206,12 @@ namespace Ain
         {
             GameEventsManager.Instance.questEvents.FinishQuest(questId);
         }
+        
+        // Method to call for re-Instantiating of the current Quest Step
+        public virtual void RestartQuestStep()
+        {
+            QuestManager.Instance.ReInstantiateCurrentQuestStep(questId);
+        }
 
         #endregion
     }

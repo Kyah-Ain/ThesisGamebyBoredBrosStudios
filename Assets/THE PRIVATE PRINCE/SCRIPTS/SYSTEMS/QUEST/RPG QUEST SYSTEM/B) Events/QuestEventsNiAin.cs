@@ -12,7 +12,7 @@ namespace Ain
         public event Action<string> onQuestStepProgress;
         public event Action<Quest> onQuestStateChange;
         
-        // ------------------------ TRIGGERS -------------------------
+        // --------------------- QUEST PROGRESS -----------------------
 
         // Method to broadcast the Start of a Quest
         public void StartQuest(string id)
@@ -32,18 +32,19 @@ namespace Ain
             onFinishQuest?.Invoke(id);
         }
         
-        // Method to broadcast the Step Progress of a Quest
-        public void QuestStepProgress(string id)
-        {
-            onQuestStepProgress?.Invoke(id);
-        }
-
-        // --------------------- CUSTOM TRIGGERS ------------------------
+        // -------------------- QUEST MANIPULATION ---------------------
 
         // Method to broadcast the Update for a Quest Status
         public void QuestStateChange(Quest quest)
         {
             onQuestStateChange?.Invoke(quest);
         }
+        
+        // Method to broadcast the Step Progress of a Quest
+        public void QuestStepProgress(string id)
+        {
+            onQuestStepProgress?.Invoke(id);
+        }
+        
     }
 }

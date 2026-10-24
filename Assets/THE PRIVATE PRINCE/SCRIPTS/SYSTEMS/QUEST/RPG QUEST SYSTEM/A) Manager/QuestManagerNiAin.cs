@@ -208,6 +208,16 @@ namespace Ain
             // Re-creates a new fresh Quest Map
             InitializedQuestMap();
         }
+        
+        // Method to re-Instantiate the current Quest Step
+        public void ReInstantiateCurrentQuestStep(string id)
+        {
+            // Stores the retrieved Quest to a temporary variable
+            Quest quest = GetQuestById(id);
+            
+            // Spawns a Quest Step under this QuestManager's gameObject
+            quest.InstantiateCurrentQuestStep(questHolder.transform);
+        }
 
         // Method to update a Quest Status
         public void ChangeQuestState(string id, QuestState questState)
