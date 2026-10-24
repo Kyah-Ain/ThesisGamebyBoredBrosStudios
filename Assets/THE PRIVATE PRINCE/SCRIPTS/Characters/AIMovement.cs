@@ -181,7 +181,7 @@ public class AIMovement : MonoBehaviour
     {
         // Prevents setting new target location if one hasn't reached yet
         if (!HasReachedDestination()) return;
-
+        
         // Handles the waiting behavior (skipped before the very first move)
         if (npcType == NPCType.WaitAtStation && hasDeparted)
         {
@@ -279,6 +279,8 @@ public class AIMovement : MonoBehaviour
         // Applies the new type right away if the AI is currently standing still
         if (HasReachedDestination()) AnimateStop();
         // if (!wasMoving) AnimateStop();
+        
+        Debug.Log($"[{name}] ChangeAnimStop -> {newType}, reached: {HasReachedDestination()}");
     }
 
     // Method to change the stopped animation type from a UnityEvent in the Inspector
@@ -317,6 +319,8 @@ public class AIMovement : MonoBehaviour
                 animator.SetBool("customAnim", true);
                 break;
         }
+        
+        Debug.Log($"[{name}] AnimateStop with {stopAnimType}");
     }
     
     #endregion
