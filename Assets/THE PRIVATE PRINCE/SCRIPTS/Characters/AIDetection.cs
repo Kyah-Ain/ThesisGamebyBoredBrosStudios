@@ -17,6 +17,8 @@ public class AIDetection : MonoBehaviour
     
     [Header("EVENTS")] // Event/s that would fire at the inspector
     [SerializeField] UnityEvent onPlayerFound; // Fires when a player was found (or when the nearest player switches to a different one)
+    [SerializeField] UnityEvent onPlayerLost; // Fires when the AI had a target and now has none
+
     
     [Header("DETECTION SETTINGS")]
     [SerializeField, ReadOnly] Transform player; // Now holds the CURRENT nearest visible player (auto-set by LookForPlayer), null if none
@@ -24,6 +26,8 @@ public class AIDetection : MonoBehaviour
     public float viewDistance = 10f; // ...
     [Range(0f, 360f)] public float viewAngle = 90f; // ...
     public LayerMask obstacleMask; // ...
+    [SerializeField] float loseSightDelay = 1.5f; // Grace time before giving up (avoids flickering at cone edges)
+    float lostTimer;
 
     [Header("SCAN SETTINGS")]
     [SerializeField] LayerMask playerMask;      // Layer(s) your players are on
@@ -124,36 +128,32 @@ public class AIDetection : MonoBehaviour
     // Method to check if a player has been found
     public void LookForPlayer()
     {
-        // Runs the Player Detector checker
         Transform detected = GetDetectedPlayer();
 
-        // Evaluates if a player has been found yet
         if (detected != null)
         {
-            // Only broadcast when we newly found someone or switched to a different (closer) player,
-            // otherwise this would spam the event every frame
+            lostTimer = loseSightDelay; // Reset the grace timer while we can see someone
+
             if (detected != currentTarget)
             {
-                // Broadcast that its been found 
                 onPlayerFound?.Invoke();
             }
-            
-            // // Passes the found player to the chase logic of EnemyMovement.cs
-            // aiMovement.SetTarget(detected);
+
+            currentTarget = detected;
+            player = detected;
         }
-        else
+        else if (currentTarget != null)
         {
-            // // Passes null to the chase logic of EnemyMovement.cs
-            // aiMovement.SetTarget(null);
+            // We had a target but can't see anyone now, count down before giving up
+            lostTimer -= Time.deltaTime;
+
+            if (lostTimer <= 0f)
+            {
+                currentTarget = null;
+                player = null;
+                onPlayerLost?.Invoke(); // <- tells your movement script to resume patrol
+            }
         }
-
-        // Stores the result so the next check can tell if the target changed
-        currentTarget = detected;
-        player = detected; // Exposes the current target in the inspector
-
-        // Prints the current value of the detection to the console
-        // (reuses "detected" instead of running the whole detection a second time)
-        // Debug.Log(detected);
     }
 
     #endregion

@@ -34,11 +34,11 @@ public class Teleportation : MonoBehaviour
     // OnTriggerEnter is called when another collider exits this object's trigger collider
     void OnTriggerExit(Collider actor)
     {
-        // If a tag is required, ignore any object that doesn't have it
-        if (!string.IsNullOrEmpty(requiredTag) && !actor.CompareTag(requiredTag)) return;
-
-        // Resets the Trigger for re-use
-        tpPassenger = null;
+        // // If a tag is required, ignore any object that doesn't have it
+        // if (!string.IsNullOrEmpty(requiredTag) && !actor.CompareTag(requiredTag)) return;
+        //
+        // // // Resets the Trigger for re-use
+        // // tpPassenger = null;
     }
     
     #endregion
@@ -91,7 +91,7 @@ public class Teleportation : MonoBehaviour
             Physics.SyncTransforms(); // only matters if you query physics this same frame
         }
         
-        // Clears the tpPassenger when teleporting is done (don't wait for OnTriggerExit)
-        if (passenger == tpPassenger) tpPassenger = null;
+        // // Clears the tpPassenger when teleporting is done (don't wait for OnTriggerExit)
+        // if (passenger == tpPassenger) tpPassenger = null;
     }
 }

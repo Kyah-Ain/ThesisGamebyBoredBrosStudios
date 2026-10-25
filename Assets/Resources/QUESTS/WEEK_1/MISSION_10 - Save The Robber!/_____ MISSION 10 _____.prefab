@@ -375,6 +375,7 @@ Transform:
   m_LocalScale: {x: 1.2033, y: 1.2032999, z: 1.2033}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8437538355039332182}
   - {fileID: 1610806741014309116}
   m_Father: {fileID: 1394335943854886041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -811,7 +812,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6594915671252660133
 Transform:
   m_ObjectHideFlags: 0
@@ -1006,7 +1007,7 @@ Transform:
   m_Children:
   - {fileID: 1351889488603184338}
   - {fileID: 8709088367167069152}
-  m_Father: {fileID: 1394335943854886041}
+  m_Father: {fileID: 4281360340181788584}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &178472106593530641
 GameObject:
@@ -1419,7 +1420,6 @@ MonoBehaviour:
   navAgent: {fileID: 2729247289388986615}
   animator: {fileID: 4492912226755108970}
   stations:
-  - {fileID: 0}
   - {fileID: 9099394423036959577}
   - {fileID: 4567961028987688161}
   navPathingTickRate: 1
@@ -1473,6 +1473,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onPlayerLost:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4010466959103781305}
+        m_TargetAssemblyTypeName: AIMovement, Assembly-CSharp
+        m_MethodName: ResumeMovement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   player: {fileID: 0}
   visualEmmitter: {fileID: 3709970004797856279}
   viewDistance: 5
@@ -1480,6 +1495,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 524159
+  loseSightDelay: 1.5
   playerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -2198,30 +2214,6 @@ MonoBehaviour:
   onDialogueDone:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5384042479372473707}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Tutorial2
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 125963387760262326}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Tutorial2
-          m_BoolArgument: 1
-        m_CallState: 2
       - m_Target: {fileID: 3508371269812830351}
         m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
         m_MethodName: ExecuteEvents
@@ -2233,6 +2225,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: Tutorial2
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6446099930688335403}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial2
+          m_BoolArgument: 1
         m_CallState: 2
   debuggerNiAin: {fileID: 3745452852758706532}
   profileTrigger: {fileID: 4601638735687676706}
@@ -2571,7 +2575,7 @@ Transform:
   m_Children:
   - {fileID: 4467313716272655046}
   - {fileID: 5304728601719945735}
-  m_Father: {fileID: 1394335943854886041}
+  m_Father: {fileID: 4281360340181788584}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &404445223476944051
 GameObject:
@@ -3497,6 +3501,145 @@ MonoBehaviour:
     m_Extent: {x: 2.6079397, y: 7.2882175, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!1 &566371703398065496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8437538355039332182}
+  - component: {fileID: 7503087369605975884}
+  - component: {fileID: 2052121321991028086}
+  - component: {fileID: 3142666539526224705}
+  m_Layer: 14
+  m_Name: Week1_Mission10_StartingDialogue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8437538355039332182
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566371703398065496}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 238.46948, y: 8.558979, z: 29.003466}
+  m_LocalScale: {x: 2.4931438, y: 2.4931438, z: 2.4931438}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 6303393063872193093}
+  m_Father: {fileID: 1446539855380612022}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7503087369605975884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566371703398065496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86bf333f57207d43b6d865e1eedc15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogs: 1
+--- !u!114 &2052121321991028086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566371703398065496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d64bf0bca1dc883488e1547a0f15fdbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onDialogueStarted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5042953107856207446}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+  onNarrationDone:
+    m_PersistentCalls:
+      m_Calls: []
+  onDialogueDone:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3508371269812830351}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial2
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8866168450922171343}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial2
+          m_BoolArgument: 1
+        m_CallState: 2
+  debuggerNiAin: {fileID: 7503087369605975884}
+  profileTrigger: {fileID: 4601638735687676706}
+  dialogueTrigger: {fileID: 658267482009189574}
+  dialogueEffect: {fileID: 3142666539526224705}
+  dialogueID: {fileID: 11400000, guid: 14b99c8366638ce4c95b300e0ec14ffe, type: 2}
+  dialogueLines:
+  - {fileID: 11400000, guid: ed0c7e8454d7a0f4887dd6246c27aac5, type: 2}
+  playRandomSet: 0
+  conversations: []
+  dialogueField: {fileID: 0}
+  currentLines: []
+  currentDialogueStep: 0
+  currentDialogueSet: 0
+  currentConversation: 0
+--- !u!114 &3142666539526224705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566371703398065496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44c703c2926a0a74ea98af1c0b66c552, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profileTrigger: {fileID: 4601638735687676706}
+  dialogueTrigger: {fileID: 658267482009189574}
+  onEffectDone:
+    m_PersistentCalls:
+      m_Calls: []
+  <EnableNarrationEffect>k__BackingField: 1
+  outputField: {fileID: 0}
+  effectSpeed: 100
 --- !u!1 &568920282407433680
 GameObject:
   m_ObjectHideFlags: 0
@@ -3881,7 +4024,7 @@ Transform:
   m_Children:
   - {fileID: 5033992622395083988}
   - {fileID: 5897031742047881270}
-  m_Father: {fileID: 3422775759732280735}
+  m_Father: {fileID: 4813563905586723355}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &621770222532700519
 GameObject:
@@ -4757,6 +4900,42 @@ MonoBehaviour:
     m_Extent: {x: 1.5752087, y: 5.944332, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!1 &790469646786360623
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4813563905586723355}
+  m_Layer: 0
+  m_Name: '***** GAMEPLAY *****'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4813563905586723355
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790469646786360623}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 512917564985388623}
+  - {fileID: 4991200426739868171}
+  - {fileID: 1470791859127606707}
+  - {fileID: 4497557288420077769}
+  - {fileID: 3016997538850056960}
+  m_Father: {fileID: 3422775759732280735}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &795895825865103794
 GameObject:
   m_ObjectHideFlags: 0
@@ -6106,7 +6285,6 @@ MonoBehaviour:
   navAgent: {fileID: 2667474471002930819}
   animator: {fileID: 6421223122532759661}
   stations:
-  - {fileID: 0}
   - {fileID: 852392923680702340}
   - {fileID: 4627428324930791145}
   navPathingTickRate: 1
@@ -6160,6 +6338,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onPlayerLost:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2091460749390463037}
+        m_TargetAssemblyTypeName: AIMovement, Assembly-CSharp
+        m_MethodName: ResumeMovement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   player: {fileID: 0}
   visualEmmitter: {fileID: 1568461350973915861}
   viewDistance: 5
@@ -6167,6 +6360,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 524159
+  loseSightDelay: 1.5
   playerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -6992,7 +7186,7 @@ Transform:
   m_Children:
   - {fileID: 1117518021359664548}
   - {fileID: 7880692338272072335}
-  m_Father: {fileID: 1394335943854886041}
+  m_Father: {fileID: 4281360340181788584}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &1183991476993678228
 GameObject:
@@ -15995,7 +16189,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2321
+  m_VersionIndex: 2342
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -16550,30 +16744,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8242511603365095682}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4287596114981444389}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1590336946170743973}
         m_TargetAssemblyTypeName: Starter, Assembly-CSharp
         m_MethodName: TriggerStart
@@ -16586,6 +16756,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onPlayerLost:
+    m_PersistentCalls:
+      m_Calls: []
   player: {fileID: 0}
   visualEmmitter: {fileID: 4869499316689024465}
   viewDistance: 5
@@ -16593,6 +16766,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 524159
+  loseSightDelay: 1.5
   playerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -17902,7 +18076,7 @@ Transform:
   - {fileID: 8378419502942025645}
   - {fileID: 2505384828055738263}
   - {fileID: 5068071529804207558}
-  m_Father: {fileID: 6858786390589719137}
+  m_Father: {fileID: 4281360340181788584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3212274063109181162
 GameObject:
@@ -18595,13 +18769,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3270997398244510066}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000025928016}
-  m_LocalPosition: {x: 179.29327, y: -2.907852, z: -6.641941}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: 0.0000025928016, z: -0, w: 1}
+  m_LocalPosition: {x: -117.45029, y: -0.049018145, z: -12.287751}
+  m_LocalScale: {x: 1.2033, y: 1.2033, z: 1.2033}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1253822984837215340}
-  m_Father: {fileID: 4991200426739868171}
+  m_Father: {fileID: 3422775759732280735}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3302042316321638565
 GameObject:
@@ -19402,8 +19576,6 @@ Transform:
   - {fileID: 6551346878956730117}
   - {fileID: 6237982126376394792}
   - {fileID: 6594915671252660133}
-  - {fileID: 3016997538850056960}
-  - {fileID: 8559104612488660714}
   m_Father: {fileID: 214899888869856978}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3623583061911622115
@@ -21908,7 +22080,7 @@ Transform:
   m_Children:
   - {fileID: 7431803965980270790}
   - {fileID: 2747566201059138563}
-  m_Father: {fileID: 3422775759732280735}
+  m_Father: {fileID: 4813563905586723355}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &4138953037920772608
 GameObject:
@@ -22502,7 +22674,7 @@ MonoBehaviour:
   useType: 0
   isResettable: 1
   addDelay: 1
-  delayTime: 3
+  delayTime: 1
   requiredTag: Player
   _isToggledAlready: 0
   _isPlayerInRange: 0
@@ -22568,7 +22740,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3807120199263594169}
-  m_Father: {fileID: 6858786390589719137}
+  m_Father: {fileID: 4813563905586723355}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4304031368301125994
 GameObject:
@@ -22842,6 +23014,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onPlayerLost:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3821581860113486070}
+        m_TargetAssemblyTypeName: AIMovement, Assembly-CSharp
+        m_MethodName: ResumeMovement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   player: {fileID: 0}
   visualEmmitter: {fileID: 8460000801481771030}
   viewDistance: 5
@@ -22849,6 +23036,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 524159
+  loseSightDelay: 1.5
   playerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -23258,7 +23446,19 @@ MonoBehaviour:
           m_StringArgument: Abandoned_Alleyway_BU
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 3207212531461013300}
+      - m_Target: {fileID: 6446099930688335403}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Abandoned_Alleyway_BU
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7956631050366308546}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -23269,6 +23469,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: Abandoned_Alleyway_BU
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 5794644830919762391}
+        m_TargetAssemblyTypeName: Starter, Assembly-CSharp
+        m_MethodName: TriggerStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Abandoned_Alleyway_BU
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 7761674473145474548}
         m_TargetAssemblyTypeName: Starter, Assembly-CSharp
@@ -28921,7 +29133,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8542391387378433075
 Transform:
   m_ObjectHideFlags: 0
@@ -32914,30 +33126,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8242511603365095682}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4287596114981444389}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1590336946170743973}
         m_TargetAssemblyTypeName: Starter, Assembly-CSharp
         m_MethodName: TriggerStart
@@ -32950,6 +33138,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onPlayerLost:
+    m_PersistentCalls:
+      m_Calls: []
   player: {fileID: 0}
   visualEmmitter: {fileID: 6151355430144111167}
   viewDistance: 5
@@ -32957,6 +33148,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 524159
+  loseSightDelay: 1.5
   playerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -34648,7 +34840,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3422775759732280735
 Transform:
   m_ObjectHideFlags: 0
@@ -34662,10 +34854,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 512917564985388623}
-  - {fileID: 4991200426739868171}
-  - {fileID: 1470791859127606707}
-  - {fileID: 4497557288420077769}
+  - {fileID: 3530794787331295171}
+  - {fileID: 4813563905586723355}
   m_Father: {fileID: 6594915671252660133}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6454033521971160725
@@ -37422,30 +37612,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8242511603365095682}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4287596114981444389}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1590336946170743973}
         m_TargetAssemblyTypeName: Starter, Assembly-CSharp
         m_MethodName: TriggerStart
@@ -37458,6 +37624,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onPlayerLost:
+    m_PersistentCalls:
+      m_Calls: []
   player: {fileID: 0}
   visualEmmitter: {fileID: 8003325498812374746}
   viewDistance: 5
@@ -37465,6 +37634,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 524159
+  loseSightDelay: 1.5
   playerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -39300,10 +39470,9 @@ Transform:
   m_LocalScale: {x: 1.2033, y: 1.2033, z: 1.2033}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3530794787331295171}
   - {fileID: 662443354596907119}
   - {fileID: 8033345315638236065}
-  m_Father: {fileID: 3422775759732280735}
+  m_Father: {fileID: 4813563905586723355}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &7376826756177202942
 GameObject:
@@ -39569,6 +39738,80 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8726519804961866342}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7426038441397074692
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6303393063872193093}
+  - component: {fileID: 5794644830919762391}
+  m_Layer: 0
+  m_Name: Starter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6303393063872193093
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7426038441397074692}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8437538355039332182}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5794644830919762391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7426038441397074692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f63c5c52de5c7a4292a05fdc74df64e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  requiresInteractInput: 0
+  onStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2052121321991028086}
+        m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
+        m_MethodName: StartDialogue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerExit:
+    m_PersistentCalls:
+      m_Calls: []
+  starterType: 0
+  useType: 0
+  isResettable: 1
+  addDelay: 1
+  delayTime: 0
+  requiredTag: Player
+  _isToggledAlready: 0
+  _isPlayerInRange: 0
 --- !u!1 &7438030991784044243
 GameObject:
   m_ObjectHideFlags: 0
@@ -40238,7 +40481,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6185111453614459837}
-  m_Father: {fileID: 3422775759732280735}
+  m_Father: {fileID: 4813563905586723355}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3015380357937861651
 MonoBehaviour:
@@ -41475,10 +41718,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1446539855380612022}
-  - {fileID: 431109270757682426}
-  - {fileID: 4044018438564788669}
-  - {fileID: 6969800160971423510}
-  - {fileID: 8312360867944216104}
+  - {fileID: 4281360340181788584}
   m_Father: {fileID: 6594915671252660133}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8024233974358798307
@@ -42077,7 +42317,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1888
+  m_VersionIndex: 1927
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -44956,7 +45196,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3438136633450974547}
-  m_Father: {fileID: 1394335943854886041}
+  m_Father: {fileID: 4281360340181788584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &165754635351571074
 MonoBehaviour:
@@ -46681,6 +46921,42 @@ Transform:
   - {fileID: 4601555730973563849}
   m_Father: {fileID: 1924147689937777521}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8866168450922171343
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4281360340181788584}
+  m_Layer: 0
+  m_Name: '***** GAMEPLAY *****'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &4281360340181788584
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8866168450922171343}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 431109270757682426}
+  - {fileID: 4044018438564788669}
+  - {fileID: 6969800160971423510}
+  - {fileID: 8312360867944216104}
+  - {fileID: 8559104612488660714}
+  m_Father: {fileID: 1394335943854886041}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8867940428106020925
 GameObject:
   m_ObjectHideFlags: 0
@@ -47020,6 +47296,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
         m_MethodName: ExecuteEvents
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial2
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8242511603365095682}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
