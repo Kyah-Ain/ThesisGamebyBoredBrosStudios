@@ -39,7 +39,6 @@ public class GameEvent : ScriptableObject
     }
 
     // ------------------------- EXTENSIONS -------------------------
-
     #region EXTENSIONS METHODS
 
     // OVERLOAD Method that triggers all 'STRING' method subscribers
@@ -79,6 +78,16 @@ public class GameEvent : ScriptableObject
         for (int i = listeners.Count - 1; i >= 0; i--)
         {
             listeners[i].OnBoolEventTriggered(parameter);
+        }
+    }
+
+    // OVERLOAD Method that triggers all 'Transform' method subscribers
+    public void TriggerEvent(Transform parameter)
+    {
+        // Calls the 'OnEventTriggered()' method in every script that is subscribed to this event
+        for (int i = listeners.Count - 1; i >= 0; i--)
+        {
+            listeners[i].OnTransformEventTriggered(parameter);
         }
     }
 

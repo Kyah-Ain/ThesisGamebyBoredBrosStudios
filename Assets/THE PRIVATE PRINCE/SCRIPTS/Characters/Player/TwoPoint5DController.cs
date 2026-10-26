@@ -137,13 +137,35 @@ public class TwoPoint5DController : MonoBehaviour
         }
     }
 
+    // Method to resume the character
+    public void ResumeCharacter()
+    {
+        ToggleFreeze(false);
+        
+        // Resets vertical velocity 
+        freefallVelocity = -1.0f;
+            
+        // Combines the horizontal and depth input with the current vertical velocity
+        Vector3 movement = new Vector3(
+            0, // Horizontal Input
+            0, // Vertical Input
+            0 // Depth Input (if there's any)
+        );
+
+        // // Animates the character as moving
+        // animator.SetBool("isMoving", true);
+            
+        // Applies calculated movement to the character
+        controller.Move(movement);
+    }
+
     // Method to stop the character
     public void StopCharacter()
     {
         ToggleFreeze(true);
         
         // Resets vertical velocity 
-        freefallVelocity = -1.0f;
+        freefallVelocity = 0f;
             
         // Combines the horizontal and depth input with the current vertical velocity
         Vector3 movement = new Vector3(

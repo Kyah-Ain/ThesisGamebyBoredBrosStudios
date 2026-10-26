@@ -55,6 +55,12 @@ public class Teleportation : MonoBehaviour
         }
     }
 
+    // Method to set the destination of the teleportation
+    public void SetDestination(Transform destination)
+    {
+        teleportTo = destination;
+    }
+
     // Method to transport a gameObject from its position to the target location
     public void Teleport(Transform passenger)
     {
@@ -93,5 +99,7 @@ public class Teleportation : MonoBehaviour
         
         // // Clears the tpPassenger when teleporting is done (don't wait for OnTriggerExit)
         // if (passenger == tpPassenger) tpPassenger = null;
+
+        Debug.Log($"Teleportation.cs called from {this.gameObject.name}: {passenger.name} was teleported to {teleportTo.name}!", this);
     }
 }

@@ -3,12 +3,9 @@ using UnityEngine;
 
 using UnityEngine.Events;
 
-// Requires a DebuggerKey.cs for it to debug, otherwise it will be muted
-[RequireComponent(typeof(DebuggerNiAinPjls))]
+// =========================== EXTENSION CLASSES ===========================
 
-// =========================== CUSTOM CLASS ===========================
-
-#region CUSTOMIZED CLASSES
+#region PRIMITIVE 
 
 [Serializable]
 public class StringEvent : UnityEvent<string> { }
@@ -24,7 +21,17 @@ public class BoolEvent : UnityEvent<bool> { }
 
 #endregion
 
+#region UNITY 
+
+[Serializable]
+public class TransformEvent : UnityEvent<Transform> {}
+
+#endregion
+
 // ============================ MAIN CLASS ============================
+
+// Requires a DebuggerKey.cs for it to debug, otherwise it will be muted
+[RequireComponent(typeof(DebuggerNiAinPjls))]
 
 public class GameEventListener : MonoBehaviour
 {
@@ -32,20 +39,35 @@ public class GameEventListener : MonoBehaviour
 
     [Header("REFERENCE")]
     [SerializeField] DebuggerNiAinPjls debuggerNiAin;
+    public GameEvent gameEvent; // Reference to the GameEvent ScriptableObject that this listener will respond to
 
-    // Reference to the GameEvent ScriptableObject that this listener will respond to
-    public GameEvent gameEvent;
+    // --------------------------- EVENTS -------------------------
+    // Reference to the Events that will be invoked when the GameEvent is triggered
 
-    // Reference to the UnityEvents that will be invoked when the GameEvent is triggered
-    public UnityEvent onEventTriggered;
+    // Simple Events
+    #region SIMPLE EVENTS
 
-    // Extension Events
-    #region EVENT EXTENSIONS
+        [Header("SIMPLE EVENTS")]
+        public UnityEvent onEventTriggered;
 
+    #endregion
+
+    // Primitive Events
+    #region PRIMITIVE EVENTS
+
+        [Header("PRIMITIVE EVENTS")]
         public StringEvent onStringEventTriggered;
         public IntEvent onIntEventTriggered;
         public FloatEvent onFloatEventTriggered;
         public BoolEvent onBoolEventTriggered;
+
+    #endregion
+
+    // Unity Events
+    #region UNITY EVENTS
+
+        [Header("UNITY EVENTS")]
+        public TransformEvent onTransformEventTriggered;
 
     #endregion
 
@@ -77,7 +99,8 @@ public class GameEventListener : MonoBehaviour
         gameEvent.RemoveListener(this);
     }
 
-    // --------------------- EXECUTABLE METHODS -------------------------
+    // -------------------------- SIMPLE LISTENER -------------------------
+    #region SIMPLE TRIGGER
 
     // Event Method to call for an execution to all methods under this event
     public void OnEventTriggered()
@@ -91,9 +114,10 @@ public class GameEventListener : MonoBehaviour
         onEventTriggered.Invoke();
     }
 
-    // ------------------------- EXTENSIONS -------------------------
+    #endregion
 
-    #region EXTENSIONS METHODS
+    // ------------------------ PRIMITIVE EXTENSIONS -------------------------
+    #region PRIMITIVE EXTENSIONS
 
     // Event Method to call and pass on string 
     public void OnStringEventTriggered(string parameter)
@@ -144,4 +168,21 @@ public class GameEventListener : MonoBehaviour
     }
 
     #endregion  
+
+    // ------------------------- UNITY EXTENSIONS -------------------------
+    #region UNITY EXTENSIONS
+
+    // Event Method to call and pass a Transform 
+    public void OnTransformEventTriggered(Transform parameter)
+    {
+        debuggerNiAin.Log(
+            $"Event call from {gameEvent} and {parameter} was received from {this.gameObject.name}. \n" +
+            $"All assigned methods in 'onTransformEventTriggered' were executed successfully!"
+        );
+
+        // Invokes the UnityEvent, which can be configured in the Inspector to call any public method on any script
+        onTransformEventTriggered.Invoke(parameter);
+    }
+
+    #endregion
 }

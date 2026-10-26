@@ -16,7 +16,7 @@ public class GameEventTrigger : MonoBehaviour
 
     private bool wasEventsAlreadyTriggered;
 
-    // ------------------------ UNITY METHODS -------------------------
+    // ---------------------- UNITY METHODS -------------------------
 
     // Awake is called when the script instance is being loaded
     void Awake() 
@@ -54,7 +54,8 @@ public class GameEventTrigger : MonoBehaviour
         wasEventsAlreadyTriggered = false;
     }
 
-    // -------------------------- EXECUTION --------------------------
+    // ---------------------- SIMPLE TRIGGER --------------------------
+    #region SIMPLE TRIGGER
 
     // Method to trigger a call to an event/s
     public void ExecuteEvents() 
@@ -69,9 +70,10 @@ public class GameEventTrigger : MonoBehaviour
         }  
     }
 
-    // ------------------------- EXTENSIONS -------------------------
+    #endregion
 
-    #region EXTENSIONS METHODS
+    // ------------------------ PRIMITIVE EXTENSIONS -------------------------
+    #region PRIMITIVE EXTENSIONS
 
     // OVERLOAD Method to trigger a call and pass a "STRING"
     public void ExecuteEvents(string message)
@@ -114,6 +116,24 @@ public class GameEventTrigger : MonoBehaviour
 
     // OVERLOAD Method to trigger a call and pass a "BOOL"
     public void ExecuteEvents(bool message)
+    {
+        wasEventsAlreadyTriggered = true;
+
+        // Iterates through all events in the array
+        foreach (GameEvent e in eventsToTrigger)
+        {
+            // Triggers each event
+            e?.TriggerEvent(message);
+        }
+    }
+
+    #endregion
+
+    // ------------------------- UNITY EXTENSIONS -------------------------
+    #region UNITY EXTENSIONS
+
+    // OVERLOAD Method to trigger a call and pass a "TRANSFORM"
+    public void ExecuteEvents(Transform message)
     {
         wasEventsAlreadyTriggered = true;
 
