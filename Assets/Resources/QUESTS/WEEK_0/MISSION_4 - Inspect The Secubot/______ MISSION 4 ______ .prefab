@@ -122,7 +122,8 @@ MonoBehaviour:
   dialogueTrigger: {fileID: 4480346943127002638}
   dialogueEffect: {fileID: 7363833272552401881}
   dialogueID: {fileID: 11400000, guid: 7ba967eac29eef747afa4c84ac75d206, type: 2}
-  dialogueLines: []
+  dialogueLines:
+  - {fileID: 11400000, guid: e83479158f6b32e40b0f47dae7384905, type: 2}
   playRandomSet: 0
   conversations: []
   dialogueField: {fileID: 0}
@@ -862,7 +863,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8078022212909853695}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -947,6 +948,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Speaker Profile - TRIGGER
       objectReference: {fileID: 0}
+    - target: {fileID: 2265035481523026757, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: m_Name
+      value: Mission 4 Ender | Quest Processor
+      objectReference: {fileID: 0}
     - target: {fileID: 3015082298506548623, guid: aefa4a87c32a2574084c81fd9865e402,
         type: 3}
       propertyPath: m_Name
@@ -956,6 +962,127 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Secubot (NPC)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: dialogueID
+      value: 
+      objectReference: {fileID: 11400000, guid: a51b3cca8e601ff479c9061b53375f59,
+        type: 2}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: dialogueLines.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: dialogueLines.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 90829294c5b439f41a70185447df8c09,
+        type: 2}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: dialogueLines.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 32aa86591de1b6c478640e62bf43199a,
+        type: 2}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueStarted.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 4221554832227969556}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: CompleteQuest
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445990726609172052, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: DialogueBaseQuestPoint, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: dialogueLines.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: bc1f9edb3d520224ab90e4e1c029beb2,
+        type: 2}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: dialogueLines.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 042ea3f5b0a9bec44bd7ac91bb74d188,
+        type: 2}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: dialogueLines.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 0926098e0d5c8694cb85fdf9a3aab127,
+        type: 2}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueStarted.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 2889694086793249411}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: TriggerStart
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856178319668778922, guid: aefa4a87c32a2574084c81fd9865e402,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: Starter, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7852103222805771784, guid: aefa4a87c32a2574084c81fd9865e402,
         type: 3}
@@ -1008,10 +1135,36 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6180089124336591202, guid: aefa4a87c32a2574084c81fd9865e402, type: 3}
+    - {fileID: 5260169693512992412, guid: aefa4a87c32a2574084c81fd9865e402, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aefa4a87c32a2574084c81fd9865e402, type: 3}
+--- !u!114 &2889694086793249411 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1289256005234121093, guid: aefa4a87c32a2574084c81fd9865e402,
+    type: 3}
+  m_PrefabInstance: {fileID: 4178807155498883846}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f63c5c52de5c7a4292a05fdc74df64e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4221554832227969556 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 246540431974150418, guid: aefa4a87c32a2574084c81fd9865e402,
+    type: 3}
+  m_PrefabInstance: {fileID: 4178807155498883846}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4101395ed18eb746a5eeddf0a14394a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6126686257815137550 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7852103222805771784, guid: aefa4a87c32a2574084c81fd9865e402,

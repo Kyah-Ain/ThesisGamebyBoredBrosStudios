@@ -35,6 +35,8 @@ namespace Ain
             isFinished = true;
 
             GameEventsManager.Instance.questEvents.AdvanceQuest(questId);
+
+            Destroy(this.gameObject);
         }
         
         // Method to destroy the Quest Step
