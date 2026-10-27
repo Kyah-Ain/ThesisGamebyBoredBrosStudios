@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public abstract class PuzzleBase : MonoBehaviour
 {
+    public UnityEvent onThisPuzzleStarted;
+    public UnityEvent onThisPuzzleDone;
+
     [Header("Puzzle Settings")]
     public bool Pausable = true;
     public float timeLimit = 0f; // 0 means no time limit
@@ -32,6 +36,8 @@ public abstract class PuzzleBase : MonoBehaviour
 
     public virtual void StartPuzzle()
     {
+        onThisPuzzleStarted?.Invoke();
+
         timer = timeLimit;
         active = true;
         ShowUI(true);
@@ -44,6 +50,8 @@ public abstract class PuzzleBase : MonoBehaviour
 
     public virtual void EndPuzzle(PuzzleResult result)
     {
+        onThisPuzzleDone?.Invoke();
+
         active = false;
         Debug.Log($"Puzzle ended with result: {result}");
         ShowUI(false);

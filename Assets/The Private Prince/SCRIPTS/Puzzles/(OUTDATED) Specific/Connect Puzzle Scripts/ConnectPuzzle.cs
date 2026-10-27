@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class WirePair
@@ -494,8 +495,9 @@ public class ConnectPuzzle : PuzzleBase
         isCompleted = true;
         uiRoot?.SetActive(false); // Hide UI when completed
         active = false;
-
         PuzzleManager.Instance.EndPuzzle(PuzzleResult.Solved);
+
+        base.onThisPuzzleDone?.Invoke();
     }
 
     private bool HasGlitchAtPosition(Vector2Int gridPos)
