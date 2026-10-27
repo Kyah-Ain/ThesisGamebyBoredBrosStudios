@@ -66,7 +66,7 @@ MonoBehaviour:
   onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
-  starterType: 3
+  starterType: 2
   useType: 1
   isResettable: 1
   addDelay: 1
@@ -159,7 +159,8 @@ MonoBehaviour:
   dialogueTrigger: {fileID: 8790038730453265142}
   dialogueEffect: {fileID: 8713910826741479533}
   dialogueID: {fileID: 11400000, guid: 3d6c953834ce1b444924ec50f68e98c5, type: 2}
-  dialogueLines: []
+  dialogueLines:
+  - {fileID: 11400000, guid: 1b4819f85be56994c9088c55d6a7e0ba, type: 2}
   playRandomSet: 0
   conversations: []
   dialogueField: {fileID: 0}
@@ -1138,6 +1139,9 @@ MonoBehaviour:
   onBoolEventTriggered:
     m_PersistentCalls:
       m_Calls: []
+  onTransformEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1036046200990257227
 GameObject:
   m_ObjectHideFlags: 0
@@ -1626,7 +1630,8 @@ MonoBehaviour:
   dialogueTrigger: {fileID: 8790038730453265142}
   dialogueEffect: {fileID: 4650068739429349403}
   dialogueID: {fileID: 11400000, guid: f43a54b5bf590b442af468c85a3a9286, type: 2}
-  dialogueLines: []
+  dialogueLines:
+  - {fileID: 11400000, guid: 4d0590b5b2ec1ef48bc56de7d1486b78, type: 2}
   playRandomSet: 0
   conversations: []
   dialogueField: {fileID: 0}
@@ -2318,6 +2323,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onBoolEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+  onTransformEventTriggered:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &4018602758898103474
@@ -3481,7 +3489,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7337049958271174224}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3899,7 +3907,8 @@ MonoBehaviour:
   dialogueTrigger: {fileID: 8790038730453265142}
   dialogueEffect: {fileID: 3511985844070428095}
   dialogueID: {fileID: 11400000, guid: 20d483912c2018a479df07d3f9921751, type: 2}
-  dialogueLines: []
+  dialogueLines:
+  - {fileID: 11400000, guid: aae9d0dab3f8c0e4fa63f90f35d8c8ec, type: 2}
   playRandomSet: 0
   conversations: []
   dialogueField: {fileID: 0}
@@ -4061,7 +4070,8 @@ MonoBehaviour:
   dialogueTrigger: {fileID: 8790038730453265142}
   dialogueEffect: {fileID: 5118259827425966738}
   dialogueID: {fileID: 11400000, guid: aa97b38f5d8e6cd498e8ab9d359e6292, type: 2}
-  dialogueLines: []
+  dialogueLines:
+  - {fileID: 11400000, guid: b669b975f24ae4e42988b1e0fce925f6, type: 2}
   playRandomSet: 0
   conversations: []
   dialogueField: {fileID: 0}
@@ -5102,6 +5112,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2041400601131927653, guid: d773c1c2bd2fc3649b0e873545bb1e25,
         type: 3}
+      propertyPath: dialogueLines.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2041400601131927653, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: dialogueLines.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 1af24cdb9330e014db259ea5ba7fe9c1,
+        type: 2}
+    - target: {fileID: 2041400601131927653, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
       propertyPath: onDialogueStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2731199149969734086}
@@ -5125,6 +5146,17 @@ PrefabInstance:
       propertyPath: onTriggerEnter.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
       objectReference: {fileID: 2731199149969734086}
+    - target: {fileID: 5940184621274587610, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: dialogueLines.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5940184621274587610, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: dialogueLines.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: c549e7f191f4b2d4497fa201c97510fb,
+        type: 2}
     - target: {fileID: 5940184621274587610, guid: d773c1c2bd2fc3649b0e873545bb1e25,
         type: 3}
       propertyPath: onDialogueStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Target

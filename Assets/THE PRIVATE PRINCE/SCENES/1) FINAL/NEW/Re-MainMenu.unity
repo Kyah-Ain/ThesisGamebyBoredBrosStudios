@@ -19065,7 +19065,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 50
+  field of view: 69
   orthographic: 0
   orthographic size: 10
   m_Depth: 0
@@ -19091,8 +19091,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1824724658}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0007106303, y: 0, z: 0, w: 0.9999998}
-  m_LocalPosition: {x: 72.21001, y: 2.5722494, z: -32.736996}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 98.4682, y: 24.78098, z: -24.475151}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19618,6 +19618,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1857479029}
   - component: {fileID: 1857479030}
+  - component: {fileID: 1857479031}
   m_Layer: 0
   m_Name: OnLoadingScenes
   m_TagString: Untagged
@@ -19688,6 +19689,19 @@ MonoBehaviour:
   onTransformEventTriggered:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1857479031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857479028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86bf333f57207d43b6d865e1eedc15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogs: 1
 --- !u!1 &1857754261
 GameObject:
   m_ObjectHideFlags: 0
@@ -33548,6 +33562,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
+        type: 3}
+      propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
+        type: 3}
+      propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6388491859773174023, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: m_Name
@@ -38893,6 +38917,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4791526458442453543}
   - component: {fileID: 1938928443110814019}
+  - component: {fileID: 7795021219430961034}
   m_Layer: 0
   m_Name: OnLoadingScenes
   m_TagString: Untagged
@@ -38900,6 +38925,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7795021219430961034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795021219430961033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86bf333f57207d43b6d865e1eedc15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogs: 1
 --- !u!114 &7795319820556674964
 MonoBehaviour:
   m_ObjectHideFlags: 0

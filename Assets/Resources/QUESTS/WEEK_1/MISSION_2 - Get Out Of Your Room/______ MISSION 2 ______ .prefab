@@ -1,5 +1,54 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3965964897458567708
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6683788809783306244}
+  - component: {fileID: 6389620067103298507}
+  m_Layer: 0
+  m_Name: OnUnlockingDoor (to Jonas APT Hallway)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6683788809783306244
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965964897458567708}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -2.2737368e-13, z: -0, w: 1}
+  m_LocalPosition: {x: -158.125, y: 29.090908, z: 34.5}
+  m_LocalScale: {x: 0.8333334, y: 0.9090909, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1405386162273013003}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6389620067103298507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3965964897458567708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcff0183194c60240aa5b3b62f002fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsToTrigger:
+  - {fileID: 11400000, guid: 238afe79e52921242a0045c7badcce3e, type: 2}
+  triggerEventsOnAwake: 0
+  triggerEventsOnStart: 0
+  triggerEventsOnEnable: 0
 --- !u!1 &4660071173634241844
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,6 +136,9 @@ MonoBehaviour:
   onBoolEventTriggered:
     m_PersistentCalls:
       m_Calls: []
+  onTransformEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5931184347711285817
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,6 +171,38 @@ Transform:
   - {fileID: 1946353356559564205}
   - {fileID: 704108014042628992}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8457649014868950391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1405386162273013003}
+  m_Layer: 0
+  m_Name: For DOOR LOGIC -------
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1405386162273013003
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8457649014868950391}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6683788809783306244}
+  m_Father: {fileID: 1604712296157083053}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &3529592640342197592
 PrefabInstance:
@@ -439,6 +523,10 @@ PrefabInstance:
         type: 3}
       insertIndex: 1
       addedObject: {fileID: 2486849202666715379}
+    - targetCorrespondingSourceObject: {fileID: 3030374410303238237, guid: daa55f6f91fdcb64ea02ea9e7132e480,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1405386162273013003}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: daa55f6f91fdcb64ea02ea9e7132e480, type: 3}
 --- !u!114 &289425974787392159 stripped
@@ -453,6 +541,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 205d4ad17229e84468ea6113ddbbee55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1604712296157083053 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3030374410303238237, guid: daa55f6f91fdcb64ea02ea9e7132e480,
+    type: 3}
+  m_PrefabInstance: {fileID: 4344592845968639472}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1946353356559564205 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2831020599830460509, guid: daa55f6f91fdcb64ea02ea9e7132e480,
