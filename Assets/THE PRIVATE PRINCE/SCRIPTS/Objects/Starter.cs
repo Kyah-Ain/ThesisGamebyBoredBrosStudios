@@ -85,7 +85,7 @@ public class Starter : MonoBehaviour, IInteractable
         // Only proceed if it's resettable
         if (isResettable)
         {
-            Reset();
+            Resetter();
         }
     }
 
@@ -156,7 +156,7 @@ public class Starter : MonoBehaviour, IInteractable
     }
     
     // Method to reset the Starter
-    public void Reset()
+    public void Resetter()
     {
         // Reset's the Player status when this was disabled while it was set to true
         _isPlayerInRange = false;
@@ -228,7 +228,7 @@ public class Starter : MonoBehaviour, IInteractable
         // Proceed only if single used & disable was chosen
         if (useType == UseType.UseOnceAndDisable)
         {
-            Reset();
+            Resetter();
         }
         // Proceed only if single used & destroy was chosen
         else if (useType == UseType.UseOnceAndDestroy)
