@@ -136,6 +136,15 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""a8dd6db4-21e8-4343-8422-58e630622d11"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -638,6 +647,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
         m_Player_Cyberscan = m_Player.FindAction("Cyberscan", throwIfNotFound: true);
+        m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
@@ -733,6 +743,7 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Block;
     private readonly InputAction m_Player_Cyberscan;
+    private readonly InputAction m_Player_Sprint;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -764,6 +775,10 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// Provides access to the underlying input action "Player/Cyberscan".
         /// </summary>
         public InputAction @Cyberscan => m_Wrapper.m_Player_Cyberscan;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Sprint".
+        /// </summary>
+        public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -805,6 +820,9 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
             @Cyberscan.started += instance.OnCyberscan;
             @Cyberscan.performed += instance.OnCyberscan;
             @Cyberscan.canceled += instance.OnCyberscan;
+            @Sprint.started += instance.OnSprint;
+            @Sprint.performed += instance.OnSprint;
+            @Sprint.canceled += instance.OnSprint;
         }
 
         /// <summary>
@@ -831,6 +849,9 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
             @Cyberscan.started -= instance.OnCyberscan;
             @Cyberscan.performed -= instance.OnCyberscan;
             @Cyberscan.canceled -= instance.OnCyberscan;
+            @Sprint.started -= instance.OnSprint;
+            @Sprint.performed -= instance.OnSprint;
+            @Sprint.canceled -= instance.OnSprint;
         }
 
         /// <summary>
@@ -1146,6 +1167,13 @@ public partial class @PrivatePrinceControls: IInputActionCollection2, IDisposabl
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCyberscan(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Sprint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSprint(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

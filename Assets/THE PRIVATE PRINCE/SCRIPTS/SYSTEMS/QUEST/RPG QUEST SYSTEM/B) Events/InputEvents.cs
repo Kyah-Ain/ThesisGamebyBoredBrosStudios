@@ -5,10 +5,12 @@ using UnityEngine.InputSystem;
 public class InputEvents
 {
     // ------------------------- EVENTS -------------------------
+    
     [field: Header("PLAYER EVENTS")]
     public event Action<InputAction.CallbackContext> onMovement;
     public event Action<InputAction.CallbackContext> onInteract;
     public event Action<InputAction.CallbackContext> onCyberScan;
+    public event Action<InputAction.CallbackContext> onSprint;
 
     [field: Header("UI EVENTS")]
     public event Action<InputAction.CallbackContext> onSubmit;
@@ -21,6 +23,7 @@ public class InputEvents
     private readonly InputAction movementAction;
     private readonly InputAction interactAction;
     private readonly InputAction cyberScanAction;
+    private readonly InputAction sprintAction;
     
     [Header("UI ACTIONS")]
     private readonly InputAction submitAction;
@@ -38,6 +41,7 @@ public class InputEvents
             movementAction = ppControls.Player.Move;
             interactAction = ppControls.Player.Interact;
             cyberScanAction = ppControls.Player.Cyberscan;
+            sprintAction = ppControls.Player.Sprint;
             
             // -------------------- UI ACTIONS --------------------
             submitAction = ppControls.UI.Submit;
@@ -53,8 +57,10 @@ public class InputEvents
             // --------------- PLAYER EVENT TRIGGER -----------------
             interactAction.performed += OnInteract;
             movementAction.performed += OnMovement;
+            sprintAction.performed += OnSprint;
             movementAction.canceled += OnMovement;
             cyberScanAction.canceled += OnCyberScan;
+            sprintAction.canceled += OnSprint;
             
             // ----------------- UI EVENT TRIGGER ------------------
             submitAction.performed += SubmitPress;
@@ -73,6 +79,11 @@ public class InputEvents
         {
             // Broadcast the input to every subscribed script
             onMovement?.Invoke(context);
+        }
+        
+        void OnSprint(InputAction.CallbackContext context)
+        {
+            onSprint?.Invoke(context);
         }
     
         void OnInteract(InputAction.CallbackContext context)
@@ -121,7 +132,9 @@ public class InputEvents
         // Stop listening to the Input System
         interactAction.performed -= OnInteract;
         movementAction.performed -= OnMovement;
+        sprintAction.performed -= OnSprint;
         movementAction.canceled -= OnMovement;
+        sprintAction.canceled -= OnSprint;
         cyberScanAction.canceled -= OnCyberScan;
         
         submitAction.performed -= SubmitPress;

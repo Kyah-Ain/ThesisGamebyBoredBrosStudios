@@ -24,9 +24,11 @@ public class TwoPoint5DController : MonoBehaviour
     [Header("SETTINGS")]
     [SerializeField] float movementSpeed = 1f; // Speed at which the character moves
     [SerializeField] [Range(0f,10f)] float gravityMultiplier = 0f; // Intensity of the Gravity Multiplier applied to the character 
+    [SerializeField] float sprintMultiplier = 1.5f; // Speed boost while sprinting (under SETTINGS)
     
     [Header("STATUS")]
     [SerializeField] [ReadOnly] bool isCharacterFrozen; // Tracker if the character should be freezed or not (useful for dialogue events)
+    [SerializeField] [ReadOnly] bool isSprinting; // Tracker if the character is sprinting (under STATUS)
     [SerializeField] [ReadOnly] float gravity = -9.81f; // Gravity force applied to the character (Earth based gravity)
     [SerializeField] [ReadOnly] float freefallVelocity = -1.0f; // Speed at which the character fall
     [SerializeField] [ReadOnly] Vector2 inputVector; // The current input value/coordinates
@@ -98,6 +100,7 @@ public class TwoPoint5DController : MonoBehaviour
         // Set subscriptions of these methods to an event
         // Left (Event Call) += Right (Method that would be called)
         GameEventsManager.Instance.inputEvents.onMovement += ApplyMovement;
+        GameEventsManager.Instance.inputEvents.onSprint += ApplySprint;   // in Subscribe()
         // GameEventsManager.Instance.inputEvents.onInteract += ;
     }
 
@@ -107,6 +110,7 @@ public class TwoPoint5DController : MonoBehaviour
         // UnSubscribe them methods from an event
         // Left (Event Call) -= Right (Method that would be called)
         GameEventsManager.Instance.inputEvents.onMovement -= ApplyMovement;
+        GameEventsManager.Instance.inputEvents.onSprint -= ApplySprint;   // in UnSubscribe()
         // GameEventsManager.Instance.inputEvents.onInteract -= ;
     }
     
@@ -122,19 +126,28 @@ public class TwoPoint5DController : MonoBehaviour
         if (!isCharacterFrozen)
         {
             ApplyGravity();
-        
-            // Combines the horizontal and depth input with the current vertical velocity
-            Vector3 movement = new Vector3(
-                inputVector.x, // Horizontal Input
-                freefallVelocity, // Vertical Input
-                inputVector.y // Depth Input (if there's any)
-            );
+
+            // Picks the current speed depending on whether the character is sprinting
+            float currentSpeed = isSprinting ? movementSpeed * sprintMultiplier : movementSpeed;
+
+            // Horizontal and depth movement, scaled by speed
+            Vector3 horizontal = new Vector3(inputVector.x, 0f, inputVector.y) * currentSpeed;
+
+            // Vertical movement (gravity), NOT scaled by speed
+            Vector3 vertical = new Vector3(0f, freefallVelocity, 0f);
 
             ApplyAnimation();
-        
+
             // Applies calculated movement to the character
-            controller.Move(movement * (movementSpeed * Time.deltaTime));
+            controller.Move((horizontal + vertical) * Time.deltaTime);
         }
+    }
+    
+    // Method for receiving sprint inputs
+    void ApplySprint(InputAction.CallbackContext context)
+    {
+        // True while the button is held, false once it's released
+        isSprinting = context.ReadValueAsButton();
     }
 
     // Method to resume the character
