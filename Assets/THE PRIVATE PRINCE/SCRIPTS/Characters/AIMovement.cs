@@ -65,10 +65,15 @@ public class AIMovement : MonoBehaviour
     [SerializeField, ReadOnly] bool isWaiting; // Tracks if the AI is currently waiting at a station
     [SerializeField, ReadOnly] float waitEndTime; // The time when the current wait is over
     [SerializeField, ReadOnly] bool hasDeparted; // Tracks if the AI already left for its first station, so it doesn't wait before the first move
+    [SerializeField, ReadOnly] bool isPaused; // Tracks if the AI is currently frozen by PauseMovement, so the loop doesn't pick new destinations meanwhile
+    [SerializeField, ReadOnly] int playersInside; // Counts how many Player colliders are inside the trigger, so one collider leaving doesn't resume the AI while another is still inside
     
     [Header("COROUTINE")]
     private Coroutine activeExecuteLoop; // Holds the current loop for navPath tick rate call
     WaitForSeconds tickWait; // Cached delay between calls, so no garbage is created every loop
+    
+    // Time when the current pause started, used to extend the wait timer by the paused duration
+    float pauseStartTime;
     
     // ---------------------- PACKED METHODS -------------------------
     
@@ -139,6 +144,11 @@ public class AIMovement : MonoBehaviour
     void OnDisable()
     {
         StopMovementLoop();
+        
+        // Resets the pause tracking, since OnTriggerExit may never fire for a disabled object
+        // (otherwise the AI could stay "paused" forever after being re-enabled)
+        playersInside = 0;
+        isPaused = false;
     }
 
     // Update is called once per frame
@@ -153,6 +163,9 @@ public class AIMovement : MonoBehaviour
         // Only process objects tagged as Player
         if(actor.CompareTag("Player"))
         {
+            // Counts this collider, since a Player can have multiple colliders (child, hitbox, etc.)
+            playersInside++;
+            
             PauseMovement();
         }
     }
@@ -163,7 +176,11 @@ public class AIMovement : MonoBehaviour
         // Only process objects tagged as Player
         if(actor.CompareTag("Player"))
         {
-            ResumeMovement();
+            // Un-counts this collider (clamped, so it never goes below zero)
+            playersInside = Mathf.Max(0, playersInside - 1);
+            
+            // Resumes only when the last Player collider has left
+            if (playersInside == 0) ResumeMovement();
         }
     }
     
@@ -182,6 +199,9 @@ public class AIMovement : MonoBehaviour
     // Method to move the AI
     public void Move()
     {
+        // Prevents picking new destinations while the AI is frozen
+        if (isPaused) return;
+        
         // Prevents setting new target location if one hasn't reached yet
         if (!HasReachedDestination()) return;
         
@@ -210,6 +230,9 @@ public class AIMovement : MonoBehaviour
     // Method to move the AI to the next station immediately, even if the current one hasn't been reached yet
     public void ForceMove()
     {
+        // Prevents the force move from overriding a pause
+        if (isPaused) return;
+        
         // Cancels any ongoing wait, so the interruption takes effect right away
         isWaiting = false;
 
@@ -221,13 +244,29 @@ public class AIMovement : MonoBehaviour
     // Method to freeze the AI
     public void PauseMovement()
     {
+        // Prevents re-running the pause (and resetting the pause start time) if already paused
+        if (isPaused) return;
+        
+        isPaused = true;
+        pauseStartTime = Time.time;
+        
         navAgent.isStopped = true;
+        
+        // Kills the deceleration glide, so the AI stops right away instead of sliding to a halt
+        navAgent.velocity = Vector3.zero;
     }
     
     // Method to unfreeze the AI
     public void ResumeMovement()
     {
+        // Prevents resuming when it isn't paused
+        if (!isPaused) return;
+        
+        isPaused = false;
         navAgent.isStopped = false;
+        
+        // Pushes the wait timer forward by the paused duration, so the wait doesn't expire during the pause
+        if (isWaiting) waitEndTime += Time.time - pauseStartTime;
     }
     
     #endregion
