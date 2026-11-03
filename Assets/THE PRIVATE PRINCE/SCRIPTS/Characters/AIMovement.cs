@@ -79,6 +79,9 @@ public class AIMovement : MonoBehaviour
     public void FaceRightWhenStopped() => ChangeAnimStop(StopAnimType.FaceRight);
     public void CustomAnimWhenStopped() => ChangeAnimStop(StopAnimType.CustomAnim);
     
+    // Where the sprite is currently facing (Xinput, Yinput). (Defaults to front)
+    public Vector2 FacingDirection { get; private set; } = Vector2.down;
+    
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
     
@@ -445,6 +448,8 @@ public class AIMovement : MonoBehaviour
     // ...
     void BlendTreeAnimator(float x, float y)
     {
+        FacingDirection = new Vector2(x, y);
+        
         // Fetches the AI's direction to the Blend Tree
         animator.SetFloat("Xinput", x);
         animator.SetFloat("Yinput", y);

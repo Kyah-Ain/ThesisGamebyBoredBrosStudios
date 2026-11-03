@@ -18,7 +18,6 @@ public class AIDetection : MonoBehaviour
     [Header("EVENTS")] // Event/s that would fire at the inspector
     [SerializeField] UnityEvent onPlayerFound; // Fires when a player was found (or when the nearest player switches to a different one)
     [SerializeField] UnityEvent onPlayerLost; // Fires when the AI had a target and now has none
-
     
     [Header("DETECTION SETTINGS")]
     [SerializeField, ReadOnly] Transform player; // Now holds the CURRENT nearest visible player (auto-set by LookForPlayer), null if none
@@ -46,8 +45,9 @@ public class AIDetection : MonoBehaviour
     // Remembers who we were locked onto last check, so the event only fires when the target changes
     [SerializeField, ReadOnly] Transform currentTarget;
 
+    [field: Header("PUBLIC ACCESS METHODS")]
     // The transform that defines where the cone starts and which way it faces
-    Transform ViewOrigin => visualEmmitter != null ? visualEmmitter : transform;
+    public Transform ViewOrigin => visualEmmitter != null ? visualEmmitter : transform;
 
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -229,7 +229,7 @@ public class AIDetection : MonoBehaviour
     }
 
     // Method to visualize the detection in the Game Scene
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         Transform origin = ViewOrigin;
 
