@@ -49,6 +49,7 @@ public class AIDetection : MonoBehaviour
     [field: Header("PUBLIC ACCESS METHODS")]
     // The transform that defines where the cone starts and which way it faces
     public Transform ViewOrigin => visualEmmitter != null ? visualEmmitter : transform;
+    readonly RaycastHit[] rayHits = new RaycastHit[8]; // Reused buffer, no garbage per frame
 
     // Facing direction flattened onto the ground plane, so tilt/roll on the emitter can never affect vision
     public Vector3 ViewForward
@@ -173,30 +174,40 @@ public class AIDetection : MonoBehaviour
     // ----------------------- DETECTION LOGICS -------------------------
     #region DETECTION LOGICS
     
-    // Method to check if ONE specific target is inside the cone view and not blocked by an obstacle
+    // Method to check if ONE specific target is inside the proximity circle OR the view cone, and not blocked
     bool CanSeePlayer(Transform target)
     {
         Vector3 origin = ViewOrigin.position;
-        Vector3 dirToPlayer = (target.position - origin).normalized;
-        float distanceToPlayer = Vector3.Distance(origin, target.position);
 
-        if (distanceToPlayer > Mathf.Max(viewDistance, proximityRadius)) return false;
+        // Flat (ground plane) offset, so it matches the visual circle and cone
+        Vector3 flat = target.position - origin;
+        flat.y = 0f;
+        float flatDistance = flat.magnitude;
 
-        // Inside the circle, the angle check is skipped (the enemy "senses" anyone close, in any direction)
-        bool insideCircle = distanceToPlayer <= proximityRadius;
+        if (flatDistance > Mathf.Max(viewDistance, proximityRadius)) return false;
+
+        Vector3 dir = flatDistance > 0.0001f ? flat / flatDistance : ViewForward;
+
+        // Inside the proximity circle: always alerted, the cone angle is skipped
+        bool insideCircle = flatDistance <= proximityRadius;
         if (!insideCircle)
         {
-            if (distanceToPlayer > viewDistance) return false;
-
-            Vector3 flatDir = dirToPlayer;
-            flatDir.y = 0f;
-            float angleToPlayer = Vector3.Angle(ViewForward, flatDir);
-            
-            if (angleToPlayer > viewAngle / 2f) return false;
+            // Outside the circle: must be inside the cone
+            if (flatDistance > viewDistance) return false;
+            if (Vector3.Angle(ViewForward, dir) > viewAngle / 2f) return false;
         }
 
-        // Walls block both the cone and the circle
-        if (Physics.Raycast(origin, dirToPlayer, distanceToPlayer, obstacleMask)) return false;
+        // Walls block both the circle and the cone (ray is flat, same as the visual mesh)
+        int count = Physics.RaycastNonAlloc(origin, dir, rayHits, flatDistance, obstacleMask, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < count; i++)
+        {
+            Transform t = rayHits[i].transform;
+
+            if (t.IsChildOf(transform)) continue;   // The AI's own colliders never block it
+            if (t.IsChildOf(target)) continue;      // The target's own colliders never block it
+
+            return false;                           // Anything else on obstacleMask is a real obstacle
+        }
 
         return true;
     }

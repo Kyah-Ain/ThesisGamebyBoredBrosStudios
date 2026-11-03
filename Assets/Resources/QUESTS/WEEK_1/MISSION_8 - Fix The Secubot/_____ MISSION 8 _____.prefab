@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18249be87d1c0e14d86db661b8a03c4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTrigger: {fileID: 0}
+  eventTrigger: {fileID: 7718338312333939722}
   questInfoSO: {fileID: 11400000, guid: e68328235545c604a860881ce3c0a6b4, type: 2}
 --- !u!1 &974420754029961609
 GameObject:
@@ -434,7 +434,7 @@ Transform:
   m_LocalScale: {x: -1.24492, y: 1.24492, z: 1.24492}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8598294055126899690}
+  - {fileID: 8835843293179882048}
   m_Father: {fileID: 1813888069019660867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1377373744040584866
@@ -2771,7 +2771,7 @@ MonoBehaviour:
           m_StringArgument: Tutorial2
           m_BoolArgument: 0
         m_CallState: 0
-      - m_Target: {fileID: 7628259069008182547}
+      - m_Target: {fileID: 3450661822585931022}
         m_TargetAssemblyTypeName: PuzzleTrigger, Assembly-CSharp
         m_MethodName: HandlePuzzleTab
         m_Mode: 1
@@ -5195,7 +5195,7 @@ MonoBehaviour:
   requiredTag: Player
   _isToggledAlready: 0
   _isPlayerInRange: 0
---- !u!1001 &5559324407872192573
+--- !u!1001 &6278634557584131545
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -5203,171 +5203,236 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2263003696387490845}
     m_Modifications:
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: Pausable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: wireCount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: movementStep
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: wireColors.Array.data[1].b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: wireColors.Array.data[1].g
+      value: 0.76862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: wireColors.Array.data[1].r
+      value: 0.9098039
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.size
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleStarted.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 437798523306590308}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 8826187064577669697}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 8555752441312457476}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 648805494908547986}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ExecuteEvents
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: AdvanceQuest
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: TriggerStart
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleStarted.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleStarted.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ExecuteEvents
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: GameEventTrigger, Assembly-CSharp
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: DialogueBaseQuestPoint, Assembly-CSharp
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: Starter, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleStarted.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: GameEventTrigger, Assembly-CSharp
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 1311462561967430632, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 3204071244380935027, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: onThisPuzzleStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 1711428002109590642, guid: b7aa810a5b6581b4690873e4b801442b,
-        type: 3}
-      propertyPath: m_Name
-      value: Connect Puzzle
-      objectReference: {fileID: 0}
-    - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 226
       objectReference: {fileID: 0}
-    - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 24.25
       objectReference: {fileID: 0}
-    - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -90
       objectReference: {fileID: 0}
-    - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+    - target: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4512058956502297133, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: m_Name
+      value: PuzzleAmogus
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869121597806253250, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
+        type: 3}
+      propertyPath: m_text
+      value: 'CONNECT PUZZLE: Connect the correct pairs of wires!'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b7aa810a5b6581b4690873e4b801442b, type: 3}
---- !u!114 &7628259069008182547 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb, type: 3}
+--- !u!114 &3450661822585931022 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2664922808668388654, guid: b7aa810a5b6581b4690873e4b801442b,
+  m_CorrespondingSourceObject: {fileID: 8701243069140811991, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
     type: 3}
-  m_PrefabInstance: {fileID: 5559324407872192573}
+  m_PrefabInstance: {fileID: 6278634557584131545}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -5375,9 +5440,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25c136ba0b627549897757160fe36ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &8598294055126899690 stripped
+--- !u!4 &8835843293179882048 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4212544584444582871, guid: b7aa810a5b6581b4690873e4b801442b,
+  m_CorrespondingSourceObject: {fileID: 3295799798263345049, guid: b4d2f1fc91ed9fd45a73b7e60231f8bb,
     type: 3}
-  m_PrefabInstance: {fileID: 5559324407872192573}
+  m_PrefabInstance: {fileID: 6278634557584131545}
   m_PrefabAsset: {fileID: 0}
