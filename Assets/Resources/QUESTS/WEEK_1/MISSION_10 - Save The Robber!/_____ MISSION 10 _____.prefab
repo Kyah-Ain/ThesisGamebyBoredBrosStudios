@@ -512,7 +512,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7428480992219599277
 Transform:
   m_ObjectHideFlags: 0
@@ -1367,6 +1367,7 @@ MonoBehaviour:
   player: {fileID: 0}
   visualEmmitter: {fileID: 3709970004797856279}
   viewDistance: 5
+  proximityRadius: 2
   viewAngle: 90
   obstacleMask:
     serializedVersion: 2
@@ -5722,6 +5723,7 @@ MonoBehaviour:
   player: {fileID: 0}
   visualEmmitter: {fileID: 1568461350973915861}
   viewDistance: 5
+  proximityRadius: 2
   viewAngle: 90
   obstacleMask:
     serializedVersion: 2
@@ -14234,7 +14236,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2345
+  m_VersionIndex: 2360
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -14775,6 +14777,7 @@ MonoBehaviour:
   player: {fileID: 0}
   visualEmmitter: {fileID: 4869499316689024465}
   viewDistance: 5
+  proximityRadius: 2
   viewAngle: 90
   obstacleMask:
     serializedVersion: 2
@@ -20710,10 +20713,11 @@ MonoBehaviour:
   player: {fileID: 0}
   visualEmmitter: {fileID: 8460000801481771030}
   viewDistance: 5
+  proximityRadius: 2
   viewAngle: 90
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 524159
+    m_Bits: 401408
   loseSightDelay: 1.5
   playerMask:
     serializedVersion: 2
@@ -26289,7 +26293,6 @@ GameObject:
   - component: {fileID: 6716922930513738177}
   - component: {fileID: 3551603140340454708}
   - component: {fileID: 5483427510047623287}
-  - component: {fileID: 7523701375854717061}
   - component: {fileID: 8867411826553856757}
   m_Layer: 0
   m_Name: DetectionVisual
@@ -26307,7 +26310,7 @@ Transform:
   m_GameObject: {fileID: 5473639931998677779}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 0.22218, y: 0.22218, z: 0.22218}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -26363,27 +26366,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &7523701375854717061
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5473639931998677779}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8867411826553856757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26397,8 +26379,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detection: {fileID: 2506668740679702380}
-  segments: 40
+  showCone: 1
+  showProximity: 1
+  coneSegments: 60
+  circleSegments: 60
   heightOffset: 0.05
+  wallOverlap: 0.05
   idleStyle: {fileID: 11400000, guid: 6bef6e39b2e82224c843fa0a3ca2a311, type: 2}
   alertStyle: {fileID: 11400000, guid: 939b8c20f28156e4285c301f22e152f9, type: 2}
   currentStyle: {fileID: 0}
@@ -29606,6 +29592,7 @@ MonoBehaviour:
   player: {fileID: 0}
   visualEmmitter: {fileID: 6151355430144111167}
   viewDistance: 5
+  proximityRadius: 2
   viewAngle: 90
   obstacleMask:
     serializedVersion: 2
@@ -32906,7 +32893,6 @@ GameObject:
   - component: {fileID: 8460000801481771030}
   - component: {fileID: 5186630918716620655}
   - component: {fileID: 8767237577165839611}
-  - component: {fileID: 4282409242260209281}
   m_Layer: 0
   m_Name: DetectionRange
   m_TagString: Untagged
@@ -32923,7 +32909,7 @@ Transform:
   m_GameObject: {fileID: 6831496583038569754}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.9201733, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 0.22218, y: 0.22218, z: 0.22218}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -32979,27 +32965,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &4282409242260209281
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6831496583038569754}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6832023405690099022
 GameObject:
   m_ObjectHideFlags: 0
@@ -33590,6 +33555,7 @@ MonoBehaviour:
   player: {fileID: 0}
   visualEmmitter: {fileID: 8003325498812374746}
   viewDistance: 5
+  proximityRadius: 2
   viewAngle: 90
   obstacleMask:
     serializedVersion: 2
@@ -37258,7 +37224,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1394335943854886041
 Transform:
   m_ObjectHideFlags: 0

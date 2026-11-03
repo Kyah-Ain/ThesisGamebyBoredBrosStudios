@@ -23,6 +23,7 @@ public class AIDetection : MonoBehaviour
     [SerializeField, ReadOnly] Transform player; // Now holds the CURRENT nearest visible player (auto-set by LookForPlayer), null if none
     [SerializeField] Transform visualEmmitter; // The visual emitter that will be used to show the detection range
     public float viewDistance = 10f; // ...
+    public float proximityRadius = 2f; // Small 360° awareness circle around the emitter (still blocked by obstacles)
     [Range(0f, 360f)] public float viewAngle = 90f; // ...
     public LayerMask obstacleMask; // ...
     [SerializeField] float loseSightDelay = 1.5f; // Grace time before giving up (avoids flickering at cone edges)
@@ -48,6 +49,17 @@ public class AIDetection : MonoBehaviour
     [field: Header("PUBLIC ACCESS METHODS")]
     // The transform that defines where the cone starts and which way it faces
     public Transform ViewOrigin => visualEmmitter != null ? visualEmmitter : transform;
+
+    // Facing direction flattened onto the ground plane, so tilt/roll on the emitter can never affect vision
+    public Vector3 ViewForward
+    {
+        get
+        {
+            Vector3 f = ViewOrigin.forward;
+            f.y = 0f;
+            return f.sqrMagnitude < 0.0001f ? Vector3.forward : f.normalized;
+        }
+    }
 
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -110,7 +122,7 @@ public class AIDetection : MonoBehaviour
         playersInRange.Clear();
 
         // Everything on the player layer within view distance becomes a candidate
-        Collider[] hits = Physics.OverlapSphere(transform.position, viewDistance, playerMask);
+        Collider[] hits = Physics.OverlapSphere(ViewOrigin.position, Mathf.Max(viewDistance, proximityRadius), playerMask);
         foreach (Collider hit in hits)
         {
             // Only process objects tagged as Player
@@ -168,15 +180,23 @@ public class AIDetection : MonoBehaviour
         Vector3 dirToPlayer = (target.position - origin).normalized;
         float distanceToPlayer = Vector3.Distance(origin, target.position);
 
-        if (distanceToPlayer > viewDistance) return false;
+        if (distanceToPlayer > Mathf.Max(viewDistance, proximityRadius)) return false;
 
-        float angleToPlayer = Vector3.Angle(ViewOrigin.forward, dirToPlayer);
-        if (angleToPlayer > viewAngle / 2f) return false;
-
-        if (Physics.Raycast(origin, dirToPlayer, distanceToPlayer, obstacleMask))
+        // Inside the circle, the angle check is skipped (the enemy "senses" anyone close, in any direction)
+        bool insideCircle = distanceToPlayer <= proximityRadius;
+        if (!insideCircle)
         {
-            return false;
+            if (distanceToPlayer > viewDistance) return false;
+
+            Vector3 flatDir = dirToPlayer;
+            flatDir.y = 0f;
+            float angleToPlayer = Vector3.Angle(ViewForward, flatDir);
+            
+            if (angleToPlayer > viewAngle / 2f) return false;
         }
+
+        // Walls block both the cone and the circle
+        if (Physics.Raycast(origin, dirToPlayer, distanceToPlayer, obstacleMask)) return false;
 
         return true;
     }
@@ -236,8 +256,8 @@ public class AIDetection : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(origin.position, viewDistance);
 
-        Vector3 rightLimit = Quaternion.Euler(0, viewAngle / 2, 0) * origin.forward;
-        Vector3 leftLimit  = Quaternion.Euler(0, -viewAngle / 2, 0) * origin.forward;
+        Vector3 rightLimit = Quaternion.Euler(0, viewAngle / 2, 0) * ViewForward;
+        Vector3 leftLimit  = Quaternion.Euler(0, -viewAngle / 2, 0) * ViewForward;
 
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(origin.position, origin.position + rightLimit * viewDistance);
@@ -262,6 +282,10 @@ public class AIDetection : MonoBehaviour
             Gizmos.color = Color.green;
             Gizmos.DrawLine(origin.position, currentTarget.position);
         }
+        
+        // Proximity Visual
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(origin.position, proximityRadius);
     }
     
     #endregion
