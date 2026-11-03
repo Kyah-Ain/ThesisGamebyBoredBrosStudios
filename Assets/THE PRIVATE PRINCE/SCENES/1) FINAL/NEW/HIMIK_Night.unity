@@ -59060,6 +59060,7 @@ GameObject:
   m_Component:
   - component: {fileID: 855394377}
   - component: {fileID: 855394378}
+  - component: {fileID: 855394379}
   m_Layer: 0
   m_Name: On Player Death
   m_TagString: Untagged
@@ -59111,6 +59112,22 @@ MonoBehaviour:
   onBoolEventTriggered:
     m_PersistentCalls:
       m_Calls: []
+  onTransformEventTriggered:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &855394379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 855394376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86bf333f57207d43b6d865e1eedc15b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogs: 1
 --- !u!1 &856274447
 GameObject:
   m_ObjectHideFlags: 0
@@ -95650,7 +95667,7 @@ PrefabInstance:
     - target: {fileID: 7977583891063391807, guid: 0b1e4c8e29185b442ad964e7c13c9976,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
