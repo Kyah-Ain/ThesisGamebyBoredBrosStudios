@@ -22,10 +22,13 @@ public class QuestStateListener : MonoBehaviour
     [SerializeField] QuestInfoSO QuestInfo; // Container for the Scriptable Quest's Data
     [SerializeField][ReadOnly] string _questId; // Container for the questId we want this script to correlates to
     [SerializeField][ReadOnly] QuestState _currentQuestState; // Container for the quest State we want this script to correlates to
-    
+
+    [SerializeField] bool reactOnlyToChanges = false;
+    bool _hasSynced;
+
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
-    
+
     // Awake is called when this script was first initialized & loaded
     void Awake()
     {
@@ -51,19 +54,17 @@ public class QuestStateListener : MonoBehaviour
     {
         UnSubscribe();
     }
-    
+
     // Start is called once before the first frame update
     void Start()
     {
-        // Retrieves the Quest from the ID
         Ain.Quest quest = Ain.QuestManager.Instance.GetQuestById(_questId);
-        
-        // Receives an update to that particular Quest
         GameEventsManager.Instance.questEvents.QuestStateChange(quest);
+        _hasSynced = true;
     }
-    
+
     #endregion
-    
+
     // ------------------------- SUBSCRIPTIONS ------------------------
     #region SUBSCRIPTIONS
 
@@ -82,48 +83,30 @@ public class QuestStateListener : MonoBehaviour
         // Left (Event Call) -= Right (Method that would be called)
         GameEventsManager.Instance.questEvents.onQuestStateChange -= QuestStateChange;
     }
-    
+
     // Method to update the Quest State for this point 
     void QuestStateChange(Ain.Quest quest)
     {
-        // Ignore Quest updates that aren't intended for this NPC
-        if (!quest.info.id.Equals(_questId))
-        {
-            return;
-        }
-        
-        // Update the state of this from the passed state value from the caller
+        if (!quest.info.id.Equals(_questId)) return;
+
+        bool isInitial = !_hasSynced;
+        QuestState previous = _currentQuestState;
         _currentQuestState = quest.state;
 
-        // Chooses the suitable case base on the parameter passed
+        // Ignore repeats of the same state
+        if (_hasSynced && previous == _currentQuestState) return;
+
+        // Skip cutscene events when we're only catching up to existing state
+        if (isInitial && reactOnlyToChanges) return;
+
         switch (_currentQuestState)
         {
-            // Dialogue logic for No Quest given
-            case QuestState.REQUIREMENTS_NOT_MET:
-                
-                break;
-                
-            // Dialogue logic for when there's a Quest wants to be given
-            case QuestState.CAN_START:
-                onQuestCanStart?.Invoke();
-                break;
-                
-            // Dialogue logic for when there's a Quest waiting to be fulfilled
-            case QuestState.IN_PROGRESS:
-                onQuestStarted?.Invoke();
-                break;
-                
-            // Dialogue logic for when there's a Quest waiting to be finished
-            case QuestState.CAN_FINISH:
-                onQuestCanFinish?.Invoke();
-                break;
-                
-            // Dialogue logic for when finished a Quest
-            case QuestState.FINISHED:
-                onQuestEnded?.Invoke();
-                break;
+            case QuestState.CAN_START: onQuestCanStart?.Invoke(); break;
+            case QuestState.IN_PROGRESS: onQuestStarted?.Invoke(); break;
+            case QuestState.CAN_FINISH: onQuestCanFinish?.Invoke(); break;
+            case QuestState.FINISHED: onQuestEnded?.Invoke(); break;
         }
     }
-    
+
     #endregion
 }
