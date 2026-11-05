@@ -20,23 +20,23 @@ public class PuzzleTrigger : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            // triggerText.gameObject.SetActive(true);
-            playerInside = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            // triggerText.gameObject.SetActive(false);
-            playerInside = false;
-        }
-    }
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         // triggerText.gameObject.SetActive(true);
+    //         playerInside = true;
+    //     }
+    // }
+    //
+    // private void OnTriggerExit(Collider other)
+    // {
+    //     if (other.CompareTag("Player"))
+    //     {
+    //         // triggerText.gameObject.SetActive(false);
+    //         playerInside = false;
+    //     }
+    // }
 
     public void HandlePuzzleTab()
     {

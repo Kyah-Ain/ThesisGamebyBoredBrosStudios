@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,7 @@ public class WiringLeftWire : MonoBehaviour
 {
     [Header("Fixed UI")]
     [SerializeField] private Image wireDesign;
-    [SerializeField] private Image symbolImage;
+    [SerializeField] private TextMeshProUGUI symbolText;
 
     [Header("Movable Wire")]
     [SerializeField] private RectTransform plugOrigin;
@@ -23,25 +24,17 @@ public class WiringLeftWire : MonoBehaviour
     public RectTransform PlugOrigin => plugOrigin;
     public RectTransform WireLine => wireLine;
 
-    /*
-     * True only when plugged into the CORRECT right wire.
-     * Solved wires are locked and can't be selected again.
-     */
-    public bool Solved { get; private set; }
-
-    /*
-     * The right wire this plug currently sits on (correct or not).
-     * Null when the plug is free or at its origin.
-     */
-    public WiringRightWire PluggedInto { get; private set; }
+    public bool Connected { get; private set; }
 
     private RectTransform puzzleRoot;
     private RectTransform dragLayer;
 
+    private Color wireColor;
+
     public void Initialize(
         int pairID,
         Color color,
-        Sprite symbol,
+        string symbol,
         RectTransform puzzleRoot,
         RectTransform dragLayer)
     {
@@ -50,20 +43,21 @@ public class WiringLeftWire : MonoBehaviour
         this.puzzleRoot = puzzleRoot;
         this.dragLayer = dragLayer;
 
-        Solved = false;
-        PluggedInto = null;
+        wireColor = color;
+
+        Connected = false;
 
         if (wireDesign != null)
             wireDesign.color = color;
 
+        if (plugImage != null)
+            plugImage.color = color;
+
         if (wireLineImage != null)
             wireLineImage.color = color;
 
-        if (symbolImage != null)
-        {
-            symbolImage.sprite = symbol;
-            symbolImage.enabled = symbol != null;
-        }
+        if (symbolText != null)
+            symbolText.text = symbol;
 
         SetSelected(false);
 
@@ -97,7 +91,7 @@ public class WiringLeftWire : MonoBehaviour
 
     public void MovePlug(Vector2 movement)
     {
-        if (Solved || plug == null)
+        if (Connected || plug == null)
             return;
 
         Vector2 newPosition =
@@ -125,61 +119,29 @@ public class WiringLeftWire : MonoBehaviour
         UpdateLine();
     }
 
-    /*
-     * Plug into a right wire. If it isn't the matching one the
-     * wire stays unsolved (and can be picked up again), but the
-     * right wire is marked occupied so nothing else snaps to it.
-     */
-    public void SnapTo(WiringRightWire target, bool correct)
+    public void SnapTo(RectTransform target)
     {
         if (target == null)
             return;
 
         Vector2 targetPosition =
-            WorldToRootPosition(target.SnapPoint.position);
+            WorldToRootPosition(target.position);
 
         plug.anchoredPosition = targetPosition;
 
         plug.localRotation = Quaternion.identity;
 
-        PluggedInto = target;
-        target.SetOccupant(this);
-
-        Solved = correct;
+        Connected = true;
 
         UpdateLine();
 
         SetSelected(false);
     }
 
-    /*
-     * Detach from whatever right wire we're sitting on.
-     * Does not move the plug.
-     */
-    public void Unplug()
-    {
-        if (PluggedInto != null)
-            PluggedInto.ClearOccupant();
-
-        PluggedInto = null;
-        Solved = false;
-    }
-
-    /*
-     * Full reset: unplug and send the plug back to its origin.
-     */
-    public void ResetWire()
-    {
-        Unplug();
-        ResetPlug();
-        SetSelected(false);
-    }
-
-    /*
-     * Moves the plug (and line) back to the plug origin.
-     */
     public void ResetPlug()
     {
+        Connected = false;
+
         if (plug == null || plugOrigin == null)
             return;
 
