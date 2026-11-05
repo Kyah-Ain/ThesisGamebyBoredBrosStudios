@@ -484,7 +484,7 @@ public class AIMovement : MonoBehaviour
         return !navAgent.hasPath || navAgent.velocity.sqrMagnitude == 0f;
     }
     
-    // ...
+    // Method to apply the corresponding animation based on Input
     void BlendTreeAnimator(float x, float y)
     {
         FacingDirection = new Vector2(x, y);

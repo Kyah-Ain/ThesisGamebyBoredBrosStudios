@@ -33,6 +33,18 @@ public class TwoPoint5DController : MonoBehaviour
     [SerializeField] [ReadOnly] float freefallVelocity = -1.0f; // Speed at which the character fall
     [SerializeField] [ReadOnly] Vector2 inputVector; // The current input value/coordinates
     
+    // ------------------- PUBLIC ACCESS METHODS -------------------------
+
+    // Method to force Jonas to look at certain angle (or Force FlipSprite in short)
+    public void FaceJonasToItsLastState() => BlendTreeAnimator(0f, 0f);
+    public void FaceJonasToFront() => BlendTreeAnimator(0f, -1f);
+    public void FaceJonasToBack() => BlendTreeAnimator(0f, 1f);
+    public void FaceJonasToLeft() => BlendTreeAnimator(-1f, 0f);
+    public void FaceJonasToRight() => BlendTreeAnimator(1f, 0f);
+    
+    // Where the sprite is currently facing (Xinput, Yinput). (Defaults to front)
+    public Vector2 FacingDirection { get; private set; } = Vector2.down;
+    
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
     
@@ -297,9 +309,10 @@ public class TwoPoint5DController : MonoBehaviour
                 animInput = new Vector2(0f, Mathf.Sign(animInput.y)); // exactly -1 or 1
             }
             
-            // Fetches the Player Inputs to the Blend Tree
-            animator.SetFloat("Xinput", animInput.x);
-            animator.SetFloat("Yinput", animInput.y);
+            // Fetches the Player Inputs for the Blend Tree to animate
+            BlendTreeAnimator(animInput.x, animInput.y);
+            // animator.SetFloat("Xinput", animInput.x);
+            // animator.SetFloat("Yinput", animInput.y);
  
             // Animates the character when moving
             animator.SetBool("isMoving", true);
@@ -319,6 +332,19 @@ public class TwoPoint5DController : MonoBehaviour
     public void ToggleFreeze(bool condition)
     {
         isCharacterFrozen = condition;
+    }
+    
+    // Method to apply the corresponding animation based on Input
+    void BlendTreeAnimator(float x = 0f, float y = 0f)
+    {
+        // Don't animate when the input given was 0f
+        if (x == 0 & y == 0) return;
+        
+        FacingDirection = new Vector2(x, y);
+        
+        // Fetches the AI's direction to the Blend Tree
+        animator.SetFloat("Xinput", x);
+        animator.SetFloat("Yinput", y);
     }
 
     // ------------------------- DEBUGGER -------------------------
