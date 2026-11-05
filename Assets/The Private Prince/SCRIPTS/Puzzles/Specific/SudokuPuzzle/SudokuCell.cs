@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,25 +8,31 @@ public class SudokuCell : MonoBehaviour
     public RectTransform visualRoot;
 
     [Tooltip("The size the cell prefab was originally designed at.")]
-    public float referenceCellSize = 200f;
+    public float referenceCellSize = 100f;
 
     [Header("UI")]
     public Image normalImage;
     public Image prefilledImage;
     public Image selectionImage;
-    public TextMeshProUGUI numberText;
+    public Image numberImage;
 
-    [Header("Text Colors")]
-    public Color editableTextColor = Color.white;
-    public Color prefilledTextColor = Color.white;
-    public Color wrongTextColor = Color.red;
+    [Header("Number Colors")]
+    public Color editableNumberColor = Color.white;
+    public Color prefilledNumberColor = Color.white;
+    public Color wrongNumberColor = Color.red;
+    public Color previewNumberColor = Color.gray;
 
     [HideInInspector] public int row;
     [HideInInspector] public int column;
 
+    private Sprite[] numberSprites;
+
     private int value;
     private bool prefilled;
     private bool wrong;
+
+    private int previewValue;
+    private bool previewing;
 
     public int Value => value;
     public bool IsPrefilled => prefilled;
@@ -35,14 +40,18 @@ public class SudokuCell : MonoBehaviour
     public void Setup(
         int row,
         int column,
-        float actualCellSize)
+        float actualCellSize,
+        Sprite[] numberSprites)
     {
         this.row = row;
         this.column = column;
+        this.numberSprites = numberSprites;
 
         value = 0;
         prefilled = false;
         wrong = false;
+        previewing = false;
+        previewValue = 0;
 
         ScaleVisuals(actualCellSize);
         RefreshVisuals();
@@ -59,14 +68,6 @@ public class SudokuCell : MonoBehaviour
         if (visualRoot == null)
             return;
 
-        /*
-         * GridLayoutGroup changes the size of the SudokuCell root,
-         * but does not automatically scale its children.
-         *
-         * visualRoot remains at the prefab's reference size and we
-         * scale the entire visual hierarchy together.
-         */
-
         visualRoot.anchorMin = new Vector2(0.5f, 0.5f);
         visualRoot.anchorMax = new Vector2(0.5f, 0.5f);
         visualRoot.pivot = new Vector2(0.5f, 0.5f);
@@ -76,11 +77,9 @@ public class SudokuCell : MonoBehaviour
         visualRoot.sizeDelta =
             new Vector2(referenceCellSize, referenceCellSize);
 
-        float scale =
-            actualCellSize / referenceCellSize;
+        float scale = actualCellSize / referenceCellSize;
 
-        visualRoot.localScale =
-            Vector3.one * scale;
+        visualRoot.localScale = Vector3.one * scale;
     }
 
     // ---------------------------------------------------------
@@ -105,12 +104,37 @@ public class SudokuCell : MonoBehaviour
         RefreshVisuals();
     }
 
+    public void SetPreview(int number)
+    {
+        previewing = true;
+        previewValue = number;
+        RefreshVisuals();
+    }
+
+    public void ClearPreview()
+    {
+        if (!previewing)
+            return;
+
+        previewing = false;
+        previewValue = 0;
+        RefreshVisuals();
+    }
+
     // ---------------------------------------------------------
     // SELECTION
     // ---------------------------------------------------------
 
     public void SetSelected(bool selected)
     {
+        if (selected)
+        {
+            // Cells are positioned manually, so sibling order only
+            // affects draw order. This keeps the selection image from
+            // being covered by cells created after this one.
+            transform.SetAsLastSibling();
+        }
+
         if (selectionImage != null)
         {
             selectionImage.gameObject.SetActive(selected);
@@ -123,33 +147,38 @@ public class SudokuCell : MonoBehaviour
 
     private void RefreshVisuals()
     {
-        if (numberText != null)
+        if (numberImage != null)
         {
-            numberText.text =
-                value > 0 ? value.ToString() : "";
+            int displayValue = previewing ? previewValue : value;
 
-            if (wrong)
+            bool hasSprite =
+                displayValue > 0 &&
+                numberSprites != null &&
+                displayValue <= numberSprites.Length &&
+                numberSprites[displayValue - 1] != null;
+
+            numberImage.enabled = hasSprite;
+
+            if (hasSprite)
             {
-                numberText.color = wrongTextColor;
+                numberImage.sprite = numberSprites[displayValue - 1];
+                numberImage.SetNativeSize();
             }
+
+            if (previewing)
+                numberImage.color = previewNumberColor;
+            else if (wrong)
+                numberImage.color = wrongNumberColor;
             else if (prefilled)
-            {
-                numberText.color = prefilledTextColor;
-            }
+                numberImage.color = prefilledNumberColor;
             else
-            {
-                numberText.color = editableTextColor;
-            }
+                numberImage.color = editableNumberColor;
         }
 
         if (prefilledImage != null)
-        {
             prefilledImage.gameObject.SetActive(prefilled);
-        }
 
         if (normalImage != null)
-        {
             normalImage.gameObject.SetActive(!prefilled);
-        }
     }
 }
