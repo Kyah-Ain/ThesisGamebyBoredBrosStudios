@@ -41,14 +41,21 @@ public class AmogusWiringPuzzle : PuzzleBase
     [Header("Snapping")]
     [SerializeField] private float snapDistance = 25f;
 
+    [Header("Keys")]
+    [Tooltip("Selects a wire to move. Kept configurable in case " +
+             "console bindings are added later.")]
+    [SerializeField] private KeyCode interactKey = KeyCode.E;
+
+    [SerializeField] private KeyCode restartKey = KeyCode.R;
+
     [Header("Wire Appearance")]
     [SerializeField]
     private List<Color> wireColors =
         new List<Color>();
 
     [SerializeField]
-    private List<string> symbols =
-        new List<string>();
+    private List<Sprite> symbols =
+        new List<Sprite>();
 
     private readonly List<WiringLeftWire> leftWires =
         new List<WiringLeftWire>();
@@ -62,6 +69,14 @@ public class AmogusWiringPuzzle : PuzzleBase
     private int selectedWireIndex;
 
     private WiringLeftWire movingWire;
+
+    /*
+     * When a wrongly connected wire is picked back up, its plug
+     * starts out sitting on that right wire's snap point. Ignore
+     * that right wire until the plug has moved away from it,
+     * otherwise it would instantly re-snap.
+     */
+    private WiringRightWire releasedFrom;
 
     private bool puzzleGenerated;
 
@@ -89,8 +104,34 @@ public class AmogusWiringPuzzle : PuzzleBase
 
         puzzleGenerated = false;
         movingWire = null;
+        releasedFrom = null;
 
         currentState = WiringState.Selecting;
+    }
+
+
+    /*
+     * Restart: every wire goes back to its start, nothing is
+     * connected. Layout and pairings stay the same.
+     */
+    private void RestartPuzzle()
+    {
+        movingWire = null;
+        releasedFrom = null;
+
+        foreach (WiringRightWire right in rightWires)
+        {
+            right.ClearOccupant();
+        }
+
+        foreach (WiringLeftWire left in leftWires)
+        {
+            left.ResetWire();
+        }
+
+        currentState = WiringState.Selecting;
+
+        SelectFirstAvailableWire();
     }
 
 
@@ -100,6 +141,12 @@ public class AmogusWiringPuzzle : PuzzleBase
 
     public override void HandleInput()
     {
+        if (Input.GetKeyDown(restartKey))
+        {
+            RestartPuzzle();
+            return;
+        }
+
         if (currentState == WiringState.Selecting)
         {
             HandleSelectionInput();
@@ -123,10 +170,7 @@ public class AmogusWiringPuzzle : PuzzleBase
             MoveSelection(1);
         }
 
-        /*
-         * RIGHT selects the current wire.
-         */
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(interactKey))
         {
             BeginMovingSelectedWire();
         }
@@ -178,6 +222,10 @@ public class AmogusWiringPuzzle : PuzzleBase
 
         int attempts = 0;
 
+        /*
+         * Skip only correctly connected wires. Wrongly connected
+         * wires stay selectable so they can be retried.
+         */
         do
         {
             selectedWireIndex += direction;
@@ -192,7 +240,7 @@ public class AmogusWiringPuzzle : PuzzleBase
 
         }
         while (
-            leftWires[selectedWireIndex].Connected &&
+            leftWires[selectedWireIndex].Solved &&
             attempts < leftWires.Count
         );
 
@@ -205,14 +253,31 @@ public class AmogusWiringPuzzle : PuzzleBase
         for (int i = 0; i < leftWires.Count; i++)
         {
             leftWires[i].SetSelected(false);
+        }
 
-            if (!leftWires[i].Connected)
+        for (int i = 0; i < leftWires.Count; i++)
+        {
+            if (!leftWires[i].Solved)
             {
-                selectedWireIndex = i;
-                leftWires[i].SetSelected(true);
+                SelectWire(i);
                 return;
             }
         }
+    }
+
+
+    private void SelectWire(int index)
+    {
+        if (index < 0 || index >= leftWires.Count)
+            return;
+
+        foreach (WiringLeftWire wire in leftWires)
+        {
+            wire.SetSelected(false);
+        }
+
+        selectedWireIndex = index;
+        leftWires[index].SetSelected(true);
     }
 
 
@@ -227,8 +292,15 @@ public class AmogusWiringPuzzle : PuzzleBase
         WiringLeftWire selected =
             leftWires[selectedWireIndex];
 
-        if (selected.Connected)
+        if (selected.Solved)
             return;
+
+        /*
+         * Picking up a wrongly connected wire frees the right
+         * wire it was sitting on.
+         */
+        releasedFrom = selected.PluggedInto;
+        selected.Unplug();
 
         movingWire = selected;
 
@@ -248,39 +320,56 @@ public class AmogusWiringPuzzle : PuzzleBase
         if (movingWire == null)
             return;
 
-        WiringRightWire target =
-            FindMatchingRightWire(
-                movingWire.PairID
-            );
+        Vector3 plugPosition =
+            movingWire.Plug.position;
 
-        if (target == null)
-            return;
+        if (releasedFrom != null)
+        {
+            float releasedDistance =
+                Vector3.Distance(
+                    plugPosition,
+                    releasedFrom.SnapPoint.position
+                );
 
-        float distance =
-            Vector3.Distance(
-                movingWire.Plug.position,
-                target.SnapPoint.position
-            );
+            if (releasedDistance > snapDistance)
+                releasedFrom = null;
+        }
 
-        if (distance <= snapDistance)
+        /*
+         * Snap to the closest FREE right wire in range,
+         * whether or not it is the matching one.
+         */
+        WiringRightWire closest = null;
+        float closestDistance = snapDistance;
+
+        foreach (WiringRightWire rightWire in rightWires)
+        {
+            if (rightWire.IsOccupied)
+                continue;
+
+            if (rightWire == releasedFrom)
+                continue;
+
+            float distance =
+                Vector3.Distance(
+                    plugPosition,
+                    rightWire.SnapPoint.position
+                );
+
+            if (distance <= closestDistance)
+            {
+                closest = rightWire;
+                closestDistance = distance;
+            }
+        }
+
+        if (closest != null)
         {
             CompleteConnection(
                 movingWire,
-                target
+                closest
             );
         }
-    }
-
-
-    private WiringRightWire FindMatchingRightWire(int pairID)
-    {
-        foreach (WiringRightWire rightWire in rightWires)
-        {
-            if (rightWire.PairID == pairID)
-                return rightWire;
-        }
-
-        return null;
     }
 
 
@@ -288,11 +377,18 @@ public class AmogusWiringPuzzle : PuzzleBase
         WiringLeftWire left,
         WiringRightWire right)
     {
-        left.SnapTo(right.SnapPoint);
+        bool correct =
+            left.PairID == right.PairID;
+
+        left.SnapTo(right, correct);
+
+        int snappedIndex =
+            leftWires.IndexOf(left);
 
         movingWire = null;
+        releasedFrom = null;
 
-        if (AllWiresConnected())
+        if (correct && AllWiresSolved())
         {
             PuzzleManager.Instance.EndPuzzle(
                 PuzzleResult.Solved
@@ -303,15 +399,26 @@ public class AmogusWiringPuzzle : PuzzleBase
 
         currentState = WiringState.Selecting;
 
-        SelectFirstAvailableWire();
+        if (correct)
+        {
+            SelectFirstAvailableWire();
+        }
+        else
+        {
+            /*
+             * Wrong pair: keep that wire selected so the player
+             * can immediately pick it back up and retry.
+             */
+            SelectWire(snappedIndex);
+        }
     }
 
 
-    private bool AllWiresConnected()
+    private bool AllWiresSolved()
     {
         foreach (WiringLeftWire wire in leftWires)
         {
-            if (!wire.Connected)
+            if (!wire.Solved)
                 return false;
         }
 
