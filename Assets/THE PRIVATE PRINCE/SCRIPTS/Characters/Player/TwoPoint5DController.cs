@@ -25,6 +25,8 @@ public class TwoPoint5DController : MonoBehaviour
     [SerializeField] float movementSpeed = 1f; // Speed at which the character moves
     [SerializeField] [Range(0f,10f)] float gravityMultiplier = 0f; // Intensity of the Gravity Multiplier applied to the character 
     [SerializeField] float sprintMultiplier = 1.5f; // Speed boost while sprinting (under SETTINGS)
+    [SerializeField] float walkAnimSpeed = 1f; // Animation playback speed while walking (1.5 = 1.5x)
+    float referenceSpeed; // The movementSpeed the character starts with
     
     [Header("STATUS")]
     [SerializeField] [ReadOnly] bool isCharacterFrozen; // Tracker if the character should be freezed or not (useful for dialogue events)
@@ -62,6 +64,8 @@ public class TwoPoint5DController : MonoBehaviour
                 // Logs a missing component if still not found
                 if (debuggerNiAin == null) MissingComponentLog("debuggerNiAin");
             }
+            
+            referenceSpeed = movementSpeed;
             
             // // Checks if our reference was null or not been set
             // if (spriteRoot == null)
@@ -149,6 +153,7 @@ public class TwoPoint5DController : MonoBehaviour
             Vector3 vertical = new Vector3(0f, freefallVelocity, 0f);
 
             ApplyAnimation();
+            ApplyAnimSpeed(currentSpeed);
 
             // Applies calculated movement to the character
             controller.Move((horizontal + vertical) * Time.deltaTime);
@@ -322,6 +327,16 @@ public class TwoPoint5DController : MonoBehaviour
             // Animates the character when NOT moving
             animator.SetBool("isMoving", false);
         }
+    }
+    
+    // Method to Manipulate Animation Speed
+    void ApplyAnimSpeed(float speed)
+    {
+        // How much faster/slower than the normal walking speed we're moving right now
+        float speedRatio = speed / Mathf.Max(referenceSpeed, 0.01f);
+
+        // Walking gives walkAnimSpeed, and everything else scales from it
+        animator.SetFloat("animSpeed", walkAnimSpeed * speedRatio);
     }
 
     #endregion
