@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,21 +5,42 @@ public class WiringRightWire : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private Image wireDesign;
-    [SerializeField] private TextMeshProUGUI symbolText;
+    [SerializeField] private Image symbolImage;
     [SerializeField] private RectTransform snapPoint;
 
     public int PairID { get; private set; }
 
     public RectTransform SnapPoint => snapPoint;
 
-    public void Initialize(int pairID, Color color, string symbol)
+    /*
+     * The left wire currently plugged into this one (right or wrong).
+     */
+    public WiringLeftWire Occupant { get; private set; }
+
+    public bool IsOccupied => Occupant != null;
+
+    public void Initialize(int pairID, Color color, Sprite symbol)
     {
         PairID = pairID;
+        Occupant = null;
 
         if (wireDesign != null)
             wireDesign.color = color;
 
-        if (symbolText != null)
-            symbolText.text = symbol;
+        if (symbolImage != null)
+        {
+            symbolImage.sprite = symbol;
+            symbolImage.enabled = symbol != null;
+        }
+    }
+
+    public void SetOccupant(WiringLeftWire wire)
+    {
+        Occupant = wire;
+    }
+
+    public void ClearOccupant()
+    {
+        Occupant = null;
     }
 }
