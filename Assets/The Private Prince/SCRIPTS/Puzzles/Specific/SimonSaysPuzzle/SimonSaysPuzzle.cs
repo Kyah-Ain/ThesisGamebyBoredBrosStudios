@@ -44,6 +44,8 @@ public class SimonSaysPuzzle : PuzzleBase
 
     private int mistakeCount = 0;
 
+    public bool restartFromFirstLevelOnMistake = false;
+
     [Header("Sequence Timing")]
     [Min(0.05f)]
     public float lightDuration = 0.4f;
@@ -63,10 +65,21 @@ public class SimonSaysPuzzle : PuzzleBase
     public TextMeshProUGUI mistakeText;
 
     [Header("Feedback Colors")]
-    public Color successColor = Color.green;
+    public Color successColor = Color.white;
     public Color mistakeColor = Color.red;
 
+    [Header("Feedback Flashes")]
+    [Min(1)] public int feedbackFlashCount = 3;
+    [Min(0.02f)] public float feedbackFlashOn = 0.12f;
+    [Min(0.02f)] public float feedbackFlashOff = 0.12f;
+
+    [Header("Completion Flashes")]
+    [Min(1)] public int completionFlashCount = 5;
+    [Min(0.02f)] public float completionFlashOn = 0.07f;
+    [Min(0.02f)] public float completionFlashOff = 0.07f;
+
     private List<Direction> sequence = new List<Direction>();
+    private List<List<Direction>> savedSequences = new List<List<Direction>>();
     private int currentInputIndex = 0;
     private int currentLevel = 0;
     private bool hasMadeDirectionalInput = false;
@@ -117,6 +130,10 @@ public class SimonSaysPuzzle : PuzzleBase
         currentLevel = 1;
         currentInputIndex = 0;
         mistakeCount = 0;
+        hasMadeDirectionalInput = false;
+        
+        savedSequences.Clear();
+        sequence.Clear();
 
         state = SimonState.ShowingSequence;
 
@@ -152,6 +169,17 @@ public class SimonSaysPuzzle : PuzzleBase
 
     private void GenerateSequenceForLevel()
     {
+        int levelIndex = currentLevel - 1;
+
+        // If this level's sequence was already generated, reuse it.
+        if (levelIndex >= 0 &&
+            levelIndex < savedSequences.Count &&
+            savedSequences[levelIndex] != null)
+        {
+            sequence = new List<Direction>(savedSequences[levelIndex]);
+            return;
+        }
+
         int requiredLength = GetCurrentLevelSequenceLength();
 
         if (!progressiveSequence)
@@ -160,14 +188,24 @@ public class SimonSaysPuzzle : PuzzleBase
             sequence.Clear();
         }
 
-        // If the existing sequence is already long enough,
-        // nothing needs to be added.
         while (sequence.Count < requiredLength)
         {
             Direction randomDirection =
                 (Direction)Random.Range(0, 4);
 
             sequence.Add(randomDirection);
+        }
+
+        // Save a copy so this level replays identically after a restart.
+        if (levelIndex >= 0)
+        {
+            while (savedSequences.Count <= levelIndex)
+            {
+                savedSequences.Add(null);
+            }
+
+            savedSequences[levelIndex] =
+                new List<Direction>(sequence);
         }
     }
 
@@ -361,42 +399,53 @@ public class SimonSaysPuzzle : PuzzleBase
     private void HandleMistake()
     {
         mistakeCount++;
-
         UpdateMistakeUI();
 
-        if (!unlimitedMistakes &&
-            mistakeCount > mistakeLimit)
+        if (sequenceCoroutine != null)
         {
-            FlashAllButtons(mistakeColor);
+            StopCoroutine(sequenceCoroutine);
+            sequenceCoroutine = null;
+        }
 
+        // Lock input during feedback.
+        state = SimonState.ShowingSequence;
+        SetDirectionButtonsInteractable(false);
+
+        bool shouldFail =
+            !unlimitedMistakes && mistakeCount > mistakeLimit;
+
+        StartCoroutine(MistakeFeedbackCoroutine(shouldFail));
+    }
+
+    private IEnumerator MistakeFeedbackCoroutine(bool shouldFail)
+    {
+        FlashAllButtons(
+            mistakeColor,
+            feedbackFlashCount,
+            feedbackFlashOn,
+            feedbackFlashOff
+        );
+
+        yield return new WaitForSecondsRealtime(
+            feedbackFlashCount * (feedbackFlashOn + feedbackFlashOff)
+        );
+
+        if (shouldFail)
+        {
             FailPuzzle();
-            return;
+            yield break;
         }
 
         currentInputIndex = 0;
         hasMadeDirectionalInput = false;
 
-        if (sequenceCoroutine != null)
+        if (restartFromFirstLevelOnMistake)
         {
-            StopCoroutine(sequenceCoroutine);
+            currentLevel = 1;
+            GenerateSequenceForLevel(); // loads the saved Level 1 sequence
         }
 
-        StartCoroutine(
-            MistakeFeedbackCoroutine()
-        );
-    }
-
-    private IEnumerator MistakeFeedbackCoroutine()
-    {
-        FlashAllButtons(mistakeColor);
-
-        yield return new WaitForSecondsRealtime(
-            0.3f
-        );
-
-        sequenceCoroutine = StartCoroutine(
-            ShowSequenceCoroutine()
-        );
+        sequenceCoroutine = StartCoroutine(ShowSequenceCoroutine());
     }
 
     private void UpdateMistakeUI()
@@ -421,28 +470,43 @@ public class SimonSaysPuzzle : PuzzleBase
 
         if (currentLevel >= numberOfLevels)
         {
-            FlashAllButtons(successColor);
-
+            // Block input immediately; end the puzzle after the flashes.
             state = SimonState.Completed;
-
-            PuzzleManager.Instance.EndPuzzle(
-                PuzzleResult.Solved
-            );
-
+            StartCoroutine(FinalCompletionCoroutine());
             return;
         }
 
-        StartCoroutine(
-            CompleteLevelFeedbackCoroutine()
+        state = SimonState.ShowingSequence;
+        StartCoroutine(CompleteLevelFeedbackCoroutine());
+    }
+
+    private IEnumerator FinalCompletionCoroutine()
+    {
+        FlashAllButtons(
+            successColor,
+            completionFlashCount,
+            completionFlashOn,
+            completionFlashOff
         );
+
+        yield return new WaitForSecondsRealtime(
+            completionFlashCount * (completionFlashOn + completionFlashOff)
+        );
+
+        PuzzleManager.Instance.EndPuzzle(PuzzleResult.Solved);
     }
 
     private IEnumerator CompleteLevelFeedbackCoroutine()
     {
-        FlashAllButtons(successColor);
+        FlashAllButtons(
+            successColor,
+            feedbackFlashCount,
+            feedbackFlashOn,
+            feedbackFlashOff
+        );
 
         yield return new WaitForSecondsRealtime(
-            0.3f
+            feedbackFlashCount * (feedbackFlashOn + feedbackFlashOff)
         );
 
         currentLevel++;
@@ -452,11 +516,7 @@ public class SimonSaysPuzzle : PuzzleBase
 
         GenerateSequenceForLevel();
 
-        state = SimonState.ShowingSequence;
-
-        sequenceCoroutine = StartCoroutine(
-            ShowSequenceCoroutine()
-        );
+        sequenceCoroutine = StartCoroutine(ShowSequenceCoroutine());
     }
 
     private void FailPuzzle()
@@ -512,39 +572,48 @@ public class SimonSaysPuzzle : PuzzleBase
 
     protected override void OnPuzzleReset()
     {
-        if (sequenceCoroutine != null)
-        {
-            StopCoroutine(sequenceCoroutine);
-            sequenceCoroutine = null;
-        }
+        StopAllCoroutines();
+        sequenceCoroutine = null;
 
         sequence.Clear();
+        savedSequences.Clear();
 
         currentLevel = 0;
         currentInputIndex = 0;
         mistakeCount = 0;
+        hasMadeDirectionalInput = false;
 
         state = SimonState.None;
 
+        ResetAllButtonVisuals();
         SetDirectionButtonsInteractable(false);
+    }
+
+    private void ResetAllButtonVisuals()
+    {
+        if (upButton != null) upButton.ResetVisual();
+        if (downButton != null) downButton.ResetVisual();
+        if (leftButton != null) leftButton.ResetVisual();
+        if (rightButton != null) rightButton.ResetVisual();
     }
 
     public int CurrentLevel => currentLevel;
     public int CurrentInput => currentInputIndex;
     public int SequenceLength => sequence.Count;
 
-    private void FlashAllButtons(Color color)
+    private void FlashAllButtons(
+        Color color, int count, float onDuration, float offDuration)
     {
         if (upButton != null)
-            upButton.FlashFeedback(color);
+            upButton.FlashFeedback(color, count, onDuration, offDuration);
 
         if (downButton != null)
-            downButton.FlashFeedback(color);
+            downButton.FlashFeedback(color, count, onDuration, offDuration);
 
         if (leftButton != null)
-            leftButton.FlashFeedback(color);
+            leftButton.FlashFeedback(color, count, onDuration, offDuration);
 
         if (rightButton != null)
-            rightButton.FlashFeedback(color);
+            rightButton.FlashFeedback(color, count, onDuration, offDuration);
     }
 }
