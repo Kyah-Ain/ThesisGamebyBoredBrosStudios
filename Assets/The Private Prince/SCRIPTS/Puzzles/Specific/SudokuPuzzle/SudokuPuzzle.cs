@@ -28,23 +28,15 @@ public class SudokuPuzzle : PuzzleBase
     [Header("Grid Lines")]
     public Image thinLinePrefab;
     public Image thickLinePrefab;
+    public float thinLineWidth = 50f;
+    public float thickLineWidth = 100f;
+
+    [Header("Number Sprites")]
+    [Tooltip("Index 0 = number 1, index 1 = number 2, etc.")]
+    public Sprite[] numberSprites;
 
     [Header("Selection UI")]
-    public TextMeshProUGUI modeText;
-    public TextMeshProUGUI selectedNumberText;
     public TextMeshProUGUI mistakeText;
-
-    [Header("Number Selection Arrows")]
-    public Image leftNumberArrow;
-    public Image rightNumberArrow;
-
-    [Header("Selected Number Colors")]
-    public Color selectedNumberCellModeColor = Color.gray;
-    public Color selectedNumberNumberModeColor = Color.white;
-
-    [Header("Arrow Colors")]
-    public Color arrowNormalColor = Color.gray;
-    public Color arrowPressedColor = Color.white;
 
     [Header("Controls")]
     public KeyCode selectKey = KeyCode.Return;
@@ -59,11 +51,23 @@ public class SudokuPuzzle : PuzzleBase
     private int subgridColumns;
     private int prefilledCount;
 
+    private float cellSize;
+    private float gridOffsetX;
+    private float gridOffsetY;
+    private float totalGridWidth;
+    private float totalGridHeight;
+
+    private float[] verticalLineX;
+    private float[] verticalLineWidths;
+    private float[] horizontalLineY;
+    private float[] horizontalLineHeights;
+
     private int[,] solution;
     private int[,] playerGrid;
     private bool[,] prefilled;
 
     private SudokuCell[,] cells;
+    private float gridPixelSize = 530f;
 
     private int selectedRow = 0;
     private int selectedColumn = 0;
@@ -289,31 +293,26 @@ public class SudokuPuzzle : PuzzleBase
     {
         ClearGrid();
 
+        UpdateGridPixelSize();
+        ComputeLayout();
+
+        // Lines first, so cells are created (and drawn) after them.
+        GenerateGridLines();
+
         cellContainer = new GameObject(
-            "Cells",
-            typeof(RectTransform)
-        ).GetComponent<RectTransform>();
+    "Cells",
+    typeof(RectTransform)
+).GetComponent<RectTransform>();
 
         cellContainer.SetParent(gridRoot, false);
 
-        cellContainer.anchorMin = Vector2.zero;
-        cellContainer.anchorMax = Vector2.one;
-        cellContainer.offsetMin = Vector2.zero;
-        cellContainer.offsetMax = Vector2.zero;
-
-        GridLayoutGroup layout =
-            cellContainer.gameObject.AddComponent<GridLayoutGroup>();
-
-        layout.constraint =
-            GridLayoutGroup.Constraint.FixedColumnCount;
-
-        layout.constraintCount = gridSize;
-
-        float cellSize = 600f / gridSize;
-
-        layout.cellSize = new Vector2(cellSize, cellSize);
-        layout.spacing = Vector2.zero;
-        layout.padding = new RectOffset(0, 0, 0, 0);
+        // Same anchoring as the lines: top-left anchor and pivot,
+        // with the container sitting exactly over the grid area.
+        cellContainer.anchorMin = new Vector2(0, 1);
+        cellContainer.anchorMax = new Vector2(0, 1);
+        cellContainer.pivot = new Vector2(0, 1);
+        cellContainer.sizeDelta = new Vector2(gridPixelSize, gridPixelSize);
+        cellContainer.anchoredPosition = Vector2.zero;
 
         cells = new SudokuCell[gridSize, gridSize];
 
@@ -324,11 +323,24 @@ public class SudokuPuzzle : PuzzleBase
                 SudokuCell cell =
                     Instantiate(cellPrefab, cellContainer);
 
-                cell.Setup(
-                    row,
-                    col,
-                    cellSize
-                );
+                RectTransform rect =
+                    cell.GetComponent<RectTransform>();
+
+                rect.anchorMin = new Vector2(0, 1);
+                rect.anchorMax = new Vector2(0, 1);
+                rect.pivot = new Vector2(0, 1);
+                rect.localScale = Vector3.one;
+                rect.localRotation = Quaternion.identity;
+
+                rect.sizeDelta = new Vector2(cellSize, cellSize);
+
+                // Cell sits just after its leading line.
+                float x = verticalLineX[col] + verticalLineWidths[col];
+                float y = horizontalLineY[row] + horizontalLineHeights[row];
+
+                rect.anchoredPosition = new Vector2(x, -y);
+
+                cell.Setup(row, col, cellSize, numberSprites);
 
                 cell.SetValue(playerGrid[row, col]);
                 cell.SetPrefilled(prefilled[row, col]);
@@ -336,8 +348,6 @@ public class SudokuPuzzle : PuzzleBase
                 cells[row, col] = cell;
             }
         }
-
-        GenerateGridLines();
     }
 
     private void ClearGrid()
@@ -355,48 +365,85 @@ public class SudokuPuzzle : PuzzleBase
         }
     }
 
+    private void UpdateGridPixelSize()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(gridRoot);
+
+        float size = Mathf.Min(gridRoot.rect.width, gridRoot.rect.height);
+
+        // Fallback if the hierarchy hasn't been laid out yet.
+        gridPixelSize = size > 0f ? size : 530f;
+    }
+
     // ---------------------------------------------------------
     // GRID LINES
     // ---------------------------------------------------------
 
+    private void ComputeLayout()
+    {
+        verticalLineWidths = new float[gridSize + 1];
+        horizontalLineHeights = new float[gridSize + 1];
+        verticalLineX = new float[gridSize + 1];
+        horizontalLineY = new float[gridSize + 1];
+
+        float totalVertical = 0f;
+        float totalHorizontal = 0f;
+
+        for (int i = 0; i <= gridSize; i++)
+        {
+            verticalLineWidths[i] =
+                (i % subgridColumns == 0) ? thickLineWidth : thinLineWidth;
+
+            horizontalLineHeights[i] =
+                (i % subgridRows == 0) ? thickLineWidth : thinLineWidth;
+
+            totalVertical += verticalLineWidths[i];
+            totalHorizontal += horizontalLineHeights[i];
+        }
+
+        // Cells are square, so use the more restrictive axis.
+        cellSize = Mathf.Min(
+            (gridPixelSize - totalVertical) / gridSize,
+            (gridPixelSize - totalHorizontal) / gridSize
+        );
+
+        totalGridWidth = cellSize * gridSize + totalVertical;
+        totalGridHeight = cellSize * gridSize + totalHorizontal;
+
+        // Center the whole grid inside gridRoot.
+        gridOffsetX = (gridPixelSize - totalGridWidth) * 0.5f;
+        gridOffsetY = (gridPixelSize - totalGridHeight) * 0.5f;
+
+        float runningX = gridOffsetX;
+        float runningY = gridOffsetY;
+
+        for (int i = 0; i <= gridSize; i++)
+        {
+            verticalLineX[i] = runningX;
+            horizontalLineY[i] = runningY;
+
+            runningX += verticalLineWidths[i] + cellSize;
+            runningY += horizontalLineHeights[i] + cellSize;
+        }
+
+        Debug.Log($"gridPixelSize={gridPixelSize} cellSize={cellSize} " + 
+            $"x[1]={verticalLineX[1]} y[1]={horizontalLineY[1]}");
+    }
+
     private void GenerateGridLines()
     {
-        float cellSize = 600f / gridSize;
-
-        // Vertical lines
-        for (int column = 0; column <= gridSize; column++)
+        for (int i = 0; i <= gridSize; i++)
         {
-            bool thick =
-                column % subgridColumns == 0;
-
-            CreateVerticalLine(
-                column * cellSize,
-                thick,
-                cellSize
-            );
-        }
-
-        // Horizontal lines
-        for (int row = 0; row <= gridSize; row++)
-        {
-            bool thick =
-                row % subgridRows == 0;
-
-            CreateHorizontalLine(
-                row * cellSize,
-                thick,
-                cellSize
-            );
+            CreateVerticalLine(i);
+            CreateHorizontalLine(i);
         }
     }
 
-    private void CreateVerticalLine(
-        float x,
-        bool thick,
-        float cellSize)
+    private void CreateVerticalLine(int index)
     {
-        Image prefab =
-            thick ? thickLinePrefab : thinLinePrefab;
+        bool thick = index % subgridColumns == 0;
+
+        Image prefab = thick ? thickLinePrefab : thinLinePrefab;
 
         if (prefab == null)
             return;
@@ -407,26 +454,20 @@ public class SudokuPuzzle : PuzzleBase
 
         rect.anchorMin = new Vector2(0, 1);
         rect.anchorMax = new Vector2(0, 1);
-
-        rect.pivot = new Vector2(0.5f, 1);
-
-        float width =
-            thick ? 5f : 1.5f;
+        rect.pivot = new Vector2(0, 1);
 
         rect.sizeDelta =
-            new Vector2(width, 600f);
+            new Vector2(verticalLineWidths[index], totalGridHeight);
 
         rect.anchoredPosition =
-            new Vector2(x, 0);
+            new Vector2(verticalLineX[index], -gridOffsetY);
     }
 
-    private void CreateHorizontalLine(
-        float y,
-        bool thick,
-        float cellSize)
+    private void CreateHorizontalLine(int index)
     {
-        Image prefab =
-            thick ? thickLinePrefab : thinLinePrefab;
+        bool thick = index % subgridRows == 0;
+
+        Image prefab = thick ? thickLinePrefab : thinLinePrefab;
 
         if (prefab == null)
             return;
@@ -437,17 +478,13 @@ public class SudokuPuzzle : PuzzleBase
 
         rect.anchorMin = new Vector2(0, 1);
         rect.anchorMax = new Vector2(0, 1);
-
-        rect.pivot = new Vector2(0, 0.5f);
-
-        float height =
-            thick ? 5f : 1.5f;
+        rect.pivot = new Vector2(0, 1);
 
         rect.sizeDelta =
-            new Vector2(600f, height);
+            new Vector2(totalGridWidth, horizontalLineHeights[index]);
 
         rect.anchoredPosition =
-            new Vector2(0, -y);
+            new Vector2(gridOffsetX, -horizontalLineY[index]);
     }
 
     // ---------------------------------------------------------
@@ -460,15 +497,9 @@ public class SudokuPuzzle : PuzzleBase
             return;
 
         if (inputMode == InputMode.SelectingCell)
-        {
             HandleCellSelection();
-        }
         else
-        {
             HandleNumberSelection();
-        }
-
-        UpdateArrowVisuals();
     }
 
     private void HandleCellSelection()
@@ -561,11 +592,14 @@ public class SudokuPuzzle : PuzzleBase
         if (cells == null)
             return;
 
+        bool showSelection = inputMode == InputMode.SelectingCell;
+
         for (int row = 0; row < gridSize; row++)
         {
             for (int col = 0; col < gridSize; col++)
             {
                 bool selected =
+                    showSelection &&
                     row == selectedRow &&
                     col == selectedColumn;
 
@@ -650,53 +684,17 @@ public class SudokuPuzzle : PuzzleBase
 
     private void UpdateInputUI()
     {
-        bool numberMode =
-            inputMode == InputMode.SelectingNumber;
+        if (cells == null)
+            return;
 
-        // ---------------------------------------------------------
-        // MODE TEXT
-        // ---------------------------------------------------------
+        SudokuCell cell = cells[selectedRow, selectedColumn];
 
-        if (modeText != null)
-        {
-            if (numberMode)
-            {
-                modeText.text =
-                    "Select Number\nWASD + Enter";
-            }
-            else
-            {
-                modeText.text =
-                    "Select Cell\nWASD + Enter";
-            }
-        }
+        if (inputMode == InputMode.SelectingNumber)
+            cell.SetPreview(selectedNumber);
+        else
+            cell.ClearPreview();
 
-        // ---------------------------------------------------------
-        // SELECTED NUMBER
-        // ---------------------------------------------------------
-
-        if (selectedNumberText != null)
-        {
-            selectedNumberText.text =
-                selectedNumber.ToString();
-
-            selectedNumberText.color =
-                numberMode
-                    ? selectedNumberNumberModeColor
-                    : selectedNumberCellModeColor;
-        }
-
-        // ---------------------------------------------------------
-        // ARROWS
-        // ---------------------------------------------------------
-
-        if (leftNumberArrow != null)
-            leftNumberArrow.gameObject.SetActive(numberMode);
-
-        if (rightNumberArrow != null)
-            rightNumberArrow.gameObject.SetActive(numberMode);
-
-        UpdateArrowVisuals();
+        UpdateSelection();
     }
 
     private void UpdateMistakeUI()
@@ -705,36 +703,6 @@ public class SudokuPuzzle : PuzzleBase
             return;
 
         mistakeText.text = $"Mistakes: {mistakes}/{maxMistakes}";
-    }
-
-    private void UpdateArrowVisuals()
-    {
-        if (inputMode != InputMode.SelectingNumber)
-            return;
-
-        bool leftPressed =
-            Input.GetKey(KeyCode.A) ||
-            Input.GetKey(KeyCode.S);
-
-        bool rightPressed =
-            Input.GetKey(KeyCode.D) ||
-            Input.GetKey(KeyCode.W);
-
-        if (leftNumberArrow != null)
-        {
-            leftNumberArrow.color =
-                leftPressed
-                    ? arrowPressedColor
-                    : arrowNormalColor;
-        }
-
-        if (rightNumberArrow != null)
-        {
-            rightNumberArrow.color =
-                rightPressed
-                    ? arrowPressedColor
-                    : arrowNormalColor;
-        }
     }
 
     // ---------------------------------------------------------

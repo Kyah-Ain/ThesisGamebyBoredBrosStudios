@@ -287,6 +287,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Puzzle Submit",
+                    "type": "Button",
+                    "id": "851c2fb6-fed9-4532-83c9-1505fb17ab86",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Cancel",
                     "type": "Button",
                     "id": "ba53f414-9c6d-43cd-ac2a-2c63de539625",
@@ -303,6 +312,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Restart",
+                    "type": "Button",
+                    "id": "9e3182f9-d329-4ae7-b946-e34e57cd62a5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -481,6 +499,61 @@
                     "action": "NavigateUI",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "f3a2a934-82bc-4bfa-9a8e-5684907aa328",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NavigateUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9cc1d8bf-b04f-4a2f-90fa-1e6412b3c518",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard & Mouse",
+                    "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "15307e55-6f28-4325-8bc5-93c0eb12b333",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad Controller",
+                    "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35aaad0c-0525-4738-84c6-75c82f0c4ab9",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard & Mouse",
+                    "action": "Puzzle Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "833d5a80-fb17-4815-8ae9-16d6df1882aa",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad Controller",
+                    "action": "Puzzle Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
