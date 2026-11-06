@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.InputSystem;
+
 public class AmogusWiringPuzzle : PuzzleBase
 {
     private enum WiringState
@@ -44,9 +46,9 @@ public class AmogusWiringPuzzle : PuzzleBase
     [Header("Keys")]
     [Tooltip("Selects a wire to move. Kept configurable in case " +
              "console bindings are added later.")]
-    [SerializeField] private KeyCode interactKey = KeyCode.E;
+    // [SerializeField] private KeyCode interactKey = KeyCode.E;
 
-    [SerializeField] private KeyCode restartKey = KeyCode.R;
+    // [SerializeField] private KeyCode restartKey = KeyCode.R;
 
     [Header("Wire Appearance")]
     [SerializeField]
@@ -88,7 +90,9 @@ public class AmogusWiringPuzzle : PuzzleBase
     public override void StartPuzzle()
     {
         base.StartPuzzle();
-
+        puzzleActive = true;
+        navigateInput = Vector2.zero;
+        
         if (!puzzleGenerated)
             GeneratePuzzle();
 
@@ -102,6 +106,8 @@ public class AmogusWiringPuzzle : PuzzleBase
     {
         ClearPuzzle();
 
+        puzzleActive = false;
+        
         puzzleGenerated = false;
         movingWire = null;
         releasedFrom = null;
@@ -133,81 +139,185 @@ public class AmogusWiringPuzzle : PuzzleBase
 
         SelectFirstAvailableWire();
     }
-
-
+    
     // =========================================================
     // INPUT
     // =========================================================
 
+    private const float NavigateThreshold = 0.5f;
+
+    // Latest value from the Navigate action (zero when released)
+    private Vector2 navigateInput;
+
+    // Only react to input while this puzzle is actually being played
+    private bool puzzleActive;
+
+    public virtual void OnEnable()  { Subscribe(); }
+    void OnDisable()                { Unsubscribe(); }
+
+    // ----------------------- SUBSCRIPTION METHODS -------------------------
+
+    // Method to subscribe to events as a listener
+    public void Subscribe()
+    {
+        // Proceeds only if the Input Control manager was found
+        if (GameEventsManager.Instance == null) return;
+
+        // SUBSCRIBE METHODS to the input action events
+        var input = GameEventsManager.Instance.inputEvents;
+        input.onNavigate += OnNavigate;
+        input.onPuzzleSubmit += OnPuzzleSubmit;
+        input.onRestart  += OnRestart;
+    }
+
+    // Method to unsubscribe from events 
+    public void Unsubscribe()
+    {
+        // A "canceled" event will never arrive once we're unsubscribed,
+        // so clear the stored value to avoid a stuck direction.
+        navigateInput = Vector2.zero;
+        
+        // Proceeds only if the Input Control manager was found
+        if (GameEventsManager.Instance == null) return;
+
+        // UNSUBSCRIBE METHODS to the input action events
+        var input = GameEventsManager.Instance.inputEvents;
+        input.onNavigate -= OnNavigate;
+        input.onPuzzleSubmit -= OnPuzzleSubmit;
+        input.onRestart  -= OnRestart;
+    }
+
+    #region AIN's NEW INPUTS
+
+    private void OnNavigate(InputAction.CallbackContext ctx)
+    {
+        Vector2 previous = navigateInput;
+        navigateInput = ctx.ReadValue<Vector2>(); // zero on canceled
+
+        if (!puzzleActive || currentState != WiringState.Selecting)
+            return;
+
+        // Step only when crossing the threshold, not every time the value
+        // changes. This stops a stick from firing many steps in one push.
+        if (navigateInput.y > NavigateThreshold &&
+            previous.y <= NavigateThreshold)
+        {
+            MoveSelection(-1);   // up
+        }
+        else if (navigateInput.y < -NavigateThreshold &&
+                 previous.y >= -NavigateThreshold)
+        {
+            MoveSelection(1);    // down
+        }
+    }
+
+    private void OnPuzzleSubmit(InputAction.CallbackContext ctx)
+    {
+        if (!puzzleActive || currentState != WiringState.Selecting)
+            return;
+
+        BeginMovingSelectedWire();
+    }
+
+    private void OnRestart(InputAction.CallbackContext ctx)
+    {
+        if (!puzzleActive) return;
+
+        RestartPuzzle();
+    }
+
+    // Called every frame by your PuzzleManager. Only continuous
+    // plug movement needs polling now.
     public override void HandleInput()
     {
-        if (Input.GetKeyDown(restartKey))
+        if (!puzzleActive ||
+            currentState != WiringState.MovingPlug ||
+            movingWire == null ||
+            navigateInput == Vector2.zero)
         {
-            RestartPuzzle();
             return;
         }
 
-        if (currentState == WiringState.Selecting)
-        {
-            HandleSelectionInput();
-        }
-        else
-        {
-            HandlePlugMovementInput();
-        }
+        movingWire.MovePlug(
+            Vector2.ClampMagnitude(navigateInput, 1f) * movementStep
+        );
+
+        ClampPlugToPuzzle();
+        CheckForSnap();
     }
 
+    #endregion
 
-    private void HandleSelectionInput()
-    {
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            MoveSelection(-1);
-        }
+    #region PAGBILAO's OLD INPUTS
 
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            MoveSelection(1);
-        }
-
-        if (Input.GetKeyDown(interactKey))
-        {
-            BeginMovingSelectedWire();
-        }
-    }
-
-
-    private void HandlePlugMovementInput()
-    {
-        if (movingWire == null)
-            return;
-
-        Vector2 movement = Vector2.zero;
-
-        if (Input.GetKey(KeyCode.W))
-            movement += Vector2.up;
-
-        if (Input.GetKey(KeyCode.S))
-            movement += Vector2.down;
-
-        if (Input.GetKey(KeyCode.A))
-            movement += Vector2.left;
-
-        if (Input.GetKey(KeyCode.D))
-            movement += Vector2.right;
-
-        if (movement != Vector2.zero)
-        {
-            movingWire.MovePlug(
-                movement.normalized * movementStep
-            );
-
-            ClampPlugToPuzzle();
-
-            CheckForSnap();
-        }
-    }
-
+    // public override void HandleInput()
+    // {
+    //     if (Input.GetKeyDown(restartKey))
+    //     {
+    //         RestartPuzzle();
+    //         return;
+    //     }
+    //
+    //     if (currentState == WiringState.Selecting)
+    //     {
+    //         HandleSelectionInput();
+    //     }
+    //     else
+    //     {
+    //         HandlePlugMovementInput();
+    //     }
+    // }
+    //
+    // private void HandleSelectionInput()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.W))
+    //     {
+    //         MoveSelection(-1);
+    //     }
+    //
+    //     if (Input.GetKeyDown(KeyCode.S))
+    //     {
+    //         MoveSelection(1);
+    //     }
+    //
+    //     if (Input.GetKeyDown(interactKey))
+    //     {
+    //         BeginMovingSelectedWire();
+    //     }
+    // }
+    //
+    // private void HandlePlugMovementInput()
+    // {
+    //     if (movingWire == null)
+    //         return;
+    //
+    //     Vector2 movement = Vector2.zero;
+    //
+    //     if (Input.GetKey(KeyCode.W))
+    //         movement += Vector2.up;
+    //
+    //     if (Input.GetKey(KeyCode.S))
+    //         movement += Vector2.down;
+    //
+    //     if (Input.GetKey(KeyCode.A))
+    //         movement += Vector2.left;
+    //
+    //     if (Input.GetKey(KeyCode.D))
+    //         movement += Vector2.right;
+    //
+    //     if (movement != Vector2.zero)
+    //     {
+    //         movingWire.MovePlug(
+    //             movement.normalized * movementStep
+    //         );
+    //
+    //         ClampPlugToPuzzle();
+    //
+    //         CheckForSnap();
+    //     }
+    // }
+    
+    #endregion
 
     // =========================================================
     // SELECTION

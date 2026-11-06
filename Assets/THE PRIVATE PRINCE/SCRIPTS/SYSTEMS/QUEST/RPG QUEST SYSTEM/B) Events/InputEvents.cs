@@ -15,7 +15,11 @@ public class InputEvents
     [field: Header("UI EVENTS")]
     public event Action<InputAction.CallbackContext> onSubmit;
     public event Action<InputAction.CallbackContext> onNavigate;
+    public event Action<InputAction.CallbackContext> onRestart;
     public event Action<InputAction.CallbackContext> onCancel;
+    
+    [field: Header("PUZZLE EVENTS")]
+    public event Action<InputAction.CallbackContext> onPuzzleSubmit;
     
     // ------------------------- VARIABLES -------------------------
     
@@ -28,7 +32,11 @@ public class InputEvents
     [Header("UI ACTIONS")]
     private readonly InputAction submitAction;
     private readonly InputAction navigateAction;
+    private readonly InputAction restartAction;
     private readonly InputAction cancelAction;
+    
+    [Header("PUZZLE ACTIONS")]
+    private readonly InputAction puzzleSubmit;
     
     // ----------------------- CONSTRUCTOR -------------------------
 
@@ -46,8 +54,12 @@ public class InputEvents
             // -------------------- UI ACTIONS --------------------
             submitAction = ppControls.UI.Submit;
             navigateAction = ppControls.UI.NavigateUI;
+            restartAction = ppControls.UI.Restart;
             cancelAction = ppControls.UI.Cancel;
-
+            
+            // -------------------- PUZZLE ACTIONS --------------------
+            puzzleSubmit = ppControls.UI.PuzzleSubmit;
+            
         #endregion
 
         #region EVENT TRIGGERS
@@ -65,7 +77,12 @@ public class InputEvents
             // ----------------- UI EVENT TRIGGER ------------------
             submitAction.performed += SubmitPress;
             navigateAction.performed += OnNavigate;
+            navigateAction.canceled += OnNavigate;
+            restartAction.performed += OnRestart;
             cancelAction.performed += OnCancel;
+            
+            // ---------------- PUZZLE EVENT TRIGGER ------------------
+            puzzleSubmit.performed += SubmitPuzzlePress;
 
         #endregion
     }
@@ -114,11 +131,27 @@ public class InputEvents
             onNavigate?.Invoke(context);
         }
         
+        void OnRestart(InputAction.CallbackContext context)
+        {
+            // Broadcast the input to every subscribed script
+            onRestart?.Invoke(context);
+        }
+        
         void OnCancel(InputAction.CallbackContext context)
         {
             // Broadcast the input to every subscribed script
             onCancel?.Invoke(context);
         }
+
+    #endregion
+    
+    #region for PUZZLE
+    
+    void SubmitPuzzlePress(InputAction.CallbackContext context)
+    {
+        // Broadcast the input to every subscribed script
+        onPuzzleSubmit?.Invoke(context);
+    }
 
     #endregion
     
@@ -139,7 +172,11 @@ public class InputEvents
         
         submitAction.performed -= SubmitPress;
         navigateAction.performed -= OnNavigate;
+        navigateAction.canceled -= OnNavigate;
+        restartAction.performed -= OnRestart;
         cancelAction.performed -= OnCancel;
+        
+        puzzleSubmit.performed -= SubmitPuzzlePress;
     }
 
     #endregion
