@@ -1,4 +1,4 @@
-using System.Collections; // Grants access to collecitons structures like ArrayLists and Hashtables
+using System.Collections; // Grants access to collections structures like ArrayLists and Hashtables
 using System.Collections.Generic; // Grants access to collections structures like Lists and Dictionaries
 using UnityEngine; // Grants access to Unity's core classes and functions like MonoBehaviour, GameObject
 
@@ -28,8 +28,8 @@ public class AIMovement : MonoBehaviour
     // Types of executing the starting Movement of the NPC
     enum MoveStartingType
     {
-        ExecuteManually,
-        ExecuteOnEnable
+        ExecuteManually,    // Stands still (stations stay assigned) until StartMovementLoop or SetRoaming(true) is called
+        ExecuteOnEnable     // Starts roaming the moment the object is enabled
     }
     
     // Types of NPC behavior when reaching a station
@@ -66,7 +66,7 @@ public class AIMovement : MonoBehaviour
     [SerializeField, Min(0f)] float repathDistance = 0f; // How far a station must move before the AI re-paths (0 = any movement)
 
     [Header("ANIMATION SETTINGS")]
-    public StopAnimType stopAnimType = StopAnimType.LastFacingDirection; // ...
+    public StopAnimType stopAnimType = StopAnimType.LastFacingDirection; // What the AI does with its animation when it stops
     [SerializeField] float walkAnimSpeed = 1f; // NEW: Animation playback speed while walking at the starting NavMeshAgent speed (1.5 = 1.5x)
     
     [Header("OTHERS")]
@@ -82,22 +82,33 @@ public class AIMovement : MonoBehaviour
     [SerializeField, ReadOnly] bool isPaused; // Tracks if the AI is currently frozen by PauseMovement, so the loop doesn't pick new destinations meanwhile
     [SerializeField, ReadOnly] int playersInside; // Counts how many Player colliders are inside the trigger, so one collider leaving doesn't resume the AI while another is still inside
     
-    [Header("COROUTINE")]
+    // ------------------------ PRIVATE VARIABLES -------------------------
+    
+    // COROUTINE
     private Coroutine activeExecuteLoop; // Holds the current loop for navPath tick rate call
     private Coroutine activeRepathLoop; // Holds the fast re-path loop
     WaitForSeconds tickWait; // Cached delay between calls, so no garbage is created every loop
     YieldInstruction repathWait; // Cached delay for the re-path loop (a physics-step wait when the tick rate is 0)
     
-    // Time when the current pause started, used to extend the wait timer by the paused duration
-    float pauseStartTime;
+    // PAUSING
+    float pauseStartTime; // Time when the current pause started, used to extend the wait timer by the paused duration
     
-    // The last station position that was sent to the agent, used to detect if the station has moved
-    Vector3 lastSentPosition;
+    // PATHING
+    Vector3 lastSentPosition; // The last station position that was sent to the agent, used to detect if the station has moved
     
-    // NEW: The NavMeshAgent speed the AI starts with, used as the "normal" walking speed for the animation ratio
-    float referenceSpeed;
+    // ANIMATION
+    float referenceSpeed; // NEW: The NavMeshAgent speed the AI starts with, used as the "normal" walking speed for the animation ratio
+    
+    // ------------------------- PROPERTIES -------------------------
+    
+    // Where the sprite is currently facing (Xinput, Yinput). (Defaults to front)
+    public Vector2 FacingDirection { get; private set; } = Vector2.down;
+    
+    // NEW: Whether the AI's movement loop is currently running (true = roaming its stations, false = standing)
+    public bool IsRoaming => activeExecuteLoop != null;
     
     // ---------------------- PACKED METHODS -------------------------
+    // Shortcuts for ChangeAnimStop, so they can be picked directly from a UnityEvent in the Inspector
     
     public void FaceLastStateWhenStopped() => ChangeAnimStop(StopAnimType.LastFacingDirection);
     public void FaceFrontWhenStopped() => ChangeAnimStop(StopAnimType.FaceFront);
@@ -105,9 +116,6 @@ public class AIMovement : MonoBehaviour
     public void FaceLeftWhenStopped() => ChangeAnimStop(StopAnimType.FaceLeft);
     public void FaceRightWhenStopped() => ChangeAnimStop(StopAnimType.FaceRight);
     public void CustomAnimWhenStopped() => ChangeAnimStop(StopAnimType.CustomAnim);
-    
-    // Where the sprite is currently facing (Xinput, Yinput). (Defaults to front)
-    public Vector2 FacingDirection { get; private set; } = Vector2.down;
     
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -269,6 +277,37 @@ public class AIMovement : MonoBehaviour
         hasDeparted = true;
     }
     
+    // Method to switch between standing still and roaming the stations from code or a UnityEvent
+    public void SetRoaming(bool value)
+    {
+        if (value)
+        {
+            // Starts the movement loop (does nothing if it's already running)
+            StartMovementLoop();
+        }
+        else
+        {
+            // Stops picking new destinations
+            StopMovementLoop();
+            
+            // Cancels the current walk, so the AI stops where it stands instead of finishing its path
+            // (skipped if the agent isn't on a baked NavMesh, otherwise Unity logs an error)
+            if (navAgent.isOnNavMesh)
+            {
+                navAgent.ResetPath();
+                
+                // Kills the deceleration glide, so the AI stops right away instead of sliding to a halt
+                navAgent.velocity = Vector3.zero;
+            }
+            
+            // Clears the roaming state, so the next start begins fresh (no leftover wait, no chasing the old station)
+            // (currentStation is left alone on purpose, so roaming continues from the next station in the list)
+            activeStation = null;
+            isWaiting = false;
+            hasDeparted = false;
+        }
+    }
+    
     // Method to freeze the AI
     public void PauseMovement()
     {
@@ -365,27 +404,16 @@ public class AIMovement : MonoBehaviour
         animator.SetFloat("animSpeed", walkAnimSpeed * speedRatio);
     }
     
-    // Method to change the stopped animation type from code
-    public void ChangeAnimStop(StopAnimType newType)
+    // Method to apply the corresponding animation based on Input
+    void BlendTreeAnimator(float x, float y)
     {
-        stopAnimType = newType;
-
-        // Applies the new type right away if the AI is currently standing still
-        if (HasReachedDestination()) AnimateStop();
-        // if (!wasMoving) AnimateStop();
+        FacingDirection = new Vector2(x, y);
         
-        Debug.Log($"[{name}] ChangeAnimStop -> {newType}, reached: {HasReachedDestination()}");
+        // Fetches the AI's direction to the Blend Tree
+        animator.SetFloat("Xinput", x);
+        animator.SetFloat("Yinput", y);
     }
-
-    // Method to change the stopped animation type from a UnityEvent in the Inspector
-    public void ChangeAnimStopByIndex(int index)
-    {
-        // Ignores numbers that don't match any enum value
-        if (!System.Enum.IsDefined(typeof(StopAnimType), index)) return;
-
-        ChangeAnimStop((StopAnimType)index);
-    }
-
+    
     // Method to animate the stop differently
     public void AnimateStop()
     {
@@ -415,6 +443,27 @@ public class AIMovement : MonoBehaviour
         }
         
         Debug.Log($"[{name}] AnimateStop with {stopAnimType}");
+    }
+    
+    // Method to change the stopped animation type from code
+    public void ChangeAnimStop(StopAnimType newType)
+    {
+        stopAnimType = newType;
+
+        // Applies the new type right away if the AI is currently standing still
+        if (HasReachedDestination()) AnimateStop();
+        // if (!wasMoving) AnimateStop();
+        
+        Debug.Log($"[{name}] ChangeAnimStop -> {newType}, reached: {HasReachedDestination()}");
+    }
+
+    // Method to change the stopped animation type from a UnityEvent in the Inspector
+    public void ChangeAnimStopByIndex(int index)
+    {
+        // Ignores numbers that don't match any enum value
+        if (!System.Enum.IsDefined(typeof(StopAnimType), index)) return;
+
+        ChangeAnimStop((StopAnimType)index);
     }
     
     #endregion
@@ -606,16 +655,6 @@ public class AIMovement : MonoBehaviour
         // !navAgent.hasPath  -> the AI has no path left, meaning it finished its route (or never had one)
         // navAgent.velocity.sqrMagnitude == 0f  -> the AI has fully stopped moving (squared magnitude skips a square root, so it's cheaper than .magnitude)
         return !navAgent.hasPath || navAgent.velocity.sqrMagnitude == 0f;
-    }
-    
-    // Method to apply the corresponding animation based on Input
-    void BlendTreeAnimator(float x, float y)
-    {
-        FacingDirection = new Vector2(x, y);
-        
-        // Fetches the AI's direction to the Blend Tree
-        animator.SetFloat("Xinput", x);
-        animator.SetFloat("Yinput", y);
     }
 
     #endregion
