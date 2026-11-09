@@ -60202,7 +60202,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 60.000004
+  field of view: 50
   orthographic: 0
   orthographic size: 10
   m_Depth: 0
@@ -60228,8 +60228,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1824724658}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 77.66998, y: 3.2799072, z: -42.600006}
+  m_LocalRotation: {x: 0.0007106303, y: 0, z: 0, w: 0.9999998}
+  m_LocalPosition: {x: 73.17, y: 2.6322503, z: -32.586998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -165380,7 +165380,12 @@ PrefabInstance:
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.size
-      value: 10
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
+        type: 3}
+      propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
@@ -165395,12 +165400,12 @@ PrefabInstance:
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[9].m_Mode
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[10].m_Mode
-      value: 6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
@@ -165411,7 +165416,7 @@ PrefabInstance:
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[10].m_Target
       value: 
-      objectReference: {fileID: 1618693699}
+      objectReference: {fileID: 6633889506893442628}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
@@ -165445,7 +165450,7 @@ PrefabInstance:
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[8].m_CallState
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
@@ -165456,6 +165461,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[10].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
+        type: 3}
+      propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: QueueScene
       objectReference: {fileID: 0}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
@@ -165470,12 +165480,12 @@ PrefabInstance:
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[9].m_MethodName
-      value: StartQueuedSceneLoading
+      value: QueueScene
       objectReference: {fileID: 0}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[10].m_MethodName
-      value: SetActive
+      value: StartQueuedSceneLoading
       objectReference: {fileID: 0}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
@@ -165485,7 +165495,7 @@ PrefabInstance:
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[10].m_TargetAssemblyTypeName
-      value: UnityEngine.GameObject, UnityEngine
+      value: GameManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
@@ -165525,12 +165535,12 @@ PrefabInstance:
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[8].m_Arguments.m_StringArgument
-      value: Re-Core
+      value: Kirova_Exhibit_Hall_Cutscene
       objectReference: {fileID: 0}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
       propertyPath: onEventTriggered.m_PersistentCalls.m_Calls.Array.data[9].m_Arguments.m_StringArgument
-      value: Re-MainMenu
+      value: Re-Core
       objectReference: {fileID: 0}
     - target: {fileID: 4615285013512664245, guid: 0945274a7e1c74e40926006eecbc4403,
         type: 3}
