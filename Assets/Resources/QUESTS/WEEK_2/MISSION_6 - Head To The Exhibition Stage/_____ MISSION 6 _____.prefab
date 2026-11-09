@@ -501,7 +501,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   starterType: 4
-  useType: 1
+  useType: 0
   isResettable: 1
   addDelay: 1
   delayTime: 0
@@ -883,7 +883,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6602656648514815556
 Transform:
   m_ObjectHideFlags: 0
@@ -992,6 +992,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: Tutorial2
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6031513826834550179}
+        m_TargetAssemblyTypeName: AIMovement, Assembly-CSharp
+        m_MethodName: FaceBackWhenStopped
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial2
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 6787912686925524698}
         m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
@@ -1480,6 +1492,18 @@ MonoBehaviour:
   onBoolEventTriggered:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 6787912686925524698}
+        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
+        m_MethodName: CompleteQuest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1602507389372351280}
         m_TargetAssemblyTypeName: Starter, Assembly-CSharp
         m_MethodName: TriggerStart
@@ -1630,7 +1654,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8751990242876287288
 Transform:
   m_ObjectHideFlags: 0
@@ -1711,6 +1735,18 @@ MonoBehaviour:
   onDialogueStarted:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 7770476346721340107}
+        m_TargetAssemblyTypeName: UnityEngine.Collider, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 5163199257581108552}
         m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
         m_MethodName: ExecuteEvents
@@ -1722,6 +1758,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6031513826834550179}
+        m_TargetAssemblyTypeName: AIMovement, Assembly-CSharp
+        m_MethodName: FaceRightWhenStopped
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 6127408506771556149}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -4556,7 +4604,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 0
+        m_CallState: 2
   onQuestCanFinish:
     m_PersistentCalls:
       m_Calls:
@@ -4892,7 +4940,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8265441886506147322
 Transform:
   m_ObjectHideFlags: 0
@@ -5007,11 +5055,11 @@ MonoBehaviour:
   onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
-  starterType: 2
+  starterType: 0
   useType: 0
   isResettable: 1
   addDelay: 1
-  delayTime: 5
+  delayTime: 0
   requiredTag: Player
   _isToggledAlready: 0
   _isPlayerInRange: 0
@@ -5581,7 +5629,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
-        m_CallState: 2
+        m_CallState: 0
   onNarrationDone:
     m_PersistentCalls:
       m_Calls: []
@@ -6365,6 +6413,30 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6031513826834550179}
+        m_TargetAssemblyTypeName: AIMovement, Assembly-CSharp
+        m_MethodName: FaceBackWhenStopped
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7770476346721340107}
+        m_TargetAssemblyTypeName: UnityEngine.Collider, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 6127408506771556149}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -7967,7 +8039,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: f543dd34c77ef144c9c128aa15f24706,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 273579421371390841}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: f543dd34c77ef144c9c128aa15f24706,
     type: 3}
 --- !u!4 &440182045132532406 stripped
@@ -7976,6 +8052,24 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1239617137374712680}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1644885785556185813 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8653719598885068355, guid: f543dd34c77ef144c9c128aa15f24706,
+    type: 3}
+  m_PrefabInstance: {fileID: 1239617137374712680}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &273579421371390841
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644885785556185813}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1001 &4109690865894832579
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8237,7 +8331,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 681313953eae0b645a94b0b1e02aeca8,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4579879615457916199}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: 681313953eae0b645a94b0b1e02aeca8,
     type: 3}
 --- !u!4 &3325723721083240477 stripped
@@ -8246,6 +8344,24 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4109690865894832579}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4534915704092792958 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8653719598885068355, guid: 681313953eae0b645a94b0b1e02aeca8,
+    type: 3}
+  m_PrefabInstance: {fileID: 4109690865894832579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &4579879615457916199
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4534915704092792958}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1001 &5857168677940865986
 PrefabInstance:
   m_ObjectHideFlags: 0
