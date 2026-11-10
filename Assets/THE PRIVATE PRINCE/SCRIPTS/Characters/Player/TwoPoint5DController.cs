@@ -27,6 +27,11 @@ public class TwoPoint5DController : MonoBehaviour
     [SerializeField] float sprintMultiplier = 1.5f; // Speed boost while sprinting (under SETTINGS)
     [SerializeField] float walkAnimSpeed = 1f; // Animation playback speed while walking (1.5 = 1.5x)
     float referenceSpeed; // The movementSpeed the character starts with
+
+    [Header("FALL PROTECTION")]
+    [SerializeField] float terminalVelocity = -20f; // The fastest the character is allowed to fall (caps the freefall velocity)
+    [SerializeField] float groundedGraceTime = 0.1f; // How long (in seconds) the character may be "ungrounded" before gravity starts building up (ignores brief bump flickers)
+    [SerializeField] float killPlaneY = -20f; // If the character falls below this world Y position, it gets placed back to its last safe position
     
     [Header("STATUS")]
     [SerializeField] [ReadOnly] bool isCharacterFrozen; // Tracker if the character should be freezed or not (useful for dialogue events)
@@ -34,6 +39,8 @@ public class TwoPoint5DController : MonoBehaviour
     [SerializeField] [ReadOnly] float gravity = -9.81f; // Gravity force applied to the character (Earth based gravity)
     [SerializeField] [ReadOnly] float freefallVelocity = -1.0f; // Speed at which the character fall
     [SerializeField] [ReadOnly] Vector2 inputVector; // The current input value/coordinates
+    [SerializeField] [ReadOnly] float timeSinceGrounded; // How long the character has been continuously ungrounded (resets when grounded)
+    [SerializeField] [ReadOnly] Vector3 lastSafePosition; // The last position where the character was standing on the ground
     
     // ------------------- PUBLIC ACCESS METHODS -------------------------
 
@@ -66,6 +73,9 @@ public class TwoPoint5DController : MonoBehaviour
             }
             
             referenceSpeed = movementSpeed;
+
+            // Starts with the spawn position as the first known safe spot, so the void check always has something to return to
+            lastSafePosition = transform.position;
             
             // // Checks if our reference was null or not been set
             // if (spriteRoot == null)
@@ -103,6 +113,9 @@ public class TwoPoint5DController : MonoBehaviour
     private void Update()
     {
         MoveCharacter();
+
+        // Rescues the character if it somehow fell into the void
+        CheckVoid();
     }
 
     #endregion
@@ -227,14 +240,46 @@ public class TwoPoint5DController : MonoBehaviour
         // Checks if the character is currently in the air
         if (!controller.isGrounded)
         {
-            // Gradually increases the downward velocity based on gravity
-            freefallVelocity += gravity * gravityMultiplier * Time.deltaTime;
+            // Counts how long the character has been continuously ungrounded
+            timeSinceGrounded += Time.deltaTime;
+
+            // Only builds up gravity once the grace time has passed (ignores brief ungrounded flickers like bumping into an agent)
+            if (timeSinceGrounded > groundedGraceTime)
+            {
+                // Gradually increases the downward velocity based on gravity, but never faster than the terminal velocity
+                freefallVelocity = Mathf.Max(
+                    freefallVelocity + gravity * gravityMultiplier * Time.deltaTime,
+                    terminalVelocity
+                );
+            }
         }
         else
         {
+            // Resets the ungrounded timer since we're back on the ground
+            timeSinceGrounded = 0f;
+
             // Resets vertical velocity when grounded
             freefallVelocity = -1.0f;
+
+            // Remembers this spot as the last place the character was safely standing
+            lastSafePosition = transform.position;
         }
+    }
+
+    // Method for rescuing the character when it falls below the kill plane (the void)
+    void CheckVoid()
+    {
+        // Does nothing while the character is still above the kill plane
+        if (transform.position.y > killPlaneY) return;
+
+        // CharacterController overrides direct position changes, so it must be disabled briefly while teleporting
+        controller.enabled = false;
+        transform.position = lastSafePosition;
+        controller.enabled = true;
+
+        // Resets vertical velocity and the ungrounded timer so the character doesn't instantly fall again
+        freefallVelocity = -1.0f;
+        timeSinceGrounded = 0f;
     }
     
     // Method for animating the character

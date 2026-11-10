@@ -46,6 +46,7 @@ public class DialogueNarrator : MonoBehaviour
     [SerializeField][ReadOnly] protected int currentDialogueStep; // Tracker for what line we currently are in the dialogue lines
     [SerializeField][ReadOnly] protected int currentDialogueSet; // Tracker for what dialogue set (from dialogueLines) we currently are in
     [SerializeField][ReadOnly] protected int currentConversation; // Tracker for which conversation (from conversations) was picked
+    [SerializeField, ReadOnly] protected bool hasQuestionRaised; // ...
     
     // ----------------------- UNITY METHODS -------------------------
     #region UNITY METHODS
@@ -161,6 +162,9 @@ public class DialogueNarrator : MonoBehaviour
         // Only continue if this NPC already owns the active dialogue
         if (!IsMine(currentDialogueIdActive)) return;
 
+        // // Only proceed if there's no question raised
+        // if (hasQuestionRaised) return;
+        
         // Lets this narrator (or its child) decide how the dialogue proceeds
         AdvanceDialogue();
         // StartDialogue(dialogueID.speechLines[0]); 
@@ -247,6 +251,12 @@ public class DialogueNarrator : MonoBehaviour
         DisplayLine(lineToNarrate, GetSpeakerName());
     }
     
+    // ...
+    public void SetRaiseQuestion(bool state)
+    {
+        hasQuestionRaised = state;
+    }
+
     // Method to move to the next dialogue set that has lines (returns false if there's none left)
     bool TryMoveToNextSet()
     {
