@@ -9,18 +9,29 @@ public class TransitionTester : MonoBehaviour
     [SerializeField] private string nextScene;
     [SerializeField] private bool loadStartSceneOnPlay = true;
 
+    [Header("Loading rules")]
+    [Tooltip("If off, a scene that is already loaded will not be loaded again.")]
+    [SerializeField] private bool allowLoadingAlreadyLoadedScenes = false;
+
     [Header("Manual control")]
     [SerializeField] private bool manualControl;
     [Range(0f, 2f)]
     [SerializeField] private float scrub;
 
-    private string currentScene;
+    private Scene currentScene; // handle of the scene this script treats as current
     private bool wasManual;
     private bool busy;
 
     private IEnumerator Start()
     {
-        if (loadStartSceneOnPlay)
+        // If the start scene is already open, adopt it as the current scene
+        Scene existing = SceneManager.GetSceneByName(startScene);
+        if (existing.IsValid() && existing.isLoaded)
+        {
+            SceneManager.SetActiveScene(existing);
+            currentScene = existing;
+        }
+        else if (loadStartSceneOnPlay)
         {
             yield return LoadAndActivate(startScene);
         }
@@ -40,14 +51,29 @@ public class TransitionTester : MonoBehaviour
         }
     }
 
+    public void SetSceneToLoad(string scene)
+    {
+        nextScene = scene;
+    }
+
+    public void SetSceneToUnload(string scene)
+    {
+        startScene = scene;
+    }
+
+    public void SetAllowLoadingAlreadyLoadedScenes(bool allow)
+    {
+        allowLoadingAlreadyLoadedScenes = allow;
+    }
+
     public void Play()
     {
-        GoTo(currentScene == startScene ? nextScene : startScene);
+        GoTo(nextScene);
     }
 
     public void GoTo(string target)
     {
-        if (busy || target == currentScene)
+        if (busy || !CanLoad(target))
         {
             return;
         }
@@ -58,7 +84,7 @@ public class TransitionTester : MonoBehaviour
 
     public void ResetToStart()
     {
-        if (busy || currentScene == startScene)
+        if (busy || !CanLoad(startScene))
         {
             return;
         }
@@ -68,13 +94,42 @@ public class TransitionTester : MonoBehaviour
         StartCoroutine(SwapRoutine(startScene));
     }
 
+    private bool CanLoad(string sceneName)
+    {
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            return false;
+        }
+
+        if (allowLoadingAlreadyLoadedScenes)
+        {
+            return true;
+        }
+
+        Scene scene = SceneManager.GetSceneByName(sceneName);
+        bool alreadyLoaded = scene.IsValid() && scene.isLoaded;
+
+        if (alreadyLoaded)
+        {
+            Debug.LogWarning($"[TransitionTester] '{sceneName}' is already loaded. Enable 'Allow Loading Already Loaded Scenes' to load it again.");
+        }
+
+        return !alreadyLoaded;
+    }
+
     private IEnumerator SwapRoutine(string target)
     {
         busy = true;
-        string previous = currentScene;
+
+        // Scene to remove afterwards: the tracked one, or the start scene if nothing is tracked yet
+        Scene previous = currentScene.IsValid()
+            ? currentScene
+            : SceneManager.GetSceneByName(startScene);
+
         yield return LoadAndActivate(target);
 
-        if (!string.IsNullOrEmpty(previous) && previous != target)
+        // Only unload if the new scene actually loaded (currentScene changed) and the old one is still there
+        if (previous.IsValid() && previous.isLoaded && previous != currentScene)
         {
             yield return SceneManager.UnloadSceneAsync(previous);
         }
@@ -84,14 +139,22 @@ public class TransitionTester : MonoBehaviour
 
     private IEnumerator LoadAndActivate(string sceneName)
     {
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            yield break;
+        }
+
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        if (operation == null) yield break; // scene not in Build Settings or name is wrong
 
         while (!operation.isDone)
         {
             yield return null;
         }
 
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
-        currentScene = sceneName;
+        // The scene we just added is the last one in the list, which stays correct even with duplicates
+        Scene loaded = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
+        SceneManager.SetActiveScene(loaded);
+        currentScene = loaded;
     }
 }
