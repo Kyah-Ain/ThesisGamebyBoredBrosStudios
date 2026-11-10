@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ public class AmogusWiringPuzzle : PuzzleBase
     private enum WiringState
     {
         Selecting,
-        MovingPlug
+        MovingPlug,
+        Resetting
     }
 
     [Header("Wire Count")]
@@ -43,9 +45,9 @@ public class AmogusWiringPuzzle : PuzzleBase
     [Header("Snapping")]
     [SerializeField] private float snapDistance = 25f;
 
-    [Header("Keys")]
-    [Tooltip("Selects a wire to move. Kept configurable in case " +
-             "console bindings are added later.")]
+    //[Header("Keys")]
+    //[Tooltip("Selects a wire to move. Kept configurable in case " +
+    //         "console bindings are added later.")]
     // [SerializeField] private KeyCode interactKey = KeyCode.E;
 
     // [SerializeField] private KeyCode restartKey = KeyCode.R;
@@ -58,6 +60,12 @@ public class AmogusWiringPuzzle : PuzzleBase
     [SerializeField]
     private List<Sprite> symbols =
         new List<Sprite>();
+
+    [Header("Failure Reset")]
+    [Tooltip("Pause before the puzzle resets when every wire is plugged " +
+         "in but at least one is wrong.")]
+    [SerializeField] private float wrongResetDelay = 0.6f;
+    private Coroutine resetRoutine;
 
     private readonly List<WiringLeftWire> leftWires =
         new List<WiringLeftWire>();
@@ -104,6 +112,12 @@ public class AmogusWiringPuzzle : PuzzleBase
 
     protected override void OnPuzzleReset()
     {
+        if (resetRoutine != null)
+        {
+            StopCoroutine(resetRoutine);
+            resetRoutine = null;
+        }
+
         ClearPuzzle();
 
         puzzleActive = false;
@@ -122,6 +136,12 @@ public class AmogusWiringPuzzle : PuzzleBase
      */
     private void RestartPuzzle()
     {
+        if (resetRoutine != null)
+        {
+            StopCoroutine(resetRoutine);
+            resetRoutine = null;
+        }
+
         movingWire = null;
         releasedFrom = null;
 
@@ -507,6 +527,13 @@ public class AmogusWiringPuzzle : PuzzleBase
             return;
         }
 
+        if (AllWiresPlugged())
+        {
+            currentState = WiringState.Resetting;
+            resetRoutine = StartCoroutine(ResetAfterDelay());
+            return;
+        }
+
         currentState = WiringState.Selecting;
 
         if (correct)
@@ -523,6 +550,48 @@ public class AmogusWiringPuzzle : PuzzleBase
         }
     }
 
+    private bool AllWiresPlugged()
+    {
+        foreach (WiringLeftWire wire in leftWires)
+        {
+            if (wire.PluggedInto == null)
+                return false;
+        }
+
+        return true;
+    }
+
+
+    private IEnumerator ResetAfterDelay()
+    {
+        // Realtime so it still works if the game is paused while
+        // the puzzle is open.
+        yield return new WaitForSecondsRealtime(wrongResetDelay);
+
+        resetRoutine = null;
+        ResetWrongWires();
+    }
+
+
+    /*
+     * Partial reset: wrongly plugged wires go back to their start
+     * and free up their right wires. Correct connections stay.
+     */
+    private void ResetWrongWires()
+    {
+        movingWire = null;
+        releasedFrom = null;
+
+        foreach (WiringLeftWire left in leftWires)
+        {
+            if (!left.Solved)
+                left.ResetWire();
+        }
+
+        currentState = WiringState.Selecting;
+
+        SelectFirstAvailableWire();
+    }
 
     private bool AllWiresSolved()
     {
