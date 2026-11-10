@@ -1307,18 +1307,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 1649248698213335080}
-        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
-        m_MethodName: CompleteQuest
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
   onNarrationDone:
     m_PersistentCalls:
       m_Calls: []
@@ -1349,6 +1337,18 @@ MonoBehaviour:
           m_StringArgument: Tutorial2
           m_BoolArgument: 0
         m_CallState: 0
+      - m_Target: {fileID: 1649248698213335080}
+        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
+        m_MethodName: AdvanceQuest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial2
+          m_BoolArgument: 0
+        m_CallState: 2
   debuggerNiAin: {fileID: 4829337560907141602}
   profileTrigger: {fileID: 2420227478143864358}
   dialogueTrigger: {fileID: 2959378946204134293}
@@ -1387,7 +1387,19 @@ MonoBehaviour:
   dialogueTrigger: {fileID: 2959378946204134293}
   onEffectDone:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1649248698213335080}
+        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
+        m_MethodName: CompleteQuest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   <EnableNarrationEffect>k__BackingField: 1
   outputField: {fileID: 0}
   effectSpeed: 100
@@ -2803,9 +2815,9 @@ MonoBehaviour:
   onStart:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1649248698213335080}
-        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
-        m_MethodName: AdvanceQuest
+      - m_Target: {fileID: 2349525365881702994}
+        m_TargetAssemblyTypeName: Starter, Assembly-CSharp
+        m_MethodName: TriggerStart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3543,12 +3555,36 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 600252509411997962}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 9158528532021334714}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onQuestCanFinish:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2349525365881702994}
-        m_TargetAssemblyTypeName: Starter, Assembly-CSharp
-        m_MethodName: TriggerStart
+      - m_Target: {fileID: 1649248698213335080}
+        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
+        m_MethodName: CompleteQuest
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3573,7 +3609,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 447307887336712574}
+      - m_Target: {fileID: 600252509411997962}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -3584,7 +3620,19 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 0
+        m_CallState: 2
+      - m_Target: {fileID: 9158528532021334714}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   debuggerNiAin: {fileID: 3210454867301580526}
   QuestInfo: {fileID: 11400000, guid: 43b751adaf9f01c4a8c1e5b55ba6bb26, type: 2}
   _questId: 
@@ -4452,6 +4500,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onQuestCanStart:
     m_PersistentCalls:
+      m_Calls: []
+  onQuestStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  onQuestCanFinish:
+    m_PersistentCalls:
+      m_Calls: []
+  onQuestEnded:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 447307887336712574}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -4465,17 +4522,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onQuestStarted:
-    m_PersistentCalls:
-      m_Calls: []
-  onQuestCanFinish:
-    m_PersistentCalls:
-      m_Calls: []
-  onQuestEnded:
-    m_PersistentCalls:
-      m_Calls: []
   debuggerNiAin: {fileID: 8792329113647501620}
-  QuestInfo: {fileID: 0}
+  QuestInfo: {fileID: 11400000, guid: 189291f23990d614fa73b9320e65de7f, type: 2}
   _questId: 
   _currentQuestState: 0
   reactOnlyToChanges: 0
