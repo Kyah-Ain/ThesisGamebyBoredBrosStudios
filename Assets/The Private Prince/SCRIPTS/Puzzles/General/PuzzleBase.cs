@@ -50,8 +50,6 @@ public abstract class PuzzleBase : MonoBehaviour
 
     public virtual void EndPuzzle(PuzzleResult result)
     {
-        onThisPuzzleDone?.Invoke();
-
         active = false;
         Debug.Log($"Puzzle ended with result: {result}");
         ShowUI(false);
@@ -60,6 +58,12 @@ public abstract class PuzzleBase : MonoBehaviour
         {
             MusicManager.Instance.ResumePreviousMusic();
         }
+    }
+
+// Called by PuzzleManager once it is fully reset and ready for a new puzzle
+    public void NotifyPuzzleDone()
+    {
+        onThisPuzzleDone?.Invoke();
     }
 
     public virtual void PausePuzzle()

@@ -9,82 +9,85 @@ public class MissionLogger : MonoBehaviour
     [Header("REFERENCE")]
     [SerializeField] GameEventTrigger eventTrigger;
     [SerializeField] QuestInfoSO questInfoSO;
-    
+
+    [Header("SETTINGS")]
+    [SerializeField] bool showStepProgress = true;
+
+    // Public property so other scripts can flip it at runtime (logic lives in SetShowStepProgress)
+    public bool ShowStepProgress
+    {
+        get => showStepProgress;
+        set => SetShowStepProgress(value);
+    }
+
     // Retrieves the Quest's data using its Quest Id
     private Ain.Quest QuestData => Ain.QuestManager.Instance.GetQuestById(questInfoSO.id);
-    
+
     // ------------------------- UNITY METHODS -------------------------
-    
-    // OnEnable is called when the object becomes enabled and active
+
     void OnEnable()
     {
         GameEventsManager.Instance.questEvents.onQuestStepProgress += OnQuestStepProgress;
     }
 
-    // OnDisable is called when the object becomes disabled
     void OnDisable()
     {
         GameEventsManager.Instance.questEvents.onQuestStepProgress -= OnQuestStepProgress;
     }
-    
+
+    // Lets you tick the checkbox in the Inspector during Play Mode and see it update live
+    void OnValidate()
+    {
+        if (Application.isPlaying && isActiveAndEnabled) UpdateQuestLog();
+    }
+
+    // ------------------------- TOGGLE METHODS -------------------------
+
+    // For a UI Toggle (shows up under "Dynamic bool" in the UnityEvent dropdown)
+    public void SetShowStepProgress(bool value)
+    {
+        if (showStepProgress == value) return;
+        showStepProgress = value;
+        UpdateQuestLog(); // Refresh immediately so the change is visible right away
+    }
+
+    // For a Button or any event that has no bool parameter
+    public void ToggleShowStepProgress()
+    {
+        SetShowStepProgress(!showStepProgress);
+    }
+
     // ------------------------- LOG METHODS -------------------------
 
-    // Method to broadcast the QuestLog
     public void UpdateQuestLog()
     {
-        // ...
         Ain.Quest quest = QuestData;
-        
-        // ...
+
         if (quest == null) return;
-        
+
         // Prevents a finished quest on repopulating the log
         if (quest.state == QuestState.FINISHED) return;
-        
-        // ...
-        string text = questInfoSO.questName;
 
-        #region QUEST STEPS LOGGER
-        
-            // // Retrieves the total questSteps to fulfill for a Quest
-            // int totalSteps = questInfoSO.questStepPrefabs.Length;
-            //
-            // // Only proceeds if we atleast have 1 steps for a Quest
-            // if (totalSteps > 0)
-            // {
-            //     // ...
-            //     int displayStep = Mathf.Min(quest.currentQuestStepIndex + 1, totalSteps);
-            //     
-            //     // ...
-            //     text += $"\nStep {displayStep}/{totalSteps}";
-            // }
+        string text = $"{questInfoSO.questName}";
 
-        #endregion
-        
-        // ...
         Ain.QuestStep step = quest.CurrentStep;
-        
-        // ...
-        if (step != null && step.HasProgress) // != null (not ?.) so Unity's destroyed-object check applies
+
+        // Only append progress when the toggle is on
+        if (showStepProgress && step != null && step.HasProgress)
         {
-            // ...
             text += $"\n{step.CurrentCount}/{step.TargetCount}";
         }
-        
-        // Broadcaster
+
         eventTrigger.ExecuteEvents(text);
     }
-    
-    // Method to broadcast the reset of the QuestLog
+
     public void ResetQuestLog()
     {
-        // Broadcaster
         eventTrigger.ExecuteEvents("");
     }
-    
+
     // --------------------------- HELPERS --------------------------
-    
-    // Method to only react to our own quest
+
     void OnQuestStepProgress(string id)
     {
         if (id == questInfoSO.id) UpdateQuestLog();

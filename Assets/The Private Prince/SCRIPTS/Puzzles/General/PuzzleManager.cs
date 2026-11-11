@@ -45,12 +45,18 @@ public class PuzzleManager : MonoBehaviour
         if (activePuzzle == null) return;
 
         PuzzleBase finished = activePuzzle; // Capture finished puzzle reference
-        state = PuzzleState.Completed; // Set state to Completed before calling EndPuzzle
-        finished.EndPuzzle(result); // Call EndPuzzle on the finished puzzle
+        state = PuzzleState.Completed;
+        finished.EndPuzzle(result); // Cleanup only (UI, music, active flag)
         Debug.Log($"Finished {finished.name} with result: {result}");
-        OnPuzzleEnded?.Invoke(finished, result); // Invoke event with finished puzzle reference
-        activePuzzle = null; // Clear active puzzle reference
-        state = PuzzleState.Idle; // Reset state to Idle to allow new puzzles to start
+
+        OnPuzzleEnded?.Invoke(finished, result);
+
+        // Fully reset BEFORE anything chained can start a new puzzle
+        activePuzzle = null;
+        state = PuzzleState.Idle;
+
+        // Now it's safe for this to start the next puzzle
+        finished.NotifyPuzzleDone();
     }
 
     public void PausePuzzle()

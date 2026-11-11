@@ -168,6 +168,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &4870362839013656232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,6 +561,7 @@ Transform:
   m_LocalScale: {x: 1.1999999, y: 1.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8177757284173899599}
   - {fileID: 1629708146504476486}
   - {fileID: 4263783325083280632}
   - {fileID: 7394145381333532302}
@@ -794,6 +796,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &1096462346137620202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1147,6 +1150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eventTrigger: {fileID: 5228549157455045661}
   questInfoSO: {fileID: 11400000, guid: c773db8f7072c814f941dd0aaed5d28e, type: 2}
+  showStepProgress: 1
 --- !u!1 &489754721498231402
 GameObject:
   m_ObjectHideFlags: 0
@@ -1515,6 +1519,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &3142666539526224705
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2021,6 +2026,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &2656648500568506662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5389,7 +5395,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3192
+  m_VersionIndex: 3198
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -5918,6 +5924,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &6751822978361671392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6454,6 +6461,55 @@ Transform:
   - {fileID: 3142765921292563275}
   m_Father: {fileID: 6551346878956730117}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3738379160416794587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8177757284173899599}
+  - component: {fileID: 2771281266113190362}
+  m_Layer: 0
+  m_Name: OnCutscene | Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8177757284173899599
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3738379160416794587}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000025928018}
+  m_LocalPosition: {x: -7.4696097, y: 29.219706, z: 28.03077}
+  m_LocalScale: {x: 0.8333334, y: 0.9090909, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2511312957514594039}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2771281266113190362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3738379160416794587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcff0183194c60240aa5b3b62f002fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsToTrigger:
+  - {fileID: 11400000, guid: c049a495df84a724d8d2d45fdd7ad579, type: 2}
+  triggerEventsOnAwake: 0
+  triggerEventsOnStart: 0
+  triggerEventsOnEnable: 0
 --- !u!1 &3754754108182573482
 GameObject:
   m_ObjectHideFlags: 0
@@ -7079,6 +7135,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &7935452601151621908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11331,6 +11388,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2771281266113190362}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   debuggerNiAin: {fileID: 7788315289458547750}
   QuestInfo: {fileID: 11400000, guid: c773db8f7072c814f941dd0aaed5d28e, type: 2}
   _questId: 
@@ -15095,6 +15164,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &6079554470271957923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16043,6 +16113,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &737451457165278571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17231,6 +17302,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2514528537932406879, guid: 55895701bd3ee1442a348e555bef244c,
         type: 3}
+      propertyPath: viewDistance
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2514528537932406879, guid: 55895701bd3ee1442a348e555bef244c,
+        type: 3}
       propertyPath: onPlayerFound.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 720356405699304880}
@@ -17624,6 +17700,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2514528537932406879, guid: 55895701bd3ee1442a348e555bef244c,
         type: 3}
+      propertyPath: viewDistance
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2514528537932406879, guid: 55895701bd3ee1442a348e555bef244c,
+        type: 3}
       propertyPath: onPlayerFound.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 720356405699304880}
@@ -17731,6 +17812,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4044018438564788669}
     m_Modifications:
+    - target: {fileID: 2514528537932406879, guid: 55895701bd3ee1442a348e555bef244c,
+        type: 3}
+      propertyPath: viewDistance
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2514528537932406879, guid: 55895701bd3ee1442a348e555bef244c,
         type: 3}
       propertyPath: onPlayerFound.m_PersistentCalls.m_Calls.Array.data[1].m_Target
