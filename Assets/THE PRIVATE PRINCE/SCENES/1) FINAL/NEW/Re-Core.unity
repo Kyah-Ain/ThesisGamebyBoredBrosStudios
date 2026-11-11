@@ -1679,18 +1679,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 344072906}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &344072908 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4087251400902101236, guid: aa3faa2d57f0e0f4bab14f772f42660c,
-    type: 3}
-  m_PrefabInstance: {fileID: 344072906}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98da85a0e3f1fcf459ff3beccecd925c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &344247960
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9551,11 +9539,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2033771384}
     m_Modifications:
-    - target: {fileID: 2303830659443027471, guid: 801754b106d067f41b5894f6c4a8aeaa,
-        type: 3}
-      propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 344072908}
     - target: {fileID: 2608367494024320736, guid: 801754b106d067f41b5894f6c4a8aeaa,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9608,13 +9591,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6741421949141298283, guid: 801754b106d067f41b5894f6c4a8aeaa,
         type: 3}
-      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
       objectReference: {fileID: 3238502739505621877}
     - target: {fileID: 7315678804562404856, guid: 801754b106d067f41b5894f6c4a8aeaa,
         type: 3}
       propertyPath: m_Name
       value: '***** MISSION 8 *****'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7738634294201547222, guid: 801754b106d067f41b5894f6c4a8aeaa,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3238502739505621877}
+    - target: {fileID: 7738634294201547222, guid: 801754b106d067f41b5894f6c4a8aeaa,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: StartQuest
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10287,73 +10280,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: '***** MISSION 9 *****'
       objectReference: {fileID: 0}
-    - target: {fileID: 4940410649990635464, guid: c15b21c10a7824a4ebb88858d8aa3116,
-        type: 3}
-      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4940410649990635464, guid: c15b21c10a7824a4ebb88858d8aa3116,
-        type: 3}
-      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4940410649990635464, guid: c15b21c10a7824a4ebb88858d8aa3116,
-        type: 3}
-      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 4396224537856841618}
-    - target: {fileID: 4940410649990635464, guid: c15b21c10a7824a4ebb88858d8aa3116,
-        type: 3}
-      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4940410649990635464, guid: c15b21c10a7824a4ebb88858d8aa3116,
-        type: 3}
-      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4940410649990635464, guid: c15b21c10a7824a4ebb88858d8aa3116,
-        type: 3}
-      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: ExecuteEvents
-      objectReference: {fileID: 0}
-    - target: {fileID: 4940410649990635464, guid: c15b21c10a7824a4ebb88858d8aa3116,
-        type: 3}
-      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: GameEventTrigger, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 4940410649990635464, guid: c15b21c10a7824a4ebb88858d8aa3116,
-        type: 3}
-      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_StringArgument
-      value: Kirova_Exhibit_Hall_Cutscene
-      objectReference: {fileID: 0}
-    - target: {fileID: 4940410649990635464, guid: c15b21c10a7824a4ebb88858d8aa3116,
-        type: 3}
-      propertyPath: onStart.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209421656635219058, guid: c15b21c10a7824a4ebb88858d8aa3116,
-        type: 3}
-      propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 344072908}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c15b21c10a7824a4ebb88858d8aa3116, type: 3}
---- !u!114 &4396224537856841618 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3334891302383109166, guid: c15b21c10a7824a4ebb88858d8aa3116,
-    type: 3}
-  m_PrefabInstance: {fileID: 4396224537856841617}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcff0183194c60240aa5b3b62f002fa8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &4871082103352923631 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9177269089830838794, guid: 8be250e872570ba41b0ea2f61e95b80c,
@@ -10874,11 +10805,6 @@ PrefabInstance:
       propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 2384778612333692908}
-    - target: {fileID: 3521072073084537403, guid: 614a94d70716d4c44b7c6c7baaed4fa0,
-        type: 3}
-      propertyPath: onThisPuzzleDone.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 344072908}
     - target: {fileID: 3572847192843980573, guid: 614a94d70716d4c44b7c6c7baaed4fa0,
         type: 3}
       propertyPath: m_Name
