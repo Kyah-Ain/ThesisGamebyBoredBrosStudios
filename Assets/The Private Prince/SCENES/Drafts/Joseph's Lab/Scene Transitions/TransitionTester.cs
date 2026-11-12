@@ -75,6 +75,17 @@ public class TransitionTester : MonoBehaviour
     {
         GoTo(nextScene);
     }
+    
+    public void PlayAnimationOnly(float duration = 1f)
+    {
+        if (busy)
+        {
+            return;
+        }
+
+        manualControl = false;
+        transition.Play(duration);
+    }
 
     public void GoTo(string target)
     {

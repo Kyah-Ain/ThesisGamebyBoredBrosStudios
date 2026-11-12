@@ -30,6 +30,28 @@ public class ScanTransition : MonoBehaviour
         overlay.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Plays the transition without touching any scenes.
+    /// duration = total time in seconds (split using the inspector's cover/hold/reveal ratio).
+    /// onCovered fires when the screen is fully covered, e.g. to teleport the player.
+    /// </summary>
+    public void Play(float duration = 1f, Action onCovered = null)
+    {
+        if (running)
+        {
+            return;
+        }
+
+        float total = coverDuration + holdDuration + revealDuration;
+        float scale = total > 0f ? Mathf.Max(0f, duration) / total : 0f;
+
+        StartCoroutine(Sequence(
+            () => InvokeOnce(onCovered),
+            coverDuration * scale,
+            holdDuration * scale,
+            revealDuration * scale));
+    }
+
     public void Run(Action onCovered)
     {
         RunRoutine(() => InvokeOnce(onCovered));
@@ -42,7 +64,7 @@ public class ScanTransition : MonoBehaviour
             return;
         }
 
-        StartCoroutine(Sequence(whileCovered));
+        StartCoroutine(Sequence(whileCovered, coverDuration, holdDuration, revealDuration));
     }
 
     public void Scrub(float value)
@@ -83,12 +105,12 @@ public class ScanTransition : MonoBehaviour
         yield break;
     }
 
-    private IEnumerator Sequence(Func<IEnumerator> whileCovered)
+    private IEnumerator Sequence(Func<IEnumerator> whileCovered, float cover, float hold, float reveal)
     {
         running = true;
         overlay.gameObject.SetActive(true);
 
-        yield return Animate(coverDuration, t =>
+        yield return Animate(cover, t =>
         {
             SetState(Min, Mathf.Lerp(Min, Max, t));
             SetPulse(t);
@@ -99,9 +121,9 @@ public class ScanTransition : MonoBehaviour
             yield return StartCoroutine(whileCovered());
         }
 
-        yield return new WaitForSecondsRealtime(holdDuration);
+        yield return new WaitForSecondsRealtime(hold);
 
-        yield return Animate(revealDuration, t =>
+        yield return Animate(reveal, t =>
         {
             SetState(Mathf.Lerp(Min, Max, t), Max);
             SetPulse(1f - t);
