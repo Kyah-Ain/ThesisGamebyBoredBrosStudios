@@ -2580,7 +2580,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -6709,7 +6709,7 @@ SpriteRenderer:
   m_Size: {x: 13.54, y: 23.71}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &271033706041819133
@@ -7804,7 +7804,7 @@ SpriteRenderer:
   m_Size: {x: 12.92, y: 24.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1045110403304891775
@@ -8463,7 +8463,7 @@ SpriteRenderer:
   m_Size: {x: 8.89, y: 15.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1649131608783655728
@@ -8789,7 +8789,7 @@ SpriteRenderer:
   m_Size: {x: 9.27, y: 14}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &1858953389471592217
@@ -11382,7 +11382,7 @@ SpriteRenderer:
   m_Size: {x: 5.48, y: 17.33}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &3550816435250392241
@@ -12270,11 +12270,16 @@ MonoBehaviour:
   gravityMultiplier: 1
   sprintMultiplier: 1.5
   walkAnimSpeed: 1
+  terminalVelocity: -20
+  groundedGraceTime: 0.1
+  killPlaneY: -20
   isCharacterFrozen: 0
   isSprinting: 0
   gravity: -9.81
   freefallVelocity: 0
   inputVector: {x: 0, y: 0}
+  timeSinceGrounded: 0
+  lastSafePosition: {x: 0, y: 0, z: 0}
 --- !u!1 &4078771855698214457
 GameObject:
   m_ObjectHideFlags: 0
@@ -13103,7 +13108,7 @@ SpriteRenderer:
   m_Size: {x: 8.6, y: 14.35}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &4419452305064452497
@@ -14241,7 +14246,7 @@ SpriteRenderer:
   m_Size: {x: 8.6, y: 14.35}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &4752729431727539109
@@ -14794,11 +14799,16 @@ MonoBehaviour:
   gravityMultiplier: 1
   sprintMultiplier: 1.5
   walkAnimSpeed: 1
+  terminalVelocity: -20
+  groundedGraceTime: 0.1
+  killPlaneY: -20
   isCharacterFrozen: 0
   isSprinting: 0
   gravity: -9.81
   freefallVelocity: 0
   inputVector: {x: 0, y: 0}
+  timeSinceGrounded: 0
+  lastSafePosition: {x: 0, y: 0, z: 0}
 --- !u!1 &4973372257940954111
 GameObject:
   m_ObjectHideFlags: 0
@@ -15885,7 +15895,7 @@ SpriteRenderer:
   m_Size: {x: 5.48, y: 17.33}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &5568637838803256853
@@ -18483,7 +18493,7 @@ SpriteRenderer:
   m_Size: {x: 9.27, y: 14}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &7297838808354281896
@@ -19093,7 +19103,7 @@ SpriteRenderer:
   m_Size: {x: 8.89, y: 15.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &7663199935017103671
@@ -19896,7 +19906,7 @@ SpriteRenderer:
   m_Size: {x: 12.92, y: 24.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!222 &8268346525025833468
@@ -21354,7 +21364,7 @@ SpriteRenderer:
   m_Size: {x: 13.54, y: 23.71}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &9209016554047687640

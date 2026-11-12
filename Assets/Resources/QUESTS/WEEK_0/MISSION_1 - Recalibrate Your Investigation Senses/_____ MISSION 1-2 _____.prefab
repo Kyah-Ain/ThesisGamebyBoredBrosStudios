@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8005122335602453443
 Transform:
   m_ObjectHideFlags: 0
@@ -66,8 +66,8 @@ MonoBehaviour:
   onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
-  starterType: 2
-  useType: 1
+  starterType: 0
+  useType: 0
   isResettable: 1
   addDelay: 1
   delayTime: 0
@@ -135,13 +135,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onDialogueStarted:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 30246447339412623}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onNarrationDone:
     m_PersistentCalls:
       m_Calls: []
   onDialogueDone:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 482860572783288392}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 8285161136929560465}
         m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
         m_MethodName: StartDialogue
@@ -154,7 +178,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  debuggerNiAin: {fileID: 4405662775079886261}
+  debuggerNiAin: {fileID: 7897680270288522687}
   profileTrigger: {fileID: 545274894131123003}
   dialogueTrigger: {fileID: 8790038730453265142}
   dialogueEffect: {fileID: 8713910826741479533}
@@ -168,6 +192,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &8713910826741479533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,9 +325,45 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2297358188927160230}
+        m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
+        m_MethodName: StartDialogue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 0
   onQuestCanFinish:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 802588114270241121}
+        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
+        m_MethodName: CompleteQuest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 0
+      - m_Target: {fileID: 4324072707816342975}
+        m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
+        m_MethodName: StartDialogue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 0
   onQuestEnded:
     m_PersistentCalls:
       m_Calls:
@@ -318,10 +379,23 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4324072707816342975}
+        m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
+        m_MethodName: StartDialogue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   debuggerNiAin: {fileID: 2889095430211749010}
   QuestInfo: {fileID: 11400000, guid: 0d7961ff918d14d43b913060cb3064bc, type: 2}
   _questId: 
   _currentQuestState: 0
+  reactOnlyToChanges: 0
 --- !u!1 &502901118980310262
 GameObject:
   m_ObjectHideFlags: 0
@@ -1052,6 +1126,7 @@ MonoBehaviour:
   QuestInfo: {fileID: 11400000, guid: 3426629707a4f104989ab8a566f82528, type: 2}
   _questId: 
   _currentQuestState: 0
+  reactOnlyToChanges: 0
 --- !u!1 &1033856490186704940
 GameObject:
   m_ObjectHideFlags: 0
@@ -1582,7 +1657,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onDialogueStarted:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 30246447339412623}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onNarrationDone:
     m_PersistentCalls:
       m_Calls: []
@@ -1639,6 +1726,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &4650068739429349403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3860,10 +3948,10 @@ MonoBehaviour:
   onDialogueStarted:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: 
-        m_Mode: 6
+      - m_Target: {fileID: 30246447339412623}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3872,15 +3960,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  onNarrationDone:
-    m_PersistentCalls:
-      m_Calls: []
-  onDialogueDone:
-    m_PersistentCalls:
-      m_Calls:
       - m_Target: {fileID: 802588114270241121}
         m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
-        m_MethodName: CompleteQuest
+        m_MethodName: StartQuest
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3888,11 +3970,29 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4324072707816342975}
-        m_TargetAssemblyTypeName: DialogueNarrator, Assembly-CSharp
-        m_MethodName: StartDialogue
+          m_BoolArgument: 1
+        m_CallState: 0
+      - m_Target: {fileID: 802588114270241121}
+        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
+        m_MethodName: AdvanceQuest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 0
+  onNarrationDone:
+    m_PersistentCalls:
+      m_Calls: []
+  onDialogueDone:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 482860572783288392}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3902,7 +4002,31 @@ MonoBehaviour:
           m_StringArgument: Tutorial3
           m_BoolArgument: 0
         m_CallState: 2
-  debuggerNiAin: {fileID: 4405662775079886261}
+      - m_Target: {fileID: 802588114270241121}
+        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
+        m_MethodName: AdvanceQuest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial3
+          m_BoolArgument: 0
+        m_CallState: 0
+      - m_Target: {fileID: 802588114270241121}
+        m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
+        m_MethodName: CompleteQuest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial3
+          m_BoolArgument: 0
+        m_CallState: 2
+  debuggerNiAin: {fileID: 3565371747845395086}
   profileTrigger: {fileID: 545274894131123003}
   dialogueTrigger: {fileID: 8790038730453265142}
   dialogueEffect: {fileID: 3511985844070428095}
@@ -3916,6 +4040,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &3511985844070428095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4029,6 +4154,18 @@ MonoBehaviour:
   onDialogueDone:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 482860572783288392}
+        m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
+        m_MethodName: ExecuteEvents
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial2
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 802588114270241121}
         m_TargetAssemblyTypeName: DialogueBaseQuestPoint, Assembly-CSharp
         m_MethodName: StartQuest
@@ -4038,7 +4175,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Tutorial2
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 802588114270241121}
@@ -4050,7 +4187,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Tutorial2
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 2297358188927160230}
@@ -4079,6 +4216,7 @@ MonoBehaviour:
   currentDialogueStep: 0
   currentDialogueSet: 0
   currentConversation: 0
+  hasQuestionRaised: 0
 --- !u!114 &5118259827425966738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5100,6 +5238,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7334599996761017555}
     m_Modifications:
+    - target: {fileID: 119990901170891149, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 119990901170891149, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c40b05900ac82c648807fd7e8e29312d, type: 2}
+    - target: {fileID: 224305739121580097, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224305739121580097, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c40b05900ac82c648807fd7e8e29312d, type: 2}
     - target: {fileID: 1180856250626189169, guid: d773c1c2bd2fc3649b0e873545bb1e25,
         type: 3}
       propertyPath: m_Name
@@ -5126,6 +5284,26 @@ PrefabInstance:
       propertyPath: onDialogueStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2731199149969734086}
+    - target: {fileID: 2682466486687327910, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2682466486687327910, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c40b05900ac82c648807fd7e8e29312d, type: 2}
+    - target: {fileID: 2710803707205567508, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2710803707205567508, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c40b05900ac82c648807fd7e8e29312d, type: 2}
     - target: {fileID: 3332885207308195993, guid: d773c1c2bd2fc3649b0e873545bb1e25,
         type: 3}
       propertyPath: onTriggerExit.m_PersistentCalls.m_Calls.Array.data[2].m_Target
@@ -5146,6 +5324,26 @@ PrefabInstance:
       propertyPath: onTriggerEnter.m_PersistentCalls.m_Calls.Array.data[3].m_Target
       value: 
       objectReference: {fileID: 2731199149969734086}
+    - target: {fileID: 4156200255768500568, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.07112098
+      objectReference: {fileID: 0}
+    - target: {fileID: 4156200255768500568, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4156200255768500568, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4156200255768500568, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 5940184621274587610, guid: d773c1c2bd2fc3649b0e873545bb1e25,
         type: 3}
       propertyPath: dialogueLines.Array.size
@@ -5183,6 +5381,16 @@ PrefabInstance:
       propertyPath: onDialogueStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2731199149969734086}
+    - target: {fileID: 6015983863012341019, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015983863012341019, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c40b05900ac82c648807fd7e8e29312d, type: 2}
     - target: {fileID: 7121329462933018333, guid: d773c1c2bd2fc3649b0e873545bb1e25,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5238,6 +5446,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Speaker Profile - TRIGGER
       objectReference: {fileID: 0}
+    - target: {fileID: 7354209664873725997, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7354209664873725997, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c40b05900ac82c648807fd7e8e29312d, type: 2}
+    - target: {fileID: 8843907285177974022, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843907285177974022, guid: d773c1c2bd2fc3649b0e873545bb1e25,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c40b05900ac82c648807fd7e8e29312d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1710348270877111213, guid: d773c1c2bd2fc3649b0e873545bb1e25, type: 3}
