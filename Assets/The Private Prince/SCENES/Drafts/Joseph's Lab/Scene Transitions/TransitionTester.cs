@@ -18,6 +18,11 @@ public class TransitionTester : MonoBehaviour
     [Range(0f, 2f)]
     [SerializeField] private float scrub;
 
+    [Header("Timing")]
+    [Tooltip("Extra time the screen stays covered after the scene has finished loading. 0 = no extra delay.")]
+    [Min(0f)]
+    [SerializeField] private float afterLoadDelay = 0f;
+    
     private Scene currentScene; // handle of the scene this script treats as current
     private bool wasManual;
     private bool busy;
@@ -91,7 +96,7 @@ public class TransitionTester : MonoBehaviour
 
         manualControl = false;
         transition.Hide();
-        StartCoroutine(SwapRoutine(startScene));
+        StartCoroutine(SwapRoutine(startScene, false));
     }
 
     private bool CanLoad(string sceneName)
@@ -117,21 +122,24 @@ public class TransitionTester : MonoBehaviour
         return !alreadyLoaded;
     }
 
-    private IEnumerator SwapRoutine(string target)
+    private IEnumerator SwapRoutine(string target, bool useDelay = true)
     {
         busy = true;
 
-        // Scene to remove afterwards: the tracked one, or the start scene if nothing is tracked yet
         Scene previous = currentScene.IsValid()
             ? currentScene
             : SceneManager.GetSceneByName(startScene);
 
         yield return LoadAndActivate(target);
 
-        // Only unload if the new scene actually loaded (currentScene changed) and the old one is still there
         if (previous.IsValid() && previous.isLoaded && previous != currentScene)
         {
             yield return SceneManager.UnloadSceneAsync(previous);
+        }
+
+        if (useDelay && afterLoadDelay > 0f)
+        {
+            yield return new WaitForSecondsRealtime(afterLoadDelay);
         }
 
         busy = false;
