@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class TransitionTester : MonoBehaviour
@@ -22,10 +23,48 @@ public class TransitionTester : MonoBehaviour
     [Tooltip("Extra time the screen stays covered after the scene has finished loading. 0 = no extra delay.")]
     [Min(0f)]
     [SerializeField] private float afterLoadDelay = 0f;
-    
+
+    [Header("Events")]
+    [Tooltip("Fires the moment the transition starts.")]
+    public UnityEvent onTransitionStarted;
+    [Tooltip("Fires after the transition has fully finished (reveal done, overlay hidden).")]
+    public UnityEvent onTransitionFinished;
+
     private Scene currentScene; // handle of the scene this script treats as current
     private bool wasManual;
     private bool busy;
+
+    private void OnEnable()
+    {
+        if (transition == null)
+        {
+            return;
+        }
+
+        transition.Started += HandleStarted;
+        transition.Finished += HandleFinished;
+    }
+
+    private void OnDisable()
+    {
+        if (transition == null)
+        {
+            return;
+        }
+
+        transition.Started -= HandleStarted;
+        transition.Finished -= HandleFinished;
+    }
+
+    private void HandleStarted()
+    {
+        onTransitionStarted?.Invoke();
+    }
+
+    private void HandleFinished()
+    {
+        onTransitionFinished?.Invoke();
+    }
 
     private IEnumerator Start()
     {
@@ -75,7 +114,7 @@ public class TransitionTester : MonoBehaviour
     {
         GoTo(nextScene);
     }
-    
+
     public void PlayAnimationOnly(float duration = 1f)
     {
         if (busy)

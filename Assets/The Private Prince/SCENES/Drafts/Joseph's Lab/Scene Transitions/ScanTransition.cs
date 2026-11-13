@@ -21,6 +21,12 @@ public class ScanTransition : MonoBehaviour
     private Material material;
     private bool running;
 
+    /// <summary>Fires the moment the cover animation begins.</summary>
+    public event Action Started;
+
+    /// <summary>Fires after the reveal is done, the overlay is hidden and the transition is no longer running.</summary>
+    public event Action Finished;
+
     private void Awake()
     {
         material = Instantiate(overlay.material);
@@ -109,6 +115,7 @@ public class ScanTransition : MonoBehaviour
     {
         running = true;
         overlay.gameObject.SetActive(true);
+        Started?.Invoke();
 
         yield return Animate(cover, t =>
         {
@@ -133,6 +140,7 @@ public class ScanTransition : MonoBehaviour
         SetPulse(0f);
         overlay.gameObject.SetActive(false);
         running = false;
+        Finished?.Invoke();
     }
 
     private IEnumerator Animate(float duration, Action<float> apply)
