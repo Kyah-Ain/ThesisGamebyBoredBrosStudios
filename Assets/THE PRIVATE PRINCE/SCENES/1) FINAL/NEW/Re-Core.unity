@@ -2007,7 +2007,7 @@ PrefabInstance:
     - target: {fileID: 6388776963417422567, guid: 1639cd9cdf1e2294d8a22d201a8d35ec,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7113627569648556892, guid: 1639cd9cdf1e2294d8a22d201a8d35ec,
         type: 3}
@@ -2200,10 +2200,58 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2125947203}
   - {fileID: 1089393144}
   m_Father: {fileID: 904358629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &319974829
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 319974830}
+  - component: {fileID: 319974831}
+  m_Layer: 0
+  m_Name: OnUseDoorToHimikNight - TRIGGER
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &319974830
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319974829}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -2.2737368e-13, z: -0, w: 1}
+  m_LocalPosition: {x: -158.125, y: 29.090908, z: 34.5}
+  m_LocalScale: {x: 0.8333334, y: 0.9090909, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3278899949649591269}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &319974831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319974829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcff0183194c60240aa5b3b62f002fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsToTrigger:
+  - {fileID: 11400000, guid: 404946f6d09f502468b2dfa6c76152c0, type: 2}
+  triggerEventsOnAwake: 0
+  triggerEventsOnStart: 0
+  triggerEventsOnEnable: 0
 --- !u!1001 &328569116
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2946,7 +2994,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &388082333
 Transform:
   m_ObjectHideFlags: 0
@@ -3041,55 +3089,6 @@ Transform:
   - {fileID: 441846855}
   - {fileID: 844780653}
   m_Father: {fileID: 44542855}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &419864385
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 419864387}
-  - component: {fileID: 419864386}
-  m_Layer: 0
-  m_Name: OnCutscene | Trigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &419864386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 419864385}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcff0183194c60240aa5b3b62f002fa8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventsToTrigger:
-  - {fileID: 11400000, guid: c049a495df84a724d8d2d45fdd7ad579, type: 2}
-  triggerEventsOnAwake: 0
-  triggerEventsOnStart: 0
-  triggerEventsOnEnable: 0
---- !u!4 &419864387
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 419864385}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000025928018}
-  m_LocalPosition: {x: 180.78647, y: 0.14167786, z: -6.4692297}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1173090476}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &436508649
 GameObject:
@@ -4040,7 +4039,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &528164196
 Transform:
   m_ObjectHideFlags: 0
@@ -4194,6 +4193,55 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1882988063}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &555425611
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 555425612}
+  - component: {fileID: 555425613}
+  m_Layer: 0
+  m_Name: OnUseDoorToHimikNight - TRIGGER
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &555425612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 555425611}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -2.2737368e-13, z: -0, w: 1}
+  m_LocalPosition: {x: -158.125, y: 29.090908, z: 34.5}
+  m_LocalScale: {x: 0.8333334, y: 0.9090909, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2395937159869139985}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &555425613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 555425611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcff0183194c60240aa5b3b62f002fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsToTrigger:
+  - {fileID: 11400000, guid: 404946f6d09f502468b2dfa6c76152c0, type: 2}
+  triggerEventsOnAwake: 0
+  triggerEventsOnStart: 0
+  triggerEventsOnEnable: 0
 --- !u!1 &557550839
 GameObject:
   m_ObjectHideFlags: 0
@@ -4255,6 +4303,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
         m_MethodName: ExecuteEvents
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1416039978}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -5084,6 +5144,55 @@ Transform:
   - {fileID: 1853158063}
   m_Father: {fileID: 1863268764}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &683565612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 683565613}
+  - component: {fileID: 683565614}
+  m_Layer: 0
+  m_Name: OnUseDoorToHimikMorning - TRIGGER
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &683565613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683565612}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -2.2737368e-13, z: -0, w: 1}
+  m_LocalPosition: {x: -158.125, y: 29.090908, z: 34.5}
+  m_LocalScale: {x: 0.8333334, y: 0.9090909, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3278899949649591269}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &683565614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683565612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcff0183194c60240aa5b3b62f002fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsToTrigger:
+  - {fileID: 11400000, guid: 075da32827e68f44fa215036a831e243, type: 2}
+  triggerEventsOnAwake: 0
+  triggerEventsOnStart: 0
+  triggerEventsOnEnable: 0
 --- !u!1 &690861484
 GameObject:
   m_ObjectHideFlags: 0
@@ -5328,16 +5437,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 452192846}
     m_Modifications:
-    - target: {fileID: 4087251400902101236, guid: aa3faa2d57f0e0f4bab14f772f42660c,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4479717127727537161, guid: aa3faa2d57f0e0f4bab14f772f42660c,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5089491515823700716, guid: aa3faa2d57f0e0f4bab14f772f42660c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5475,12 +5574,12 @@ GameObject:
   - component: {fileID: 786969566}
   - component: {fileID: 786969567}
   m_Layer: 0
-  m_Name: OnCutsceneDone | Trigger
+  m_Name: OnCutsceneDone - TRIGGER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &786969566
 Transform:
   m_ObjectHideFlags: 0
@@ -5489,12 +5588,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 786969565}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1796861574}
+  m_Father: {fileID: 1851625191}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &786969567
 MonoBehaviour:
@@ -5512,7 +5611,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dd601ec3b3082e3418f3b9fd902fd81b, type: 2}
   triggerEventsOnAwake: 0
   triggerEventsOnStart: 0
-  triggerEventsOnEnable: 1
+  triggerEventsOnEnable: 0
 --- !u!1 &788293501
 GameObject:
   m_ObjectHideFlags: 0
@@ -5987,7 +6086,7 @@ GameObject:
   - component: {fileID: 821168430}
   - component: {fileID: 821168431}
   m_Layer: 0
-  m_Name: OnCutscene | Trigger
+  m_Name: OnCutscene - TRIGGER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6002,11 +6101,11 @@ Transform:
   m_GameObject: {fileID: 821168429}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000025928018}
-  m_LocalPosition: {x: 175.53647, y: 0.14167786, z: -6.4692297}
+  m_LocalPosition: {x: 180.78647, y: 0.14167786, z: -6.4692297}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8657175356283732883}
+  m_Father: {fileID: 1173090476}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &821168431
 MonoBehaviour:
@@ -7505,16 +7604,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 452192846}
     m_Modifications:
-    - target: {fileID: 4087251400902101236, guid: aa3faa2d57f0e0f4bab14f772f42660c,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4479717127727537161, guid: aa3faa2d57f0e0f4bab14f772f42660c,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5089491515823700716, guid: aa3faa2d57f0e0f4bab14f772f42660c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7717,7 +7806,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 0
+        m_CallState: 2
       - m_Target: {fileID: 485540849}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -7884,54 +7973,6 @@ MonoBehaviour:
     m_Events:
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1562144631}
-          m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
-          m_MethodName: ExecuteEvents
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 0
-        - m_Target: {fileID: 1637023848}
-          m_TargetAssemblyTypeName: Starter, Assembly-CSharp
-          m_MethodName: TriggerStart
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 0
-        - m_Target: {fileID: 606300767}
-          m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
-          m_MethodName: ExecuteEvents
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: HIMIK_Night
-            m_BoolArgument: 1
-          m_CallState: 0
-        - m_Target: {fileID: 1449293091}
-          m_TargetAssemblyTypeName: UnityEngine.Component, UnityEngine
-          m_MethodName: SendMessage
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Jonas_Interior_Cutscenes
-            m_BoolArgument: 1
-          m_CallState: 0
         - m_Target: {fileID: 1637023848}
           m_TargetAssemblyTypeName: Starter, Assembly-CSharp
           m_MethodName: TriggerStart
@@ -8422,7 +8463,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 419864387}
+  - {fileID: 821168430}
   m_Father: {fileID: 362484348}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1185131191
@@ -9693,30 +9734,6 @@ MonoBehaviour:
     m_Events:
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 606300767}
-          m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
-          m_MethodName: ExecuteEvents
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: HIMIK_Morning
-            m_BoolArgument: 1
-          m_CallState: 0
-        - m_Target: {fileID: 1449293091}
-          m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
-          m_MethodName: ExecuteEvents
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Jonas_Interior_Cutscenes
-            m_BoolArgument: 1
-          m_CallState: 0
         - m_Target: {fileID: 5757515453623705953}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_MethodName: SetActive
@@ -11297,12 +11314,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8078687349671400601}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1600612831 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1269138919271246522, guid: e2cc4d60f67397c4cbbab18086aa4bc2,
-    type: 3}
-  m_PrefabInstance: {fileID: 4363421485795760070}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1614576335 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6229375720711227395, guid: a03e6764c08bdb8439411cf2414672e5,
@@ -11787,7 +11798,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 0
+        m_CallState: 2
       - m_Target: {fileID: 344247962}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -12250,6 +12261,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2125947203}
   - {fileID: 2142630568}
   m_Father: {fileID: 362484348}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12574,7 +12586,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
-        m_CallState: 0
+        m_CallState: 2
       - m_Target: {fileID: 1371993228}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -12636,7 +12648,6 @@ Transform:
   m_Children:
   - {fileID: 472360261}
   - {fileID: 1562144632}
-  - {fileID: 786969566}
   m_Father: {fileID: 904358629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1837140849
@@ -12805,6 +12816,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1219648898}
+  - {fileID: 786969566}
   - {fileID: 1476574658}
   - {fileID: 1534544354}
   m_Father: {fileID: 503400197}
@@ -14912,7 +14924,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 296666003}
+  m_Father: {fileID: 1708600907}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2125947204
 MonoBehaviour:
@@ -15307,7 +15319,7 @@ MonoBehaviour:
   onQuestEnded:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 419864386}
+      - m_Target: {fileID: 821168431}
         m_TargetAssemblyTypeName: GameEventTrigger, Assembly-CSharp
         m_MethodName: ExecuteEvents
         m_Mode: 1
@@ -15318,7 +15330,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
-        m_CallState: 0
+        m_CallState: 2
       - m_Target: {fileID: 49058018}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -15916,7 +15928,7 @@ PrefabInstance:
     - target: {fileID: 3174424635884810181, guid: a03e6764c08bdb8439411cf2414672e5,
         type: 3}
       propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3174424635884810181, guid: a03e6764c08bdb8439411cf2414672e5,
         type: 3}
@@ -16197,6 +16209,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 954846239165767563, guid: 01b4b295d0183114cba0f0304532aa8c,
+        type: 3}
+      propertyPath: onQuestStarted.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 954846239165767563, guid: 01b4b295d0183114cba0f0304532aa8c,
+        type: 3}
+      propertyPath: onQuestStarted.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4125581500827027678, guid: 01b4b295d0183114cba0f0304532aa8c,
         type: 3}
       propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.size
@@ -16236,6 +16258,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5123571299203607989, guid: 01b4b295d0183114cba0f0304532aa8c,
+        type: 3}
+      propertyPath: m_Name
+      value: OnUseDoorToHimikMorning - TRIGGER
       objectReference: {fileID: 0}
     - target: {fileID: 7470965120449155903, guid: 01b4b295d0183114cba0f0304532aa8c,
         type: 3}
@@ -16289,7 +16316,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1751880319114762496, guid: 01b4b295d0183114cba0f0304532aa8c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 555425612}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01b4b295d0183114cba0f0304532aa8c, type: 3}
 --- !u!114 &2395937159869139984 stripped
@@ -16304,6 +16335,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4101395ed18eb746a5eeddf0a14394a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2395937159869139985 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1751880319114762496, guid: 01b4b295d0183114cba0f0304532aa8c,
+    type: 3}
+  m_PrefabInstance: {fileID: 2395937159869139983}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2992755761606696684
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16402,6 +16439,51 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4139859876537363506, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4139859876537363506, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4139859876537363506, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[3].m_Target
+      value: 
+      objectReference: {fileID: 683565614}
+    - target: {fileID: 4139859876537363506, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4139859876537363506, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4139859876537363506, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
+      value: ExecuteEvents
+      objectReference: {fileID: 0}
+    - target: {fileID: 4139859876537363506, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
+      value: GameEventTrigger, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4139859876537363506, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_StringArgument
+      value: Tutorial2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4139859876537363506, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: onDialogueDone.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4528024744421109094, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -16452,6 +16534,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5546488285188912917, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: m_Name
+      value: markred=Week1_Mission4_Ender
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517090747508605196, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      propertyPath: m_Name
+      value: markred=OnDoorPuzzleSolved (to HIMIK) - TRIGGER
+      objectReference: {fileID: 0}
     - target: {fileID: 7153604276621071571, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
         type: 3}
       propertyPath: m_Name
@@ -16459,9 +16551,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5470465422493484736, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 683565613}
+    - targetCorrespondingSourceObject: {fileID: 5470465422493484736, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 319974830}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90b44222591c4ba4b8ca4fa5ecc47865, type: 3}
+--- !u!4 &3278899949649591269 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5470465422493484736, guid: 90b44222591c4ba4b8ca4fa5ecc47865,
+    type: 3}
+  m_PrefabInstance: {fileID: 3278899949649591268}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3798280337080859680 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5089491515823700716, guid: aa3faa2d57f0e0f4bab14f772f42660c,
@@ -17062,16 +17168,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 528164196}
     m_Modifications:
-    - target: {fileID: 343395039539067622, guid: 2f2b84312ab948d43bd1d06cc4d56c99,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2297358188927160230, guid: 2f2b84312ab948d43bd1d06cc4d56c99,
-        type: 3}
-      propertyPath: onDialogueStarted.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1600612831}
     - target: {fileID: 7334599996761017555, guid: 2f2b84312ab948d43bd1d06cc4d56c99,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -17126,21 +17222,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: '***** MISSION 1-2 *****'
-      objectReference: {fileID: 0}
-    - target: {fileID: 7337049958271174224, guid: 2f2b84312ab948d43bd1d06cc4d56c99,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8549540341783779804, guid: 2f2b84312ab948d43bd1d06cc4d56c99,
-        type: 3}
-      propertyPath: useType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8549540341783779804, guid: 2f2b84312ab948d43bd1d06cc4d56c99,
-        type: 3}
-      propertyPath: starterType
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17241,7 +17322,7 @@ PrefabInstance:
     - target: {fileID: 7247669008743242228, guid: df24eb7cbb690b14cafea673597e3654,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18197,7 +18278,7 @@ PrefabInstance:
     - target: {fileID: 6397911931122921771, guid: e3bc9c98a7a73d443b8def0c21767e3b,
         type: 3}
       propertyPath: onQuestEnded.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6397911931122921771, guid: e3bc9c98a7a73d443b8def0c21767e3b,
         type: 3}
@@ -18231,19 +18312,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 8161351092746604414, guid: e3bc9c98a7a73d443b8def0c21767e3b,
-        type: 3}
-      insertIndex: 0
-      addedObject: {fileID: 821168430}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3bc9c98a7a73d443b8def0c21767e3b, type: 3}
---- !u!4 &8657175356283732883 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8161351092746604414, guid: e3bc9c98a7a73d443b8def0c21767e3b,
-    type: 3}
-  m_PrefabInstance: {fileID: 8657175356283732882}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8853863706939355348 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8792463759296216399, guid: 4bdcfaef3b90b8c409886beeaefa764e,
