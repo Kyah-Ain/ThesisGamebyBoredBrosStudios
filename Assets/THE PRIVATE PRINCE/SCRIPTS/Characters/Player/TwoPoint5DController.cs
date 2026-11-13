@@ -116,6 +116,11 @@ public class TwoPoint5DController : MonoBehaviour
 
         // Rescues the character if it somehow fell into the void
         CheckVoid();
+        
+        // Re-push the remembered facing now that the Animator is live
+        BlendTreeAnimator(FacingDirection.x, FacingDirection.y);
+        
+        debuggerNiAin.Log($"FacingDirection: {FacingDirection}");
     }
 
     #endregion
