@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using UnityEngine.Events; 
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -45,18 +45,18 @@ public class MenuEventSystemHandler : MonoBehaviour
         debuggerNiAin = GetComponent<DebuggerNiAinPjls>();
 
         // Iterates through each UI inserted the list
-        foreach (var selectable in Selectables) 
+        foreach (var selectable in Selectables)
         {
             // Converts a simple UI to a navigable with keys type of UI 
             AddSelectionListeners(selectable);
 
             // Stores the UI's original/initial size before animation
-            _scales.Add(selectable, selectable.transform.localScale);  
+            _scales.Add(selectable, selectable.transform.localScale);
         }
     }
 
     // OnEnable is called when the object becomes enabled and active
-    public virtual void OnEnable() 
+    public virtual void OnEnable()
     {
         Subscribe();
 
@@ -68,6 +68,8 @@ public class MenuEventSystemHandler : MonoBehaviour
         }
 
         StartCoroutine(SelectAfterDelay());
+
+        CreditsOnEnable(); // CREDITS FIX: starts the credits scroll (see the region at the bottom)
     }
 
     // OnEnable is called when the object becomes disabled and inactive
@@ -78,6 +80,8 @@ public class MenuEventSystemHandler : MonoBehaviour
         // Stops trying to animate the interactable UI's when they're disabled
         _scaleUpTween.Kill(true);
         _scaleDownTween.Kill(true);
+
+        CreditsOnDisable(); // CREDITS FIX: stops the credits scroll (see the region at the bottom)
     }
 
     // OnDestroy is called when the object is destroyed
@@ -121,7 +125,7 @@ public class MenuEventSystemHandler : MonoBehaviour
         EventTrigger trigger = selectable.gameObject.GetComponent<EventTrigger>();
 
         // Evaluates if we catched one to ignore this block, otherwise proceed inside
-        if (trigger == null) 
+        if (trigger == null)
         {
             // Automatically add the component missing and hold a reference to it 
             trigger = selectable.gameObject.AddComponent<EventTrigger>();
@@ -137,10 +141,11 @@ public class MenuEventSystemHandler : MonoBehaviour
     // ------------------------- ATTACHER METHODS ---------------------------
 
     // Method to attach a Selection event response to an interactable UI object
-    protected virtual void AddSelectEventBehaviour(EventTrigger triggerable) 
+    protected virtual void AddSelectEventBehaviour(EventTrigger triggerable)
     {
         // Initialized an "onSelect" event and stores it to a temp variable
-        EventTrigger.Entry SelectEntry = new EventTrigger.Entry {
+        EventTrigger.Entry SelectEntry = new EventTrigger.Entry
+        {
             eventID = EventTriggerType.Select
         };
 
@@ -155,7 +160,8 @@ public class MenuEventSystemHandler : MonoBehaviour
     protected virtual void AddDeselectEventBehaviour(EventTrigger triggerable)
     {
         // Initialized an "onDeselect" event and stores it to a temp variable
-        EventTrigger.Entry DeselectEntry = new EventTrigger.Entry {
+        EventTrigger.Entry DeselectEntry = new EventTrigger.Entry
+        {
             eventID = EventTriggerType.Deselect
         };
 
@@ -170,7 +176,8 @@ public class MenuEventSystemHandler : MonoBehaviour
     protected virtual void AddOnPointerEnterEventBehaviour(EventTrigger triggerable)
     {
         // Initialized an "onPointerEnter" event and stores it to a temp variable
-        EventTrigger.Entry PointerEnter = new EventTrigger.Entry {
+        EventTrigger.Entry PointerEnter = new EventTrigger.Entry
+        {
             eventID = EventTriggerType.PointerEnter
         };
 
@@ -185,7 +192,8 @@ public class MenuEventSystemHandler : MonoBehaviour
     protected virtual void AddOnPointerExitEventBehaviour(EventTrigger triggerable)
     {
         // Initialized an "onPointerExit" event and stores it to a temp variable
-        EventTrigger.Entry PointerExit = new EventTrigger.Entry {
+        EventTrigger.Entry PointerExit = new EventTrigger.Entry
+        {
             eventID = EventTriggerType.PointerExit
         };
 
@@ -222,7 +230,7 @@ public class MenuEventSystemHandler : MonoBehaviour
         if (_animationExclusions.Contains(eventData.selectedObject)) return;
 
         // Animates the scale of this interactable UI
-        Selectable sel = eventData.selectedObject.GetComponent<Selectable>(); 
+        Selectable sel = eventData.selectedObject.GetComponent<Selectable>();
         _scaleDownTween = eventData.selectedObject.transform.DOScale(_scales[sel], _scaleDuration);
     }
 
@@ -233,13 +241,13 @@ public class MenuEventSystemHandler : MonoBehaviour
         PointerEventData pointerEventData = eventData as PointerEventData;
 
         // Only proceeds if we retrieved a pointerEvent reference
-        if (pointerEventData != null) 
+        if (pointerEventData != null)
         {
             // Tries finding a selectable in the Parent gameObject
             Selectable sel = pointerEventData.pointerEnter.GetComponentInParent<Selectable>();
 
             // Only proceeds if there's none in the parent
-            if (sel == null) 
+            if (sel == null)
             {
                 // Look for a selectable from the child objects instead
                 sel = pointerEventData.pointerEnter.GetComponentInChildren<Selectable>();
@@ -265,19 +273,19 @@ public class MenuEventSystemHandler : MonoBehaviour
     }
 
     // ------------------------- UI INTERACTIONS ---------------------------
-    
+
     // Method to navigate through interactable UI objects
     protected virtual void OnNavigate(InputAction.CallbackContext context)
     {
         // Prevents deselection when there's no new selection 
         if (EventSystem.current.currentSelectedGameObject == null &&
-            _lastSelected != null) 
+            _lastSelected != null)
         {
             // Selects the last interactable UI selected instead
             EventSystem.current.SetSelectedGameObject(_lastSelected.gameObject);
         }
     }
-    
+
     // Method to interact the selected button
     protected virtual void OnSubmit(InputAction.CallbackContext context)
     {
@@ -285,11 +293,11 @@ public class MenuEventSystemHandler : MonoBehaviour
         GameObject selectedObj = EventSystem.current.currentSelectedGameObject;
 
         // Only proceeds further if there's even a selection happening 
-        if (selectedObj == null) return; 
+        if (selectedObj == null) return;
 
         // Retrieves the button of the selected interactable UI (to ensure that it is a button)
         Button button = selectedObj.GetComponent<Button>();
-        
+
         // Only proceeds if the selected object is actually a Button
         if (button == null) return;
 
@@ -300,7 +308,7 @@ public class MenuEventSystemHandler : MonoBehaviour
     // ------------------------- HELPER METHODS ---------------------------
 
     // Coroutine Method to add delay before UI selection
-    protected virtual IEnumerator SelectAfterDelay() 
+    protected virtual IEnumerator SelectAfterDelay()
     {
         // The waiting time before execution
         yield return new WaitForSeconds(1f);
@@ -308,4 +316,221 @@ public class MenuEventSystemHandler : MonoBehaviour
         // Automatically selects the specified interactable UI set in the Inspector
         EventSystem.current.SetSelectedGameObject(_firstSelected.gameObject);
     }
+
+    // ------------------------- CREDITS FIX ---------------------------
+
+    #region CREDITS SCROLL FIX
+
+    [Header("CREDITS SCROLL (leave empty on menus that aren't credits)")]
+    [SerializeField] private ScrollRect _creditsScroll;
+    [SerializeField] private RectTransform _creditsLogo;
+    [SerializeField] private float _creditsAutoSpeed = 70f;
+    [SerializeField] private float _creditsManualSpeed = 900f;
+    [SerializeField] private float _creditsWheelDistance = 250f;
+    [SerializeField] private float _creditsWheelSmoothness = 6f;
+    [SerializeField] private float _creditsStartDelay = 1f;
+    [SerializeField] private float _creditsResumeDelay = 1.5f;
+    [Range(0f, 1f)]
+    [SerializeField] private float _creditsLogoPosition = 0.5f;
+    [SerializeField] private bool _creditsScrollWithNavigationKeys = true;
+    [SerializeField] private UnityEvent _onCreditsReachedEnd = new UnityEvent();
+
+    private RectTransform _creditsContent;
+    private RectTransform _creditsViewport;
+    private float _creditsEndY;
+    private float _creditsLastY;
+    private float _creditsPauseTimer;
+    private float _creditsWheelVelocity;
+    private bool _creditsReady;
+    private bool _creditsDragging;
+    private bool _creditsReportedEnd;
+    private bool _creditsDragHooked;
+
+    private void CreditsOnEnable()
+    {
+        if (_creditsScroll == null) return;
+
+        _creditsContent = _creditsScroll.content;
+        _creditsViewport = _creditsScroll.viewport != null ? _creditsScroll.viewport : (RectTransform)_creditsScroll.transform;
+        _creditsScroll.scrollSensitivity = 0f;
+
+        HookCreditsDrag();
+        StartCoroutine(PrepareCredits());
+    }
+
+    private void CreditsOnDisable()
+    {
+        _creditsReady = false;
+        _creditsDragging = false;
+    }
+
+    private void HookCreditsDrag()
+    {
+        if (_creditsDragHooked) return;
+        _creditsDragHooked = true;
+
+        EventTrigger trigger = _creditsScroll.GetComponent<EventTrigger>();
+
+        if (trigger == null)
+        {
+            trigger = _creditsScroll.gameObject.AddComponent<EventTrigger>();
+        }
+
+        EventTrigger.Entry begin = new EventTrigger.Entry { eventID = EventTriggerType.BeginDrag };
+        begin.callback.AddListener(_ => _creditsDragging = true);
+        trigger.triggers.Add(begin);
+
+        EventTrigger.Entry end = new EventTrigger.Entry { eventID = EventTriggerType.EndDrag };
+        end.callback.AddListener(_ =>
+        {
+            _creditsDragging = false;
+            _creditsPauseTimer = _creditsResumeDelay;
+        });
+        trigger.triggers.Add(end);
+    }
+
+    private IEnumerator PrepareCredits()
+    {
+        _creditsReady = false;
+        _creditsDragging = false;
+        _creditsReportedEnd = false;
+        _creditsWheelVelocity = 0f;
+        _creditsPauseTimer = _creditsStartDelay;
+
+        yield return null;
+
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_creditsContent);
+        _creditsContent.anchoredPosition = new Vector2(_creditsContent.anchoredPosition.x, 0f);
+
+        RecalculateCreditsEnd();
+        _creditsLastY = 0f;
+        _creditsReady = true;
+    }
+
+    private void RecalculateCreditsEnd()
+    {
+        Vector3 logoCenter = _creditsLogo.TransformPoint(_creditsLogo.rect.center);
+        float distanceFromTop = _creditsContent.rect.yMax - _creditsContent.InverseTransformPoint(logoCenter).y;
+        float maxScroll = Mathf.Max(0f, _creditsContent.rect.height - _creditsViewport.rect.height);
+
+        _creditsEndY = Mathf.Clamp(distanceFromTop - _creditsViewport.rect.height * _creditsLogoPosition, 0f, maxScroll);
+    }
+
+    private void Update()
+    {
+        if (_creditsScroll == null || !_creditsReady) return;
+
+        RecalculateCreditsEnd();
+
+        float currentY = _creditsContent.anchoredPosition.y;
+        float deltaTime = Time.unscaledDeltaTime;
+
+        if (_creditsDragging)
+        {
+            _creditsPauseTimer = _creditsResumeDelay;
+            _creditsWheelVelocity = 0f;
+            _creditsLastY = currentY;
+            return;
+        }
+
+        if (Mathf.Abs(currentY - _creditsLastY) > 0.01f)
+        {
+            _creditsPauseTimer = _creditsResumeDelay;
+        }
+
+        float manual = ReadCreditsManualInput();
+        float wheel = ReadCreditsWheel();
+
+        if (Mathf.Abs(wheel) > 0.001f)
+        {
+            _creditsWheelVelocity += -wheel * _creditsWheelDistance * _creditsWheelSmoothness;
+        }
+
+        if (Mathf.Abs(manual) > 0.01f || Mathf.Abs(_creditsWheelVelocity) > 1f)
+        {
+            _creditsPauseTimer = _creditsResumeDelay;
+        }
+
+        float delta = (manual * _creditsManualSpeed + _creditsWheelVelocity) * deltaTime;
+        _creditsWheelVelocity *= Mathf.Exp(-_creditsWheelSmoothness * deltaTime);
+
+        if (Mathf.Abs(_creditsWheelVelocity) < 0.5f)
+        {
+            _creditsWheelVelocity = 0f;
+        }
+
+        _creditsPauseTimer -= deltaTime;
+
+        if (_creditsPauseTimer <= 0f)
+        {
+            delta += _creditsAutoSpeed * deltaTime;
+        }
+
+        float newY = Mathf.Clamp(currentY + delta, 0f, _creditsEndY);
+
+        if (newY <= 0f || newY >= _creditsEndY)
+        {
+            _creditsWheelVelocity = 0f;
+        }
+
+        _creditsContent.anchoredPosition = new Vector2(_creditsContent.anchoredPosition.x, newY);
+        _creditsLastY = newY;
+
+        if (!_creditsReportedEnd && newY >= _creditsEndY - 0.5f)
+        {
+            _creditsReportedEnd = true;
+            _onCreditsReachedEnd.Invoke();
+        }
+    }
+
+    private float ReadCreditsWheel()
+    {
+        Mouse mouse = Mouse.current;
+
+        if (mouse == null) return 0f;
+
+        float raw = mouse.scroll.ReadValue().y;
+
+        if (Mathf.Abs(raw) > 10f)
+        {
+            raw /= 120f;
+        }
+
+        return raw;
+    }
+
+    private float ReadCreditsManualInput()
+    {
+        float value = 0f;
+        Gamepad pad = Gamepad.current;
+
+        if (pad != null)
+        {
+            float right = pad.rightStick.ReadValue().y;
+
+            if (_creditsScrollWithNavigationKeys)
+            {
+                float left = pad.leftStick.ReadValue().y;
+                value -= Mathf.Abs(right) > Mathf.Abs(left) ? right : left;
+                value -= pad.dpad.ReadValue().y;
+            }
+            else
+            {
+                value -= right;
+            }
+        }
+
+        Keyboard keyboard = Keyboard.current;
+
+        if (keyboard != null && _creditsScrollWithNavigationKeys)
+        {
+            if (keyboard.downArrowKey.isPressed || keyboard.sKey.isPressed) value += 1f;
+            if (keyboard.upArrowKey.isPressed || keyboard.wKey.isPressed) value -= 1f;
+        }
+
+        return Mathf.Clamp(value, -1f, 1f);
+    }
+
+    #endregion
 }
